@@ -1221,6 +1221,7 @@ sub _datetime {
 sub _name {
   my ($bibentry, $entry, $f, $key, $form, $lang) = @_;
   my $secnum = $Biber::MASTER->get_current_section;
+  my $section = $Biber::MASTER->sections->get_section($secnum);
   my $bee = $bibentry->get_field('entrytype');
 
   foreach my $node ($entry->findnodes("./$NS:names[\@type='$f']")) {
@@ -1259,7 +1260,7 @@ sub _name {
         }
       }
 
-      $names->add_name(parsename($namenode, $f, $key, $i+1));
+      $names->add_name(parsename($section, $namenode, $f, $key, $i+1));
     }
 
     # Deal with explicit "moreenames" in data source
@@ -1295,7 +1296,7 @@ sub _name {
 =cut
 
 sub parsename {
-  my ($node, $fieldname, $key, $count) = @_;
+  my ($section, $node, $fieldname, $key, $count) = @_;
   if ($logger->is_debug()) {# performance tune
     $logger->debug('Parsing BibLaTeXML name object ' . $node->nodePath);
   }
@@ -1340,14 +1341,18 @@ sub parsename {
     }
   }
 
-  my %nps;
-  foreach my $n ($dm->get_constant_value('nameparts')) { # list type so returns list
-    $nps{$n} = {string  => $namec{$n} // undef,
-                initial => exists($namec{$n}) ? $namec{"${n}-i"} : undef};
+  my %nameparts;
+  foreach my $np ($dm->get_constant_value('nameparts')) { # list type so returns list
+    $nameparts{$np} = {string  => $namec{$np} // undef,
+                       initial => exists($namec{$np}) ? $namec{"${np}-i"} : undef};
+
+    # Record max namepart lengths
+    $section->set_np_length($np, length($nameparts{$np}{string}))  if $nameparts{$np}{string};
+    $section->set_np_length("${np}-i", length(join('', $nameparts{$np}{initial}->@*))) if $nameparts{$np}{initial};
   }
 
   my $newname = Biber::Entry::Name->new(
-                                        %nps,
+                                        %nameparts,
                                         gender => $node->getAttribute('gender')
                                        );
 

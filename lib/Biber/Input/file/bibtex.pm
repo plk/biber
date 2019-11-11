@@ -1168,8 +1168,6 @@ sub _name {
                                      undef,
                                      {binmode => 'utf-8', normalization => 'NFD'});
 
-
-
   for (my $i = 0; $i <= $#tmp; $i++) {
     my $name = $tmp[$i];
 
@@ -1212,7 +1210,7 @@ sub _name {
       # uniquename defaults to 'false' just in case we are in tool mode otherwise
       # there are spurious uninitialised warnings
 
-      next unless $no = parsename_x($name, $tbfield, $key);
+      next unless $no = parsename_x($section, $name, $tbfield, $key);
     }
     else { # Normal bibtex name format
       # Check for malformed names in names which aren't completely escaped
@@ -1236,7 +1234,7 @@ sub _name {
       # Skip names that don't parse for some reason
       # unique name defaults to 0 just in case we are in tool mode otherwise there are spurious
       # uninitialised warnings
-      next unless $no = parsename($name);
+      next unless $no = parsename($section, $name);
     }
 
     # Deal with implied "et al" in data source
@@ -1713,7 +1711,7 @@ sub parse_decode {
 =cut
 
 sub parsename {
-  my $namestr = shift;
+  my ($section, $namestr) = @_;
 
   # First sanitise the namestring due to Text::BibTeX::Name limitations on whitespace
   $namestr =~ s/\A\s*|\s*\z//xms; # leading and trailing whitespace
@@ -1773,6 +1771,10 @@ sub parsename {
     $nameparts{$np} = {string  => $namec{"${np}-stripped"} // undef,
                        initial => $namec{$np} ? $namec{"${np}-i"} : undef};
     $strip->{$np} = $namec{"${np}-strippedflag"};
+
+    # Record max namepart lengths
+    $section->set_np_length($np, length($nameparts{$np}{string})) if $nameparts{$np}{string};
+    $section->set_np_length("${np}-i", length(join('', $nameparts{$np}{initial}->@*))) if $nameparts{$np}{initial};
   }
 
   # The "strip" entry tells us which of the name parts had outer braces
@@ -1803,7 +1805,7 @@ sub parsename {
 =cut
 
 sub parsename_x {
-  my ($namestr, $fieldname, $key) = @_;
+  my ($section, $namestr, $fieldname, $key) = @_;
   my $xnamesep = Biber::Config->getoption('xnamesep');
   my %nps = map {$_ => 1} $dm->get_constant_value('nameparts');
 
@@ -1864,9 +1866,13 @@ sub parsename_x {
   }
 
   my %nameparts;
-  foreach my $n (keys %nps) {
-    $nameparts{$n} = {string  => $namec{$n} // undef,
-                      initial => exists($namec{$n}) ? $namec{"${n}-i"} : undef};
+  foreach my $np (keys %nps) {
+    $nameparts{$np} = {string  => $namec{$np} // undef,
+                       initial => exists($namec{$np}) ? $namec{"${np}-i"} : undef};
+
+    # Record max namepart lengths
+    $section->set_np_length($np, length($nameparts{$np}{string}))  if $nameparts{$np}{string};
+    $section->set_np_length("${np}-i", length(join('', $nameparts{$np}{initial}->@*)))  if $nameparts{$np}{initial};
   }
 
   # The "strip" entry tells us which of the name parts had outer braces

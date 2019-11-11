@@ -155,7 +155,7 @@ is_deeply($biber->datalists->get_lists_by_attrs(section           => 0,
 # Note that:
 # * K6 has an entry scope override which makes it sort with family first despite the
 #   'given' name key template using the given name first.
-# * K11 has a name list scope override which forces "a" literal first
+# * K11 has a name list scope override which forces "aaa" literal first
 # * K12 has a name scope override which forces "Z" literal first
 is_deeply($biber->datalists->get_lists_by_attrs(section           => 0,
                                        name                       => 'lname',

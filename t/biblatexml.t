@@ -163,7 +163,7 @@ my $l2 = q|    \entry{loopkey:a}{book}{}
 |;
 
 
-my $bltx1 = 'mm,,,von!Булгаков!Павел Георгиевич#РРозенфельд!Борис-ZZ Aбрамович!von#Aхмедов!Ашраф Ахмедович#+,1980,0,Мухаммад ибн муса ал-Хорезми. Около 783 – около 850';
+my $bltx1 = 'mm,,,vonБулгаков   Павел Георгиевич  РРозенфельдБорис-ZZ AбрамовичvonAхмедов    Ашраф Ахмедович   ,1980,0,Мухаммад ибн муса ал-Хорезми. Около 783 – около 850';
 
 # Test::Differences doesn't like utf8 unless it's encoded here
 eq_or_diff(encode_utf8($out->get_output_entry('bltx1', $main)), encode_utf8($l1), 'BibLaTeXML - 1');

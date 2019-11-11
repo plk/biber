@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/xsl" href="../../data/bcf.xsl"?>
 <?xml-model href="../../data/schemata/bcf.rnc" type="application/relax-ng-compact-syntax"?>
-<bcf:controlfile version="4.0" bltxversion="3.14" xmlns:bcf="https://sourceforge.net/projects/biblatex">
+<bcf:controlfile version="3.7" bltxversion="3.14" xmlns:bcf="https://sourceforge.net/projects/biblatex">
   <!-- OPTIONS -->
   <bcf:options component="biber" type="global">
     <bcf:option type="singlevalued">
@@ -26,7 +26,7 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>sortcase</bcf:key>
-      <bcf:value>1</bcf:value>
+      <bcf:value>0</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>sortupper</bcf:key>
@@ -40,7 +40,7 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>labelalpha</bcf:key>
-      <bcf:value>0</bcf:value>
+      <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="multivalued">
       <bcf:key>labelnamespec</bcf:key>
@@ -728,30 +728,6 @@
       <bcf:part type="namepart" order="1" use="0">prefix</bcf:part>
     </bcf:keypart>
   </bcf:sortingnamekeytemplate>
-  <bcf:sortingnamekeytemplate name="given">
-    <bcf:keypart order="1">
-      <bcf:part type="namepart" order="1">given</bcf:part>
-    </bcf:keypart>
-    <bcf:keypart order="2">
-      <bcf:part type="namepart" order="1">family</bcf:part>
-    </bcf:keypart>
-  </bcf:sortingnamekeytemplate>
-  <bcf:sortingnamekeytemplate name="snk1">
-    <bcf:keypart order="1">
-      <bcf:part type="literal" order="1">aaa</bcf:part>
-    </bcf:keypart>
-    <bcf:keypart order="2">
-      <bcf:part type="namepart" order="1">family</bcf:part>
-    </bcf:keypart>
-  </bcf:sortingnamekeytemplate>
-  <bcf:sortingnamekeytemplate name="snk2">
-    <bcf:keypart order="1">
-      <bcf:part type="literal" order="1">Z</bcf:part>
-    </bcf:keypart>
-    <bcf:keypart order="2">
-      <bcf:part type="namepart" order="1">family</bcf:part>
-    </bcf:keypart>
-  </bcf:sortingnamekeytemplate>
   <bcf:presort>mm</bcf:presort>
   <!-- DATA MODEL -->
   <bcf:datamodel>
@@ -759,7 +735,7 @@
       <bcf:constant type="list" name="gender">sf,sm,sn,pf,pm,pn,pp</bcf:constant>
       <bcf:constant type="list" name="nameparts">family,given,prefix,suffix</bcf:constant>
       <bcf:constant type="list" name="optiondatatypes">boolean,integer,string,xml</bcf:constant>
-      <bcf:constant type="list" name="multiscriptforms">default,transliteration,transcription,translation</bcf:constant>
+      <bcf:constant type="list" name="multiscriptforms">original,transliteration,transcription,translation</bcf:constant>
     </bcf:constants>
     <bcf:entrytypes>
       <bcf:entrytype>article</bcf:entrytype>
@@ -1996,37 +1972,14 @@
   </bcf:datamodel>
   <!-- SECTION 0 -->
   <bcf:bibdata section="0">
-    <bcf:datasource type="file" datatype="bibtex">datalists.bib</bcf:datasource>
-    <bcf:datasource type="file" datatype="biblatexml">datalists.bltxml</bcf:datasource>
+    <bcf:datasource type="file" datatype="bibtex">sort-names.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey order="1">K1</bcf:citekey>
-    <bcf:citekey order="2">K2</bcf:citekey>
-    <bcf:citekey order="3">K3</bcf:citekey>
-    <bcf:citekey order="4">K4</bcf:citekey>
-    <bcf:citekey order="5">K5</bcf:citekey>
-    <bcf:citekey order="6">K6</bcf:citekey>
-    <bcf:citekey order="7">K7</bcf:citekey>
-    <bcf:citekey order="8">K8</bcf:citekey>
-    <bcf:citekey order="9">K9</bcf:citekey>
-    <bcf:citekey order="10">K10</bcf:citekey>
-    <bcf:citekey order="11">K11</bcf:citekey>
-    <bcf:citekey order="12">K12</bcf:citekey>
+    <bcf:citekey order="1">N1</bcf:citekey>
+    <bcf:citekey order="1">N2</bcf:citekey>
+    <bcf:citekey order="2">N3</bcf:citekey>
   </bcf:section>
-  <!-- SECTION 1 -->
-  <bcf:bibdata section="1">
-    <bcf:datasource type="file" datatype="bibtex">datalists.bib</bcf:datasource>
-  </bcf:bibdata>
-  <bcf:section number="1">
-    <bcf:citekey order="1">D1</bcf:citekey>
-    <bcf:citekey order="2">D2</bcf:citekey>
-    <bcf:citekey order="3">D3</bcf:citekey>
-    <bcf:citekey order="4">D4</bcf:citekey>
-    <bcf:citekey order="5">D5</bcf:citekey>
-    <bcf:citekey order="6">D6</bcf:citekey>
-    <bcf:citekey order="7">D7</bcf:citekey>
-  </bcf:section>
-  <!-- SORTING -->
+  <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="nty">
     <bcf:sort order="1">
       <bcf:sortitem order="1">presort</bcf:sortitem>
@@ -2055,196 +2008,14 @@
       <bcf:sortitem literal="1" order="2">0</bcf:sortitem>
     </bcf:sort>
   </bcf:sortingtemplate>
-  <bcf:sortingtemplate name="none">
-    <bcf:sort order="1">
-      <bcf:sortitem order="1">citeorder</bcf:sortitem>
-    </bcf:sort>
-  </bcf:sortingtemplate>
-  <bcf:sortingtemplate name="lname">
-    <bcf:sort order="1">
-      <bcf:sortitem order="1">author</bcf:sortitem>
-    </bcf:sort>
-  </bcf:sortingtemplate>
-  <bcf:sortingtemplate name="lnameswe" locale="swedish">
-    <bcf:sort order="1">
-      <bcf:sortitem order="1">author</bcf:sortitem>
-    </bcf:sort>
-  </bcf:sortingtemplate>
-  <bcf:sortingtemplate name="lyear">
-    <bcf:sort order="1">
-      <bcf:sortitem order="1">year</bcf:sortitem>
-    </bcf:sort>
-  </bcf:sortingtemplate>
-  <bcf:sortingtemplate name="lyeard">
-    <bcf:sort order="1" sort_direction="descending">
-      <bcf:sortitem order="1">year</bcf:sortitem>
-    </bcf:sort>
-  </bcf:sortingtemplate>
-  <bcf:sortingtemplate name="ltitle">
-    <bcf:sort order="1">
-      <bcf:sortitem order="1">title</bcf:sortitem>
-    </bcf:sort>
-  </bcf:sortingtemplate>
-  <bcf:sortingtemplate name="ltitlespan" locale="es_ES_trad">
-    <bcf:sort order="1">
-      <bcf:sortitem order="1">title</bcf:sortitem>
-    </bcf:sort>
-  </bcf:sortingtemplate>
-  <bcf:sortingtemplate name="ltitleset">
-    <bcf:sort order="1">
-      <bcf:sortitem order="1">title</bcf:sortitem>
-    </bcf:sort>
-    <bcf:sort order="2" locale="es_ES_trad">
-      <bcf:sortitem order="1">note</bcf:sortitem>
-    </bcf:sort>
-  </bcf:sortingtemplate>
-  <bcf:sortingtemplate name="publisher">
-    <bcf:sort order="1">
-      <bcf:sortitem order="1">publisher</bcf:sortitem>
-    </bcf:sort>
-  </bcf:sortingtemplate>
   <!-- DATA LISTS -->
   <bcf:datalist sortingnamekeytemplatename="global"
                 section="0"
-                name="lname"
-                sortingtemplatename="lname"
+                name="none/global//global/global"
+                sortingtemplatename="none"
                 type="entry"
                 labelprefix=""
                 uniquenametemplatename="global"
-                labelalphanametemplatename="global">
-  </bcf:datalist>
-  <bcf:datalist sortingnamekeytemplatename="global"
-                section="0"
-                name="lnameswe"
-                sortingtemplatename="lnameswe"
-                type="entry"
-                labelprefix=""
-                uniquenametemplatename="global"
-                labelalphanametemplatename="global">
-  </bcf:datalist>
-  <bcf:datalist sortingnamekeytemplatename="global"
-                section="0"
-                name="lnamef1"
-                sortingtemplatename="lname"
-                type="entry"
-                labelprefix=""
-                uniquenametemplatename="global"
-                labelalphanametemplatename="global">
-    <bcf:filter type="field">publisher</bcf:filter>
-    <bcf:filter type="notfield">verba</bcf:filter>
-  </bcf:datalist>
-  <bcf:datalist sortingnamekeytemplatename="global"
-                section="0"
-                name="lnamef2"
-                sortingtemplatename="lname"
-                type="entry"
-                labelprefix=""
-                uniquenametemplatename="global"
-                labelalphanametemplatename="global">
-    <bcf:filter type="keyword">key2</bcf:filter>
-  </bcf:datalist>
-  <bcf:datalist sortingnamekeytemplatename="global"
-                section="0"
-                name="lnamef3"
-                sortingtemplatename="lname"
-                type="entry"
-                labelprefix=""
-                uniquenametemplatename="global"
-                labelalphanametemplatename="global">
-    <bcf:filter type="nottype">thesis</bcf:filter>
-    <bcf:filter type="notkeyword">key1</bcf:filter>
-  </bcf:datalist>
-  <bcf:datalist sortingnamekeytemplatename="global"
-                section="0"
-                name="lnamef4"
-                sortingtemplatename="lname"
-                type="entry"
-                labelprefix=""
-                uniquenametemplatename="global"
-                labelalphanametemplatename="global">
-    <bcf:filter type="notfield">verba</bcf:filter>
-    <bcf:filter type="subtype">rubbish</bcf:filter>
-  </bcf:datalist>
-  <bcf:datalist sortingnamekeytemplatename="global"
-                section="0"
-                name="lnamef5"
-                sortingtemplatename="lname"
-                type="entry"
-                labelprefix=""
-                uniquenametemplatename="global"
-                labelalphanametemplatename="global">
-    <bcf:filter type="field">author</bcf:filter>
-    <bcf:filteror>
-      <bcf:filter type="field">verba</bcf:filter>
-      <bcf:filter type="subtype">rubbish</bcf:filter>
-    </bcf:filteror>
-  </bcf:datalist>
-  <bcf:datalist sortingnamekeytemplatename="global"
-                section="0"
-                name="lyear"
-                sortingtemplatename="lyeard"
-                type="entry"
-                labelprefix=""
-                uniquenametemplatename="global"
-                labelalphanametemplatename="global">
-  </bcf:datalist>
-  <bcf:datalist sortingnamekeytemplatename="global"
-                section="0"
-                name="ltitle"
-                sortingtemplatename="ltitle"
-                type="entry"
-                labelprefix=""
-                uniquenametemplatename="global"
-                labelalphanametemplatename="global">
-  </bcf:datalist>
-  <bcf:datalist sortingnamekeytemplatename="global"
-                section="0"
-                name="ltitlespan"
-                sortingtemplatename="ltitlespan"
-                type="entry"
-                labelprefix=""
-                uniquenametemplatename="global"
-                labelalphanametemplatename="global">
-  </bcf:datalist>
-  <bcf:datalist sortingnamekeytemplatename="global"
-                section="0"
-                name="ltitleset"
-                sortingtemplatename="ltitleset"
-                type="entry"
-                labelprefix=""
-                uniquenametemplatename="global"
-                labelalphanametemplatename="global">
-  </bcf:datalist>
-  <!-- This should be ignored as it's a repeat -->
-  <bcf:datalist sortingnamekeytemplatename="global"
-                section="0"
-                name="ltitle"
-                sortingtemplatename="publisher"
-                type="entry"
-                labelprefix=""
-                uniquenametemplatename="global"
-                labelalphanametemplatename="global">
-  </bcf:datalist>
-  <!-- datalist/entry/names and name scope sorting name key scheme
-       scheme is overridden at entry (K6), names (K11) and name (K12) scope -->
-  <bcf:datalist sortingnamekeytemplatename="given"
-                section="0"
-                name="lname"
-                sortingtemplatename="lname"
-                type="entry"
-                labelprefix=""
-                uniquenametemplatename="global"
-                labelalphanametemplatename="global">
-  </bcf:datalist>
-  <!-- Testing dates -->
-  <bcf:datalist sortingnamekeytemplatename="global"
-                section="1"
-                name="ldates"
-                sortingtemplatename="lyear"
-                type="entry"
-                labelprefix=""
-                uniquenametemplatename="global"
-                labelalphanametemplatename="global">
-  </bcf:datalist>
+                labelalphanametemplatename="global"/>
 </bcf:controlfile>
 
