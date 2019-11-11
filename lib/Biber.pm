@@ -4158,7 +4158,7 @@ sub sort_list {
       my $sortfield = $dlist->get_sortdata_for_key($key)->[1][$i];
       # Resolve real zeros back again
       if ($lsds->[$i]{int}) {
-        # There is special cases to be careful of here in that "final" elements
+        # There are special cases to be careful of here in that "final" elements
         # in sorting copy themselves as strings to further sort fields and therefore
         # need coercing to 0 for int tests. Fallback of '0' for int fields should
         # be handled in the sorting spec otherwise this will be the default for missing

@@ -738,7 +738,7 @@
   </bcf:sortingnamekeytemplate>
   <bcf:sortingnamekeytemplate name="snk1">
     <bcf:keypart order="1">
-      <bcf:part type="literal" order="1">a</bcf:part>
+      <bcf:part type="literal" order="1">aaa</bcf:part>
     </bcf:keypart>
     <bcf:keypart order="2">
       <bcf:part type="namepart" order="1">family</bcf:part>

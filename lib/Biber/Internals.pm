@@ -1476,6 +1476,7 @@ sub _namestring {
   my $bee = $be->get_field('entrytype');
   my $names = $be->get_field($field);
   my $str = '';
+  my $namesort = [];
   my $count = $names->count_names;
   # get visibility for sorting
   my $visible = $dlist->get_visible_sort($names->get_id);
@@ -1495,14 +1496,6 @@ sub _namestring {
     $useprefix = $names->get_useprefix;
   }
 
-  # These should be symbols which can't appear in names and which sort before all alphanum
-  # so that "Alan Smith" sorts after "Al Smith". This means, symbols which normalise_string_sort()
-  # strips out. Unfortuately, this means using punctuation and these are by default variable
-  # weight and ignorable in DUCET so we have to set U::C to variable=>'non-ignorable' as
-  # sorting default so that they are non-ignorable
-  my $nsi    = '!';          # name separator, internal
-  my $nse    = '#';          # name separator, external
-  # Guaranteed to sort after everything else as it's the last legal Unicode code point
   my $trunc = "\x{10FFFD}";  # sort string for "et al" truncated name
 
   # We strip nosort first otherwise normalise_string_sort damages diacritics
@@ -1524,6 +1517,7 @@ sub _namestring {
     my $snk = Biber::Config->getblxoption(undef, 'sortingnamekeytemplate')->{$snkname};
 
     # Get the sorting name key specification and use it to construct a sorting key for each name
+    my $kpa = [];
     foreach my $kp ($snk->@*) {
       my $kps;
       foreach my $np ($kp->@*) {
@@ -1542,13 +1536,25 @@ sub _namestring {
 
             if (not $useopt or
                 ($useopt and $useoptval == $np->{use})) {
+
               # Do we only want initials for sorting?
               if ($np->{inits}) {
                 my $npistring = $n->get_namepart_initial($namepart);
-                $kps .= normalise_string_sort(join('', $npistring->@*), $field);
+
+                # The namepart is padded to the longest namepart in the ref
+                # section as this is the only way to make sorting work
+                # properly The padding is spaces as this sorts before all
+                # glyphs but it also of variable weight and ignorable in
+                # DUCET so we have to set U::C to variable=>'non-ignorable'
+                # as sorting default so that spaces are non-ignorable
+                $kps .= sprintf("%-*s",
+                                $section->get_np_length("${namepart}-i"),
+                                normalise_string_sort(join('', $npistring->@*), $field));
               }
               else {
-                $kps .= normalise_string_sort($npstring, $field);
+                $kps .= sprintf("%-*s",
+                                $section->get_np_length($namepart),
+                                normalise_string_sort($npstring, $field));
               }
             }
           }
@@ -1557,12 +1563,12 @@ sub _namestring {
           $kps .= $np->{value};
         }
       }
-      # Now append the key part string plus internal name sep if the string is not empty
-      $str .= $kps . $nsi if $kps;
+      # Now append the key part string if the string is not empty
+      $str .= $kps if $kps;
+      push $kpa->@*, $kps;
     }
 
-    $str =~ s/\Q$nsi\E\z//xms;       # Remove any trailing internal separator
-    $str .= $nse;                    # Add separator in between names
+    push $namesort->@*, $kpa;
   }
 
   my $nso = Biber::Config->getblxoption($secnum, 'nosortothers', $bee, $citekey);
@@ -1572,19 +1578,11 @@ sub _namestring {
     $nso = $names->get_nosortothers;
   }
 
-  # If we had an explicit "and others"
-  unless ($nso) {
-    if ($names->get_morenames) {
-      $str .= "+$nse";
-    }
-  }
-
-  $str =~ s/\s+\Q$nse\E/$nse/gxms;   # Remove any whitespace before external separator
-  $str =~ s/\Q$nse\E\z//xms;         # strip final external separator as we have finished
-
   unless ($nso) {
     $str .= $trunc if $visible < $count; # name list was truncated
+    push $namesort->@*, $trunc if $visible < $count; # name list was truncated
   }
+
   return $str;
 }
 

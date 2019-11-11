@@ -23,6 +23,7 @@ sub new {
   my ($class, %params) = @_;
   my $self = bless {%params}, $class;
   $self->{bibentries} = new Biber::Entries;
+  $self->{namepartlengths} = {};
   $self->{keytorelclone} = {};
   $self->{relclonetokey} = {};
   $self->{relkeys} = {};
@@ -61,6 +62,32 @@ sub reset_caches {
   return;
 }
 
+=head2 set_np_length
+
+  Check and record max namepart length. Needed to construct sort keys for names
+
+=cut
+
+sub set_np_length {
+  my ($self, $np, $len) = @_;
+  return unless defined $len;
+  if ($len > ($self->{namepartlengths}{$np} // 0)) {
+    $self->{namepartlengths}{$np} = $len;
+  }
+  return;
+}
+
+=head2 get_np_length
+
+  Return max namepart length. Needed to construct sort keys for names
+
+=cut
+
+sub get_np_length {
+  my ($self, $np) = @_;
+  return $self->{namepartlengths}{$np};
+}
+
 
 =head2 set_set_pc
 
@@ -69,8 +96,7 @@ sub reset_caches {
 =cut
 
 sub set_set_pc {
-  my $self = shift;
-  my ($parent, $child) = @_;
+  my ($self, $parent, $child) = @_;
   $self->{state}{set}{pc}{$parent}{$child} = 1;
   return;
 }
@@ -82,8 +108,7 @@ sub set_set_pc {
 =cut
 
 sub set_set_cp {
-  my $self = shift;
-  my ($child, $parent) = @_;
+  my ($self, $child, $parent) = @_;
   $self->{state}{set}{cp}{$child}{$parent} = 1;
   return;
 }
@@ -95,8 +120,7 @@ sub set_set_cp {
 =cut
 
 sub get_set_pc {
-  my $self = shift;
-  my ($parent, $child) = @_;
+  my ($self, $parent, $child) = @_;
   return exists($self->{state}{set}{pc}{$parent}{$child}) ? 1 : 0;
 }
 
@@ -107,8 +131,7 @@ sub get_set_pc {
 =cut
 
 sub get_set_cp {
-  my $self = shift;
-  my ($child, $parent) = @_;
+  my ($self, $child, $parent) = @_;
   return exists($self->{state}{set}{cp}{$child}{$parent}) ? 1 : 0;
 }
 
@@ -119,8 +142,7 @@ sub get_set_cp {
 =cut
 
 sub get_set_children {
-  my $self = shift;
-  my $parent = shift;
+  my ($self, $parent) = @_;
   if (exists($self->{state}{set}{pc}{$parent})) {
     return (keys $self->{state}{set}{pc}{$parent}->%*);
   }
@@ -136,8 +158,7 @@ sub get_set_children {
 =cut
 
 sub get_set_parents {
-  my $self = shift;
-  my $child = shift;
+  my ($self, $child) = @_;
   if (exists($self->{state}{set}{cp}{$child})) {
     return (keys $self->{state}{set}{cp}{$child}->%*);
   }

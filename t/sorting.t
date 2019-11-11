@@ -37,31 +37,31 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 
-my $yearoff1    = 'mm,,Knuth!Donald E.,Computers & Typesetting,1984,';
-my $yearoff2    = 'mm,,Knuth!Donald E.,Computers & Typesetting,198,';
-my $yearoff3    = 'mm,,Knuth!Donald E.,Computers & Typesetting,1984,';
-my $yearoff4    = 'mm,,Knuth!Donald E.,Computers & Typesetting,984,';
-my $yearoff5    = 'mm,,Knuth!Donald E.,Computers & Typesetting,1984,';
-my $yearoff6    = 'mm,,Knuth!Donald E.,Computers & Typesetting,1984,';
-my $yearoff7    = 'mm,,Knuth!Donald E.,Computers & Typesetting,198,';
-my $yearoff8    = 'mm,,Knuth!Donald E.,Computers & Typesetting,1984,';
-my $yearoff9    = 'mm,,Knuth!Donald E.,Computers & Typesetting,984,';
-my $vol1        = 'mm,,Glashow!Sheldon,Partial Symmetries of Weak Interactions,1961,2200';
-my $vol2        = 'mm,,Glashow!Sheldon,Partial Symmetries of Weak Interactions,1961,2200000';
-my $vol3        = 'mm,,Glashow!Sheldon,Partial Symmetries of Weak Interactions,1961,ĐĐĐ22';
-my $nty         = 'mm,,Glashow!Sheldon,Partial Symmetries of Weak Interactions,1961,22';
-my $nyt         = 'mm,,Glashow!Sheldon,1961,Partial Symmetries of Weak Interactions,22';
-my $nyvt        = 'mm,,Glashow!Sheldon,1961,22,Partial Symmetries of Weak Interactions';
-my $anyt_la     = 'mm,Gla61,,Glashow!Sheldon,1961,Partial Symmetries of Weak Interactions,';
-my $anyt        = 'mm,,,Glashow!Sheldon,1961,Partial Symmetries of Weak Interactions,';
-my $anyvt_la    = 'mm,Gla61,,Glashow!Sheldon,1961,0022,Partial Symmetries of Weak Interactions';
-my $anyvt_la2   = "mm,Hos+98,,Hostetler!Michael J.\x{10FFFD},1998,0014,Alkanethiolate gold cluster molecules with core diameters from 1.5 to 5.2 nm";
-my $anyvt_la3   = "mm,HW98,,Hostetler!Michael J.#Wingate!Julia E.\x{10FFFD},1998,0014,Alkanethiolate gold cluster molecules with core diameters from 1.5 to 5.2 nm";
-my $anyvt_la4   = "mm,HW+98,,Hostetler!Michael J.#Wingate!Julia E.\x{10FFFD},1998,0014,Alkanethiolate gold cluster molecules with core diameters from 1.5 to 5.2 nm";
-my $anyvt       = 'mm,,,Glashow!Sheldon,1961,0022,Partial Symmetries of Weak Interactions';
-my $ynt         = 'mm,,1961,Glashow!Sheldon,Partial Symmetries of Weak Interactions';
-my $ydnt        = 'mm,,1961,Glashow!Sheldon,Partial Symmetries of Weak Interactions';
-my $sortinits   = 'mm,,1961,Glashow!S,Partial Symmetries of Weak Interactions';
+my $yearoff1    = 'mm,,Knuth        Donald E.      ,Computers & Typesetting,1984,';
+my $yearoff2    = 'mm,,Knuth        Donald E.      ,Computers & Typesetting,198,';
+my $yearoff3    = 'mm,,Knuth        Donald E.      ,Computers & Typesetting,1984,';
+my $yearoff4    = 'mm,,Knuth        Donald E.      ,Computers & Typesetting,984,';
+my $yearoff5    = 'mm,,Knuth        Donald E.      ,Computers & Typesetting,1984,';
+my $yearoff6    = 'mm,,Knuth        Donald E.      ,Computers & Typesetting,1984,';
+my $yearoff7    = 'mm,,Knuth        Donald E.      ,Computers & Typesetting,198,';
+my $yearoff8    = 'mm,,Knuth        Donald E.      ,Computers & Typesetting,1984,';
+my $yearoff9    = 'mm,,Knuth        Donald E.      ,Computers & Typesetting,984,';
+my $vol1        = 'mm,,Glashow      Sheldon        ,Partial Symmetries of Weak Interactions,1961,2200';
+my $vol2        = 'mm,,Glashow      Sheldon        ,Partial Symmetries of Weak Interactions,1961,2200000';
+my $vol3        = 'mm,,Glashow      Sheldon        ,Partial Symmetries of Weak Interactions,1961,ĐĐĐ22';
+my $nty         = 'mm,,Glashow      Sheldon        ,Partial Symmetries of Weak Interactions,1961,22';
+my $nyt         = 'mm,,Glashow      Sheldon        ,1961,Partial Symmetries of Weak Interactions,22';
+my $nyvt        = 'mm,,Glashow      Sheldon        ,1961,22,Partial Symmetries of Weak Interactions';
+my $anyt_la     = 'mm,Gla61,,Glashow      Sheldon        ,1961,Partial Symmetries of Weak Interactions,';
+my $anyt        = 'mm,,,Glashow      Sheldon        ,1961,Partial Symmetries of Weak Interactions,';
+my $anyvt_la    = 'mm,Gla61,,Glashow      Sheldon        ,1961,0022,Partial Symmetries of Weak Interactions';
+my $anyvt_la2   = "mm,Hos+98,,Hostetler    Michael J.     \x{10fffd},1998,0014,Alkanethiolate gold cluster molecules with core diameters from 1.5 to 5.2 nm";
+my $anyvt_la3   = "mm,HW98,,Hostetler    Michael J.     Wingate      Julia E.       \x{10fffd},1998,0014,Alkanethiolate gold cluster molecules with core diameters from 1.5 to 5.2 nm";
+my $anyvt_la4   = "mm,HW+98,,Hostetler    Michael J.     Wingate      Julia E.       \x{10fffd},1998,0014,Alkanethiolate gold cluster molecules with core diameters from 1.5 to 5.2 nm";
+my $anyvt       = 'mm,,,Glashow      Sheldon        ,1961,0022,Partial Symmetries of Weak Interactions';
+my $ynt         = 'mm,,1961,Glashow      Sheldon        ,Partial Symmetries of Weak Interactions';
+my $ydnt        = 'mm,,1961,Glashow      Sheldon        ,Partial Symmetries of Weak Interactions';
+my $sortinits   = 'mm,,1961,Glashow      S  ,Partial Symmetries of Weak Interactions';
 my $debug       = 'stdmodel';
 my $sk1         = 'mm,,AATESTKEY,AATESTKEY,AATESTKEY,AATESTKEY';
 my $ps_sc       = 'zs,,Partial Symmetries of Weak Interactions,,Partial Symmetries of Weak Interactions,Partial Symmetries of Weak Interactions';
@@ -73,27 +73,27 @@ my $lists3      = "IBM\x{10FFFD}";
 my $lists4      = "IBM!HP\x{10FFFD}";
 my $lists5      = 'IBM!HP!Sun!Sony';
 my $dates1      = '1979,1,2000000,1980,4,8,1924,6,7,1924,7,9,1924,0002,5,192,2,3,1979,3,4,79,3,3';
-my $edtypeclass1 = 'redactor,Jaffé!Philipp,Loewenfeld!Samuel#Kaltenbrunner!Ferdinand#Ewald!Paul';
-my $prefix1     = 'mm,,Luzzatto!Moshe Ḥayyim,,,Lashon la-Ramḥal: u-vo sheloshah ḥiburim,2000,';
-my $diacritic1  = 'mm,,Hasan!Alī,al-Hasan!ʿAlī,Hasan!Alī,Some title,2000,';
+my $edtypeclass1 = 'redactor,Jaffé       Philipp        ,Loewenfeld   Samuel         KaltenbrunnerFerdinand      Ewald        Paul           ';
+my $prefix1     = 'mm,,Luzzatto     Moshe Ḥayyim  ,,,Lashon la-Ramḥal: u-vo sheloshah ḥiburim,2000,';
+my $diacritic1  = 'mm,,Hasan        Alī           ,al-Hasan     ʿAlī          ,Hasan        Alī           ,Some title,2000,';
 my $labels      = '2005,3,2';
 my $sn1         = '';
-my $snk1        = 'mm,,John John!von!Doe!Jr,,,0';
-my $ent1        = 'mm,,Smith#Brian,,,0';
-my $others1     = 'mm,,Gauck!Joachim,,Title A,0';
-my $others2     = 'mm,,Gauck!Joachim#+,,Title B,0';
+my $snk1        = 'mm,,John            John           vonDoe          Jr,,,0';
+my $ent1        = 'mm,,Smith        Brian          ,,,0';
+my $others1     = 'mm,,Gauck        Joachim        ,,Title A,0';
+my $others2     = 'mm,,Gauck        Joachim        ,,Title B,0';
 my $final       = 'mm,,zzzz,zzzz,zzzz,zzzz';
 
 my $short1    = 'mm,,Lopez';
 my $short2    = 'mm,,Lopeza';
 
 # These have custom presort and also an exclusion on year and title set
-my $useprefix1  = 'ww,,von!Bobble!Terrence,,,0';
-my $useprefix4  = 'ww,,Bobble!Terrence!von,,,0';
+my $useprefix1  = 'ww,,vonBobble       Terrence       ,,,0';
+my $useprefix4  = 'ww,,Bobble       Terrence       von,,,0';
 
 # These have namelist and name scope useprefix respectively
-my $useprefix2  = 'mm,,Animal!Alan!von,1998,Things,0';
-my $useprefix3  = 'mm,,von!Rabble!Richard,1998,Things,0';
+my $useprefix2  = 'mm,,Animal       Alan           von,1998,Things,0';
+my $useprefix3  = 'mm,,vonRabble       Richard        ,1998,Things,0';
 
 # Sorting data schemata
 my $ssd1 = [
