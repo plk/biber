@@ -85,7 +85,7 @@ sub set_np_length {
 
 sub get_np_length {
   my ($self, $np) = @_;
-  return $self->{namepartlengths}{$np};
+  return $self->{namepartlengths}{$np} // 0;
 }
 
 
