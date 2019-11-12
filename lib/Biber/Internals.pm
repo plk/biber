@@ -1476,7 +1476,6 @@ sub _namestring {
   my $bee = $be->get_field('entrytype');
   my $names = $be->get_field($field);
   my $str = '';
-  my $namesort = [];
   my $count = $names->count_names;
   # get visibility for sorting
   my $visible = $dlist->get_visible_sort($names->get_id);
@@ -1519,8 +1518,9 @@ sub _namestring {
     # Get the sorting name key specification and use it to construct a sorting key for each name
     my $kpa = [];
     foreach my $kp ($snk->@*) {
-      my $kps;
-      foreach my $np ($kp->@*) {
+      my $kps = '';
+      for (my $i=0; $i<=$kp->$#*; $i++) {
+        my $np = $kp->[$i];
         if ($np->{type} eq 'namepart') {
           my $namepart = $np->{value};
           my $useopt = exists($np->{use}) ? "use$namepart" : undef;
@@ -1537,6 +1537,7 @@ sub _namestring {
             if (not $useopt or
                 ($useopt and $useoptval == $np->{use})) {
 
+              my $nps = '';
               # Do we only want initials for sorting?
               if ($np->{inits}) {
                 my $npistring = $n->get_namepart_initial($namepart);
@@ -1547,15 +1548,22 @@ sub _namestring {
                 # glyphs but it also of variable weight and ignorable in
                 # DUCET so we have to set U::C to variable=>'non-ignorable'
                 # as sorting default so that spaces are non-ignorable
-                $kps .= sprintf("%-*s",
-                                $section->get_np_length("${namepart}-i"),
-                                normalise_string_sort(join('', $npistring->@*), $field));
+                $nps = normalise_string_sort(join('', $npistring->@*), $field);
+
+                # Only pad the last namepart
+                if ($i == $kp->$#*) {
+                  $nps = sprintf("%-*s", $section->get_np_length("${namepart}-i"), $nps);
+                }
               }
               else {
-                $kps .= sprintf("%-*s",
-                                $section->get_np_length($namepart),
-                                normalise_string_sort($npstring, $field));
+                $nps = normalise_string_sort($npstring, $field);
+
+                # Only pad the last namepart
+                if ($i == $kp->$#*) {
+                  $nps = sprintf("%-*s", $section->get_np_length($namepart), $nps);
+                }
               }
+              $kps .= $nps;
             }
           }
         }
@@ -1567,8 +1575,6 @@ sub _namestring {
       $str .= $kps if $kps;
       push $kpa->@*, $kps;
     }
-
-    push $namesort->@*, $kpa;
   }
 
   my $nso = Biber::Config->getblxoption($secnum, 'nosortothers', $bee, $citekey);
@@ -1580,10 +1586,10 @@ sub _namestring {
 
   unless ($nso) {
     $str .= $trunc if $visible < $count; # name list was truncated
-    push $namesort->@*, $trunc if $visible < $count; # name list was truncated
   }
 
   return $str;
+
 }
 
 sub _liststring {

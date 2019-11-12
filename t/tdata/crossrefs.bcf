@@ -619,17 +619,15 @@
   <bcf:sortingnamekeytemplate name="global">
     <bcf:keypart order="1">
       <bcf:part type="namepart" order="1" use="1">prefix</bcf:part>
+      <bcf:part type="namepart" order="2">family</bcf:part>
     </bcf:keypart>
     <bcf:keypart order="2">
-      <bcf:part type="namepart" order="1">family</bcf:part>
-    </bcf:keypart>
-    <bcf:keypart order="3">
       <bcf:part type="namepart" order="1">given</bcf:part>
     </bcf:keypart>
-    <bcf:keypart order="4">
+    <bcf:keypart order="3">
       <bcf:part type="namepart" order="1">suffix</bcf:part>
     </bcf:keypart>
-    <bcf:keypart order="5">
+    <bcf:keypart order="4">
       <bcf:part type="namepart" order="1" use="0">prefix</bcf:part>
     </bcf:keypart>
   </bcf:sortingnamekeytemplate>

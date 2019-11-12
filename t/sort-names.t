@@ -31,12 +31,9 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 # Options - we could set these in the control file but it's nice to see what we're
 # relying on here for tests
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
-Biber::Config->setblxoption(undef,'labeldateparts', undef);
-Biber::Config->setblxoption(undef,'labelalpha', 0);
 
 # (re)generate information based on option settings
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
 my $main = $biber->datalists->get_list('none/global//global/global');
-
-is_deeply($main->get_keys, ['N1', 'N2', 'N3'], 'names order');
+is_deeply($main->get_keys, ['N4', 'N1', 'N2', 'N3'], 'names order');
