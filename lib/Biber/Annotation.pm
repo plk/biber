@@ -9,6 +9,7 @@ use Data::Dump;
 use Biber::Utils;
 use Log::Log4perl qw( :no_extra_logdie_message );
 use List::Util qw( first );
+use Storable qw(dclone);
 no autovivification;
 my $logger = Log::Log4perl::get_logger('main');
 
@@ -49,6 +50,22 @@ sub set_annotation {
   unless (first {fc($_) eq fc($name)} $ANN->{names}{$key}{$field}->@*) {
     push $ANN->{names}{$key}{$field}->@*, $name;
   }
+  return;
+}
+
+=head2 copy_annotations
+
+  Copy all annotations from one entry to another
+
+=cut
+
+sub copy_annotations {
+  shift; # class method so don't care about class name
+  my ($sourcekey, $targetkey) = @_;
+  $ANN->{field}{$targetkey} = dclone($ANN->{field}{$sourcekey}) if exists($ANN->{field}{$sourcekey});
+  $ANN->{item}{$targetkey} = dclone($ANN->{item}{$sourcekey}) if exists($ANN->{item}{$sourcekey});
+  $ANN->{part}{$targetkey} = dclone($ANN->{part}{$sourcekey}) if exists($ANN->{part}{$sourcekey});
+  $ANN->{names}{$targetkey} = dclone($ANN->{names}{$sourcekey}) if exists($ANN->{names}{$sourcekey});
   return;
 }
 
