@@ -9,6 +9,7 @@ use Data::Dump;
 use Biber::Utils;
 use Log::Log4perl qw( :no_extra_logdie_message );
 use List::Util qw( first );
+use Storable qw(dclone);
 no autovivification;
 my $logger = Log::Log4perl::get_logger('main');
 
@@ -64,6 +65,26 @@ sub set_annotation {
 
   # Record all forms/langs for an annotation
   $ANN->{ms}{$key}{$field}{$name}{$form}{$lang} = 1;
+
+  return;
+}
+
+=head2 copy_annotations
+
+  Copy all annotations from one entry to another
+
+=cut
+
+sub copy_annotations {
+  shift; # class method so don't care about class name
+  my ($sourcekey, $targetkey) = @_;
+  $ANN->{field}{$targetkey} = dclone($ANN->{field}{$sourcekey}) if exists($ANN->{field}{$sourcekey});
+  $ANN->{fields}{$targetkey} = dclone($ANN->{fields}{$sourcekey}) if exists($ANN->{fields}{$sourcekey});
+  $ANN->{item}{$targetkey} = dclone($ANN->{item}{$sourcekey}) if exists($ANN->{item}{$sourcekey});
+  $ANN->{part}{$targetkey} = dclone($ANN->{part}{$sourcekey}) if exists($ANN->{part}{$sourcekey});
+  $ANN->{names}{$targetkey} = dclone($ANN->{names}{$sourcekey}) if exists($ANN->{names}{$sourcekey});
+  $ANN->{fieldswithname}{$targetkey} = dclone($ANN->{fieldswithname}{$sourcekey}) if exists($ANN->{fieldswithname}{$sourcekey});
+  $ANN->{ms}{$targetkey} = dclone($ANN->{ms}{$sourcekey}) if exists($ANN->{ms}{$sourcekey});
 
   return;
 }

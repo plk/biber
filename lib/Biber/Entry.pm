@@ -189,6 +189,9 @@ sub clone {
     }
   }
 
+  # Clone annotations
+  Biber::Annotation->copy_annotations($self->get_field('citekey'), $newkey);
+
   # Need to add entrytype and datatype
   $new->{derivedfields}{entrytype} = $self->{derivedfields}{entrytype};
   $new->{derivedfields}{datatype} = $self->{derivedfields}{datatype};
