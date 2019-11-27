@@ -158,8 +158,8 @@
 *** DONE granular xdata doesn't work for dates
 *** DONE granular xdata at field level and below must be between same field and datatypes
 * TODO Multiscript
-** TODO Documentation
-*** TODO Document \DeclareDatamodelMultiscriptEntryfields and \ResetDatamodelMultiscriptEntryfields
+** Documentation
+*** TODO \DeclareDatamodelMultiscriptEntryfields and \ResetDatamodelMultiscriptEntryfields
 *** TODO multiscriptforms constant
 *** TODO 'langtags' special annotation name
 *** TODO msform/mslang biblatex options and scopes (global/entry only)
