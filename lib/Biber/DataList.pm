@@ -214,7 +214,7 @@ sub add_uniquelistcount_minyear {
 
 sub get_uniquelistcount_minyear {
   my ($self, $minyearnamelist, $year) = @_;
-  return scalar keys $self->{state}{uniquelistcount}{minyear}{join("\x{10FFFD}", $minyearnamelist->@*)}{$year}->%*;
+  return scalar keys $self->{state}{uniquelistcount}{minyear}{join("\x{10FFFD}", $minyearnamelist->@*)}{$year // '0'}->%*;
 }
 
 =head2 get_uniquelistcount_final

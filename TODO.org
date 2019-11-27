@@ -160,7 +160,7 @@
 *** DONE granular xdata at field level and below must be between same field and datatypes
 * TODO Multiscript
 ** Documentation
-*** TODO Document \DeclareDatamodelMultiscriptEntryfields and \ResetDatamodelMultiscriptEntryfields
+*** TODO \DeclareDatamodelMultiscriptEntryfields and \ResetDatamodelMultiscriptEntryfields
 *** TODO multiscriptforms constant
 ** Datamodel
 *** DONE Add valid multiscript fields to datamodel
@@ -170,4 +170,4 @@
 https://tools.ietf.org/html/bcp47
 
 *** TODO Parsing field alternates function
-*** TODO annotation BCP47 tag parts override field tag parts
+*** TODO annotation BCP47 tag parts override field tag part
