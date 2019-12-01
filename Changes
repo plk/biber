@@ -1,6 +1,14 @@
 Revision history for Biber
 
-2.14   (2019)
+2.14   (2019-12)
+       * XDATA now supports granular references so that specific
+         fields/items in a list field may be used and inserted into
+         fields/list positions. This allow, for example, re-use of names
+         from a general XDATA entry containing data about authors. See the
+         biblatex documentation.
+       * Remote Zotero data source requests now send correct header
+       * Annotations are now correctly output for related entries
+       * Better sorting of some name edge cases
        * New map_entrykey_* mapping verbs
        * New options --noremove-tmp-dir and --show-tmp-dir to disable of
          removal on exit and showing location of temporary directory used for
