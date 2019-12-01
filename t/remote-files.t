@@ -9,7 +9,7 @@ use Test::Differences;
 unified_diff;
 
 if ($ENV{BIBER_DEV_TESTS}) {
-  plan tests => 2;
+  plan tests => 1;
 }
 else {
   plan skip_all => 'BIBER_DEV_TESTS not set';
@@ -88,40 +88,4 @@ my $dl1 = q|    \entry{AbdelbarH98}{article}{}
     \endentry
 |;
 
-my $ssl = q|    \entry{crossley_politics_1994}{book}{}
-      \name{author}{1}{}{%
-        {{un=0,uniquepart=base,hash=92a23f84d2ee0a6817cf6e31edda9ac2}{%
-           family={Crossley},
-           familyi={C\bibinitperiod},
-           given={Nick},
-           giveni={N\bibinitperiod},
-           givenun=0}}%
-      }
-      \list{language}{1}{%
-        {en}%
-      }
-      \list{publisher}{1}{%
-        {Avebury}%
-      }
-      \strng{namehash}{92a23f84d2ee0a6817cf6e31edda9ac2}
-      \strng{fullhash}{92a23f84d2ee0a6817cf6e31edda9ac2}
-      \strng{bibnamehash}{92a23f84d2ee0a6817cf6e31edda9ac2}
-      \strng{authorbibnamehash}{92a23f84d2ee0a6817cf6e31edda9ac2}
-      \strng{authornamehash}{92a23f84d2ee0a6817cf6e31edda9ac2}
-      \strng{authorfullhash}{92a23f84d2ee0a6817cf6e31edda9ac2}
-      \field{sortinit}{C}
-      \field{sortinithash}{4c244ceae61406cdc0cc2ce1cb1ff703}
-      \field{extradatescope}{labelyear}
-      \field{labeldatesource}{year}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{shorttitle}
-      \field{isbn}{9781856288866}
-      \field{shorttitle}{The politics of subjectivity}
-      \field{title}{The politics of subjectivity : {Between} {Foucault} and {Merleau}-{Ponty}}
-      \field{year}{1994}
-      \keyw{Philosophy / General,Philosophy / History \& Surveys / Modern,Subjectivity}
-    \endentry
-|;
-
 eq_or_diff( $out->get_output_entry('AbdelbarH98', $main), $dl1, 'Fetch from plain bib download') ;
-eq_or_diff( $out->get_output_entry('crossley_politics_1994', $main), $ssl, 'HTTPS test') ;
