@@ -52,7 +52,7 @@ our @EXPORT = qw{ glob_data_file locate_data_file makenamesid makenameid
   latex_recode_output filter_entry_options biber_error biber_warn ireplace
   imatch validate_biber_xml process_entry_options escape_label
   unescape_label biber_decode_utf8 out parse_date_start parse_date_end
-  parse_date_range locale2bcp47 bcp472locale rangelen match_indices
+  parse_date_range locale2bcp47 rangelen match_indices
   process_comment map_boolean parse_range parse_range_alt maploopreplace
   get_transliterator call_transliterator normalise_string_bblxml
   gen_initials join_name_parts split_xsv date_monthday tzformat
@@ -1399,19 +1399,6 @@ sub locale2bcp47 {
   my $localestr = shift;
   return $localestr unless $localestr;
   return $LOCALE_MAP{$localestr} || $localestr;
-}
-
-=head2 bcp472locale
-
-  Map CLDR (bcp47) locale to a babel/polyglossia locale
-  Return input string if there is no mapping
-
-=cut
-
-sub bcp472locale {
-  my $localestr = shift;
-  return $localestr unless $localestr;
-  return $LOCALE_MAP_R{$localestr} || $localestr;
 }
 
 =head2 rangelen

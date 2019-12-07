@@ -158,18 +158,26 @@
 *** DONE granular xdata doesn't work for dates
 *** DONE granular xdata at field level and below must be between same field and datatypes
 * TODO Multiscript
-** Documentation
+** TODO Documentation
 *** TODO \DeclareDatamodelMultiscriptEntryfields and \ResetDatamodelMultiscriptEntryfields
 *** TODO multiscriptforms constant
 *** TODO 'langtags' special annotation name
-*** TODO msform/mslang biblatex options and scopes (global/entry only)
+*** TODO msform/mslang biblatex options and LANGID override below ENTRY scope. The options control which alternates are selected in various templates by biber.
+*** TODO msform/mslang \printbibliography/\printbiblist options to select the defaults for \printfield etc. Don't need to be refcontext options as mslang/msform are already addressed as they indirectly change the current refcontext templates which in turn changes data.
 *** TODO biber mslang option and that this is checked after biblatex global/entry (for tool mode use)
 ** TODO biblatex
 *** DONE Datamodel
-*** DONE Add valid multiscript fields to datamodel
-*** DONE Add new datamodel constant list of default forms (original, transliteration, transcription, translation)
+**** DONE Add valid multiscript fields to datamodel
+**** DONE Add new datamodel constant list of default forms (original, transliteration, transcription, translation)
 *** TODO msform and mslang as biblatex options with scope down to ENTRY
-** TODO Biber
+*** TODO output sortlocale/mslang in .bcf as BCP-47 if possible (polyglossia 1.47+)
+*** TODO inheritance templates
+*** TODO sorting templates
+*** TODO labelalphanametemplate
+*** TODO sortingnamekeytemplate
+
+*** TODO uniquenametemplate
+** TODO biber
 *** DONE Decomm DOT output
 *** DONE Parsing BCP47 function https://tools.ietf.org/html/bcp47
 *** DONE Names and lists
@@ -184,9 +192,13 @@
 *** DONE biblatexml input
 *** DONE bibtex output
 *** DONE biblatexml output
-*** TODO Add msform/mslang options to biblatex as globals/per-refcontext, inherit mslang from doc lang
 *** TODO bbl output
-*** TODO Duplicate regions (de-DE, fr-FR) in LOCALE_MAP? - wait for package as per github.com/reutenauer/polyglossia/issues/226
+*** TODO LOCALE_MAP
+**** TODO Duplicate regions (de-DE, fr-FR) in LOCALE_MAP?
+**** TODO Wait for polyglossia 1.47 release. However, can we switch completely to BCP47 for .bcf and .bbl if babel does not support BCP47?
 *** TODO bblxml output
 *** TODO inheritance templates
 *** TODO sorting templates
+*** TODO labelalphanametemplate
+*** TODO sortingnamekeytemplate
+*** TODO uniquenametemplate
