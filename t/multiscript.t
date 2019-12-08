@@ -3,8 +3,10 @@ use strict;
 use warnings;
 use utf8;
 no warnings 'utf8';
+use Text::Diff::Config;
+$Text::Diff::Config::Output_Unicode = 1;
 
-use Test::More tests => 19;
+use Test::More tests => 20;
 use Test::Differences;
 unified_diff;
 
@@ -66,3 +68,89 @@ eq_or_diff($bibentries->entry('bltx1')->get_field('author')->nth_mslang(1), 'ru-
 eq_or_diff($bibentries->entry('bltx1')->get_field('author')->nth_mslang(2), 'en-us', 'multiscript - 17');
 eq_or_diff($bibentries->entry('bltx1')->get_field('author', 'transliteration', 'ru-Grek')->nth_mslang(1), 'ru-grek', 'multiscript - 18');
 eq_or_diff($bibentries->entry('bltx1')->get_field('author', 'transliteration', 'ru-grek')->nth_mslang(2), 'en-us', 'multiscript - 19');
+
+my $ms1 = q|    \entry{ms1}{article}{}
+      \name[msform=transliteration,mslang=ru-latn]{author}{3}{}{%
+        {{mslang=en-us,hash=c221fa2d0fd5443df81b6bc63acf958a}{%
+           family={Smith},
+           familyi={S\bibinitperiod},
+           given={Bill},
+           giveni={B\bibinitperiod}}}%
+        {{mslang=ru-latn,hash=0c7edadf6ef1ef60f583b09b35993f86}{%
+           family={Pushkin},
+           familyi={P\bibinitperiod},
+           given={Aleksandr},
+           giveni={A\bibinitperiod}}}%
+        {{mslang=zh-latn,hash=743dd6cdaa6639320289d219d351d7b7}{%
+           family={Xu},
+           familyi={X\bibinitperiod},
+           given={Bing},
+           giveni={B\bibinitperiod}}}%
+      }
+      \name[msform=transliteration,mslang=ru-grek]{author}{3}{}{%
+        {{mslang=en-us,hash=c221fa2d0fd5443df81b6bc63acf958a}{%
+           family={Smith},
+           familyi={S\bibinitperiod},
+           given={Bill},
+           giveni={B\bibinitperiod}}}%
+        {{mslang=ru-grek,hash=23836992c4d5c0bdf6f16c3d9feacbce}{%
+           family={Πούσκιν},
+           familyi={Π\bibinitperiod},
+           given={Ἀλεξάντρ},
+           giveni={Ἀ\bibinitperiod}}}%
+        {{mslang=zh-grek,hash=c8d42acf200a5d5dc4c71a634f807d66}{%
+           family={Ξού},
+           familyi={Ξ\bibinitperiod},
+           given={Μπίνγκ},
+           giveni={Μ\bibinitperiod}}}%
+      }
+      \name[msform=default,mslang=en-us]{author}{3}{}{%
+        {{mslang=en-us,hash=c221fa2d0fd5443df81b6bc63acf958a}{%
+           family={Smith},
+           familyi={S\bibinitperiod},
+           given={Bill},
+           giveni={B\bibinitperiod}}}%
+        {{mslang=ru-cyrl,hash=4f73a0f18329ab1288633835f7b04724}{%
+           family={Пушкин},
+           familyi={П\bibinitperiod},
+           given={Александр},
+           giveni={А\bibinitperiod}}}%
+        {{mslang=zh-hant,hash=2f26b14cfb672c6b954bbf761450c065}{%
+           family={徐冰},
+           familyi={徐\bibinitperiod}}}%
+      }
+      \list[msform=default,mslang=en-us]{location}{2}{%
+        {locationa}%
+        {Standortb}%
+      }
+      \list[msform=translation,mslang=fr]{location}{2}{%
+        {emplacementa}%
+        {Standortb}%
+      }
+      \strng{namehash}{c8e70e2e1328616e34339e681de514c7}
+      \strng{fullhash}{c8e70e2e1328616e34339e681de514c7}
+      \strng{bibnamehash}{c8e70e2e1328616e34339e681de514c7}
+      \strng{authorbibnamehash}{c8e70e2e1328616e34339e681de514c7}
+      \strng{authornamehash}{c8e70e2e1328616e34339e681de514c7}
+      \strng{authorfullhash}{c8e70e2e1328616e34339e681de514c7}
+      \field{sortinit}{S}
+      \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field[msform=translation,mslang=fr]{title}{Titre}
+      \field[msform=default,mslang=en-us]{title}{Title}
+      \field{year}{1995}
+      \field{dateera}{ce}
+      \annotation{item}{author}{default}{en-us}{langtags}{2}{}{0}{ru-Cyrl}
+      \annotation{item}{author}{default}{en-us}{langtags}{3}{}{0}{zh-Hant}
+      \annotation{item}{author}{transliteration}{ru-grek}{langtags}{1}{}{0}{en-US}
+      \annotation{item}{author}{transliteration}{ru-grek}{langtags}{3}{}{0}{zh-Grek}
+      \annotation{item}{author}{transliteration}{ru-latn}{langtags}{1}{}{0}{en-US}
+      \annotation{item}{author}{transliteration}{ru-latn}{langtags}{3}{}{0}{zh-Latn}
+      \annotation{item}{location}{default}{en-us}{langtags}{2}{}{0}{de}
+      \annotation{item}{location}{translation}{fr}{langtags}{2}{}{0}{de}
+    \endentry
+|;
+
+# BBL output tests
+eq_or_diff($out->get_output_entry('ms1', $main), $ms1, 'BBL 1');

@@ -499,7 +499,7 @@ sub set_datafield {
 
 =head2 get_alternates_for_field
 
-    Get an array of valid {form, lang, value} triplets for a field
+    Get an array ref of valid {form=>$form, lang=>$lang, val=>$value} triplets for a field
 
 =cut
 

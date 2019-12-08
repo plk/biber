@@ -1922,15 +1922,17 @@ sub instantiate_entry {
 
     # per-namehash
     foreach my $pn ($dmh->{namelistsall}->@*) {
-      next unless my $nl = $be->get_field($pn);
-      foreach my $n ($nl->names->@*) {
-        my $nid = $n->get_id;
-        if (my $e = $self->{state}{namelistdata}{$nl->get_id}{$nid}{hash}) {
-          my $str = "hash=$e";
-          $entry_string =~ s|<BDS>$nid-PERNAMEHASH</BDS>|$str|gxms;
-        }
-        else {
-          $entry_string =~ s|<BDS>$nid-PERNAMEHASH</BDS>,?||gxms;
+      foreach my $alts ($be->get_alternates_for_field($pn)->@*) {
+        my $nl = $alts->{val};
+        foreach my $n ($nl->names->@*) {
+          my $nid = $n->get_id;
+          if (my $e = $self->{state}{namelistdata}{$nl->get_id}{$nid}{hash}) {
+            my $str = "hash=$e";
+            $entry_string =~ s|<BDS>$nid-PERNAMEHASH</BDS>|$str|gxms;
+          }
+          else {
+            $entry_string =~ s|,?<BDS>$nid-PERNAMEHASH</BDS>,?||gxms;
+          }
         }
       }
     }

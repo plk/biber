@@ -171,7 +171,7 @@
 **** DONE Add new datamodel constant list of default forms (original, transliteration, transcription, translation)
 *** TODO msform and mslang biblatex global options
 *** TODO msform and mslang biblatex refcontext options (but not passed to biber), inherit from global
-*** TODO auto-create some name macros for list-item specific mslang?
+*** TODO around 4560 in biblatex.sty - add mslang name option and set some macro, expose to user
 *** TODO output sortlocale/mslang in .bcf as BCP-47 if possible (polyglossia 1.47+)
 *** TODO inheritance templates
 *** TODO sorting templates

@@ -1,11 +1,10 @@
-<# -*- cperl -*-
+# -*- cperl -*-
 use strict;
 use warnings;
 use utf8;
 no warnings 'utf8';
 use Text::Diff::Config;
 $Text::Diff::Config::Output_Unicode = 1;
-
 
 use Test::More tests => 5;
 use Test::Differences;

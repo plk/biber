@@ -2712,9 +2712,11 @@ sub process_pername_hashes {
   my $dmh = Biber::Config->get_dm_helpers;
 
   foreach my $pn ($dmh->{namelistsall}->@*) {
-    next unless my $nl = $be->get_field($pn);
-    foreach my $n ($nl->names->@*) {
-      $dlist->set_namehash($nl->get_id, $n->get_id, $self->_genpnhash($citekey, $n));
+    foreach my $alts ($be->get_alternates_for_field($pn)->@*) {
+      my $nl = $alts->{val};
+      foreach my $n ($nl->names->@*) {
+        $dlist->set_namehash($nl->get_id, $n->get_id, $self->_genpnhash($citekey, $n));
+      }
     }
   }
   return;
