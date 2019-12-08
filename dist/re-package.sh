@@ -56,7 +56,7 @@ if [ ! -e $ROOT/binaries/Windows/biber-MSWIN32.zip ]; then
 fi
 
 # OSX_Intel (including legacy (10.5<version<10.13))
-${ROOT}/binaries/OSX_Intel
+cd ${ROOT}/binaries/OSX_Intel
 if [ ! -e $ROOT/binaries/OSX_Intel/biber-darwinlegacy_x86_64.tar.gz ]; then
   /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/OSX_Intel/biber-darwinlegacy_x86_64.tar.gz
   [ $? -eq 0 ] || exit 1
