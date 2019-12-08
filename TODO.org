@@ -161,21 +161,22 @@
 ** TODO Documentation
 *** TODO \DeclareDatamodelMultiscriptEntryfields and \ResetDatamodelMultiscriptEntryfields
 *** TODO multiscriptforms constant
-*** TODO 'langtags' special annotation name
-*** TODO msform/mslang biblatex options and LANGID override below ENTRY scope. The options control which alternates are selected in various templates by biber.
-*** TODO msform/mslang \printbibliography/\printbiblist options to select the defaults for \printfield etc. Don't need to be refcontext options as mslang/msform are already addressed as they indirectly change the current refcontext templates which in turn changes data.
-*** TODO biber mslang option and that this is checked after biblatex global/entry (for tool mode use)
+*** TODO 'langtags' special annotation name means \namepart<part>mslang,\namepart<part>msform in name .bbl. This is a convenience as the same info will be in the annotations
+*** TODO msform/mslang biblatex global options. The options control which alternates are selected in various templates by biber and which alternates are selected by \cites/\print* in refcontexts.
+*** TODO msform/mslang refcontext options to select the defaults for \printfield and cites etc. Don't need to be passed to biber via .bcf as the biber needs for mslang/msform are already addressed as they indirectly change the current refcontext templates which in turn changes data. These options are there to influence the biblatex side of things. Default to globals.
+*** TODO biber mslang option and that this is checked after biblatex global/entry(LANGID) (for tool mode use)
 ** TODO biblatex
 *** DONE Datamodel
 **** DONE Add valid multiscript fields to datamodel
 **** DONE Add new datamodel constant list of default forms (original, transliteration, transcription, translation)
-*** TODO msform and mslang as biblatex options with scope down to ENTRY
+*** TODO msform and mslang biblatex global options
+*** TODO msform and mslang biblatex refcontext options (but not passed to biber), inherit from global
+*** TODO auto-create <namepart>msform, <namepart>mslang (top biblatex.def)
 *** TODO output sortlocale/mslang in .bcf as BCP-47 if possible (polyglossia 1.47+)
 *** TODO inheritance templates
 *** TODO sorting templates
 *** TODO labelalphanametemplate
 *** TODO sortingnamekeytemplate
-
 *** TODO uniquenametemplate
 ** TODO biber
 *** DONE Decomm DOT output
@@ -192,6 +193,7 @@
 *** DONE biblatexml input
 *** DONE bibtex output
 *** DONE biblatexml output
+*** TODO langtags annotations for names go into mslang, msform options in the name and .bbl (as well as annotions) (->nth_mslang)
 *** TODO bbl output
 *** TODO LOCALE_MAP
 **** TODO Duplicate regions (de-DE, fr-FR) in LOCALE_MAP?

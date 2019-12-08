@@ -567,7 +567,7 @@ Set threshold for crossrefs.
 =item B<--mslang=[langtag]>
 
 Use F<langtag> as the default BCP47 language tag for multiscript fields
-with no langtag is specified. Default is 'en-US'.
+when no language is specified for the field. Default is 'en-US'.
 
 =item B<--mssep=[sep]>
 
