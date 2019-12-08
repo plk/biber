@@ -1851,29 +1851,31 @@ sub instantiate_entry {
 
     # uniquename
     foreach my $namefield ($dmh->{namelists}->@*) {
-      next unless my $nl = $be->get_field($namefield);
-      my $nlid = $nl->get_id;
-      foreach my $n ($nl->names->@*) {
-        my $nid = $n->get_id;
-        if (defined($self->get_unsummary($nlid, $nid))) {
-          my $str = 'un=' . $self->get_unsummary($nlid, $nid);
-          $entry_string =~ s|<BDS>UNS-$nid</BDS>|$str|gxms;
-          $str = 'uniquepart=' . $self->get_unpart($nlid, $nid);
-          $entry_string =~ s|<BDS>UNP-$nid</BDS>|$str|gxms;
-          foreach my $np ($n->get_nameparts) {
-            if ($self->is_unbasepart($nlid, $nid, $np)) {
-              $entry_string =~ s|\s+<BDS>UNP-$np-$nid</BDS>,?||gxms;
-            }
-            else {
-              $str = "${np}un=" . $self->get_unparts($nlid, $nid, $np);
-              $entry_string =~ s|<BDS>UNP-$np-$nid</BDS>|$str|gxms;
+      foreach my $alts ($be->get_alternates_for_field($namefield)->@*) {
+        my $nl = $alts->{val};
+        my $nlid = $nl->get_id;
+        foreach my $n ($nl->names->@*) {
+          my $nid = $n->get_id;
+          if (defined($self->get_unsummary($nlid, $nid))) {
+            my $str = 'un=' . $self->get_unsummary($nlid, $nid);
+            $entry_string =~ s|<BDS>UNS-$nid</BDS>|$str|gxms;
+            $str = 'uniquepart=' . $self->get_unpart($nlid, $nid);
+            $entry_string =~ s|<BDS>UNP-$nid</BDS>|$str|gxms;
+            foreach my $np ($n->get_nameparts) {
+              if ($self->is_unbasepart($nlid, $nid, $np)) {
+                $entry_string =~ s|\s+<BDS>UNP-$np-$nid</BDS>,?||gxms;
+              }
+              else {
+                $str = "${np}un=" . $self->get_unparts($nlid, $nid, $np);
+                $entry_string =~ s|<BDS>UNP-$np-$nid</BDS>|$str|gxms;
+              }
             }
           }
-        }
-        else {
-          $entry_string =~ s|<BDS>UN[SP]-$nid</BDS>,?||gxms;
-          foreach my $np ($n->get_nameparts) {
-            $entry_string =~ s|\s+<BDS>UNP-$np-$nid</BDS>,?||gxms;
+          else {
+            $entry_string =~ s|<BDS>UN[SP]-$nid</BDS>,?||gxms;
+            foreach my $np ($n->get_nameparts) {
+              $entry_string =~ s|\s+<BDS>UNP-$np-$nid</BDS>,?||gxms;
+            }
           }
         }
       }
@@ -2035,42 +2037,46 @@ sub instantiate_entry {
 
     # uniquelist
     foreach my $namefield ($dmh->{namelists}->@*) {
-      next unless my $nl = $be->get_field($namefield);
-      my $nlid = $nl->get_id;
-      if (defined($self->get_uniquelist($nlid))) {
-        my $str = $self->get_uniquelist($nlid);
-        $entry_string =~ s|\[BDS\]UL-$nlid\[/BDS\]|$str|gxms;
-      }
-      else {
-        $entry_string =~ s|\sul="\[BDS\]UL-$nlid\[/BDS\]"||gxms;
+      foreach my $alts ($be->get_alternates_for_field($namefield)->@*) {
+        my $nl = $alts->{val};
+        my $nlid = $nl->get_id;
+        if (defined($self->get_uniquelist($nlid))) {
+          my $str = $self->get_uniquelist($nlid);
+          $entry_string =~ s|\[BDS\]UL-$nlid\[/BDS\]|$str|gxms;
+        }
+        else {
+          $entry_string =~ s|\sul="\[BDS\]UL-$nlid\[/BDS\]"||gxms;
+        }
       }
     }
 
     # uniquename
     foreach my $namefield ($dmh->{namelists}->@*) {
-      next unless my $nl = $be->get_field($namefield);
-      my $nlid = $nl->get_id;
-      foreach my $n ($nl->names->@*) {
-        my $nid = $n->get_id;
-        if (defined($self->get_unsummary($nlid, $nid))) {
-          my $str = $self->get_unsummary($nlid, $nid);
-          $entry_string =~ s|\[BDS\]UNS-$nid\[/BDS\]|$str|gxms;
-          $str = $self->get_unpart($nlid, $nid);
-          $entry_string =~ s|\[BDS\]UNP-$nid\[/BDS\]|$str|gxms;
-          foreach my $np ($n->get_nameparts) {
-            if ($self->is_unbasepart($nlid, $nid, $np)) {
-              $entry_string =~ s|\sun="\[BDS\]UNP-$np-$nid\[/BDS\]",?||gxms;
-            }
-            else {
-              $str = $self->get_unparts($nlid, $nid, $np);
-              $entry_string =~ s|\[BDS\]UNP-$np-$nid\[/BDS\]|$str|gxms;
+      foreach my $alts ($be->get_alternates_for_field($namefield)->@*) {
+        my $nl = $alts->{val};
+        my $nlid = $nl->get_id;
+        foreach my $n ($nl->names->@*) {
+          my $nid = $n->get_id;
+          if (defined($self->get_unsummary($nlid, $nid))) {
+            my $str = $self->get_unsummary($nlid, $nid);
+            $entry_string =~ s|\[BDS\]UNS-$nid\[/BDS\]|$str|gxms;
+            $str = $self->get_unpart($nlid, $nid);
+            $entry_string =~ s|\[BDS\]UNP-$nid\[/BDS\]|$str|gxms;
+            foreach my $np ($n->get_nameparts) {
+              if ($self->is_unbasepart($nlid, $nid, $np)) {
+                $entry_string =~ s|\sun="\[BDS\]UNP-$np-$nid\[/BDS\]",?||gxms;
+              }
+              else {
+                $str = $self->get_unparts($nlid, $nid, $np);
+                $entry_string =~ s|\[BDS\]UNP-$np-$nid\[/BDS\]|$str|gxms;
+              }
             }
           }
-        }
-        else {
-          $entry_string =~ s#\s(?:un|uniquepart)="\[BDS\]UN[SP]-$nid\[/BDS\]",?##gxms;
-          foreach my $np ($n->get_nameparts) {
-            $entry_string =~ s|\sun="\[BDS\]UNP-$np-$nid\[/BDS\]",?||gxms;
+          else {
+            $entry_string =~ s#\s(?:un|uniquepart)="\[BDS\]UN[SP]-$nid\[/BDS\]",?##gxms;
+            foreach my $np ($n->get_nameparts) {
+              $entry_string =~ s|\sun="\[BDS\]UNP-$np-$nid\[/BDS\]",?||gxms;
+            }
           }
         }
       }
@@ -2118,15 +2124,17 @@ sub instantiate_entry {
 
     # per-namehash
     foreach my $pn ($dmh->{namelistsall}->@*) {
-      next unless my $nl = $be->get_field($pn);
-      foreach my $n ($nl->names->@*) {
-        my $nid = $n->get_id;
-        if (my $e = $self->{state}{namelistdata}{$nl->get_id}{$nid}{hash}) {
-          my $str = $e;
-          $entry_string =~ s|\[BDS\]$nid-PERNAMEHASH\[/BDS\]|$str|gxms;
-        }
-        else {
-          $entry_string =~ s|hash="\[BDS\]$nid-PERNAMEHASH\[/BDS\]"?,?||gxms;
+      foreach my $alts ($be->get_alternates_for_field($pn)->@*) {
+        my $nl = $alts->{val};
+        foreach my $n ($nl->names->@*) {
+          my $nid = $n->get_id;
+          if (my $e = $self->{state}{namelistdata}{$nl->get_id}{$nid}{hash}) {
+            my $str = $e;
+            $entry_string =~ s|\[BDS\]$nid-PERNAMEHASH\[/BDS\]|$str|gxms;
+          }
+          else {
+            $entry_string =~ s|hash="\[BDS\]$nid-PERNAMEHASH\[/BDS\]"?,?||gxms;
+          }
         }
       }
     }

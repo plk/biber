@@ -69,6 +69,7 @@ eq_or_diff($bibentries->entry('bltx1')->get_field('author')->nth_mslang(2), 'en-
 eq_or_diff($bibentries->entry('bltx1')->get_field('author', 'transliteration', 'ru-Grek')->nth_mslang(1), 'ru-grek', 'multiscript - 18');
 eq_or_diff($bibentries->entry('bltx1')->get_field('author', 'transliteration', 'ru-grek')->nth_mslang(2), 'en-us', 'multiscript - 19');
 
+# BBL output tests
 my $ms1 = q|    \entry{ms1}{article}{}
       \name[msform=transliteration,mslang=ru-latn]{author}{3}{}{%
         {{mslang=en-us,hash=c221fa2d0fd5443df81b6bc63acf958a}{%
@@ -152,5 +153,4 @@ my $ms1 = q|    \entry{ms1}{article}{}
     \endentry
 |;
 
-# BBL output tests
 eq_or_diff($out->get_output_entry('ms1', $main), $ms1, 'BBL 1');
