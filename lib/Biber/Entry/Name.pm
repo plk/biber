@@ -282,7 +282,7 @@ sub name_part_to_bltxml {
 =cut
 
 sub name_to_bbl {
-  my ($self, $un) = @_;
+  my ($self, $namelist, $un, $namepos) = @_;
   my $dm = Biber::Config->get_dm;
   my @pno; # per-name options
   my $pno; # per-name options final string
@@ -327,6 +327,13 @@ sub name_to_bbl {
     push @pno, "<BDS>UNP-${nid}</BDS>";
   }
 
+  # Add item mslang information from annotations. We retain the annotation too.
+  # This is a convenience so that mslang information for individual names is more easily
+  # available in name formats
+  if (my $langtag = $namelist->nth_mslang($namepos)) {
+    push @pno, "mslang=$langtag";
+  }
+
   # Add per-name options
   foreach my $no (keys $CONFIG_SCOPEOPT_BIBLATEX{NAME}->%*) {
     if (defined($self->${\"get_$no"})) {
@@ -356,7 +363,7 @@ sub name_to_bbl {
 =cut
 
 sub name_to_bblxml {
-  my ($self, $xml, $xml_prefix, $un) = @_;
+  my ($self, $xml, $xml_prefix, $namelist, $un, $namepos) = @_;
   my $dm = Biber::Config->get_dm;
   my %pno; # per-name options
   my %names;
@@ -385,6 +392,13 @@ sub name_to_bblxml {
   if ($un ne 'false') {
     $pno{un} = "[BDS]UNS-${nid}[/BDS]";
     $pno{uniquepart} = "[BDS]UNP-${nid}[/BDS]";
+  }
+
+  # Add item mslang information from annotations. We retain the annotation too.
+  # This is a convenience so that mslang information for individual names is more easily
+  # available in name formats
+  if (my $langtag = $namelist->nth_mslang($namepos)) {
+    $pno{mslang} = $langtag;
   }
 
   # Add per-name options

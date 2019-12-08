@@ -1622,6 +1622,9 @@ sub generate_bblxml_schema {
   $writer->endTag();    # attribute
   $writer->endTag();    # optional
   $writer->startTag('optional');
+  $writer->emptyTag('attribute', 'name' => 'mslang');
+  $writer->endTag();    # optional
+  $writer->startTag('optional');
   $writer->emptyTag('attribute', 'name' => 'sortingnamekeytemplatename');
   $writer->endTag();    # optional
   $writer->emptyTag('attribute', 'name' => 'hash');

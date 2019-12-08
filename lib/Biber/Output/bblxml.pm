@@ -257,7 +257,8 @@ sub set_output_entry {
       $xml->startTag([$xml_prefix, 'names'], type => $namefield, count => $total, map {$_ => $plo{$_}} sort keys %plo);
 
       # Now the names
-      foreach my $n ($nf->names->@*) {
+      for (my $i = 1; $i <= $total; $i++) {
+        my $n = $nf->names->[$i-1];
 
         # Per-name uniquename if this is labelname
         if ($lni eq $namefield) {
@@ -266,7 +267,7 @@ sub set_output_entry {
           }
         }
 
-        $n->name_to_bblxml($xml, $xml_prefix, $un);
+        $n->name_to_bblxml($xml, $xml_prefix, $nf, $un, $i);
       }
       $xml->endTag();# names
     }

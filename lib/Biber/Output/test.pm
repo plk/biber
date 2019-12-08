@@ -190,8 +190,8 @@ sub set_output_entry {
         $nfv = join(',', @plo);
       }
       $acc .= "      \\name{$namefield}{$total}{$nfv}{%\n";
-      foreach my $n ($nf->names->@*) {
-        $acc .= $n->name_to_bbl($un);
+      for (my $i = 1; $i <= $total; $i++) {
+        $acc .= $nf->names->[$i-1]->name_to_bbl($nf, $un, $i);
       }
       $acc .= "      }\n";
     }

@@ -161,7 +161,7 @@
 ** TODO Documentation
 *** TODO \DeclareDatamodelMultiscriptEntryfields and \ResetDatamodelMultiscriptEntryfields
 *** TODO multiscriptforms constant
-*** TODO 'langtags' special annotation name means \namepart<part>mslang,\namepart<part>msform in name .bbl. This is a convenience as the same info will be in the annotations
+*** TODO 'langtags' special annotation name.
 *** TODO msform/mslang biblatex global options. The options control which alternates are selected in various templates by biber and which alternates are selected by \cites/\print* in refcontexts.
 *** TODO msform/mslang refcontext options to select the defaults for \printfield and cites etc. Don't need to be passed to biber via .bcf as the biber needs for mslang/msform are already addressed as they indirectly change the current refcontext templates which in turn changes data. These options are there to influence the biblatex side of things. Default to globals.
 *** TODO biber mslang option and that this is checked after biblatex global/entry(LANGID) (for tool mode use)
@@ -171,7 +171,7 @@
 **** DONE Add new datamodel constant list of default forms (original, transliteration, transcription, translation)
 *** TODO msform and mslang biblatex global options
 *** TODO msform and mslang biblatex refcontext options (but not passed to biber), inherit from global
-*** TODO auto-create <namepart>msform, <namepart>mslang (top biblatex.def)
+*** TODO auto-create some name macros for list-item specific mslang?
 *** TODO output sortlocale/mslang in .bcf as BCP-47 if possible (polyglossia 1.47+)
 *** TODO inheritance templates
 *** TODO sorting templates
