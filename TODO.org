@@ -178,6 +178,7 @@
 *** TODO labelalphanametemplate
 *** TODO sortingnamekeytemplate
 *** TODO uniquenametemplate
+*** TODO labelname/labeltitle etc.
 ** TODO biber
 *** DONE Decomm DOT output
 *** DONE Parsing BCP47 function https://tools.ietf.org/html/bcp47
@@ -205,3 +206,4 @@
 *** TODO labelalphanametemplate
 *** TODO sortingnamekeytemplate
 *** TODO uniquenametemplate
+*** TODO labelname/labeltitle etc.
