@@ -350,13 +350,14 @@ sub is_xdata_resolved {
 
   Record the labelname information. This is special
   meta-information so we have a separate method for this
-  Takes a hash ref with the information.
 
 =cut
 
 sub set_labelname_info {
-  my ($self, $data) = @_;
-  $self->{labelnameinfo} = $data;
+  my ($self, $field, $form, $lang) = @_;
+  $form = fc($form // 'default');
+  $lang = fc($lang // Biber::Config::get_mslang());
+  $self->{labelnameinfo} = [$field, $form, $lang];
   return;
 }
 
@@ -364,26 +365,26 @@ sub set_labelname_info {
 
   Retrieve the labelname information. This is special
   meta-information so we have a separate method for this
-  Returns a hash ref with the information.
 
 =cut
 
 sub get_labelname_info {
   my $self = shift;
-  return $self->{labelnameinfo};
+  return $self->{labelnameinfo} // [];
 }
 
 =head2 set_labelnamefh_info
 
   Record the fullhash labelname information. This is special
   meta-information so we have a separate method for this
-  Takes a hash ref with the information.
 
 =cut
 
 sub set_labelnamefh_info {
-  my ($self, $data) = @_;
-  $self->{labelnamefhinfo} = $data;
+  my ($self, $field, $form, $lang) = @_;
+  $form = fc($form // 'default');
+  $lang = fc($lang // Biber::Config::get_mslang());
+  $self->{labelnamefhinfo} = [$field, $form, $lang];
   return;
 }
 
@@ -391,26 +392,26 @@ sub set_labelnamefh_info {
 
   Retrieve the fullhash labelname information. This is special
   meta-information so we have a separate method for this
-  Returns a hash ref with the information.
 
 =cut
 
 sub get_labelnamefh_info {
   my $self = shift;
-  return $self->{labelnamefhinfo};
+  return $self->{labelnamefhinfo} // [];
 }
 
 =head2 set_labeltitle_info
 
   Record the labeltitle information. This is special
   meta-information so we have a separate method for this
-  Takes a hash ref with the information.
 
 =cut
 
 sub set_labeltitle_info {
-  my ($self, $data) = @_;
-  $self->{labeltitleinfo} = $data;
+  my ($self, $field, $form, $lang) = @_;
+  $form = fc($form // 'default');
+  $lang = fc($lang // Biber::Config::get_mslang());
+  $self->{labeltitleinfo} = [$field, $form, $lang];
   return;
 }
 
@@ -418,13 +419,12 @@ sub set_labeltitle_info {
 
   Retrieve the labeltitle information. This is special
   meta-information so we have a separate method for this
-  Returns a hash ref with the information.
 
 =cut
 
 sub get_labeltitle_info {
   my $self = shift;
-  return $self->{labeltitleinfo};
+  return $self->{labeltitleinfo} // [];
 }
 
 
@@ -432,13 +432,12 @@ sub get_labeltitle_info {
 
   Record the labeldate information. This is special
   meta-information so we have a separate method for this
-  Takes a hash ref with the information.
 
 =cut
 
 sub set_labeldate_info {
-  my ($self, $data) = @_;
-  $self->{labeldateinfo} = $data;
+  my ($self, $field) = @_;
+  $self->{labeldateinfo} = $field;
   return;
 }
 
@@ -446,7 +445,6 @@ sub set_labeldate_info {
 
   Retrieve the labeldate information. This is special
   meta-information so we have a separate method for this
-  Returns a hash ref with the information.
 
 =cut
 
@@ -499,7 +497,8 @@ sub set_datafield {
 
 =head2 get_alternates_for_field
 
-    Get an array ref of valid {form=>$form, lang=>$lang, val=>$value} triplets for a field
+    Get an sorted array ref of valid {form=>$form, lang=>$lang,
+    val=>$value} triplets for a field
 
 =cut
 

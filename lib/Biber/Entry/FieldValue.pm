@@ -48,15 +48,15 @@ sub get_value {
 
 =head2 get_alternates
 
-  Retrieve alternates for a particular field
+  Retrieve (sorted) alternates for a particular field
 
 =cut
 
 sub get_alternates {
   my $self = shift;
   my $alternates = [];
-  foreach my $form (keys $self->{alternates}->%*) {
-    foreach my $lang (keys $self->{alternates}{$form}->%*) {
+  foreach my $form (sort keys $self->{alternates}->%*) {
+    foreach my $lang (sort keys $self->{alternates}{$form}->%*) {
       push $alternates->@*, {form => $form, lang => $lang, val => $self->{alternates}{$form}{$lang}};
     }
   }

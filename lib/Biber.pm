@@ -2006,9 +2006,9 @@ sub process_uniqueprimaryauthor {
   my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
 
-  if (my $lni = $be->get_labelname_info) {
+  if (my ($lni, $lnf, $lnl) = $be->get_labelname_info->@*) {
     if (Biber::Config->getblxoption(undef, 'uniqueprimaryauthor', $bee, $citekey)) {
-      my $nl = $be->get_field($lni);
+      my $nl = $be->get_field($lni, $lnf, $lnl);
       if ($logger->is_trace()) {# performance tune
         $logger->trace("Creating uniqueprimaryauthor information for '$citekey'");
       }
@@ -2048,8 +2048,8 @@ sub process_workuniqueness {
   my $bee = $be->get_field('entrytype');
 
   my $identifier;
-  my $lni = $be->get_labelname_info;
-  my $lti = $be->get_labeltitle_info;
+  my ($lni, $lnf, $lnl) = $be->get_labelname_info->@*;
+  my ($lti, $ltf, $ltl) = $be->get_labeltitle_info->@*;
 
   # ignore settings from inheritance data?
   my $ignore = Biber::Config->get_uniq_ignore($citekey);
@@ -2058,7 +2058,7 @@ sub process_workuniqueness {
   # Don't generate information for entries with no labelname or labeltitle
   # Use fullhash as this is not a test of uniqueness of only visible information
   if ($lni and Biber::Config->getblxoption(undef, 'singletitle', $bee, $citekey)) {
-    $identifier = $self->_getfullhash($citekey, $be->get_field($lni));
+    $identifier = $self->_getfullhash($citekey, $be->get_field($lni, $lnf, $lnl));
 
     # Skip due to ignore settings?
     # Don't count towards singletitle being false if both labelname and labeltitle
@@ -2075,7 +2075,7 @@ sub process_workuniqueness {
   # uniquetitle
   # Don't generate information for entries with no labeltitle
   if ($lti and Biber::Config->getblxoption(undef, 'uniquetitle', $bee, $citekey)) {
-    $identifier = $be->get_field($lti);
+    $identifier = $be->get_field($lti, $ltf, $ltl);
 
     # Skip due to ignore settings?
     unless (first {fc($lti) eq fc($_)} $ignore->{uniquetitle}->@*) {
@@ -2087,7 +2087,7 @@ sub process_workuniqueness {
   # uniquebaretitle
   # Don't generate information for entries with no labeltitle and with labelname
   if ($lti and not $lni and Biber::Config->getblxoption(undef, 'uniquebaretitle', $bee, $citekey)) {
-    $identifier = $be->get_field($lti);
+    $identifier = $be->get_field($lti, $ltf, $ltl);
 
     # Skip due to ignore settings?
     unless (first {fc($lti) eq fc($_)} $ignore->{uniquebaretitle}->@*) {
@@ -2100,7 +2100,7 @@ sub process_workuniqueness {
   # Don't generate information for entries with no labelname and labeltitle
   # Should use fullhash this is not a test of uniqueness of only visible information
   if ($lni and $lti and Biber::Config->getblxoption(undef, 'uniquework', $bee, $citekey)) {
-    $identifier = $self->_getfullhash($citekey, $be->get_field($lni)) . $be->get_field($lti);
+    $identifier = $self->_getfullhash($citekey, $be->get_field($lni, $lnf, $lnl)) . $be->get_field($lti, $ltf, $ltl);
 
     # Skip due to ignore settings?
     unless (first {fc($lni) eq fc($_)} $ignore->{uniquework}->@* and
@@ -2143,8 +2143,8 @@ sub process_extradate {
     }
 
     my $namehash = '';
-    if (my $lni = $be->get_labelname_info) {
-      $namehash = $self->_getnamehash_u($citekey, $be->get_field($lni), $dlist);
+    if (my ($lni, $lnf, $lnl) = $be->get_labelname_info->@*) {
+      $namehash = $self->_getnamehash_u($citekey, $be->get_field($lni, $lnf, $lnl), $dlist);
     }
 
     my $datestring = ''; # Need a default empty string
@@ -2194,8 +2194,8 @@ sub process_extraname {
   }
 
   my $namehash;
-  if (my $lni = $be->get_labelname_info) {
-    $namehash = $self->_getnamehash_u($citekey, $be->get_field($lni), $dlist);
+  if (my ($lni, $lnf, $lnl) = $be->get_labelname_info->@*) {
+    $namehash = $self->_getnamehash_u($citekey, $be->get_field($lni, $lnf, $lnl), $dlist);
   }
 
   # Don't bother with extraname when there is no labelname
@@ -2238,12 +2238,12 @@ sub process_extratitle {
     }
 
     my $namehash = '';
-    if (my $lni = $be->get_labelname_info) {
-      $namehash = $self->_getnamehash_u($citekey, $be->get_field($lni), $dlist);
+    if (my ($lni, $lnf, $lnl) = $be->get_labelname_info->@*) {
+      $namehash = $self->_getnamehash_u($citekey, $be->get_field($lni, $lnf, $lnl), $dlist);
     }
 
-    my $lti = $be->get_labeltitle_info;
-    my $title_string = $be->get_field($lti) // '';
+    my ($lti, $ltf, $ltl) = $be->get_labeltitle_info->@*;
+    my $title_string = $be->get_field($lti, $ltf, $ltl) // '';
 
     my $nametitle_string = "$namehash,$title_string";
     if ($logger->is_trace()) {# performance tune
@@ -2290,8 +2290,8 @@ sub process_extratitleyear {
       $logger->trace("Creating extratitleyear information for '$citekey'");
     }
 
-    my $lti = $be->get_labeltitle_info;
-    my $title_string = $be->get_field($lti) // '';
+    my ($lti, $ltf, $ltl) = $be->get_labeltitle_info->@*;
+    my $title_string = $be->get_field($lti, $ltf, $ltl) // '';
 
     # Takes into account the labelyear which can be a range
     my $year_string = $be->get_field('labelyear') || $be->get_field('year') || '';
@@ -2399,6 +2399,8 @@ sub process_labelname {
   foreach my $h_ln ($lnamespec->@*) {
     my $lnameopt;
     my $ln = $h_ln->{content};
+    my $form = $h_ln->{form};
+    my $lang = $h_ln->{lang};
     if ( $ln =~ /\Ashort(\X+)\z/xms ) {
       $lnameopt = $1;
     }
@@ -2417,8 +2419,8 @@ sub process_labelname {
       next;
     }
 
-    if ($be->get_field($ln)) {
-      $be->set_labelname_info($ln);
+    if ($be->get_field($ln, $form, $lang)) {
+      $be->set_labelname_info($ln, $form, $lang);
       last;
     }
   }
@@ -2428,6 +2430,8 @@ sub process_labelname {
   # manual)
   foreach my $h_ln ($lnamespec->@*) {
     my $ln = $h_ln->{content};
+    my $form = $h_ln->{form};
+    my $lang = $h_ln->{lang};
     if ( $ln =~ /\Ashort(.+)\z/xms ) {
       next;
     }
@@ -2441,8 +2445,8 @@ sub process_labelname {
       next;
     }
 
-    if ($be->get_field($ln)) {
-      $be->set_labelnamefh_info($ln);
+    if ($be->get_field($ln, $form, $lang)) {
+      $be->set_labelnamefh_info($ln, $form, $lang);
       last;
     }
   }
@@ -2621,7 +2625,7 @@ sub process_labeltitle {
 
   foreach my $h_ltn ($ltitlespec->@*) {
     my $ltn = $h_ltn->{content};
-    if (my $lt = $be->get_field($ltn)) {
+    if (my $lt = $be->get_field($ltn, $h_ltn->{form}, $h_ltn->{lang})) {
       $be->set_labeltitle_info($ltn);
       $be->set_field('labeltitle', $lt);
       last;
@@ -2650,8 +2654,8 @@ sub process_fullhash {
   # max/mincitenames settings
   # This can't be resolved nicely by biblatex because it depends on use* options
   # and also SHORT* fields etc.
-  if (my $lnfhi = $be->get_labelnamefh_info) {
-    if (my $lnfh = $be->get_field($lnfhi)) {
+  if (my ($lni, $lnf, $lnl) = $be->get_labelnamefh_info->@*) {
+    if (my $lnfh = $be->get_field($lni, $lnf, $lnl)) {
       $be->set_field('fullhash', $self->_getfullhash($citekey, $lnfh));
     }
   }
@@ -2681,8 +2685,8 @@ sub process_namehash {
   # namehash is generated from the labelname
   # This can't be resolved nicely by biblatex because it depends on use* options
   # and also SHORT* fields etc.
-  if (my $lni = $be->get_labelname_info) {
-    if (my $ln = $be->get_field($lni)) {
+  if (my ($lni, $lnf, $lnl) = $be->get_labelname_info->@*) {
+    if (my $ln = $be->get_field($lni, $lnf, $lnl)) {
       $dlist->set_entryfield($citekey, 'namehash', $self->_getnamehash($citekey, $ln, $dlist));
       $dlist->set_entryfield($citekey, 'bibnamehash', $self->_getnamehash($citekey, $ln, $dlist, 1));
     }
@@ -2695,7 +2699,7 @@ sub process_namehash {
     $dlist->set_entryfield($citekey, "${n}bibnamehash", $self->_getnamehash($citekey, $nv, $dlist, 1));
   }
 
-  return;
+   return;
 }
 
 =head2 process_pername_hashes
@@ -3298,11 +3302,11 @@ sub create_uniquename_info {
   MAIN: foreach my $citekey ( $section->get_citekeys ) {
     my $be = $bibentries->entry($citekey);
     my $bee = $be->get_field('entrytype');
-    my $lni = $be->get_labelname_info;
+    my ($lni, $lnf, $lnl) = $be->get_labelname_info->@*;
 
     next unless defined($lni); # only care about labelname
 
-    my $nl = $be->get_field($lni);
+    my $nl = $be->get_field($lni, $lnf, $lnl);
     my $nlid = $nl->get_id;
 
     my $un = Biber::Config->getblxoption($secnum, 'uniquename', $bee, $citekey);
@@ -3433,7 +3437,7 @@ sub create_uniquename_info {
       my $eul = Biber::Config->getblxoption($secnum, 'uniquelist', $bee, $citekey);
 
       # Per-namelist uniquelist
-      my $nl = $be->get_field($lni);
+      my $nl = $be->get_field($lni, $lnf, $lnl);
       if (defined($lni) and $nl->get_uniquelist) {
         $eul = $nl->get_uniquelist;
       }
@@ -3466,10 +3470,10 @@ sub generate_uniquename {
 MAIN:  foreach my $citekey ( $section->get_citekeys ) {
     my $be = $bibentries->entry($citekey);
     my $bee = $be->get_field('entrytype');
-    my $lni = $be->get_labelname_info;
+    my ($lni, $lnf, $lnl) = $be->get_labelname_info->@*;
     next unless defined($lni); # only care about labelname
 
-    my $nl = $be->get_field($lni);
+    my $nl = $be->get_field($lni, $lnf, $lnl);
     my $nlid = $nl->get_id;
 
     my $un = Biber::Config->getblxoption($secnum, 'uniquename', $bee, $citekey);
@@ -3549,7 +3553,7 @@ MAIN:  foreach my $citekey ( $section->get_citekeys ) {
 
       my $eul = Biber::Config->getblxoption($secnum, 'uniquelist', $bee, $citekey);
       # Per-namelist uniquelist
-      my $names = $be->get_field($be->get_labelname_info);
+      my $names = $be->get_field($be->get_labelname_info->@*);
       if (defined($names->get_uniquelist)) {
         $eul = $names->get_uniquelist;
       }
@@ -3596,9 +3600,9 @@ sub create_uniquelist_info {
     my $bee = $be->get_field('entrytype');
     my $maxcn = Biber::Config->getblxoption($secnum, 'maxcitenames', $bee, $citekey);
     my $mincn = Biber::Config->getblxoption($secnum, 'mincitenames', $bee, $citekey);
-    my $lni = $be->get_labelname_info;
+    my ($lni, $lnf, $lnl) = $be->get_labelname_info->@*;
     next unless defined($lni); # only care about labelname
-    my $nl = $be->get_field($lni);
+    my $nl = $be->get_field($lni, $lnf, $lnl);
     my $nlid = $nl->get_id;
 
     my $ul = Biber::Config->getblxoption($secnum, 'uniquelist', $bee, $citekey);
@@ -3690,9 +3694,9 @@ sub generate_uniquelist {
     my $bee = $be->get_field('entrytype');
     my $maxcn = Biber::Config->getblxoption($secnum, 'maxcitenames', $bee, $citekey);
     my $mincn = Biber::Config->getblxoption($secnum, 'mincitenames', $bee, $citekey);
-    my $lni = $be->get_labelname_info;
+    my ($lni, $lnf, $lnl) = $be->get_labelname_info->@*;
     next unless defined($lni); # only care about labelname
-    my $nl = $be->get_field($lni);
+    my $nl = $be->get_field($lni, $lnf, $lnl);
     my $nlid = $nl->get_id;
 
     my $ul = Biber::Config->getblxoption($secnum, 'uniquelist', $bee, $citekey);
@@ -3778,7 +3782,7 @@ sub generate_contextdata {
   foreach my $key ($dlist->get_keys->@*) {
     my $be = $section->bibentry($key);
     my $bee = $be->get_field('entrytype');
-    my $lni = $be->get_labelname_info;
+    my ($lni, $lnf, $lnl) = $be->get_labelname_info->@*;
 
     # Sort any set members according to the list sorting order of the keys.
     # This gets the indices of the set elements in the sorted datalist, sorts

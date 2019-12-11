@@ -554,6 +554,7 @@ labeltitlespec =
     element bcf:key { "labeltitlespec" },
     element bcf:value {
       attribute order { xsd:integer },
+      attribute form { text }?,
       attribute lang { text }?,
       text
     }+
@@ -770,6 +771,7 @@ labelnamespec =
     element bcf:key { "labelnamespec" },
     element bcf:value {
       attribute order { xsd:integer },
+      attribute form { text }?,
       attribute lang { text }?,
       text
     }+

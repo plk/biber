@@ -124,8 +124,8 @@ sub set_output_entry {
   my $xml_prefix = 'https://sourceforge.net/projects/biblatex/bblxml';
   my $un = Biber::Config->getblxoption($secnum, 'uniquename', $bee, $key);
   my $ul = Biber::Config->getblxoption($secnum, 'uniquelist', $bee, $key);
-  my $nl = $be->get_field($be->get_labelname_info);
-  my $lni = $be->get_labelname_info;
+  my ($lni, $lnf, $lnl) = $be->get_labelname_info->@*;
+  my $nl = $be->get_field($lni, $lnf, $lnl);
 
   # Per-namelist uniquelist
   if (defined($lni) and $nl->get_uniquelist) {
@@ -314,7 +314,7 @@ sub set_output_entry {
   }
 
   # Output extraname if there is a labelname
-  if ($be->get_labelname_info) {
+  if ($lni) {
     $xml->dataElement('BDS', 'EXTRANAME');
   }
 
@@ -363,7 +363,7 @@ sub set_output_entry {
   }
 
   # The source field for labeltitle
-  if (my $lti = $be->get_labeltitle_info) {
+  if (my ($lti, $ltf, $ltl) = $be->get_labeltitle_info->@*) {
     $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($lti), name => 'labeltitlesource');
   }
 

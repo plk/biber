@@ -1388,6 +1388,9 @@
             <data type="integer"/>
           </attribute>
           <optional>
+            <attribute name="form"/>
+          </optional>
+          <optional>
             <attribute name="lang"/>
           </optional>
           <text/>
@@ -1861,6 +1864,9 @@
           <attribute name="order">
             <data type="integer"/>
           </attribute>
+          <optional>
+            <attribute name="form"/>
+          </optional>
           <optional>
             <attribute name="lang"/>
           </optional>

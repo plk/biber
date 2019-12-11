@@ -81,8 +81,8 @@ sub set_output_entry {
   my $key = $be->get_field('citekey');
   my $un = Biber::Config->getblxoption($secnum,'uniquename', $bee, $key);
   my $ul = Biber::Config->getblxoption($secnum,'uniquelist', $bee, $key);
-  my $lni = $be->get_labelname_info;
-  my $nl = $be->get_field($lni);
+  my ($lni, $lnf, $lnl) = $be->get_labelname_info->@*;
+  my $nl = $be->get_field($lni, $lnf, $lnl);
 
   # Per-namelist uniquelist
   if (defined($lni) and $nl->get_uniquelist) {
@@ -280,12 +280,12 @@ sub set_output_entry {
 
   # The source field for labelname
   if ($lni) {
-    $acc .= "      \\field{labelnamesource}{$lni}\n";
+    $acc .= "      \\field{labelnamesource}{$lni}{$lnf}{$lnl}\n";
   }
 
   # The source field for labeltitle
-  if (my $lti = $be->get_labeltitle_info) {
-    $acc .= "      \\field{labeltitlesource}{$lti}\n";
+  if (my ($lti, $ltf, $ltl) = $be->get_labeltitle_info->@*) {
+    $acc .= "      \\field{labeltitlesource}{$lti}{$ltf}{$ltl}\n";
   }
 
   foreach my $field (sort $dm->get_fields_of_type('field', 'entrykey')->@*,

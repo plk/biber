@@ -279,11 +279,12 @@ sub _labelpart {
     if (my $inc = $part->{ifnames}) {
       my $f = $part->{content};
       # resolve labelname
+      my ($lni, $lnf, $lnl) = $be->get_labelname_info->@*;
       if ($f eq 'labelname') {
-        $f = ($be->get_labelname_info || '');
+        $f = ($lni || '');
       }
       if ( first {$f eq $_} $dm->get_fields_of_type('list', 'name')->@*) {
-        my $names = $be->get_field($f) || next; # just in case there is no labelname etc.
+        my $names = $be->get_field($f, $lnf, $lnl) || next; # just in case there is no labelname etc.
         my $total_names = $names->count;
         my $visible_names;
         if ($total_names > $maxan) {
@@ -403,7 +404,7 @@ sub _label_name {
   $lantname = Biber::Config->getblxoption($secnum, 'labelalphanametemplatename', undef, $citekey) // $lantname;
 
   # Shortcut - if there is no labelname, don't do anything
-  return ['',''] unless defined($be->get_labelname_info);
+  return ['',''] unless $be->get_labelname_info->@*;
 
   my $namename = $args->[0];
   my $acc = '';# Must initialise to empty string as we need to return a string
@@ -415,14 +416,15 @@ sub _label_name {
   # Careful to extract the information we need about the real name behind labelname
   # as we need this to set the use* options below.
   my $realname;
+  my ($lni, $lnf, $lnl) = $be->get_labelname_info->@*;
   if ($namename eq 'labelname') {
-    $realname = $be->get_labelname_info;
+    $realname =  $lni;
   }
   else {
     $realname = $namename;
   }
 
-  my $names = $be->get_field($realname);
+  my $names = $be->get_field($realname, $lnf, $lnl);
 
   # Account for labelname set to short* when testing use* options
   my $lnameopt;
@@ -1276,7 +1278,7 @@ sub _sort_labelalpha {
 sub _sort_labelname {
   my ($self, $citekey, $secnum, $section, $be, $dlist, $sortelementattributes, $args) = @_;
   # re-direct to the right sorting routine for the labelname
-  if (my $lni = $be->get_labelname_info) {
+  if (my $lni = $be->get_labelname_info->[0]) {
     # Don't process attributes as they will be processed in the real sub
     return $self->_dispatch_sorting($lni, $citekey, $secnum, $section, $be, $dlist, $sortelementattributes);
   }
@@ -1288,7 +1290,7 @@ sub _sort_labelname {
 sub _sort_labeltitle {
   my ($self, $citekey, $secnum, $section, $be, $dlist, $sortelementattributes, $args) = @_;
   # re-direct to the right sorting routine for the labeltitle
-  if (my $lti = $be->get_labeltitle_info) {
+  if (my $lti = $be->get_labeltitle_info->[0]) {
     # Don't process attributes as they will be processed in the real sub
     return $self->_dispatch_sorting($lti, $citekey, $secnum, $section, $be, $dlist, $sortelementattributes);
   }

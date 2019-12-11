@@ -71,22 +71,20 @@ eq_or_diff($bibentries->entry('bltx1')->get_field('author', 'transliteration', '
 
 # BBL output tests
 my $ms1 = q|    \entry{ms1}{article}{}
-      \name[msform=transliteration,mslang=ru-latn]{author}{3}{}{%
+      \name[msform=default,mslang=en-us]{author}{3}{}{%
         {{mslang=en-us,hash=c221fa2d0fd5443df81b6bc63acf958a}{%
            family={Smith},
            familyi={S\bibinitperiod},
            given={Bill},
            giveni={B\bibinitperiod}}}%
-        {{mslang=ru-latn,hash=0c7edadf6ef1ef60f583b09b35993f86}{%
-           family={Pushkin},
-           familyi={P\bibinitperiod},
-           given={Aleksandr},
-           giveni={A\bibinitperiod}}}%
-        {{mslang=zh-latn,hash=743dd6cdaa6639320289d219d351d7b7}{%
-           family={Xu},
-           familyi={X\bibinitperiod},
-           given={Bing},
-           giveni={B\bibinitperiod}}}%
+        {{mslang=ru-cyrl,hash=4f73a0f18329ab1288633835f7b04724}{%
+           family={Пушкин},
+           familyi={П\bibinitperiod},
+           given={Александр},
+           giveni={А\bibinitperiod}}}%
+        {{mslang=zh-hant,hash=2f26b14cfb672c6b954bbf761450c065}{%
+           family={徐冰},
+           familyi={徐\bibinitperiod}}}%
       }
       \name[msform=transliteration,mslang=ru-grek]{author}{3}{}{%
         {{mslang=en-us,hash=c221fa2d0fd5443df81b6bc63acf958a}{%
@@ -105,20 +103,22 @@ my $ms1 = q|    \entry{ms1}{article}{}
            given={Μπίνγκ},
            giveni={Μ\bibinitperiod}}}%
       }
-      \name[msform=default,mslang=en-us]{author}{3}{}{%
+      \name[msform=transliteration,mslang=ru-latn]{author}{3}{}{%
         {{mslang=en-us,hash=c221fa2d0fd5443df81b6bc63acf958a}{%
            family={Smith},
            familyi={S\bibinitperiod},
            given={Bill},
            giveni={B\bibinitperiod}}}%
-        {{mslang=ru-cyrl,hash=4f73a0f18329ab1288633835f7b04724}{%
-           family={Пушкин},
-           familyi={П\bibinitperiod},
-           given={Александр},
-           giveni={А\bibinitperiod}}}%
-        {{mslang=zh-hant,hash=2f26b14cfb672c6b954bbf761450c065}{%
-           family={徐冰},
-           familyi={徐\bibinitperiod}}}%
+        {{mslang=ru-latn,hash=0c7edadf6ef1ef60f583b09b35993f86}{%
+           family={Pushkin},
+           familyi={P\bibinitperiod},
+           given={Aleksandr},
+           giveni={A\bibinitperiod}}}%
+        {{mslang=zh-latn,hash=743dd6cdaa6639320289d219d351d7b7}{%
+           family={Xu},
+           familyi={X\bibinitperiod},
+           given={Bing},
+           giveni={B\bibinitperiod}}}%
       }
       \list[msform=default,mslang=en-us]{location}{2}{%
         {locationa}%
@@ -136,10 +136,10 @@ my $ms1 = q|    \entry{ms1}{article}{}
       \strng{authorfullhash}{c8e70e2e1328616e34339e681de514c7}
       \field{sortinit}{S}
       \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field[msform=translation,mslang=fr]{title}{Titre}
+      \field{labelnamesource}{author}{default}{en-us}
+      \field{labeltitlesource}{title}{default}{en-us}
       \field[msform=default,mslang=en-us]{title}{Title}
+      \field[msform=translation,mslang=fr]{title}{Titre}
       \field{year}{1995}
       \field{dateera}{ce}
       \annotation{item}{author}{default}{en-us}{langtags}{2}{}{0}{ru-Cyrl}
@@ -152,5 +152,7 @@ my $ms1 = q|    \entry{ms1}{article}{}
       \annotation{item}{location}{translation}{fr}{langtags}{2}{}{0}{de}
     \endentry
 |;
+
+#print $out->get_output_entry('ms1', $main);
 
 eq_or_diff($out->get_output_entry('ms1', $main), $ms1, 'BBL 1');
