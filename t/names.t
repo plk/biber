@@ -441,7 +441,7 @@ my $l11 = q|    \entry{L11}{book}{}
 my $l12 = q|    \entry{L12}{book}{}
       \name{author}{1}{}{%
         {{hash=d7ca88c13a8f7ce1c23e920010a31f83}{%
-           family={Vall{é}e\\bibnamedelima Poussin},
+           family={Vallée\\bibnamedelima Poussin},
            familyi={V\\bibinitperiod\\bibinitdelim P\\bibinitperiod},
            given={Charles\\bibnamedelimb Louis\\bibnamedelimb Xavier\\bibnamedelima Joseph},
            giveni={C\\bibinitperiod\\bibinitdelim L\\bibinitperiod\\bibinitdelim X\\bibinitperiod\\bibinitdelim J\\bibinitperiod},
@@ -655,7 +655,7 @@ my $l21 = q|    \entry{L21}{book}{}
         {{hash=4389a3c0dc7da74487b50808ba9436ad}{%
            family={Smith},
            familyi={S\bibinitperiod},
-           given={{\v{S}}omeone},
+           given={\v{S}omeone},
            giveni={\v{S}\bibinitperiod}}}%
       }
       \strng{namehash}{4389a3c0dc7da74487b50808ba9436ad}
@@ -674,7 +674,7 @@ my $l21 = q|    \entry{L21}{book}{}
 my $l22u = q|    \entry{L22}{book}{}
       \name{author}{1}{}{%
         {{hash=e58b861545799d0eaf883402a882126e}{%
-           family={{Š}mith},
+           family={Šmith},
            familyi={Š\bibinitperiod},
            given={Someone},
            giveni={S\bibinitperiod}}}%
@@ -696,7 +696,7 @@ my $l22u = q|    \entry{L22}{book}{}
 my $l22 = q|    \entry{L22}{book}{}
       \name{author}{1}{}{%
         {{hash=e58b861545799d0eaf883402a882126e}{%
-           family={{\v{S}}mith},
+           family={\v{S}mith},
            familyi={\v{S}\bibinitperiod},
            given={Someone},
            giveni={S\bibinitperiod}}}%
@@ -710,7 +710,6 @@ my $l22 = q|    \entry{L22}{book}{}
       \field{extraname}{1}
       \field{sortinit}{\v{S}}
       \field{sortinithash}{c319cff79d99c853d775f88277d4e45f}
-      \true{uniqueprimaryauthor}
       \field{labelnamesource}{author}
     \endentry
 |;
@@ -815,14 +814,14 @@ my $l29 = q|    \entry{L29}{book}{}
 my $l31 = q|    \entry{L31}{book}{}
       \name{author}{1}{}{%
         {{hash=29c3ff92fff79d09a8b44d2f775de0b1}{%
-           family={{\~{Z}}elly},
+           family={\~{Z}elly},
            familyi={\~{Z}\\bibinitperiod},
            given={Arthur},
            giveni={A\bibinitperiod}}}%
       }
       \name{editor}{1}{}{%
         {{hash=29c3ff92fff79d09a8b44d2f775de0b1}{%
-           family={{\~{Z}}elly},
+           family={\~{Z}elly},
            familyi={\~{Z}\\bibinitperiod},
            given={Arthur},
            giveni={A\bibinitperiod}}}%
