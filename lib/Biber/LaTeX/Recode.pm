@@ -249,14 +249,11 @@ sub latex_decode {
 
         # Rename protecting braces so that they are not broken by RE manipulations
         $text =~ s/(\{?)\\($re)\s*\{(\pL\pM*)\}(\}?)/$bracemap->{$1} . $3 . $map->{$2} . $bracemap->{$4}/ge;
-        $text =~ s/(\{?)(\pL\pM*)(\}?)/$bracemap->{$1} . $2 . $bracemap->{$3}/ge;
-
-
-#        $text =~ s/\\($re)\s*\{(\pL\pM*)\}/$2 . $map->{$1}/ge;
+        $text =~ s/(\{)(\pL\pM*)(\})/$bracemap->{$1} . $2 . $bracemap->{$3}/ge;
 
         # Conditional regexp with code-block condition
         # non letter macros for diacritics (e.g. \=) can be followed by any letter
-        # but letter diacritic macros (e.g \c) can't (\cS) horribly Broken
+        # but letter diacritic macros (e.g \c) can't (\cS)
         #
         # If the RE for the macro doesn't end with a basic LaTeX macro letter (\=), then
         #   next char can be any letter (\=d)
