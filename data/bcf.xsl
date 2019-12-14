@@ -321,6 +321,9 @@
                       <td><tt><xsl:for-each select="./bcf:value">
                         <xsl:sort select="./@order"/>
                         <xsl:value-of select="./text()"/>
+                        <xsl:if test="./@form">
+                          (<xsl:value-of select="./@form"/>,<xsl:value-of select="./@lang"/>)
+                        </xsl:if>
                         <xsl:if test="not(position()=last())">
                           <xsl:text disable-output-escaping="yes">,&amp;nbsp;</xsl:text>
                         </xsl:if>

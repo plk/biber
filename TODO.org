@@ -194,10 +194,10 @@
 *** DONE biblatexml input
 *** DONE bibtex output
 *** DONE biblatexml output
-*** TODO labelnamespec/labeltitlespec
+*** DONE labelnamespec/labeltitlespec
 **** DONE form/lang in labelnamespec is not working - lots of errors
 **** DONE .bcf schema
-**** TODO XSL
+**** DONE XSL
 *** DONE labelnamesource/labeltitlesource
 *** DONE Xnamehash, Xbibnamehash need generalising for alternates (~2695 in Biber.pm) and in bbl/bblxml output. Then these macros need different parsing in biblatex
 *** TODO bbl output
