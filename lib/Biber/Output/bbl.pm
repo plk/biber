@@ -360,12 +360,16 @@ sub set_output_entry {
 
 
   # Output namelist hashes
-  foreach my $namefield ($dmh->{namelists}->@*) {
-    next unless $be->get_field($namefield);
-    $acc .= "      <BDS>${namefield}BIBNAMEHASH</BDS>\n";
-    $acc .= "      <BDS>${namefield}NAMEHASH</BDS>\n";
-    if (my $fullhash = $be->get_field("${namefield}fullhash")) {
-      $acc .= "      \\strng{${namefield}fullhash}{$fullhash}\n";
+  foreach my $n ($dmh->{namelists}->@*) {
+    foreach my $alts ($be->get_alternates_for_field($n)->@*) {
+      my $val = $alts->{val};
+      my $form = $alts->{form};
+      my $lang = $alts->{lang};
+      $acc .= "      <BDS>${n}${form}${lang}BIBNAMEHASH</BDS>\n";
+      $acc .= "      <BDS>${n}${form}${lang}NAMEHASH</BDS>\n";
+      if (my $fullhash = $be->get_field("${n}${form}${lang}fullhash")) {
+        $acc .= "      \\strng{${n}${form}${lang}fullhash}{$fullhash}\n";
+      }
     }
   }
 

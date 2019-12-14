@@ -178,7 +178,7 @@
 *** TODO labelalphatemplate
 *** TODO labelnamespec/labeltitlespec
 *** TODO labelnamesource/labeltitlesource (2 extra args)
-*** TODO Xnamehash, Xbibnamehash (2 extra args)
+*** TODO NAMEnamehash, NAMEbibnamehash are now NAMEFORMLANGnamehash and NAMEFORMLANGbibnamehash
 ** TODO biber
 *** DONE Decomm DOT output
 *** DONE Parsing BCP47 function https://tools.ietf.org/html/bcp47
@@ -195,11 +195,11 @@
 *** DONE bibtex output
 *** DONE biblatexml output
 *** TODO labelnamespec/labeltitlespec
-**** TODO form/lang in labelnamespec is not working - lots of errors
+**** DONE form/lang in labelnamespec is not working - lots of errors
 **** DONE .bcf schema
 **** TODO XSL
 *** DONE labelnamesource/labeltitlesource
-*** TODO Xnamehash, Xbibnamehash need generalising for alternates (~2695 in Biber.pm) and in bbl/bblxml output. Then these macros need extra args in biblatex
+*** DONE Xnamehash, Xbibnamehash need generalising for alternates (~2695 in Biber.pm) and in bbl/bblxml output. Then these macros need different parsing in biblatex
 *** TODO bbl output
 **** DONE langtags annotations for names go into mslang option in the name and .bbl (as well as annotions) (->nth_mslang)
 **** DONE DataList.pm needs alternates loops (instantiate_entry())

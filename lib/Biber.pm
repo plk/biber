@@ -2663,8 +2663,13 @@ sub process_fullhash {
 
   # Generate fullhash for all other name fields
   foreach my $n ($dmh->{namelistsall}->@*) {
-    next unless my $nv = $be->get_field($n);
-    $be->set_field("${n}fullhash", $self->_getfullhash($citekey, $nv));
+    foreach my $alts ($be->get_alternates_for_field($n)->@*) {
+      my $nv = $alts->{val};
+      my $form = $alts->{form};
+      my $lang = $alts->{lang};
+
+      $be->set_field("${n}${form}${lang}fullhash", $self->_getfullhash($citekey, $nv));
+    }
   }
 
   return;
@@ -2695,12 +2700,17 @@ sub process_namehash {
 
   # Generate namehash for all other name fields
   foreach my $n ($dmh->{namelistsall}->@*) {
-    next unless my $nv = $be->get_field($n);
-    $dlist->set_entryfield($citekey, "${n}namehash", $self->_getnamehash($citekey, $nv, $dlist));
-    $dlist->set_entryfield($citekey, "${n}bibnamehash", $self->_getnamehash($citekey, $nv, $dlist, 1));
+    foreach my $alts ($be->get_alternates_for_field($n)->@*) {
+      my $nv = $alts->{val};
+      my $form = $alts->{form};
+      my $lang = $alts->{lang};
+
+      $dlist->set_entryfield($citekey, "${n}${form}${lang}namehash", $self->_getnamehash($citekey, $nv, $dlist));
+      $dlist->set_entryfield($citekey, "${n}${form}${lang}bibnamehash", $self->_getnamehash($citekey, $nv, $dlist, 1));
+    }
   }
 
-   return;
+  return;
 }
 
 =head2 process_pername_hashes

@@ -131,9 +131,15 @@ my $ms1 = q|    \entry{ms1}{article}{}
       \strng{namehash}{6506017dedcafd386988f8f975fedd0d}
       \strng{fullhash}{6506017dedcafd386988f8f975fedd0d}
       \strng{bibnamehash}{6506017dedcafd386988f8f975fedd0d}
-      \strng{authorbibnamehash}{c8e70e2e1328616e34339e681de514c7}
-      \strng{authornamehash}{c8e70e2e1328616e34339e681de514c7}
-      \strng{authorfullhash}{c8e70e2e1328616e34339e681de514c7}
+      \strng{authordefaulten-usbibnamehash}{c8e70e2e1328616e34339e681de514c7}
+      \strng{authordefaulten-usnamehash}{c8e70e2e1328616e34339e681de514c7}
+      \strng{authordefaulten-usfullhash}{c8e70e2e1328616e34339e681de514c7}
+      \strng{authortransliterationru-grekbibnamehash}{d4dcf56a391b21aec2131b22a251c6b5}
+      \strng{authortransliterationru-greknamehash}{d4dcf56a391b21aec2131b22a251c6b5}
+      \strng{authortransliterationru-grekfullhash}{d4dcf56a391b21aec2131b22a251c6b5}
+      \strng{authortransliterationru-latnbibnamehash}{6506017dedcafd386988f8f975fedd0d}
+      \strng{authortransliterationru-latnnamehash}{6506017dedcafd386988f8f975fedd0d}
+      \strng{authortransliterationru-latnfullhash}{6506017dedcafd386988f8f975fedd0d}
       \field{sortinit}{S}
       \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
       \field{labelnamesource}{author}{transliteration}{ru-latn}
