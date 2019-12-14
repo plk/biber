@@ -2625,9 +2625,10 @@ sub process_labeltitle {
 
   foreach my $h_ltn ($ltitlespec->@*) {
     my $ltn = $h_ltn->{content};
-    if (my $lt = $be->get_field($ltn, $h_ltn->{form}, $h_ltn->{lang})) {
-      $be->set_labeltitle_info($ltn);
-      $be->set_field('labeltitle', $lt);
+    my $form = $h_ltn->{form};
+    my $lang = $h_ltn->{lang};
+    if (my $lt = $be->get_field($ltn, $form, $lang)) {
+      $be->set_labeltitle_info($ltn, $form, $lang);
       last;
     }
     if ($logger->is_debug()) {# performance tune
@@ -2756,89 +2757,93 @@ sub process_visible_names {
     my $minan = Biber::Config->getblxoption($secnum, 'minalphanames', $bee, $citekey);
 
     foreach my $n ($dmh->{namelistsall}->@*) {
-      next unless my $nl = $be->get_field($n);
+      foreach my $alts ($be->get_alternates_for_field($n)->@*) {
+        my $nl = $alts->{val};
+        my $form = $alts->{form};
+        my $lang = $alts->{lang};
 
-      my $count = $nl->count;
-      my $visible_names_cite;
-      my $visible_names_bib;
-      my $visible_names_sort;
-      my $visible_names_alpha;
+        my $count = $nl->count;
+        my $visible_names_cite;
+        my $visible_names_bib;
+        my $visible_names_sort;
+        my $visible_names_alpha;
 
-      # Cap min*names for this entry at $count. Why? Because imagine we have this:
-      #
-      # John Smith and Bill Jones
-      #
-      # and mincitenames=3. Then visibility will be set to 3 but there aren't 3 names to
-      # get information from so looping over the visibility count would cause name methods
-      # to operate on undef at index 3 and die
-      my $l_mincn = $count < $mincn ? $count : $mincn;
-      my $l_minbn = $count < $minbn ? $count : $minbn;
-      my $l_minsn = $count < $minsn ? $count : $minsn;
-      my $l_minan = $count < $minan ? $count : $minan;
+        # Cap min*names for this entry at $count. Why? Because imagine we have this:
+        #
+        # John Smith and Bill Jones
+        #
+        # and mincitenames=3. Then visibility will be set to 3 but there aren't 3 names to
+        # get information from so looping over the visibility count would cause name methods
+        # to operate on undef at index 3 and die
+        my $l_mincn = $count < $mincn ? $count : $mincn;
+        my $l_minbn = $count < $minbn ? $count : $minbn;
+        my $l_minsn = $count < $minsn ? $count : $minsn;
+        my $l_minan = $count < $minan ? $count : $minan;
 
-      # If name list was truncated in bib with "and others", this means that the
-      # name list has already been manually truncated to the correct visibility
-      # and so the visibility is just the count of the explicit names
+        # If name list was truncated in bib with "and others", this means that the
+        # name list has already been manually truncated to the correct visibility
+        # and so the visibility is just the count of the explicit names
 
-      # max/minalphanames doesn't care about uniquelist - labels are just labels
-      if ($count > $maxan) {
-        $visible_names_alpha = $l_minan;
-      }
-      else {
-        $visible_names_alpha = $count;
-      }
+        # max/minalphanames doesn't care about uniquelist - labels are just labels
+        if ($count > $maxan) {
+          $visible_names_alpha = $l_minan;
+        }
+        else {
+          $visible_names_alpha = $count;
+        }
 
-      # max/mincitenames
-      if ($count > $maxcn) {
-        # Visibility to the uniquelist point if uniquelist is requested
-        # We know at this stage that if uniquelist is set, there are more than maxcitenames
-        # names. We also know that uniquelist > mincitenames because it is a further
-        # disambiguation on top of mincitenames so can't be less as you can't disambiguate
-        # by losing information
-        $visible_names_cite = $dlist->get_uniquelist($nl->get_id) // $l_mincn;
-      }
-      else { # visibility is simply the full list
-        $visible_names_cite = $count;
-      }
+        # max/mincitenames
+        if ($count > $maxcn) {
+          # Visibility to the uniquelist point if uniquelist is requested
+          # We know at this stage that if uniquelist is set, there are more than maxcitenames
+          # names. We also know that uniquelist > mincitenames because it is a further
+          # disambiguation on top of mincitenames so can't be less as you can't disambiguate
+          # by losing information
+          $visible_names_cite = $dlist->get_uniquelist($nl->get_id) // $l_mincn;
+        }
+        else {                  # visibility is simply the full list
+          $visible_names_cite = $count;
+        }
 
-      # max/minbibnames
-      if ($count > $maxbn) {
-        # Visibility to the uniquelist point if uniquelist is requested
-        # We know at this stage that if uniquelist is set, there are more than maxbibnames
-        # names. We also know that uniquelist > minbibnames because it is a further
-        # disambiguation on top of minbibnames so can't be less as you can't disambiguate
-        # by losing information
-        $visible_names_bib = $dlist->get_uniquelist($nl->get_id) // $l_minbn;
-      }
-      else { # visibility is simply the full list
-        $visible_names_bib = $count;
-      }
+        # max/minbibnames
+        if ($count > $maxbn) {
+          # Visibility to the uniquelist point if uniquelist is requested
+          # We know at this stage that if uniquelist is set, there are more than maxbibnames
+          # names. We also know that uniquelist > minbibnames because it is a further
+          # disambiguation on top of minbibnames so can't be less as you can't disambiguate
+          # by losing information
+          $visible_names_bib = $dlist->get_uniquelist($nl->get_id) // $l_minbn;
+        }
+        else {                  # visibility is simply the full list
+          $visible_names_bib = $count;
+        }
 
-      # max/minsortnames
-      if ($count > $maxsn) {
-        # Visibility to the uniquelist point if uniquelist is requested
-        # We know at this stage that if uniquelist is set, there are more than maxsortnames
-        # names. We also know that uniquelist > minsortnames because it is a further
-        # disambiguation on top of minsortnames so can't be less as you can't disambiguate
-        # by losing information
-        $visible_names_sort = $dlist->get_uniquelist($nl->get_id) // $l_minsn;
-      }
-      else { # visibility is simply the full list
-        $visible_names_sort = $count;
-      }
+        # max/minsortnames
+        if ($count > $maxsn) {
+          # Visibility to the uniquelist point if uniquelist is requested
+          # We know at this stage that if uniquelist is set, there are more than maxsortnames
+          # names. We also know that uniquelist > minsortnames because it is a further
+          # disambiguation on top of minsortnames so can't be less as you can't disambiguate
+          # by losing information
+          $visible_names_sort = $dlist->get_uniquelist($nl->get_id) // $l_minsn;
+        }
+        else {                  # visibility is simply the full list
+          $visible_names_sort = $count;
+        }
 
-      if ($logger->is_trace()) { # performance shortcut
-        $logger->trace("Setting visible names (cite) for key '$citekey' to '$visible_names_cite'");
-        $logger->trace("Setting visible names (bib) for key '$citekey' to '$visible_names_bib'");
-        $logger->trace("Setting visible names (alpha) for key '$citekey' to '$visible_names_alpha'");
-      }
+        if ($logger->is_trace()) { # performance shortcut
+          $logger->trace("Setting visible names (cite) for key '$citekey' to '$visible_names_cite'");
+          $logger->trace("Setting visible names (bib) for key '$citekey' to '$visible_names_bib'");
+          $logger->trace("Setting visible names (alpha) for key '$citekey' to '$visible_names_alpha'");
+        }
 
-      # Need to set these on all name forms
-      my $nlid = $be->get_field($n)->get_id;
-      $dlist->set_visible_cite($nlid, $visible_names_cite);
-      $dlist->set_visible_bib($nlid, $visible_names_bib);
-      $dlist->set_visible_sort($nlid, $visible_names_sort);
-      $dlist->set_visible_alpha($nlid, $visible_names_alpha);
+        # Need to set these on all name forms
+        my $nlid = $be->get_field($n, $form, $lang)->get_id;
+        $dlist->set_visible_cite($nlid, $visible_names_cite);
+        $dlist->set_visible_bib($nlid, $visible_names_bib);
+        $dlist->set_visible_sort($nlid, $visible_names_sort);
+        $dlist->set_visible_alpha($nlid, $visible_names_alpha);
+      }
     }
   }
 }

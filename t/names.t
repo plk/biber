@@ -952,9 +952,9 @@ eq_or_diff( $out->get_output_entry('L29', $main), $l29, 'Escaped name with 3 com
 
 # Checking visibility
 # Count does not include the "and others" as this "name" is deleted in the output driver
-eq_or_diff($bibentries->entry('V1')->get_field($bibentries->entry('V1')->get_labelname_info)->count, '2', 'Name count for "and others" - 1');
-eq_or_diff($main->get_visible_cite($bibentries->entry('V1')->get_field($bibentries->entry('V1')->get_labelname_info)->get_id), '2', 'Visibility for "and others" - 1');
-eq_or_diff($main->get_visible_cite($bibentries->entry('V2')->get_field($bibentries->entry('V2')->get_labelname_info)->get_id), '1', 'Visibility for "and others" - 2');
+eq_or_diff($bibentries->entry('V1')->get_field($bibentries->entry('V1')->get_labelname_info->[0])->count, '2', 'Name count for "and others" - 1');
+eq_or_diff($main->get_visible_cite($bibentries->entry('V1')->get_field($bibentries->entry('V1')->get_labelname_info->[0])->get_id), '2', 'Visibility for "and others" - 1');
+eq_or_diff($main->get_visible_cite($bibentries->entry('V2')->get_field($bibentries->entry('V2')->get_labelname_info->[0])->get_id), '1', 'Visibility for "and others" - 2');
 # A few tests depend on non UTF-8 output
 # Have to use a new biber object when trying to change encoding as this isn't
 # dealt with in ->prepare
@@ -976,7 +976,7 @@ $section = $biber->sections->get_section(0);
 $main = $biber->datalists->get_list('custom/global//global/global');
 $bibentries = $section->bibentries;
 
-eq_or_diff(NFC($bibentries->entry('L21')->get_field($bibentries->entry('L21')->get_labelname_info)->nth_name(1)->get_namepart_initial('given')->[0]), 'Š', 'Terseinitials 1'); # Should be in NFD UTF-8
+eq_or_diff(NFC($bibentries->entry('L21')->get_field($bibentries->entry('L21')->get_labelname_info->[0])->nth_name(1)->get_namepart_initial('given')->[0]), 'Š', 'Terseinitials 1'); # Should be in NFD UTF-8
 eq_or_diff( encode_utf8($out->get_output_entry('L12', $main)), encode_utf8($l12), 'First First First First prefix prefix Last Last') ;
 eq_or_diff( $out->get_output_entry('L21', $main), $l21, 'LaTeX encoded unicode given name');
 eq_or_diff( $out->get_output_entry('L22', $main), $l22, 'LaTeX encoded unicode family name - 2');

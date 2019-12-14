@@ -45,20 +45,20 @@ $biber->prepare;
 my $section = $biber->sections->get_section(0);
 my $bibentries = $section->bibentries;
 
-my $un1nlid = $bibentries->entry('un1')->get_field($bibentries->entry('un1')->get_labelname_info)->get_id;
-my $un1nid = $bibentries->entry('un1')->get_field($bibentries->entry('un1')->get_labelname_info)->nth_name(1)->get_id;
-my $un2nlid = $bibentries->entry('un2')->get_field($bibentries->entry('un2')->get_labelname_info)->get_id;
-my $un2nid = $bibentries->entry('un2')->get_field($bibentries->entry('un2')->get_labelname_info)->nth_name(1)->get_id;
-my $un3nlid = $bibentries->entry('un3')->get_field($bibentries->entry('un3')->get_labelname_info)->get_id;
-my $un3nid = $bibentries->entry('un3')->get_field($bibentries->entry('un3')->get_labelname_info)->nth_name(1)->get_id;
-my $un4nlid = $bibentries->entry('un4')->get_field($bibentries->entry('un4')->get_labelname_info)->get_id;
-my $un4nid = $bibentries->entry('un4')->get_field($bibentries->entry('un4')->get_labelname_info)->nth_name(1)->get_id;
-my $un5nlid = $bibentries->entry('un5')->get_field($bibentries->entry('un5')->get_labelname_info)->get_id;
-my $un5nid = $bibentries->entry('un5')->get_field($bibentries->entry('un5')->get_labelname_info)->nth_name(1)->get_id;
-my $un6nlid = $bibentries->entry('un6')->get_field($bibentries->entry('un6')->get_labelname_info)->get_id;
-my $un6nid = $bibentries->entry('un6')->get_field($bibentries->entry('un6')->get_labelname_info)->nth_name(1)->get_id;
-my $un7nlid = $bibentries->entry('un7')->get_field($bibentries->entry('un7')->get_labelname_info)->get_id;
-my $un7nid = $bibentries->entry('un7')->get_field($bibentries->entry('un7')->get_labelname_info)->nth_name(1)->get_id;
+my $un1nlid = $bibentries->entry('un1')->get_field($bibentries->entry('un1')->get_labelname_info->[0])->get_id;
+my $un1nid = $bibentries->entry('un1')->get_field($bibentries->entry('un1')->get_labelname_info->[0])->nth_name(1)->get_id;
+my $un2nlid = $bibentries->entry('un2')->get_field($bibentries->entry('un2')->get_labelname_info->[0])->get_id;
+my $un2nid = $bibentries->entry('un2')->get_field($bibentries->entry('un2')->get_labelname_info->[0])->nth_name(1)->get_id;
+my $un3nlid = $bibentries->entry('un3')->get_field($bibentries->entry('un3')->get_labelname_info->[0])->get_id;
+my $un3nid = $bibentries->entry('un3')->get_field($bibentries->entry('un3')->get_labelname_info->[0])->nth_name(1)->get_id;
+my $un4nlid = $bibentries->entry('un4')->get_field($bibentries->entry('un4')->get_labelname_info->[0])->get_id;
+my $un4nid = $bibentries->entry('un4')->get_field($bibentries->entry('un4')->get_labelname_info->[0])->nth_name(1)->get_id;
+my $un5nlid = $bibentries->entry('un5')->get_field($bibentries->entry('un5')->get_labelname_info->[0])->get_id;
+my $un5nid = $bibentries->entry('un5')->get_field($bibentries->entry('un5')->get_labelname_info->[0])->nth_name(1)->get_id;
+my $un6nlid = $bibentries->entry('un6')->get_field($bibentries->entry('un6')->get_labelname_info->[0])->get_id;
+my $un6nid = $bibentries->entry('un6')->get_field($bibentries->entry('un6')->get_labelname_info->[0])->nth_name(1)->get_id;
+my $un7nlid = $bibentries->entry('un7')->get_field($bibentries->entry('un7')->get_labelname_info->[0])->get_id;
+my $un7nid = $bibentries->entry('un7')->get_field($bibentries->entry('un7')->get_labelname_info->[0])->nth_name(1)->get_id;
 
 my $out = $biber->get_output_obj;
 my $un1 = q|    \entry{un1}{article}{}

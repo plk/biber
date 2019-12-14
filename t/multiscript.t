@@ -128,16 +128,16 @@ my $ms1 = q|    \entry{ms1}{article}{}
         {emplacementa}%
         {Standortb}%
       }
-      \strng{namehash}{c8e70e2e1328616e34339e681de514c7}
-      \strng{fullhash}{c8e70e2e1328616e34339e681de514c7}
-      \strng{bibnamehash}{c8e70e2e1328616e34339e681de514c7}
+      \strng{namehash}{6506017dedcafd386988f8f975fedd0d}
+      \strng{fullhash}{6506017dedcafd386988f8f975fedd0d}
+      \strng{bibnamehash}{6506017dedcafd386988f8f975fedd0d}
       \strng{authorbibnamehash}{c8e70e2e1328616e34339e681de514c7}
       \strng{authornamehash}{c8e70e2e1328616e34339e681de514c7}
       \strng{authorfullhash}{c8e70e2e1328616e34339e681de514c7}
       \field{sortinit}{S}
       \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
-      \field{labelnamesource}{author}{default}{en-us}
-      \field{labeltitlesource}{title}{default}{en-us}
+      \field{labelnamesource}{author}{transliteration}{ru-latn}
+      \field{labeltitlesource}{title}{translation}{fr}
       \field[msform=default,mslang=en-us]{title}{Title}
       \field[msform=translation,mslang=fr]{title}{Titre}
       \field{year}{1995}

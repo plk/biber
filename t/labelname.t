@@ -49,7 +49,7 @@ Biber::Config->setblxoption(undef,'labelnamespec', [ {content => 'namea'},
 $biber->prepare;
 my $bibentries = $biber->sections->get_section(0)->bibentries;
 
-eq_or_diff($bibentries->entry('angenendtsa')->get_labelname_info, 'shortauthor', 'global shortauthor' );
-eq_or_diff($bibentries->entry('stdmodel')->get_labelname_info, 'author', 'global author' );
-eq_or_diff($bibentries->entry('aristotle:anima')->get_labelname_info, 'editor', 'type-specific editor' );
-eq_or_diff($bibentries->entry('lne1')->get_labelname_info, 'namea', 'type-specific exotic name' );
+eq_or_diff($bibentries->entry('angenendtsa')->get_labelname_info->[0], 'shortauthor', 'global shortauthor' );
+eq_or_diff($bibentries->entry('stdmodel')->get_labelname_info->[0], 'author', 'global author' );
+eq_or_diff($bibentries->entry('aristotle:anima')->get_labelname_info->[0], 'editor', 'type-specific editor' );
+eq_or_diff($bibentries->entry('lne1')->get_labelname_info->[0], 'namea', 'type-specific exotic name' );

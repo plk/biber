@@ -45,10 +45,10 @@
     <bcf:option type="multivalued">
       <bcf:key>labelnamespec</bcf:key>
       <bcf:value order="1">shortauthor</bcf:value>
-      <bcf:value order="2">author</bcf:value>
-      <bcf:value order="3">shorteditor</bcf:value>
-      <bcf:value order="4">editor</bcf:value>
-      <bcf:value order="5">translator</bcf:value>
+      <bcf:value order="2" form="transliteration" lang="ru-Latn">author</bcf:value>
+      <bcf:value order="4">shorteditor</bcf:value>
+      <bcf:value order="5">editor</bcf:value>
+      <bcf:value order="6">translator</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>labeltitle</bcf:key>
@@ -57,7 +57,7 @@
     <bcf:option type="multivalued">
       <bcf:key>labeltitlespec</bcf:key>
       <bcf:value order="1">shorttitle</bcf:value>
-      <bcf:value order="2">title</bcf:value>
+      <bcf:value order="2" form="translation" lang="fr">title</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>labeltitleyear</bcf:key>

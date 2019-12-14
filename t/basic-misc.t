@@ -616,7 +616,7 @@ ok(is_undef($bibentries->entry('i2')->get_field('userf')), 'map 9' );
 ok(is_undef($bibentries->entry('i2')->get_field('userc')), 'map 10' );
 
 # Make sure visibility doesn't exceed number of names.
-eq_or_diff($main->get_visible_bib($bibentries->entry('i2')->get_field($bibentries->entry('i2')->get_labelname_info)->get_id), '3', 'bib visibility - 1');
+eq_or_diff($main->get_visible_bib($bibentries->entry('i2')->get_field($bibentries->entry('i2')->get_labelname_info->[0])->get_id), '3', 'bib visibility - 1');
 
 # Testing per_type and per_entry max/min* so reset globals to defaults
 Biber::Config->setblxoption(undef,'uniquelist', 'false');
@@ -646,12 +646,12 @@ $biber->prepare;
 $section = $biber->sections->get_section(0);
 $main = $biber->datalists->get_list('nty/global//global/global');
 
-eq_or_diff($main->get_visible_cite($bibentries->entry('tmn1')->get_field($bibentries->entry('tmn1')->get_labelname_info)->get_id), '1', 'per_type maxcitenames - 1');
-eq_or_diff($main->get_visible_cite($bibentries->entry('tmn2')->get_field($bibentries->entry('tmn2')->get_labelname_info)->get_id), '3', 'per_type maxcitenames - 2');
-eq_or_diff($main->get_visible_bib($bibentries->entry('tmn3')->get_field($bibentries->entry('tmn3')->get_labelname_info)->get_id), '2', 'per_type bibnames - 3');
-eq_or_diff($main->get_visible_bib($bibentries->entry('tmn4')->get_field($bibentries->entry('tmn4')->get_labelname_info)->get_id), '3', 'per_type bibnames - 4');
-eq_or_diff($main->get_visible_alpha($bibentries->entry('tmn1')->get_field($bibentries->entry('tmn1')->get_labelname_info)->get_id), '3', 'per_type/entry alphanames - 1');
-eq_or_diff($main->get_visible_alpha($bibentries->entry('tmn2')->get_field($bibentries->entry('tmn2')->get_labelname_info)->get_id), '2', 'per_type/entry alphanames - 2');
+eq_or_diff($main->get_visible_cite($bibentries->entry('tmn1')->get_field($bibentries->entry('tmn1')->get_labelname_info->[0])->get_id), '1', 'per_type maxcitenames - 1');
+eq_or_diff($main->get_visible_cite($bibentries->entry('tmn2')->get_field($bibentries->entry('tmn2')->get_labelname_info->[0])->get_id), '3', 'per_type maxcitenames - 2');
+eq_or_diff($main->get_visible_bib($bibentries->entry('tmn3')->get_field($bibentries->entry('tmn3')->get_labelname_info->[0])->get_id), '2', 'per_type bibnames - 3');
+eq_or_diff($main->get_visible_bib($bibentries->entry('tmn4')->get_field($bibentries->entry('tmn4')->get_labelname_info->[0])->get_id), '3', 'per_type bibnames - 4');
+eq_or_diff($main->get_visible_alpha($bibentries->entry('tmn1')->get_field($bibentries->entry('tmn1')->get_labelname_info->[0])->get_id), '3', 'per_type/entry alphanames - 1');
+eq_or_diff($main->get_visible_alpha($bibentries->entry('tmn2')->get_field($bibentries->entry('tmn2')->get_labelname_info->[0])->get_id), '2', 'per_type/entry alphanames - 2');
 eq_or_diff($biber->_liststring('tmn1', 'institution'), 'A!B!C', 'per_type/entry items - 1');
 eq_or_diff($biber->_liststring('tmn3', 'institution'), "A!B\x{10FFFD}", 'per_type/entry items - 2');
 
