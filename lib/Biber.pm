@@ -4834,6 +4834,13 @@ sub _parse_sort {
       if (defined($sortitem->{literal})) { # Found literal attribute
         $sortitemattributes->{literal} = $sortitem->{literal};
       }
+      if (defined($sortitem->{form})) { # Found form attribute
+        $sortitemattributes->{form} = $sortitem->{form};
+      }
+      if (defined($sortitem->{lang})) { # Found lang attribute
+        $sortitemattributes->{lang} = $sortitem->{lang};
+      }
+
       push $sortingitems->@*, {$sortitem->{content} => $sortitemattributes};
     }
 

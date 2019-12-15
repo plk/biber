@@ -40,7 +40,7 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>labelalpha</bcf:key>
-      <bcf:value>0</bcf:value>
+      <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="multivalued">
       <bcf:key>labelnamespec</bcf:key>
@@ -582,6 +582,10 @@
       <bcf:labelpart substring_width="1" substring_side="left">labelname</bcf:labelpart>
     </bcf:labelelement>
     <bcf:labelelement order="2">
+      <bcf:labelpart substring_width="1" substring_side="left"
+                     form="translation" lang="fr">location</bcf:labelpart>
+    </bcf:labelelement>
+    <bcf:labelelement order="3">
       <bcf:labelpart substring_width="2" substring_side="right">year</bcf:labelpart>
     </bcf:labelelement>
   </bcf:labelalphatemplate>
@@ -1987,7 +1991,8 @@
   </bcf:bibdata>
   <bcf:section number="0">
     <bcf:citekey order="1">ms1</bcf:citekey>
-    <bcf:citekey order="2">bltx1</bcf:citekey>
+    <bcf:citekey order="2">ms2</bcf:citekey>
+    <bcf:citekey order="3">bltx1</bcf:citekey>
   </bcf:section>
   <!-- SORTING -->
   <bcf:sortingtemplate name="nty">
@@ -1999,7 +2004,7 @@
     </bcf:sort>
     <bcf:sort order="3">
       <bcf:sortitem order="1">sortname</bcf:sortitem>
-      <bcf:sortitem order="2">author</bcf:sortitem>
+      <bcf:sortitem order="2" form="transliteration" lang="ru-Latn">author</bcf:sortitem>
       <bcf:sortitem order="3">editor</bcf:sortitem>
       <bcf:sortitem order="4">translator</bcf:sortitem>
       <bcf:sortitem order="5">sorttitle</bcf:sortitem>

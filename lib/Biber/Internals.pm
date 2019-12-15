@@ -228,8 +228,13 @@ sub _dispatch_table_label {
   }
   # Fields which are part of the datamodel
   my $dmf = $dm->get_dm_for_field($field);
-  if ($dmf->{fieldtype} eq 'list' and $dmf->{datatype} eq 'name') {
-    return [\&_label_name, [$field]];
+  if ($dmf->{fieldtype} eq 'list') {
+    if ($dmf->{datatype} eq 'name') {
+      return [\&_label_name, [$field]];
+    }
+    else {
+      return [\&_label_list, [$field]];
+    }
   }
   else {
     return [\&_label_basic, [$field]];
@@ -368,13 +373,36 @@ sub _label_basic {
   my $f;
   if ($args->[1] and
       $args->[1] eq 'nostrip') {
-    $f = $be->get_field($e);
+    $f = $be->get_field($e, $labelattrs->{form}, $labelattrs->{lang});
   }
   else {
-    $f = normalise_string_label($be->get_field($e));
+    $f = normalise_string_label($be->get_field($e, $labelattrs->{form}, $labelattrs->{lang}));
   }
+
   if ($f) {
     my $b = _process_label_attributes($self, $citekey, $dlist, [[$f, undef]], $labelattrs, $e);
+    return [$b, unescape_label($b)];
+  }
+  else {
+    return ['', ''];
+  }
+}
+
+sub _label_list {
+  my ($self, $citekey, $secnum, $section, $be, $args, $labelattrs, $dlist) = @_;
+  my $e = $args->[0];
+
+  my $f = $be->get_field($e, $labelattrs->{form}, $labelattrs->{lang});
+  if ($f) {
+    my $b;
+    foreach my $elem ($f->get_items->@*) {
+      $b .= _process_label_attributes($self, $citekey, $dlist, [[$elem, undef]], $labelattrs, $e);
+    }
+
+    unless ($args->[1] and  $args->[1] eq 'nostrip') {
+      $b = normalise_string_label($b);
+    }
+
     return [$b, unescape_label($b)];
   }
   else {
@@ -397,14 +425,11 @@ sub _label_name {
   my $alphaothers = Biber::Config->getblxoption(undef, 'alphaothers', $bee);
   my $sortalphaothers = Biber::Config->getblxoption(undef, 'sortalphaothers', $bee);
 
-  # Get the labelalphanametemplate name or this list context
+  # Get the labelalphanametemplate name for this list context
   my $lantname = $dlist->get_labelalphanametemplatename;
 
   # Override with any entry-specific information
   $lantname = Biber::Config->getblxoption($secnum, 'labelalphanametemplatename', undef, $citekey) // $lantname;
-
-  # Shortcut - if there is no labelname, don't do anything
-  return ['',''] unless $be->get_labelname_info->@*;
 
   my $namename = $args->[0];
   my $acc = '';# Must initialise to empty string as we need to return a string
@@ -416,15 +441,16 @@ sub _label_name {
   # Careful to extract the information we need about the real name behind labelname
   # as we need this to set the use* options below.
   my $realname;
-  my ($lni, $lnf, $lnl) = $be->get_labelname_info->@*;
+  my $names;
   if ($namename eq 'labelname') {
+    my ($lni, $lnf, $lnl) = $be->get_labelname_info->@*;
     $realname =  $lni;
+    $names = $be->get_field($lni, $lnf, $lnl);
   }
   else {
     $realname = $namename;
+    $names = $be->get_field($namename, $labelattrs->{form}, $labelattrs->{lang});
   }
-
-  my $names = $be->get_field($realname, $lnf, $lnl);
 
   # Account for labelname set to short* when testing use* options
   my $lnameopt;
@@ -1237,7 +1263,7 @@ sub _sort_integer {
     }
 
     # Use Unicode::UCD::num() to map Unicode numbers to integers if possible
-    $field = num($field) //$field;
+    $field = num($field) // $field;
 
     return _process_sort_attributes($field, $sortelementattributes);
   }
@@ -1250,8 +1276,8 @@ sub _sort_editort {
   my ($self, $citekey, $secnum, $section, $be, $dlist, $sortelementattributes, $args) = @_;
   my $edtypeclass = $args->[0]; # get editor type/class field
   if (Biber::Config->getblxoption($secnum, 'useeditor', $be->get_field('entrytype'), $citekey) and
-    $be->get_field($edtypeclass)) {
-    my $string = $be->get_field($edtypeclass);
+    $be->get_field($edtypeclass, $sortelementattributes->{form}, $sortelementattributes->{lang})) {
+    my $string = $be->get_field($edtypeclass, $sortelementattributes->{form}, $sortelementattributes->{lang});
     return _translit($edtypeclass, $be, _process_sort_attributes($string, $sortelementattributes));
   }
   else {
@@ -1323,8 +1349,8 @@ sub _sort_labeldate {
 sub _sort_list {
   my ($self, $citekey, $secnum, $section, $be, $dlist, $sortelementattributes, $args) = @_;
   my $list = $args->[0]; # get list field
-  if ($be->get_field($list)) {
-    my $string = $self->_liststring($citekey, $list);
+  if ($be->get_field($list, $sortelementattributes->{form}, $sortelementattributes->{lang})) {
+    my $string = $self->_liststring($citekey, $list, $sortelementattributes->{form}, $sortelementattributes->{lang});
     return _translit($list, $be, _process_sort_attributes($string, $sortelementattributes));
   }
   else {
@@ -1338,7 +1364,7 @@ sub _sort_list_verbatim {
   my ($self, $citekey, $secnum, $section, $be, $dlist, $sortelementattributes, $args) = @_;
   my $list = $args->[0]; # get list field
   if ($be->get_field($list)) {
-    my $string = $self->_liststring($citekey, $list, 1);
+    my $string = $self->_liststring($citekey, $list, $sortelementattributes->{form}, $sortelementattributes->{lang}, 1);
     return _process_sort_attributes($string, $sortelementattributes);
   }
   else {
@@ -1352,7 +1378,7 @@ sub _sort_list_verbatim {
 sub _sort_literal {
   my ($self, $citekey, $secnum, $section, $be, $dlist, $sortelementattributes, $args) = @_;
   my $literal = $args->[0]; # get actual field
-  if (my $field = $be->get_field($literal)) {
+  if (my $field = $be->get_field($literal, $sortelementattributes->{form}, $sortelementattributes->{lang})) {
     my $string = normalise_string_sort($field, $literal);
     return _translit($literal, $be, _process_sort_attributes($string, $sortelementattributes));
   }
@@ -1367,7 +1393,7 @@ sub _sort_literal {
 sub _sort_verbatim {
   my ($self, $citekey, $secnum, $section, $be, $dlist, $sortelementattributes, $args) = @_;
   my $literal = $args->[0]; # get actual field
-  if (my $field = $be->get_field($literal)) {
+  if (my $field = $be->get_field($literal, $sortelementattributes->{form}, $sortelementattributes->{lang})) {
     my $string = strip_nosort($field, $literal);
     return _process_sort_attributes($field, $sortelementattributes);
   }
@@ -1387,8 +1413,8 @@ sub _sort_name {
       not Biber::Config->getblxoption($secnum, "use$name", $be->get_field('entrytype'), $citekey)) {
     return '';
     }
-  if ($be->get_field($name)) {
-    my $string = $self->_namestring($citekey, $name, $dlist);
+  if ($be->get_field($name, $sortelementattributes->{form}, $sortelementattributes->{lang})) {
+    my $string = $self->_namestring($citekey, $name, $sortelementattributes->{form}, $sortelementattributes->{lang}, $dlist);
     return _translit($name, $be, _process_sort_attributes($string, $sortelementattributes));
   }
   else {
@@ -1409,7 +1435,7 @@ sub _sort_sortname {
   # sortname is ignored if no use<name> option is defined - see biblatex manual
   if ($be->get_field('sortname') and
       grep {Biber::Config->getblxoption($secnum, "use$_", $be->get_field('entrytype'), $citekey)} $dm->get_fields_of_type('list', 'name')->@*) {
-    my $string = $self->_namestring($citekey, 'sortname', $dlist);
+    my $string = $self->_namestring($citekey, 'sortname', $sortelementattributes->{form}, $sortelementattributes->{lang}, $dlist);
     return _translit('sortname', $be, _process_sort_attributes($string, $sortelementattributes));
   }
   else {
@@ -1471,12 +1497,12 @@ sub _process_sort_attributes {
 # This is used to generate sorting string for names
 sub _namestring {
   my $self = shift;
-  my ($citekey, $field, $dlist) = @_;
+  my ($citekey, $field, $form, $lang, $dlist) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
-  my $names = $be->get_field($field);
+  my $names = $be->get_field($field, $form, $lang);
   my $str = '';
   my $count = $names->count;
   # get visibility for sorting
@@ -1595,13 +1621,15 @@ sub _namestring {
 }
 
 sub _liststring {
-  my ($self, $citekey, $field, $verbatim) = @_;
+  my ($self, $citekey, $field, $form, $lang, $verbatim) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
-  my $f = $be->get_field($field); # _liststring is used in tests so there has to be
-  return '' unless defined($f);   # more error checking which will never be needed in normal use
+  # _liststring is used in tests so there has to be more error checking which will
+  # never be needed in normal use
+  my $f = $be->get_field($field, $form, $lang);
+  return '' unless defined($f);
   my @items = $f->get_items->@*;
   my $str = '';
   my $truncated = 0;

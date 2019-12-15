@@ -200,15 +200,15 @@
 **** DONE XSL
 *** DONE labelnamesource/labeltitlesource
 *** DONE Xnamehash, Xbibnamehash need generalising for alternates (~2695 in Biber.pm) and in bbl/bblxml output. Then these macros need different parsing in biblatex
-*** TODO bbl output
+*** DONE bblxml output
+**** DONE labelnamesource/labeltitlesource need form/lang outputting and schema changing for bblxml
+*** DONE bbl output
 **** DONE langtags annotations for names go into mslang option in the name and .bbl (as well as annotions) (->nth_mslang)
 **** DONE DataList.pm needs alternates loops (instantiate_entry())
 *** TODO LOCALE_MAP
 **** TODO Duplicate regions (de-DE, fr-FR) in LOCALE_MAP?
 **** TODO Wait for polyglossia 1.47 release. However, can we switch completely to BCP47 for .bcf and .bbl if babel does not support BCP47?
-*** TODO bblxml output
-**** TODO labelnamesource/labeltitlesource need form/lang outputting and schema changing for bblxml
 *** TODO inheritance templates
-*** TODO sorting templates
+*** DONE sorting templates
 *** TODO labelalphatemplate
-** TODO basically audit all ->get_field(), ->field_exists()
+** TODO audit all ->get_field(), ->field_exists()

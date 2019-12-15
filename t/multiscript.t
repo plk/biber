@@ -6,7 +6,7 @@ no warnings 'utf8';
 use Text::Diff::Config;
 $Text::Diff::Config::Output_Unicode = 1;
 
-use Test::More tests => 20;
+use Test::More tests => 21;
 use Test::Differences;
 unified_diff;
 
@@ -140,6 +140,7 @@ my $ms1 = q|    \entry{ms1}{article}{}
       \strng{authortransliterationru-latnbibnamehash}{6506017dedcafd386988f8f975fedd0d}
       \strng{authortransliterationru-latnnamehash}{6506017dedcafd386988f8f975fedd0d}
       \strng{authortransliterationru-latnfullhash}{6506017dedcafd386988f8f975fedd0d}
+      \field{labelalpha}{SPXeS95}
       \field{sortinit}{S}
       \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
       \field{labelnamesource}{author}{transliteration}{ru-latn}
@@ -162,3 +163,4 @@ my $ms1 = q|    \entry{ms1}{article}{}
 #print $out->get_output_entry('ms1', $main);
 
 eq_or_diff($out->get_output_entry('ms1', $main), $ms1, 'BBL 1');
+is_deeply($main->get_keys, ['ms2', 'ms1', 'bltx1'], 'sorting - 1');
