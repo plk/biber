@@ -602,12 +602,12 @@ sub del_datafield {
 =cut
 
 sub field_exists {
-  my ($self, $key, $form, $lang) = @_;
+  my ($self, $field, $form, $lang) = @_;
   no autovivification;
   $lang = fc($lang) if $lang;
-  my $k = $self->{datafields}{$key} || $self->{derivedfields}{$key};
-  return 0 unless $k;
-  return defined($k->get_value($form, $lang))? 1 : 0;
+  my $f = $self->{datafields}{$field} || $self->{derivedfields}{$field};
+  return 0 unless $f;
+  return defined($f->get_value($form, $lang))? 1 : 0;
 }
 
 =head2 date_fields_exist
@@ -774,15 +774,21 @@ sub set_inherit_from {
 
   # Data source fields
   foreach my $field ($parent->datafields) {
-    next if $self->field_exists($field); # Don't overwrite existing fields
+    foreach my $alts ($parent->get_alternates_for_field($field)->@*) {
+      my $val = $alts->{val};
+      my $form = $alts->{form};
+      my $lang = $alts->{lang};
 
-    # Annotations are allowed for set parents themselves so never inherit these.
-    # This can't be suppressed at .bbl writing as it is impossible to know there
-    # whether the field came from the parent or first child because inheritance
-    # is a low-level operation on datafields
-    next if fc($field) eq fc('annotation');
+      next if $self->field_exists($field, $form, $lang); # Don't overwrite existing fields
 
-    $self->set_datafield($field, $parent->get_field($field));
+      # Annotations are allowed for set parents themselves so never inherit these.
+      # This can't be suppressed at .bbl writing as it is impossible to know there
+      # whether the field came from the parent or first child because inheritance
+      # is a low-level operation on datafields
+      next if fc($field) eq fc('annotation');
+
+      $self->set_datafield($field, $parent->get_field($field, $form, $lang), $form, $lang);
+    }
   }
 
   # Datesplit is a special non datafield and needs to be inherited for any
@@ -868,11 +874,17 @@ sub resolve_xdata {
           # Whole entry XDATA reference so inherit all fields
           if (not defined($xdatum->{xdatafield})) {
             foreach my $field ($xdataentry->datafields()) { # set fields
-              next if $field eq 'ids'; # Never inherit aliases
-              $self->set_datafield($field, $xdataentry->get_field($field));
+              foreach my $alts ($xdataentry->get_alternates_for_field($field)->@*) {
+                my $val = $alts->{val};
+                my $form = $alts->{form};
+                my $lang = $alts->{lang};
 
-              if ($logger->is_debug()) { # performance tune
-                $logger->debug("Setting field '$field' in entry '$entry_key' via XDATA");
+                next if $field eq 'ids'; # Never inherit aliases
+                $self->set_datafield($field, $xdataentry->get_field($field, $form, $lang), $form, $lang);
+
+                if ($logger->is_debug()) { # performance tune
+                  $logger->debug("Setting field '$field' in entry '$entry_key' via XDATA");
+                }
               }
             }
           }
@@ -928,7 +940,7 @@ sub resolve_xdata {
             }
             # Non-list
             else {
-              $self->set_datafield($reffield, $xdataentry->get_field($xdatafield), $refform, $reflang);
+              $self->set_datafield($reffield, $xdataentry->get_field($xdatafield, $xdataform, $xdatalang), $refform, $reflang);
               if ($logger->is_debug()) { # performance tune
                 $logger->debug("Setting field '$reffield/$refform/$reflang' in entry '$entry_key' via XDATA");
               }
@@ -1014,31 +1026,36 @@ sub inherit_from {
               next;
             }
           }
-          next unless $parent->field_exists($field->{source});
-          $processed{$field->{source}} = 1;
-          # localise defaults according to field, if specified
-          my $field_override_target = $field->{override_target} // 'false';
-          # Skip this field if requested
-          if ($field->{skip}) {
+          foreach my $alts ($parent->get_alternates_for_field($field->{source})->@*) {
+            my $val = $alts->{val};
+            my $form = $alts->{form};
+            my $lang = $alts->{lang};
+
             $processed{$field->{source}} = 1;
-          }
-          # Set the field if it doesn't exist or override is requested
-          elsif (not $self->field_exists($field->{target}) or
-                 $field_override_target eq 'true') {
-            if ($logger->is_debug()) {# performance tune
-              $logger->debug("Entry '$target_key' is inheriting field '" .
-                             $field->{source}.
-                             "' as '" .
-                             $field->{target} .
-                             "' from entry '$source_key'");
+            # localise defaults according to field, if specified
+            my $field_override_target = $field->{override_target} // 'false';
+            # Skip this field if requested
+            if ($field->{skip}) {
+              $processed{$field->{source}} = 1;
             }
+            # Set the field if it doesn't exist or override is requested
+            elsif (not $self->field_exists($field->{target}, $form, $lang) or
+                   $field_override_target eq 'true') {
+              if ($logger->is_debug()) { # performance tune
+                $logger->debug("Entry '$target_key' is inheriting field '" .
+                               $field->{source} . "/$form/$lang" .
+                               "' as '" .
+                               $field->{target} . "/$form/$lang" .
+                               "' from entry '$source_key'");
+              }
 
-            $self->set_datafield($field->{target}, $parent->get_field($field->{source}));
+              $self->set_datafield($field->{target}, $parent->get_field($field->{source}, $form, $lang), $form, $lang);
 
-            # Ignore uniqueness information tracking for this inheritance?
-            my $ignore = $inherit->{ignore} || $dignore;
-            Biber::Config->add_uniq_ignore($target_key, $field->{target}, $ignore);
+              # Ignore uniqueness information tracking for this inheritance?
+              my $ignore = $inherit->{ignore} || $dignore;
+              Biber::Config->add_uniq_ignore($target_key, $field->{target}, $ignore);
 
+            }
           }
         }
       }
@@ -1049,6 +1066,9 @@ sub inherit_from {
   if ($inherit_all eq 'true') {
     my @fields = $parent->datafields;
 
+    my @filtered_fields;
+    my @removed_fields;
+
     # Special case:
     # WITH NO override: If the child has any Xdate datepart, don't inherit any Xdateparts
     # from parent otherwise you can end up with rather broken dates in the child.
@@ -1057,8 +1077,6 @@ sub inherit_from {
     # Save removed fields as this is needed when copying derived special date fields below
     # as these also need skipping if have skipped the *date field from which they were derived
     # WITH override: Remove all related dateparts so that there is no conflict with inherited
-    my @filtered_fields;
-    my @removed_fields;
     foreach my $field (@fields) {
       if (first {$_ eq $field} $dmh->{dateparts}->@*) {
         if ($self->date_fields_exist($field)) {
@@ -1102,17 +1120,23 @@ sub inherit_from {
       }
       next if $processed{$field}; # Skip if we have already dealt with this field above
 
-      # Set the field if it doesn't exist or override is requested
-      if (not $self->field_exists($field) or $override_target eq 'true') {
-        if ($logger->is_debug()) { # performance tune
-          $logger->debug("Entry '$target_key' is inheriting field '$field' from entry '$source_key'");
+      foreach my $alts ($parent->get_alternates_for_field($field)->@*) {
+        my $val = $alts->{val};
+        my $form = $alts->{form};
+        my $lang = $alts->{lang};
+
+        # Set the field if it doesn't exist or override is requested
+        if (not $self->field_exists($field, $form, $lang) or $override_target eq 'true') {
+          if ($logger->is_debug()) { # performance tune
+            $logger->debug("Entry '$target_key' is inheriting field '$field/$form/$lang' from entry '$source_key'");
+          }
+
+          $self->set_datafield($field, $parent->get_field($field, $form, $lang), $form, $lang);
+
+          # Ignore uniqueness information tracking for this inheritance?
+          Biber::Config->add_uniq_ignore($target_key, $field, $dignore);
+
         }
-
-        $self->set_datafield($field, $parent->get_field($field));
-
-        # Ignore uniqueness information tracking for this inheritance?
-        Biber::Config->add_uniq_ignore($target_key, $field, $dignore);
-
       }
     }
   }

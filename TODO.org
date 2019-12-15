@@ -165,6 +165,9 @@
 *** TODO msform/mslang biblatex global options. The options control which alternates are selected in various templates by biber and which alternates are selected by \cites/\print* in refcontexts.
 *** TODO msform/mslang refcontext options to select the defaults for \printfield and cites etc. Don't need to be passed to biber via .bcf as the biber needs for mslang/msform are already addressed as they indirectly change the current refcontext templates which in turn changes data. These options are there to influence the biblatex side of things. Default to globals.
 *** TODO biber mslang option and that this is checked after biblatex global/entry(LANGID) (for tool mode use)
+*** TODO all changed macros ...
+*** TODO \field in \DeclareLabelalphaTemplate to say that non-name list fields apply the template to each list member
+*** TODO Inheritance is of all alternates
 ** TODO biblatex
 *** DONE Datamodel
 **** DONE Add valid multiscript fields to datamodel
@@ -173,7 +176,6 @@
 *** TODO msform and mslang biblatex refcontext options (but not passed to biber), inherit from global
 *** TODO around 4560 in biblatex.sty - add mslang name option and set some macro, expose to user
 *** TODO output sortlocale/mslang in .bcf as BCP-47 if possible (polyglossia 1.47+)
-*** TODO inheritance templates
 *** TODO sorting templates
 *** TODO labelalphatemplate
 *** TODO labelnamespec/labeltitlespec
@@ -208,7 +210,13 @@
 *** TODO LOCALE_MAP
 **** TODO Duplicate regions (de-DE, fr-FR) in LOCALE_MAP?
 **** TODO Wait for polyglossia 1.47 release. However, can we switch completely to BCP47 for .bcf and .bbl if babel does not support BCP47?
-*** TODO inheritance templates
+*** DONE inheritance templates
 *** DONE sorting templates
-*** TODO labelalphatemplate
-** TODO audit all ->get_field(), ->field_exists()
+*** DONE labelalphatemplate
+*** DONE audit of field subs
+**** DONE set_field()
+**** DONE set_datafield()
+**** DONE get_field()
+**** DONE get_datafield()
+**** DONE field_exists()
+*** TODO fix all test outputs

@@ -1661,139 +1661,142 @@ sub process_namedis {
   # to use this method to get data without setting it in the list object (in uniqueprimaryauthor())
   my $namedis;
 
-MAIN:  foreach my $pn ($dmh->{namelistsall}->@*) {
-    next unless my $nl = $be->get_field($pn);
-    my $nlid = $nl->get_id;
+ MAIN:  foreach my $pn ($dmh->{namelistsall}->@*) {
+    foreach my $alts ($be->get_alternates_for_field($pn)->@*) {
+      my $nl = $alts->{val};
 
-    # per-namelist uniquenametemplatename
-    if (defined($nl->get_uniquenametemplatename)) {
-      $untname = $nl->get_uniquenametemplatename;
-    }
+      my $nlid = $nl->get_id;
 
-    # per-namelist uniquelist
-    if (defined($nl->get_uniquelist)) {
-      $ul = $nl->get_uniquelist;
-    }
-
-    # per-namelist uniquename
-    if (defined($nl->get_uniquename)) {
-      $un = $nl->get_uniquename;
-    }
-
-    foreach my $n ($nl->names->@*) {
-      my $nid = $n->get_id;
-
-      my $namestring = '';
-      my $namestrings = [];
-      my $namedisschema = [];
-
-      # per-name uniquenametemplatename
-      if (defined($n->get_uniquenametemplatename)) {
-        $untname = $n->get_uniquenametemplatename;
+      # per-namelist uniquenametemplatename
+      if (defined($nl->get_uniquenametemplatename)) {
+        $untname = $nl->get_uniquenametemplatename;
       }
 
-      # per-name uniquename
-      if (defined($n->get_uniquename)) {
-        $un = $n->get_uniquename;
+      # per-namelist uniquelist
+      if (defined($nl->get_uniquelist)) {
+        $ul = $nl->get_uniquelist;
       }
 
-      my $nameun = $un;
+      # per-namelist uniquename
+      if (defined($nl->get_uniquename)) {
+        $un = $nl->get_uniquename;
+      }
 
-      # First construct base part ...
-      my $base = ''; # Might not be any base parts at all so make sure it's not undefined
-      my $baseparts;
+      foreach my $n ($nl->names->@*) {
+        my $nid = $n->get_id;
 
-      foreach my $np (Biber::Config->getblxoption(undef, 'uniquenametemplate')->{$untname}->@*) {
-        next unless $np->{base};
-        my $npn = $np->{namepart};
+        my $namestring = '';
+        my $namestrings = [];
+        my $namedisschema = [];
 
-        if (my $p = $n->get_namepart($npn)) {
-          if ($np->{use}) {     # only ever defined as 1
-            my $method = "get_use$npn";
-            my $useok = Biber::Config->getblxoption($secnum, "use$npn",
-                                                    $bee,
-                                                    $citekey);
-            # Override with per-namelist setting - only for extended name format
-            if (defined($nl->$method)) {
-              $useok = $nl->$method;
-            }
-            # Override with per-name setting - only for extended name format
-            if (defined($n->$method)) {
-              $useok = $n->$method;
-            }
-            next unless $useok;
-          }
-          $base .= $p;
-          push $baseparts->@*, $npn;
+        # per-name uniquenametemplatename
+        if (defined($n->get_uniquenametemplatename)) {
+          $untname = $n->get_uniquenametemplatename;
         }
-      }
 
-      $namestring .= $base;
-      push $namestrings->@*, $base;
-      push $namedisschema->@*, ['base' => $baseparts] if defined($baseparts);
+        # per-name uniquename
+        if (defined($n->get_uniquename)) {
+          $un = $n->get_uniquename;
+        }
 
-      # ... then add non-base parts by incrementally adding to the last disambiguation level
-      foreach my $np (Biber::Config->getblxoption(undef, 'uniquenametemplate')->{$untname}->@*) {
-        next if $np->{base};
-        next if defined($np->{disambiguation}) and ($np->{disambiguation} eq 'none');
+        my $nameun = $un;
 
-        my $npn = $np->{namepart};
+        # First construct base part ...
+        my $base = ''; # Might not be any base parts at all so make sure it's not undefined
+        my $baseparts;
 
-        my $level = $np->{disambiguation} // $UNIQUENAME_CONTEXTS{$un // 'false'};
-        my $lastns = $namestrings->[$namestrings->$#*];
+        foreach my $np (Biber::Config->getblxoption(undef, 'uniquenametemplate')->{$untname}->@*) {
+          next unless $np->{base};
+          my $npn = $np->{namepart};
 
-        if (my $p = $n->get_namepart($npn)) {
-          my $pi = $n->get_namepart_initial($npn);
-          if ($np->{use}) {     # only ever defined as 1
-            my $method = "get_use$npn";
-            my $useok = Biber::Config->getblxoption($secnum, "use$npn",
-                                                    $bee,
-                                                    $citekey);
-            # Override with per-namelist setting - only for extended name format
-            if (defined($nl->$method)) {
-              $useok = $nl->$method;
+          if (my $p = $n->get_namepart($npn)) {
+            if ($np->{use}) {   # only ever defined as 1
+              my $method = "get_use$npn";
+              my $useok = Biber::Config->getblxoption($secnum, "use$npn",
+                                                      $bee,
+                                                      $citekey);
+              # Override with per-namelist setting - only for extended name format
+              if (defined($nl->$method)) {
+                $useok = $nl->$method;
+              }
+              # Override with per-name setting - only for extended name format
+              if (defined($n->$method)) {
+                $useok = $n->$method;
+              }
+              next unless $useok;
             }
-            # Override with per-name setting - only for extended name format
-            if (defined($n->$method)) {
-              $useok = $n->$method;
-            }
-            next unless $useok;
-          }
-
-          $namestring .= $p;
-
-          # per-namepart disambiguation level
-          # Here we incrementally add disambiguation possibilities to an array and simultaneously
-          # record a schema of what each incremental disambiguation is
-          if (fc($level) eq fc('full')) { # only full disambiguation
-            push $namestrings->@*, $lastns . $p;
-            push $namedisschema->@*, [$npn => 'fullonly'];
-          }
-          if (fc($level) eq fc('initorfull')) { # initials or full disambiguation
-            push $namestrings->@*, $lastns . join('', $pi->@*);
-            push $namedisschema->@*, [$npn => 'init'];
-            push $namestrings->@*, $lastns . $p;
-            push $namedisschema->@*, [$npn => 'full'];
-          }
-          elsif (fc($level) eq fc('init')) { # inits only
-            push $namestrings->@*, $lastns . join('', $pi->@*);
-            push $namedisschema->@*, [$npn => 'init'];
+            $base .= $p;
+            push $baseparts->@*, $npn;
           }
         }
-      }
 
-      if ($logger->is_trace()) { # performance tune
-        $logger->trace("namestrings in '$citekey': " . join (',', $namestrings->@*));
-      }
+        $namestring .= $base;
+        push $namestrings->@*, $base;
+        push $namedisschema->@*, ['base' => $baseparts] if defined($baseparts);
 
-      # namelistul is the option value of the effective uniquelist option at the level
-      # of the list in which the name occurs. It's useful to know this where the results
-      # of the sub are used
-      $namedis->{$nlid}{$nid} = {nameun        => $nameun,
-                                 namelistul    => $ul,
-                                 namestring    => $namestring,
-                                 namestrings   => $namestrings,
-                                 namedisschema => $namedisschema};
+        # ... then add non-base parts by incrementally adding to the last disambiguation level
+        foreach my $np (Biber::Config->getblxoption(undef, 'uniquenametemplate')->{$untname}->@*) {
+          next if $np->{base};
+          next if defined($np->{disambiguation}) and ($np->{disambiguation} eq 'none');
+
+          my $npn = $np->{namepart};
+
+          my $level = $np->{disambiguation} // $UNIQUENAME_CONTEXTS{$un // 'false'};
+          my $lastns = $namestrings->[$namestrings->$#*];
+
+          if (my $p = $n->get_namepart($npn)) {
+            my $pi = $n->get_namepart_initial($npn);
+            if ($np->{use}) {   # only ever defined as 1
+              my $method = "get_use$npn";
+              my $useok = Biber::Config->getblxoption($secnum, "use$npn",
+                                                      $bee,
+                                                      $citekey);
+              # Override with per-namelist setting - only for extended name format
+              if (defined($nl->$method)) {
+                $useok = $nl->$method;
+              }
+              # Override with per-name setting - only for extended name format
+              if (defined($n->$method)) {
+                $useok = $n->$method;
+              }
+              next unless $useok;
+            }
+
+            $namestring .= $p;
+
+            # per-namepart disambiguation level
+            # Here we incrementally add disambiguation possibilities to an array and simultaneously
+            # record a schema of what each incremental disambiguation is
+            if (fc($level) eq fc('full')) { # only full disambiguation
+              push $namestrings->@*, $lastns . $p;
+              push $namedisschema->@*, [$npn => 'fullonly'];
+            }
+            if (fc($level) eq fc('initorfull')) { # initials or full disambiguation
+              push $namestrings->@*, $lastns . join('', $pi->@*);
+              push $namedisschema->@*, [$npn => 'init'];
+              push $namestrings->@*, $lastns . $p;
+              push $namedisschema->@*, [$npn => 'full'];
+            }
+            elsif (fc($level) eq fc('init')) { # inits only
+              push $namestrings->@*, $lastns . join('', $pi->@*);
+              push $namedisschema->@*, [$npn => 'init'];
+            }
+          }
+        }
+
+        if ($logger->is_trace()) { # performance tune
+          $logger->trace("namestrings in '$citekey': " . join (',', $namestrings->@*));
+        }
+
+        # namelistul is the option value of the effective uniquelist option at the level
+        # of the list in which the name occurs. It's useful to know this where the results
+        # of the sub are used
+        $namedis->{$nlid}{$nid} = {nameun        => $nameun,
+                                   namelistul    => $ul,
+                                   namestring    => $namestring,
+                                   namestrings   => $namestrings,
+                                   namedisschema => $namedisschema};
+      }
     }
   }
 
@@ -3568,7 +3571,7 @@ MAIN:  foreach my $citekey ( $section->get_citekeys ) {
 
       my $eul = Biber::Config->getblxoption($secnum, 'uniquelist', $bee, $citekey);
       # Per-namelist uniquelist
-      my $names = $be->get_field($be->get_labelname_info->@*);
+      my $names = $be->get_field($lni, $lnf, $lnl);
       if (defined($names->get_uniquelist)) {
         $eul = $names->get_uniquelist;
       }
@@ -3887,7 +3890,9 @@ sub generate_contextdata {
 
     # uniquename
     foreach my $namefield ($dmh->{namelists}->@*) {
-      if (my $nl = $be->get_field($namefield)) {
+      foreach my $alts ($be->get_alternates_for_field($namefield)->@*) {
+        my $nl = $alts->{val};
+
         my $nlid = $nl->get_id;
         next unless (defined($lni) and $lni eq $namefield); # labelname only
         foreach my $n ($nl->names->@*) {

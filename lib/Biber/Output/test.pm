@@ -30,37 +30,50 @@ Essentially, this outputs to a string so we can look at it internally in tests
 =cut
 
 sub _printfield {
-  my ($be, $field, $str) = @_;
+  my ($be, $field, $str, $ms) = @_;
+
   my $field_type = 'field';
+  my $dm = Biber::Config->get_dm;
+
+  my $outfield = $dm->get_outcase($field);
+
+  return '' if is_null($str) and not $dm->field_is_nullok($field);
+
   # crossref and xref are of type 'strng' in the .bbl
   if (lc($field) eq 'crossref' or
       lc($field) eq 'xref') {
     $field_type = 'strng';
   }
 
-  # auto-escase TeX special chars if:
-  # * The entry is not a bibtex entry (no auto-escaping for bibtex data)
-  # * It's not a strng field
+  # Output absolute astronomical year by default (with year 0)
+  # biblatex will adjust the years when printed with BCE/CE eras
+  if ($field =~ m/^(.*)(?!end)year$/) {
+    if (my $y = $be->get_field("$1year")) {
+      $str = abs($y) if looks_like_number($y);
+    }
+  }
+
+  # auto-escape TeX special chars if:
+  # * The entry is not a BibTeX entry (no auto-escaping for BibTeX data)
+  # * It's not a string field
   if ($field_type ne 'strng' and $be->get_field('datatype') ne 'bibtex') {
     $str =~ s/(?<!\\)(\#|\&|\%)/\\$1/gxms;
-    $str =~ s/\A[\n\s]+//xms;
-    $str =~ s/[\n\s]+\z//xms;
   }
 
   if (Biber::Config->getoption('wraplines')) {
-    ## 16 is the length of '      \field{}{}'
-    if ( 16 + Unicode::GCString->new($field)->length + Unicode::GCString->new($str)->length > 2*$Text::Wrap::columns ) {
-      return "      \\${field_type}{$field}{%\n" . wrap('      ', '      ', $str) . "%\n      }\n";
+    ## 16 is the length of '      \field{}{}' or '      \strng{}{}'
+    if ( 16 + Unicode::GCString->new($ms)->length + Unicode::GCString->new($outfield)->length + Unicode::GCString->new($str)->length > 2*$Text::Wrap::columns ) {
+      return "      \\${field_type}${ms}{$outfield}{%\n" . wrap('      ', '      ', $str) . "%\n      }\n";
     }
-    elsif ( 16 + Unicode::GCString->new($field)->length + Unicode::GCString->new($str)->length > $Text::Wrap::columns ) {
-      return wrap('      ', '      ', "\\${field_type}{$field}{$str}" ) . "\n";
+    elsif ( 16 + Unicode::GCString->new($ms)->length + Unicode::GCString->new($outfield)->length + Unicode::GCString->new($str)->length > $Text::Wrap::columns ) {
+      return wrap('      ', '      ', "\\${field_type}${ms}{$outfield}{$str}" ) . "\n";
     }
     else {
-      return "      \\${field_type}{$field}{$str}\n";
+      return "      \\${field_type}${ms}{$outfield}{$str}\n";
     }
   }
   else {
-    return "      \\${field_type}{$field}{$str}\n";
+    return "      \\${field_type}${ms}{$outfield}{$str}\n";
   }
   return;
 }
@@ -143,8 +156,18 @@ sub set_output_entry {
   # Output name fields
   foreach my $namefield ($dm->get_fields_of_type('list', 'name')->@*) {
     next if $dm->field_is_skipout($namefield);
-    if ( my $nf = $be->get_field($namefield) ) {
+    foreach my $alts ($be->get_alternates_for_field($namefield)->@*) {
+      my $nf = $alts->{val};
+      my $form = $alts->{form};
+      my $lang = $alts->{lang};
       my $nlid = $nf->get_id;
+
+      # Internally, no distinction is made between multiscript and
+      # non-multiscript fields but it is on output
+      my $ms = '';
+      if ($dm->is_multiscript($namefield)) {
+        $ms = "[msform=$form,mslang=$lang]";
+      }
 
       # Did we have "and others" in the data?
       if ( $nf->get_morenames ) {
@@ -158,7 +181,7 @@ sub set_output_entry {
       # Per-name uniquename if this is labelname
       if (defined($lni) and $lni eq $namefield) {
         if (defined($nf->get_uniquename)) {
-            $un = $nf->get_uniquename;
+          $un = $nf->get_uniquename;
         }
       }
 
@@ -189,7 +212,7 @@ sub set_output_entry {
         }
         $nfv = join(',', @plo);
       }
-      $acc .= "      \\name{$namefield}{$total}{$nfv}{%\n";
+      $acc .= "      \\name${ms}{$namefield}{$total}{$nfv}{%\n";
       for (my $i = 1; $i <= $total; $i++) {
         $acc .= $nf->names->[$i-1]->name_to_bbl($nf, $un, $i);
       }
@@ -199,14 +222,24 @@ sub set_output_entry {
 
   # List fields
   foreach my $listfield ($dm->get_fields_of_fieldtype('list')->@*) {
-    next if $dm->field_is_datatype('name', $listfield); # name is a special list
-    if ( my $lf = $be->get_field($listfield) ) {
-      if ( lc($be->get_field($listfield)->last_item) eq Biber::Config->getoption('others_string') ) {
+    foreach my $alts ($be->get_alternates_for_field($listfield)->@*) {
+      my $lf = $alts->{val};
+      my $form = $alts->{form};
+      my $lang = $alts->{lang};
+
+      # Internally, no distinction is made between multiscript and
+      # non-multiscript fields but it is on output
+      my $ms = '';
+      if ($dm->is_multiscript($listfield)) {
+        $ms = "[msform=$form,mslang=$lang]";
+      }
+
+      if ( lc($lf->last_item) eq Biber::Config->getoption('others_string') ) {
         $acc .= "      \\true{more$listfield}\n";
         $lf->del_last_item; # remove the last element in the array
       };
       my $total = $lf->count;
-      $acc .= "      \\list{$listfield}{$total}{%\n";
+      $acc .= "      \\list${ms}{$listfield}{$total}{%\n";
       foreach my $f ($lf->get_items->@*) {
         $acc .= "        {$f}%\n";
       }
@@ -221,12 +254,17 @@ sub set_output_entry {
   $acc .= "      <BDS>BIBNAMEHASH</BDS>\n";
 
   # Output namelist hashes
-  foreach my $namefield ($dmh->{namelists}->@*) {
-    next unless $be->get_field($namefield);
-    $acc .= "      <BDS>${namefield}BIBNAMEHASH</BDS>\n";
-    $acc .= "      <BDS>${namefield}NAMEHASH</BDS>\n";
-    if (my $fullhash = $be->get_field("${namefield}fullhash")) {
-      $acc .= "      \\strng{${namefield}fullhash}{$fullhash}\n";
+  foreach my $n ($dmh->{namelists}->@*) {
+    foreach my $alts ($be->get_alternates_for_field($n)->@*) {
+      my $val = $alts->{val};
+      my $form = $alts->{form};
+      my $lang = $alts->{lang};
+
+      $acc .= "      <BDS>${n}${form}${lang}BIBNAMEHASH</BDS>\n";
+      $acc .= "      <BDS>${n}${form}${lang}NAMEHASH</BDS>\n";
+      if (my $fullhash = $be->get_field("${n}${form}${lang}fullhash")) {
+        $acc .= "      \\strng{${n}${form}${lang}fullhash}{$fullhash}\n";
+      }
     }
   }
 
@@ -288,40 +326,57 @@ sub set_output_entry {
     $acc .= "      \\field{labeltitlesource}{$lti}{$ltf}{$ltl}\n";
   }
 
-  foreach my $field (sort $dm->get_fields_of_type('field', 'entrykey')->@*,
-                          $dm->get_fields_of_type('field', 'key')->@*,
-                          $dm->get_fields_of_type('field', 'integer')->@*,
-                          $dm->get_fields_of_type('field', 'datepart')->@*,
-                          $dm->get_fields_of_type('field', 'literal')->@*,
-                          $dm->get_fields_of_type('field', 'code')->@*) {
-    next if $dm->field_is_skipout($field);
-    next if $dm->get_fieldformat($field) eq 'xsv';
-    if ( ($dm->field_is_nullok($field) and
-          $be->field_exists($field)) or
-         $be->get_field($field) ) {
-      # we skip outputting the crossref or xref when the parent is not cited
-      # (biblatex manual, section 2.2.3)
-      # sets are a special case so always output crossref/xref for them since their
-      # children will always be in the .bbl otherwise they make no sense.
-      unless ( $be->get_field('entrytype') eq 'set') {
-        next if ($field eq 'crossref' and
-                 not $section->has_citekey($be->get_field('crossref')));
-        next if ($field eq 'xref' and
-                 not $section->has_citekey($be->get_field('xref')));
+  foreach my $field ($dmh->{fields}->@*) {
+    foreach my $alts ($be->get_alternates_for_field($field)->@*) {
+      my $val = $alts->{val};
+      my $form = $alts->{form};
+      my $lang = $alts->{lang};
+
+      # Internally, no distinction is made between multiscript and
+      # non-multiscript fields but it is on output
+      my $ms = '';
+      if ($dm->is_multiscript($field)) {
+        $ms = "[msform=$form,mslang=$lang]";
       }
 
-      $acc .= _printfield($be, $field, $be->get_field($field) );
+      if ( length($val) or     # length() catches '0' values, which we want
+           ($dm->field_is_nullok($field) and
+            $be->field_exists($field, $form, $lang)) ) {
+
+        # we skip outputting the crossref or xref when the parent is not cited
+        # (biblatex manual, section 2.2.3)
+        # sets are a special case so always output crossref/xref for them since their
+        # children will always be in the .bbl otherwise they make no sense.
+        unless ($bee eq 'set') {
+          next if ($field eq 'crossref' and
+                   not $section->has_citekey($be->get_field('crossref')));
+          next if ($field eq 'xref' and
+                   not $section->has_citekey($be->get_field('xref')));
+        }
+        $acc .= _printfield($be, $field, $val, $ms);
+      }
     }
   }
 
   # XSV fields
-  foreach my $field (sort $dm->get_fields_of_fieldformat('xsv')->@*) {
-    next if $dm->field_is_skipout($field);
+  foreach my $field ($dmh->{xsv}->@*) {
     # keywords is by default field/xsv/keyword but it is in fact
     # output with its own special macro below
     next if $field eq 'keywords';
-    if (my $f = $be->get_field($field)) {
-      $acc .= _printfield($be, $field, join(',', $f->get_items->@*) );
+
+    foreach my $alts ($be->get_alternates_for_field($field)->@*) {
+      my $f = $alts->{val};
+      my $form = $alts->{form};
+      my $lang = $alts->{lang};
+
+      # Internally, no distinction is made between multiscript and
+      # non-multiscript fields but it is on output
+      my $ms = '';
+      if ($dm->is_multiscript($field)) {
+        $ms = "[msform=$form,mslang=$lang]";
+      }
+
+      $acc .= _printfield($be, $field, join(',', $f->get_items->@*), $ms);
     }
   }
 

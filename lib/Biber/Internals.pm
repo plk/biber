@@ -654,7 +654,7 @@ sub _process_label_attributes {
           # Get the indices of each field (or namepart) we are dealing with
           my %indices;
           foreach my $key (@citekeys) {
-            if (my $f = $section->bibentry($key)->get_field($field)) {
+            if (my $f = $section->bibentry($key)->get_field($field, $labelattrs->{form}, $labelattrs->{lang})) {
               if ($nameparts) { # name field
                 my $nlid = $f->get_id;
                 foreach my $n ($f->first_n_names($dlist->get_visible_alpha($nlid))->@*) {
@@ -732,7 +732,7 @@ sub _process_label_attributes {
         else {
           # This retains the structure of the entries for the "l" list disambiguation
           # Have to be careful if field "$f" is not set for all entries
-          my $strings = [map {my $f = $section->bibentry($_)->get_field($field);
+          my $strings = [map {my $f = $section->bibentry($_)->get_field($field, $labelattrs->{form}, $labelattrs->{lang});
                               $f ? ($nameparts ? [map {my $n = $_;join('', map {$n->get_namepart($_)} $nameparts->@*)} $f->first_n_names($dlist->get_visible_alpha($f->get_id))->@*] : [$f]) : [''] }
                          @citekeys];
           my $lcache = _label_listdisambiguation($strings);
@@ -1363,7 +1363,7 @@ sub _sort_list {
 sub _sort_list_verbatim {
   my ($self, $citekey, $secnum, $section, $be, $dlist, $sortelementattributes, $args) = @_;
   my $list = $args->[0]; # get list field
-  if ($be->get_field($list)) {
+  if ($be->get_field($list, $sortelementattributes->{form}, $sortelementattributes->{lang})) {
     my $string = $self->_liststring($citekey, $list, $sortelementattributes->{form}, $sortelementattributes->{lang}, 1);
     return _process_sort_attributes($string, $sortelementattributes);
   }
@@ -1433,7 +1433,7 @@ sub _sort_sortname {
   my $dm = Biber::Config->get_dm;
 
   # sortname is ignored if no use<name> option is defined - see biblatex manual
-  if ($be->get_field('sortname') and
+  if ($be->get_field('sortname', $sortelementattributes->{form}, $sortelementattributes->{lang}) and
       grep {Biber::Config->getblxoption($secnum, "use$_", $be->get_field('entrytype'), $citekey)} $dm->get_fields_of_type('list', 'name')->@*) {
     my $string = $self->_namestring($citekey, 'sortname', $sortelementattributes->{form}, $sortelementattributes->{lang}, $dlist);
     return _translit('sortname', $be, _process_sort_attributes($string, $sortelementattributes));

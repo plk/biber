@@ -308,7 +308,7 @@ sub set_output_entry {
 
       if (length($val) or      # length() catches '0' values, which we want
           ($dm->field_is_nullok($field) and
-           $be->field_exists($field))) {
+           $be->field_exists($field, $form, $lang))) {
         next if $dm->get_fieldformat($field) eq 'xsv';
         next if $field eq 'crossref'; # this is handled above
         my @attrs;

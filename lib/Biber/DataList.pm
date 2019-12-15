@@ -1838,14 +1838,16 @@ sub instantiate_entry {
 
     # uniquelist
     foreach my $namefield ($dmh->{namelists}->@*) {
-      next unless my $nl = $be->get_field($namefield);
-      my $nlid = $nl->get_id;
-      if (defined($self->get_uniquelist($nlid))) {
-        my $str = 'ul=' . $self->get_uniquelist($nlid);
-        $entry_string =~ s|<BDS>UL-$nlid</BDS>|$str|gxms;
-      }
-      else {
-        $entry_string =~ s|<BDS>UL-$nlid</BDS>,?||gxms;
+      foreach my $alts ($be->get_alternates_for_field($namefield)->@*) {
+        my $nl = $alts->{val};
+        my $nlid = $nl->get_id;
+        if (defined($self->get_uniquelist($nlid))) {
+          my $str = 'ul=' . $self->get_uniquelist($nlid);
+          $entry_string =~ s|<BDS>UL-$nlid</BDS>|$str|gxms;
+        }
+        else {
+          $entry_string =~ s|<BDS>UL-$nlid</BDS>,?||gxms;
+        }
       }
     }
 
