@@ -388,12 +388,12 @@ sub set_output_entry {
 
   # The source field for labelname
   if ($lni) {
-    $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($lni), name => 'labelnamesource');
+    $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($lni), name => 'labelnamesource', msform => $lnf, 'mslang' => $lnl);
   }
 
   # The source field for labeltitle
   if (my ($lti, $ltf, $ltl) = $be->get_labeltitle_info->@*) {
-    $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($lti), name => 'labeltitlesource');
+    $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($lti), name => 'labeltitlesource', 'msform' => $ltf, 'mslang' => $ltl);
   }
 
   if (my $ck = $be->get_field('clonesourcekey')) {

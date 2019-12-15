@@ -48,8 +48,8 @@
         <bbl:field name="labelalpha">Aks\textbf{+}06</bbl:field>
         <bbl:field name="sortinit">A</bbl:field>
         <bbl:field name="sortinithash">a3dcedd53b04d1adfd5ac303ecd5e6fa</bbl:field>
-        <bbl:field name="labelnamesource">author</bbl:field>
-        <bbl:field name="labeltitlesource">title</bbl:field>
+        <bbl:field name="labelnamesource" msform="default" mslang="en-us">author</bbl:field>
+        <bbl:field name="labeltitlesource" msform="default" mslang="en-us">title</bbl:field>
         <bbl:field name="indextitle">Effect of immobilization on catalytic characteristics</bbl:field>
         <bbl:field name="journaltitle" msform="default" mslang="en-us">J. Organomet. Chem.</bbl:field>
         <bbl:field name="number">13</bbl:field>
@@ -80,8 +80,8 @@
         <bbl:field name="labelalpha">Ang02</bbl:field>
         <bbl:field name="sortinit">A</bbl:field>
         <bbl:field name="sortinithash">a3dcedd53b04d1adfd5ac303ecd5e6fa</bbl:field>
-        <bbl:field name="labelnamesource">author</bbl:field>
-        <bbl:field name="labeltitlesource">shorttitle</bbl:field>
+        <bbl:field name="labelnamesource" msform="default" mslang="en-us">author</bbl:field>
+        <bbl:field name="labeltitlesource" msform="default" mslang="en-us">shorttitle</bbl:field>
         <bbl:field name="annotation">A German article in a French journal. Apart from that, a typical article entry. Note the indextitle field</bbl:field>
         <bbl:field name="indextitle">In Honore Salvatoris</bbl:field>
         <bbl:field name="journaltitle" msform="default" mslang="en-us">Revue d'Histoire Ecclésiastique</bbl:field>
@@ -137,8 +137,8 @@
         <bbl:field name="authordefaulten-usbibnamehash">eb3f242602109f5bdbeb41fdd990fcc0</bbl:field>
         <bbl:field name="sortinit">G</bbl:field>
         <bbl:field name="sortinithash">62eb2aa29549e4fdbd3cb154ec5711cb</bbl:field>
-        <bbl:field name="labelnamesource">author</bbl:field>
-        <bbl:field name="labeltitlesource">title</bbl:field>
+        <bbl:field name="labelnamesource" msform="default" mslang="en-us">author</bbl:field>
+        <bbl:field name="labeltitlesource" msform="default" mslang="en-us">title</bbl:field>
         <bbl:field name="journaltitle" msform="default" mslang="en-us">Nucl. Phys.</bbl:field>
         <bbl:field name="title" msform="default" mslang="en-us">Partial Symmetries of Weak Interactions</bbl:field>
         <bbl:field name="volume">22</bbl:field>
@@ -174,8 +174,8 @@
         <bbl:field name="sortinit">K</bbl:field>
         <bbl:field name="sortinithash">d3edc18d54b9438a72c24c925bfb38f4</bbl:field>
         <bbl:field name="extraalpha">1</bbl:field>
-        <bbl:field name="labelnamesource">author</bbl:field>
-        <bbl:field name="labeltitlesource">shorttitle</bbl:field>
+        <bbl:field name="labelnamesource" msform="default" mslang="en-us">author</bbl:field>
+        <bbl:field name="labeltitlesource" msform="default" mslang="en-us">shorttitle</bbl:field>
         <bbl:field name="annotation">The second volume of a five-volume book. Note the sorttitle field. Also note the indexsorttitle field</bbl:field>
         <bbl:field name="indexsorttitle">TeX: The Program</bbl:field>
         <bbl:field name="langid">english</bbl:field>
@@ -210,8 +210,8 @@
         <bbl:field name="sortinit">K</bbl:field>
         <bbl:field name="sortinithash">d3edc18d54b9438a72c24c925bfb38f4</bbl:field>
         <bbl:field name="extraalpha">2</bbl:field>
-        <bbl:field name="labelnamesource">author</bbl:field>
-        <bbl:field name="labeltitlesource">shorttitle</bbl:field>
+        <bbl:field name="labelnamesource" msform="default" mslang="en-us">author</bbl:field>
+        <bbl:field name="labeltitlesource" msform="default" mslang="en-us">shorttitle</bbl:field>
         <bbl:field name="annotation">The third volume of a five-volume book. Note the sorttitle and indextitle field</bbl:field>
         <bbl:field name="indextitle">METAFONTbook, The</bbl:field>
         <bbl:field name="langid">english</bbl:field>
@@ -238,8 +238,8 @@
         <bbl:field name="labelalpha">Ree58</bbl:field>
         <bbl:field name="sortinit">R</bbl:field>
         <bbl:field name="sortinithash">b9c68a358aea118dfa887b6e902414a7</bbl:field>
-        <bbl:field name="labelnamesource">author</bbl:field>
-        <bbl:field name="labeltitlesource">title</bbl:field>
+        <bbl:field name="labelnamesource" msform="default" mslang="en-us">author</bbl:field>
+        <bbl:field name="labeltitlesource" msform="default" mslang="en-us">title</bbl:field>
         <bbl:field name="annotation">An article entry with a series and a volume field. Note the format of the series. If the value of the series field is an integer, this number is printed as an ordinal and the string *series is appended automatically</bbl:field>
         <bbl:field name="journaltitle" msform="default" mslang="en-us">William and Mary Quarterly</bbl:field>
         <bbl:field name="langid">english</bbl:field>
@@ -295,8 +295,8 @@
         <bbl:field name="editordefaulten-usbibnamehash">d0ec890e59163c24c111a08d2a4be982</bbl:field>
         <bbl:field name="sortinit">S</bbl:field>
         <bbl:field name="sortinithash">c319cff79d99c853d775f88277d4e45f</bbl:field>
-        <bbl:field name="labelnamesource">author</bbl:field>
-        <bbl:field name="labeltitlesource">title</bbl:field>
+        <bbl:field name="labelnamesource" msform="default" mslang="en-us">author</bbl:field>
+        <bbl:field name="labeltitlesource" msform="default" mslang="en-us">title</bbl:field>
         <bbl:field name="booksubtitle" msform="default" mslang="en-us">Relativistic groups and analyticity</bbl:field>
         <bbl:field name="booktitle" msform="default" mslang="en-us">Elementary particle theory</bbl:field>
         <bbl:field name="booktitleaddon" msform="default" mslang="en-us">Proceedings of the Eighth Nobel Symposium, May 19--25, 1968</bbl:field>
@@ -326,8 +326,8 @@
         <bbl:field name="labelalpha">Sho91</bbl:field>
         <bbl:field name="sortinit">S</bbl:field>
         <bbl:field name="sortinithash">c319cff79d99c853d775f88277d4e45f</bbl:field>
-        <bbl:field name="labelnamesource">author</bbl:field>
-        <bbl:field name="labeltitlesource">title</bbl:field>
+        <bbl:field name="labelnamesource" msform="default" mslang="en-us">author</bbl:field>
+        <bbl:field name="labeltitlesource" msform="default" mslang="en-us">title</bbl:field>
         <bbl:field name="annotation">An article entry with series, volume, and number fields. Note the format of the series which is a localization key</bbl:field>
         <bbl:field name="journaltitle" msform="default" mslang="en-us">American Anthropologist</bbl:field>
         <bbl:field name="number">1</bbl:field>
@@ -369,8 +369,8 @@
         <bbl:field name="authordefaulten-usbibnamehash">15e144c72b0b9d10db00ddc6d37a19e6</bbl:field>
         <bbl:field name="sortinit">W</bbl:field>
         <bbl:field name="sortinithash">1af34bd8c148ffb32de1494636b49713</bbl:field>
-        <bbl:field name="labelnamesource">author</bbl:field>
-        <bbl:field name="labeltitlesource">title</bbl:field>
+        <bbl:field name="labelnamesource" msform="default" mslang="en-us">author</bbl:field>
+        <bbl:field name="labeltitlesource" msform="default" mslang="en-us">title</bbl:field>
         <bbl:field name="journaltitle" msform="default" mslang="en-us">Phys. Rev. Lett.</bbl:field>
         <bbl:field name="title" msform="default" mslang="en-us">A Model of Leptons</bbl:field>
         <bbl:field name="volume">19</bbl:field>
@@ -427,8 +427,8 @@
         <bbl:field name="labelalpha">Aks\textbf{+}06</bbl:field>
         <bbl:field name="sortinit">A</bbl:field>
         <bbl:field name="sortinithash">a3dcedd53b04d1adfd5ac303ecd5e6fa</bbl:field>
-        <bbl:field name="labelnamesource">author</bbl:field>
-        <bbl:field name="labeltitlesource">title</bbl:field>
+        <bbl:field name="labelnamesource" msform="default" mslang="en-us">author</bbl:field>
+        <bbl:field name="labeltitlesource" msform="default" mslang="en-us">title</bbl:field>
         <bbl:field name="indextitle">Effect of immobilization on catalytic characteristics</bbl:field>
         <bbl:field name="journaltitle" msform="default" mslang="en-us">J. Organomet. Chem.</bbl:field>
         <bbl:field name="number">13</bbl:field>
@@ -459,8 +459,8 @@
         <bbl:field name="labelalpha">Ang02</bbl:field>
         <bbl:field name="sortinit">A</bbl:field>
         <bbl:field name="sortinithash">a3dcedd53b04d1adfd5ac303ecd5e6fa</bbl:field>
-        <bbl:field name="labelnamesource">author</bbl:field>
-        <bbl:field name="labeltitlesource">shorttitle</bbl:field>
+        <bbl:field name="labelnamesource" msform="default" mslang="en-us">author</bbl:field>
+        <bbl:field name="labeltitlesource" msform="default" mslang="en-us">shorttitle</bbl:field>
         <bbl:field name="annotation">A German article in a French journal. Apart from that, a typical article entry. Note the indextitle field</bbl:field>
         <bbl:field name="indextitle">In Honore Salvatoris</bbl:field>
         <bbl:field name="journaltitle" msform="default" mslang="en-us">Revue d'Histoire Ecclésiastique</bbl:field>
@@ -516,8 +516,8 @@
         <bbl:field name="authordefaulten-usbibnamehash">eb3f242602109f5bdbeb41fdd990fcc0</bbl:field>
         <bbl:field name="sortinit">G</bbl:field>
         <bbl:field name="sortinithash">62eb2aa29549e4fdbd3cb154ec5711cb</bbl:field>
-        <bbl:field name="labelnamesource">author</bbl:field>
-        <bbl:field name="labeltitlesource">title</bbl:field>
+        <bbl:field name="labelnamesource" msform="default" mslang="en-us">author</bbl:field>
+        <bbl:field name="labeltitlesource" msform="default" mslang="en-us">title</bbl:field>
         <bbl:field name="journaltitle" msform="default" mslang="en-us">Nucl. Phys.</bbl:field>
         <bbl:field name="title" msform="default" mslang="en-us">Partial Symmetries of Weak Interactions</bbl:field>
         <bbl:field name="volume">22</bbl:field>
@@ -553,8 +553,8 @@
         <bbl:field name="sortinit">K</bbl:field>
         <bbl:field name="sortinithash">d3edc18d54b9438a72c24c925bfb38f4</bbl:field>
         <bbl:field name="extraalpha">1</bbl:field>
-        <bbl:field name="labelnamesource">author</bbl:field>
-        <bbl:field name="labeltitlesource">shorttitle</bbl:field>
+        <bbl:field name="labelnamesource" msform="default" mslang="en-us">author</bbl:field>
+        <bbl:field name="labeltitlesource" msform="default" mslang="en-us">shorttitle</bbl:field>
         <bbl:field name="annotation">The second volume of a five-volume book. Note the sorttitle field. Also note the indexsorttitle field</bbl:field>
         <bbl:field name="indexsorttitle">TeX: The Program</bbl:field>
         <bbl:field name="langid">english</bbl:field>
@@ -589,8 +589,8 @@
         <bbl:field name="sortinit">K</bbl:field>
         <bbl:field name="sortinithash">d3edc18d54b9438a72c24c925bfb38f4</bbl:field>
         <bbl:field name="extraalpha">2</bbl:field>
-        <bbl:field name="labelnamesource">author</bbl:field>
-        <bbl:field name="labeltitlesource">shorttitle</bbl:field>
+        <bbl:field name="labelnamesource" msform="default" mslang="en-us">author</bbl:field>
+        <bbl:field name="labeltitlesource" msform="default" mslang="en-us">shorttitle</bbl:field>
         <bbl:field name="annotation">The third volume of a five-volume book. Note the sorttitle and indextitle field</bbl:field>
         <bbl:field name="indextitle">METAFONTbook, The</bbl:field>
         <bbl:field name="langid">english</bbl:field>
@@ -617,8 +617,8 @@
         <bbl:field name="labelalpha">Ree58</bbl:field>
         <bbl:field name="sortinit">R</bbl:field>
         <bbl:field name="sortinithash">b9c68a358aea118dfa887b6e902414a7</bbl:field>
-        <bbl:field name="labelnamesource">author</bbl:field>
-        <bbl:field name="labeltitlesource">title</bbl:field>
+        <bbl:field name="labelnamesource" msform="default" mslang="en-us">author</bbl:field>
+        <bbl:field name="labeltitlesource" msform="default" mslang="en-us">title</bbl:field>
         <bbl:field name="annotation">An article entry with a series and a volume field. Note the format of the series. If the value of the series field is an integer, this number is printed as an ordinal and the string *series is appended automatically</bbl:field>
         <bbl:field name="journaltitle" msform="default" mslang="en-us">William and Mary Quarterly</bbl:field>
         <bbl:field name="langid">english</bbl:field>
@@ -674,8 +674,8 @@
         <bbl:field name="editordefaulten-usbibnamehash">d0ec890e59163c24c111a08d2a4be982</bbl:field>
         <bbl:field name="sortinit">S</bbl:field>
         <bbl:field name="sortinithash">c319cff79d99c853d775f88277d4e45f</bbl:field>
-        <bbl:field name="labelnamesource">author</bbl:field>
-        <bbl:field name="labeltitlesource">title</bbl:field>
+        <bbl:field name="labelnamesource" msform="default" mslang="en-us">author</bbl:field>
+        <bbl:field name="labeltitlesource" msform="default" mslang="en-us">title</bbl:field>
         <bbl:field name="booksubtitle" msform="default" mslang="en-us">Relativistic groups and analyticity</bbl:field>
         <bbl:field name="booktitle" msform="default" mslang="en-us">Elementary particle theory</bbl:field>
         <bbl:field name="booktitleaddon" msform="default" mslang="en-us">Proceedings of the Eighth Nobel Symposium, May 19--25, 1968</bbl:field>
@@ -705,8 +705,8 @@
         <bbl:field name="labelalpha">Sho91</bbl:field>
         <bbl:field name="sortinit">S</bbl:field>
         <bbl:field name="sortinithash">c319cff79d99c853d775f88277d4e45f</bbl:field>
-        <bbl:field name="labelnamesource">author</bbl:field>
-        <bbl:field name="labeltitlesource">title</bbl:field>
+        <bbl:field name="labelnamesource" msform="default" mslang="en-us">author</bbl:field>
+        <bbl:field name="labeltitlesource" msform="default" mslang="en-us">title</bbl:field>
         <bbl:field name="annotation">An article entry with series, volume, and number fields. Note the format of the series which is a localization key</bbl:field>
         <bbl:field name="journaltitle" msform="default" mslang="en-us">American Anthropologist</bbl:field>
         <bbl:field name="number">1</bbl:field>
@@ -748,8 +748,8 @@
         <bbl:field name="authordefaulten-usbibnamehash">15e144c72b0b9d10db00ddc6d37a19e6</bbl:field>
         <bbl:field name="sortinit">W</bbl:field>
         <bbl:field name="sortinithash">1af34bd8c148ffb32de1494636b49713</bbl:field>
-        <bbl:field name="labelnamesource">author</bbl:field>
-        <bbl:field name="labeltitlesource">title</bbl:field>
+        <bbl:field name="labelnamesource" msform="default" mslang="en-us">author</bbl:field>
+        <bbl:field name="labeltitlesource" msform="default" mslang="en-us">title</bbl:field>
         <bbl:field name="journaltitle" msform="default" mslang="en-us">Phys. Rev. Lett.</bbl:field>
         <bbl:field name="title" msform="default" mslang="en-us">A Model of Leptons</bbl:field>
         <bbl:field name="volume">19</bbl:field>
