@@ -221,10 +221,14 @@ sub set_output_entry {
   }
 
   # Output name fields
-  foreach my $namefield ($dm->get_fields_of_type('list', 'name')->@*) {
-    if ( my $nf = $be->get_field($namefield) ) {
-      next if $dm->field_is_skipout($namefield);
+  foreach my $n ($dmh->{namelists}->@*) {
+    next if $dm->field_is_skipout($n);
+    foreach my $alts ($be->get_alternates_for_field($n)->@*) {
+      my $nf = $alts->{val};
+      my $form = $alts->{form};
+      my $lang = $alts->{lang};
       my $nlid = $nf->get_id;
+
       my %plo;
 
       # Did we have "and others" in the data?
@@ -234,7 +238,7 @@ sub set_output_entry {
 
       my $total = $nf->count;
 
-      if (defined($lni) and $lni eq $namefield) {
+      if (defined($lni) and $lni eq $n) {
 
         # Add uniquelist if requested
         # Don't use angles in attributes ...
@@ -254,14 +258,22 @@ sub set_output_entry {
         }
       }
 
-      $xml->startTag([$xml_prefix, 'names'], type => $namefield, count => $total, map {$_ => $plo{$_}} sort keys %plo);
+      # Internally, no distinction is made between multiscript and
+      # non-multiscript fields but it is on output
+      my @ms = ();
+      if ($dm->is_multiscript($n)) {
+        push @ms, ('msform' => $form) if $form;
+        push @ms, ('mslang' => $lang) if $lang;
+      }
+
+      $xml->startTag([$xml_prefix, 'names'], type => $n, @ms, count => $total, map {$_ => $plo{$_}} sort keys %plo);
 
       # Now the names
       for (my $i = 1; $i <= $total; $i++) {
         my $n = $nf->names->[$i-1];
 
         # Per-name uniquename if this is labelname
-        if ($lni eq $namefield) {
+        if ($lni eq $n) {
           if (defined($n->get_uniquename)) {
             $un = $n->get_uniquename;
           }
@@ -269,16 +281,20 @@ sub set_output_entry {
 
         $n->name_to_bblxml($xml, $xml_prefix, $nf, $un, $i);
       }
-      $xml->endTag();# names
+      $xml->endTag();           # names
     }
   }
 
   # Output list fields
   foreach my $listfield ($dm->get_fields_of_fieldtype('list')->@*) {
-    if (my $lf = $be->get_field($listfield)) {
-      next if $dm->field_is_datatype('name', $listfield); # name is a special list
-      next if $dm->field_is_datatype('uri', $listfield); # special lists
-      next if $dm->field_is_skipout($listfield);
+    next if $dm->field_is_datatype('name', $listfield); # name is a special list
+    next if $dm->field_is_datatype('uri', $listfield); # special lists
+    next if $dm->field_is_skipout($listfield);
+
+    foreach my $alts ($be->get_alternates_for_field($listfield)->@*) {
+      my $lf = $alts->{val};
+      my $form = $alts->{form};
+      my $lang = $alts->{lang};
 
       my %plo;
 
@@ -288,8 +304,16 @@ sub set_output_entry {
         $lf->del_last_item;
       }
 
+      # Internally, no distinction is made between multiscript and
+      # non-multiscript fields but it is on output
+      my @ms = ();
+      if ($dm->is_multiscript($listfield)) {
+        push @ms, ('msform' => $form) if $form;
+        push @ms, ('mslang' => $lang) if $lang;
+      }
+
       my $total = $lf->count;
-      $xml->startTag([$xml_prefix, 'list'], name => $listfield, count => $total, map {$_ => $plo{$_}} sort keys %plo);
+      $xml->startTag([$xml_prefix, 'list'], name => $listfield, @ms, count => $total, map {$_ => $plo{$_}} sort keys %plo);
       foreach my $f ($lf->get_items->@*) {
         $xml->dataElement([$xml_prefix, 'item'], _bblxml_norm($f));
       }
@@ -304,13 +328,18 @@ sub set_output_entry {
   $xml->dataElement('BDS', 'BIBNAMEHASH');
 
   # Output namelist hashes
-  foreach my $namefield ($dmh->{namelists}->@*) {
-    next unless $be->get_field($namefield);
-    $xml->dataElement('BDS', "${namefield}NAMEHASH");
-    if (my $fullhash = $be->get_field("${namefield}fullhash")) {
-      $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($fullhash), name => "${namefield}fullhash");
+  foreach my $n ($dmh->{namelists}->@*) {
+    foreach my $alts ($be->get_alternates_for_field($n)->@*) {
+      my $val = $alts->{val};
+      my $form = $alts->{form};
+      my $lang = $alts->{lang};
+
+      $xml->dataElement('BDS', "${n}${form}${lang}NAMEHASH");
+      if (my $fullhash = $be->get_field("${n}${form}${lang}fullhash")) {
+        $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($fullhash), name => "${n}${form}${lang}fullhash");
+      }
+      $xml->dataElement('BDS', "${n}${form}${lang}BIBNAMEHASH");
     }
-    $xml->dataElement('BDS', "${namefield}BIBNAMEHASH");
   }
 
   # Output extraname if there is a labelname
@@ -371,6 +400,8 @@ sub set_output_entry {
     $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($ck), name => 'clonesourcekey');
   }
 
+
+  # Output fields
   foreach my $field (sort $dm->get_fields_of_type('field',
                                                   ['entrykey',
                                                    'key',
@@ -378,25 +409,38 @@ sub set_output_entry {
                                                    'literal',
                                                    'code',
                                                    'verbatim'])->@*) {
-    my $val = $be->get_field($field);
-    if ( length($val) or # length() catches '0' values, which we want
-         ($dm->field_is_nullok($field) and
-          $be->field_exists($field))) {
-      next if $dm->field_is_skipout($field);
-      next if $dm->get_fieldformat($field) eq 'xsv';
-      # we skip outputting the crossref or xref when the parent is not cited
-      # (biblatex manual, section 2.2.3)
-      # sets are a special case so always output crossref/xref for them since their
-      # children will always be in the .bbl otherwise they make no sense.
-      unless ($bee eq 'set') {
-        next if ($field eq 'crossref' and
-                 not $section->has_citekey($be->get_field('crossref')));
-        next if ($field eq 'xref' and
-                 not $section->has_citekey($be->get_field('xref')));
-      }
+    foreach my $alts ($be->get_alternates_for_field($field)->@*) {
+      my $val = $alts->{val};
+      my $form = $alts->{form};
+      my $lang = $alts->{lang};
 
-      $xml->dataElement([$xml_prefix, 'field'],
-                        _bblxml_norm($val), name => $field);
+      if ( length($val) or     # length() catches '0' values, which we want
+           ($dm->field_is_nullok($field) and
+            $be->field_exists($field, $form, $lang))) {
+        next if $dm->field_is_skipout($field);
+        next if $dm->get_fieldformat($field) eq 'xsv';
+        # we skip outputting the crossref or xref when the parent is not cited
+        # (biblatex manual, section 2.2.3)
+        # sets are a special case so always output crossref/xref for them since their
+        # children will always be in the .bbl otherwise they make no sense.
+        unless ($bee eq 'set') {
+          next if ($field eq 'crossref' and
+                   not $section->has_citekey($be->get_field('crossref')));
+          next if ($field eq 'xref' and
+                   not $section->has_citekey($be->get_field('xref')));
+        }
+
+        # Internally, no distinction is made between multiscript and
+        # non-multiscript fields but it is on output
+        my @ms = ();
+        if ($dm->is_multiscript($field)) {
+          push @ms, ('msform' => $form) if $form;
+          push @ms, ('mslang' => $lang) if $lang;
+        }
+
+        $xml->dataElement([$xml_prefix, 'field'],
+                          _bblxml_norm($val), name => $field, @ms);
+      }
     }
   }
 
@@ -477,12 +521,25 @@ sub set_output_entry {
 
   # XSV fields
   foreach my $field ($dmh->{xsv}->@*) {
-    if (my $f = $be->get_field($field)) {
-      next if $dm->field_is_skipout($field);
-      # keywords is by default field/xsv/keyword but it is in fact
-      # output with its own special macro below
-      next if $field eq 'keywords';
-      $xml->startTag([$xml_prefix, 'field'], name => $field, format => 'xsv');
+    next if $dm->field_is_skipout($field);
+    # keywords is by default field/xsv/keyword but it is in fact
+    # output with its own special macro below
+    next if $field eq 'keywords';
+
+    foreach my $alts ($be->get_alternates_for_field($field)->@*) {
+      my $f = $alts->{val};
+      my $form = $alts->{form};
+      my $lang = $alts->{lang};
+
+      # Internally, no distinction is made between multiscript and
+      # non-multiscript fields but it is on output
+      my @ms = ();
+      if ($dm->is_multiscript($field)) {
+        push @ms, ('msform' => $form) if $form;
+        push @ms, ('mslang' => $lang) if $lang;
+      }
+
+      $xml->startTag([$xml_prefix, 'field'], name => $field, @ms, format => 'xsv');
       foreach my $f ($f->get_items->@*) {
         $xml->dataElement([$xml_prefix, 'item'], _bblxml_norm($f));
       }
@@ -554,50 +611,68 @@ sub set_output_entry {
   # Output annotations
   foreach my $f (Biber::Annotation->get_annotated_fields('field', $key)) {
     foreach my $n (Biber::Annotation->get_annotations('field', $key, $f)) {
-      my $v = Biber::Annotation->get_annotation('field', $key, $f, $n);
-      my $l = Biber::Annotation->is_literal_annotation('field', $key, $f, $n);
-      $xml->dataElement([$xml_prefix, 'annotation'],
-                        scope => 'field',
-                        field => _bblxml_norm($f),
-                        name  => bblxml_norm($n),
-                        literal => $l,
-                        value => _bblxml_norm($v)
-                       );
+      foreach my $form (Biber::Annotation->get_annotation_forms($key, $f, $n)) {
+        foreach my $lang (Biber::Annotation->get_annotation_langs($key, $f, $n, $form)) {
+          my $v = Biber::Annotation->get_annotation('field', $key, $f, $form, $lang, $n);
+          my $l = Biber::Annotation->is_literal_annotation('field', $key, $f, $form, $lang, $n);
+          $xml->dataElement([$xml_prefix, 'annotation'],
+                            scope => 'field',
+                            field => _bblxml_norm($f),
+                            msform => $form,
+                            mslang => $lang,
+                            name  => bblxml_norm($n),
+                            literal => $l,
+                            value => _bblxml_norm($v)
+                           );
+        }
+      }
     }
   }
 
   foreach my $f (Biber::Annotation->get_annotated_fields('item', $key)) {
     foreach my $n (Biber::Annotation->get_annotations('item', $key, $f)) {
-      foreach my $c (Biber::Annotation->get_annotated_items('item', $key, $f)) {
-        my $v = Biber::Annotation->get_annotation('item', $key, $f, $c);
-        my $l = Biber::Annotation->is_literal_annotation('item', $key, $f, $n, $c);
-        $xml->dataElement([$xml_prefix, 'annotation'],
-                          scope => 'item',
-                          field => _bblxml_norm($f),
-                          name  => bblxml_norm($n),
-                          literal => $l,
-                          item  => _bblxml_norm($c),
-                          value => _bblxml_norm($v)
-                         );
+      foreach my $form (Biber::Annotation->get_annotation_forms($key, $f, $n)) {
+        foreach my $lang (Biber::Annotation->get_annotation_langs($key, $f, $n, $form)) {
+          foreach my $c (Biber::Annotation->get_annotated_items('item', $key, $f, $n, $form, $lang)) {
+            my $v = Biber::Annotation->get_annotation('item', $key, $f, $form, $lang, $n, $c);
+            my $l = Biber::Annotation->is_literal_annotation('item', $key, $f, $form, $lang, $n, $c);
+            $xml->dataElement([$xml_prefix, 'annotation'],
+                              scope => 'item',
+                              field => _bblxml_norm($f),
+                              msform => $form,
+                              mslang => $lang,
+                              name  => bblxml_norm($n),
+                              literal => $l,
+                              item  => _bblxml_norm($c),
+                              value => _bblxml_norm($v)
+                             );
+          }
+        }
       }
     }
   }
 
   foreach my $f (Biber::Annotation->get_annotated_fields('part', $key)) {
     foreach my $n (Biber::Annotation->get_annotations('part', $key, $f)) {
-      foreach my $c (Biber::Annotation->get_annotated_items('part', $key, $f)) {
-        foreach my $p (Biber::Annotation->get_annotated_parts('part', $key, $f, $c)) {
-          my $v = Biber::Annotation->get_annotation('part', $key, $f, $c, $p);
-          my $l = Biber::Annotation->is_literal_annotation('part', $key, $f, $n, $c, $p);
-          $xml->dataElement([$xml_prefix, 'annotation'],
-                            scope => 'part',
-                            field => _bblxml_norm($f),
-                            name  => bblxml_norm($n),
-                            literal => $l,
-                            item  => _bblxml_norm($c),
-                            part  => _bblxml_norm($p),
-                            value => _bblxml_norm($v)
-                           );
+      foreach my $form (Biber::Annotation->get_annotation_forms($key, $f, $n)) {
+        foreach my $lang (Biber::Annotation->get_annotation_langs($key, $f, $n, $form)) {
+          foreach my $c (Biber::Annotation->get_annotated_items('part', $key, $f, $n, $form, $lang)) {
+            foreach my $p (Biber::Annotation->get_annotated_parts('part', $key, $f, $n, $c, $form, $lang)) {
+              my $v = Biber::Annotation->get_annotation('part', $key, $f, $form, $lang, $n, $c, $p);
+              my $l = Biber::Annotation->is_literal_annotation('part', $key, $f, $form, $lang, $n, $c, $p);
+              $xml->dataElement([$xml_prefix, 'annotation'],
+                                scope => 'part',
+                                field => _bblxml_norm($f),
+                                msform => $form,
+                                mslang => $lang,
+                                name  => bblxml_norm($n),
+                                literal => $l,
+                                item  => _bblxml_norm($c),
+                                part  => _bblxml_norm($p),
+                                value => _bblxml_norm($v)
+                               );
+            }
+          }
         }
       }
     }

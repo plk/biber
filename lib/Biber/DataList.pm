@@ -2099,18 +2099,22 @@ sub instantiate_entry {
     }
 
     # per-namelist bibnamehash and namehash
-    foreach my $namefield ($dmh->{namelists}->@*) {
+    foreach my $n ($dmh->{namelists}->@*) {
+      foreach my $alts ($be->get_alternates_for_field($n)->@*) {
+        my $form = $alts->{form};
+        my $lang = $alts->{lang};
 
-      # per-namelist bibnamehash
-      if (my $e = $self->get_entryfield($key, "${namefield}bibnamehash")) {
-        my $str = "<bbl:field name=\"${namefield}bibnamehash\">$e</bbl:field>";
-        $entry_string =~ s|<BDS>${namefield}BIBNAMEHASH</BDS>|$str|gxms;
-      }
+        # per-namelist bibnamehash
+        if (my $e = $self->get_entryfield($key, "${n}${form}${lang}bibnamehash")) {
+          my $str = "<bbl:field name=\"${n}${form}${lang}bibnamehash\">$e</bbl:field>";
+          $entry_string =~ s|<BDS>${n}${form}${lang}BIBNAMEHASH</BDS>|$str|gxms;
+        }
 
-      # per-namelist namehash
-      if (my $e = $self->get_entryfield($key, "${namefield}namehash")) {
-        my $str = "<bbl:field name=\"${namefield}namehash\">$e</bbl:field>";
-        $entry_string =~ s|<BDS>${namefield}NAMEHASH</BDS>|$str|gxms;
+        # per-namelist namehash
+        if (my $e = $self->get_entryfield($key, "${n}${form}${lang}namehash")) {
+          my $str = "<bbl:field name=\"${n}${form}${lang}namehash\">$e</bbl:field>";
+          $entry_string =~ s|<BDS>${n}${form}${lang}NAMEHASH</BDS>|$str|gxms;
+        }
       }
     }
 

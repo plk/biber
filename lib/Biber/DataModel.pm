@@ -1584,6 +1584,16 @@ sub generate_bblxml_schema {
 
   $writer->startTag('oneOrMore');
   $writer->startTag('element', 'name' => "$bbl:names");
+  $writer->startTag('optional');
+  $writer->startTag('attribute', 'name' => 'msform');
+  $writer->emptyTag('data', 'type' => 'string');
+  $writer->endTag();    # attribute
+  $writer->endTag();    # optional
+  $writer->startTag('optional');
+  $writer->startTag('attribute', 'name' => 'mslang');
+  $writer->emptyTag('data', 'type' => 'string');
+  $writer->endTag();    # attribute
+  $writer->endTag();    # optional
   $writer->startTag('attribute', 'name' => 'type');
   $writer->startTag('choice');
   foreach my $name (@names) {
@@ -1661,6 +1671,16 @@ sub generate_bblxml_schema {
 
   $writer->startTag('zeroOrMore');
   $writer->startTag('element', 'name' => "$bbl:list");
+  $writer->startTag('optional');
+  $writer->startTag('attribute', 'name' => 'msform');
+  $writer->emptyTag('data', 'type' => 'string');
+  $writer->endTag();    # attribute
+  $writer->endTag();    # optional
+  $writer->startTag('optional');
+  $writer->startTag('attribute', 'name' => 'mslang');
+  $writer->emptyTag('data', 'type' => 'string');
+  $writer->endTag();    # attribute
+  $writer->endTag();    # optional
   $writer->startTag('attribute', 'name' => 'name');
   $writer->startTag('choice');
   foreach my $list (@lists) {
@@ -1722,20 +1742,30 @@ sub generate_bblxml_schema {
   # uri fields
   my @fs3 = $dm->get_fields_of_type('field', 'uri')->@*;
 
-  # <namelist>namehash and <namelist>fullhash
-  my @fs4;
-  map {push @fs4, "${_}namehash";push @fs4, "${_}bibnamehash";push @fs4, "${_}fullhash"} $dmh->{namelists}->@*;
-
   $writer->startTag('oneOrMore');
   $writer->startTag('element', 'name' => "$bbl:field");
+  $writer->startTag('optional');
+  $writer->startTag('attribute', 'name' => 'msform');
+  $writer->emptyTag('data', 'type' => 'string');
+  $writer->endTag();    # attribute
+  $writer->endTag();    # optional
+  $writer->startTag('optional');
+  $writer->startTag('attribute', 'name' => 'mslang');
+  $writer->emptyTag('data', 'type' => 'string');
+  $writer->endTag();    # attribute
+  $writer->endTag();    # optional
   $writer->startTag('choice'); # start choice of normal vs datepart fields
   $writer->startTag('group'); #
   $writer->startTag('attribute', 'name' => 'name');
 
   $writer->startTag('choice');
-  foreach my $f (@fs1, @fs2, @fs3, @fs4) {
+  foreach my $f (@fs1, @fs2, @fs3) {
     $writer->dataElement('value', $f);
   }
+  # "<field><form><lang>(bib)namehash"
+  $writer->startTag('data', 'type' => 'string');
+  $writer->dataElement('param', '.*(bib)?(name|full)hash', 'name' => 'pattern');
+  $writer->endTag();    # data
   $writer->endTag();    # choice
   $writer->endTag();    # attribute
   $writer->endTag();    # group
@@ -1913,6 +1943,16 @@ sub generate_bblxml_schema {
   $writer->endTag();# choice
   $writer->endTag();# scope attribute
   $writer->emptyTag('attribute', 'name' => 'field');
+  $writer->startTag('optional');
+  $writer->startTag('attribute', 'name' => 'msform');
+  $writer->emptyTag('data', 'type' => 'string');
+  $writer->endTag();    # attribute
+  $writer->endTag();    # optional
+  $writer->startTag('optional');
+  $writer->startTag('attribute', 'name' => 'mslang');
+  $writer->emptyTag('data', 'type' => 'string');
+  $writer->endTag();    # attribute
+  $writer->endTag();    # optional
   $writer->emptyTag('attribute', 'name' => 'name');
   $writer->emptyTag('attribute', 'name' => 'value');
   $writer->startTag('attribute', 'name' => 'literal');

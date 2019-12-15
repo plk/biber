@@ -9,7 +9,7 @@
         <bbl:inset>
           <bbl:member>set</bbl:member>
         </bbl:inset>
-        <bbl:names type="author" count="7">
+        <bbl:names type="author" msform="default" mslang="en-us" count="7">
           <bbl:name hash="e410078ecf298d6b83792df6633b2b08" un="0" uniquepart="base">
             <bbl:namepart type="family" initials="A">Aksın</bbl:namepart>
             <bbl:namepart type="given" un="0" initials="Ö">Özge</bbl:namepart>
@@ -42,18 +42,18 @@
         <bbl:field name="namehash">860705eb8ffac6e40507746c7ede79ca</bbl:field>
         <bbl:field name="fullhash">f565e365b13f55b7eb75966908d10961</bbl:field>
         <bbl:field name="bibnamehash">860705eb8ffac6e40507746c7ede79ca</bbl:field>
-        <bbl:field name="authornamehash">860705eb8ffac6e40507746c7ede79ca</bbl:field>
-        <bbl:field name="authorfullhash">f565e365b13f55b7eb75966908d10961</bbl:field>
-        <bbl:field name="authorbibnamehash">860705eb8ffac6e40507746c7ede79ca</bbl:field>
+        <bbl:field name="authordefaulten-usnamehash">860705eb8ffac6e40507746c7ede79ca</bbl:field>
+        <bbl:field name="authordefaulten-usfullhash">f565e365b13f55b7eb75966908d10961</bbl:field>
+        <bbl:field name="authordefaulten-usbibnamehash">860705eb8ffac6e40507746c7ede79ca</bbl:field>
         <bbl:field name="labelalpha">Aks\textbf{+}06</bbl:field>
         <bbl:field name="sortinit">A</bbl:field>
         <bbl:field name="sortinithash">a3dcedd53b04d1adfd5ac303ecd5e6fa</bbl:field>
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">title</bbl:field>
         <bbl:field name="indextitle">Effect of immobilization on catalytic characteristics</bbl:field>
-        <bbl:field name="journaltitle">J. Organomet. Chem.</bbl:field>
+        <bbl:field name="journaltitle" msform="default" mslang="en-us">J. Organomet. Chem.</bbl:field>
         <bbl:field name="number">13</bbl:field>
-        <bbl:field name="title">Effect of immobilization on catalytic characteristics of saturated Pd-N-heterocyclic carbenes in Mizoroki-Heck reactions</bbl:field>
+        <bbl:field name="title" msform="default" mslang="en-us">Effect of immobilization on catalytic characteristics of saturated Pd-N-heterocyclic carbenes in Mizoroki-Heck reactions</bbl:field>
         <bbl:field name="volume">691</bbl:field>
         <bbl:field name="month">02</bbl:field>
         <bbl:field name="year">2006</bbl:field>
@@ -65,7 +65,7 @@
         </bbl:range>
       </bbl:entry>
       <bbl:entry key="angenendt" type="article" singletitle="true">
-        <bbl:names type="author" count="1">
+        <bbl:names type="author" msform="default" mslang="en-us" count="1">
           <bbl:name hash="9717d2d959a4b18727868ca7928c34b4" un="0" uniquepart="base">
             <bbl:namepart type="family" initials="A">Angenendt</bbl:namepart>
             <bbl:namepart type="given" un="0" initials="A">Arnold</bbl:namepart>
@@ -74,9 +74,9 @@
         <bbl:field name="namehash">9717d2d959a4b18727868ca7928c34b4</bbl:field>
         <bbl:field name="fullhash">9717d2d959a4b18727868ca7928c34b4</bbl:field>
         <bbl:field name="bibnamehash">9717d2d959a4b18727868ca7928c34b4</bbl:field>
-        <bbl:field name="authornamehash">9717d2d959a4b18727868ca7928c34b4</bbl:field>
-        <bbl:field name="authorfullhash">9717d2d959a4b18727868ca7928c34b4</bbl:field>
-        <bbl:field name="authorbibnamehash">9717d2d959a4b18727868ca7928c34b4</bbl:field>
+        <bbl:field name="authordefaulten-usnamehash">9717d2d959a4b18727868ca7928c34b4</bbl:field>
+        <bbl:field name="authordefaulten-usfullhash">9717d2d959a4b18727868ca7928c34b4</bbl:field>
+        <bbl:field name="authordefaulten-usbibnamehash">9717d2d959a4b18727868ca7928c34b4</bbl:field>
         <bbl:field name="labelalpha">Ang02</bbl:field>
         <bbl:field name="sortinit">A</bbl:field>
         <bbl:field name="sortinithash">a3dcedd53b04d1adfd5ac303ecd5e6fa</bbl:field>
@@ -84,10 +84,10 @@
         <bbl:field name="labeltitlesource">shorttitle</bbl:field>
         <bbl:field name="annotation">A German article in a French journal. Apart from that, a typical article entry. Note the indextitle field</bbl:field>
         <bbl:field name="indextitle">In Honore Salvatoris</bbl:field>
-        <bbl:field name="journaltitle">Revue d'Histoire Ecclésiastique</bbl:field>
+        <bbl:field name="journaltitle" msform="default" mslang="en-us">Revue d'Histoire Ecclésiastique</bbl:field>
         <bbl:field name="langid">german</bbl:field>
-        <bbl:field name="shorttitle">In Honore Salvatoris</bbl:field>
-        <bbl:field name="title">In Honore Salvatoris -- Vom Sinn und Unsinn der Patrozinienkunde</bbl:field>
+        <bbl:field name="shorttitle" msform="default" mslang="en-us">In Honore Salvatoris</bbl:field>
+        <bbl:field name="title" msform="default" mslang="en-us">In Honore Salvatoris -- Vom Sinn und Unsinn der Patrozinienkunde</bbl:field>
         <bbl:field name="volume">97</bbl:field>
         <bbl:field name="year">2002</bbl:field>
         <bbl:range name="pages">
@@ -123,7 +123,7 @@
         <bbl:inset>
           <bbl:member>stdmodel</bbl:member>
         </bbl:inset>
-        <bbl:names type="author" count="1">
+        <bbl:names type="author" msform="default" mslang="en-us" count="1">
           <bbl:name hash="eb3f242602109f5bdbeb41fdd990fcc0">
             <bbl:namepart type="family" initials="G">Glashow</bbl:namepart>
             <bbl:namepart type="given" initials="S">Sheldon</bbl:namepart>
@@ -132,15 +132,15 @@
         <bbl:field name="namehash">eb3f242602109f5bdbeb41fdd990fcc0</bbl:field>
         <bbl:field name="fullhash">eb3f242602109f5bdbeb41fdd990fcc0</bbl:field>
         <bbl:field name="bibnamehash">eb3f242602109f5bdbeb41fdd990fcc0</bbl:field>
-        <bbl:field name="authornamehash">eb3f242602109f5bdbeb41fdd990fcc0</bbl:field>
-        <bbl:field name="authorfullhash">eb3f242602109f5bdbeb41fdd990fcc0</bbl:field>
-        <bbl:field name="authorbibnamehash">eb3f242602109f5bdbeb41fdd990fcc0</bbl:field>
+        <bbl:field name="authordefaulten-usnamehash">eb3f242602109f5bdbeb41fdd990fcc0</bbl:field>
+        <bbl:field name="authordefaulten-usfullhash">eb3f242602109f5bdbeb41fdd990fcc0</bbl:field>
+        <bbl:field name="authordefaulten-usbibnamehash">eb3f242602109f5bdbeb41fdd990fcc0</bbl:field>
         <bbl:field name="sortinit">G</bbl:field>
         <bbl:field name="sortinithash">62eb2aa29549e4fdbd3cb154ec5711cb</bbl:field>
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">title</bbl:field>
-        <bbl:field name="journaltitle">Nucl. Phys.</bbl:field>
-        <bbl:field name="title">Partial Symmetries of Weak Interactions</bbl:field>
+        <bbl:field name="journaltitle" msform="default" mslang="en-us">Nucl. Phys.</bbl:field>
+        <bbl:field name="title" msform="default" mslang="en-us">Partial Symmetries of Weak Interactions</bbl:field>
         <bbl:field name="volume">22</bbl:field>
         <bbl:field name="year">1961</bbl:field>
         <bbl:range name="pages">
@@ -151,24 +151,24 @@
         <bbl:warning>Field 'entryset' is no longer needed in set member entries in Biber - ignoring in entry 'stdmodel:glashow'</bbl:warning>
       </bbl:entry>
       <bbl:entry key="knuth:ct:b" type="book">
-        <bbl:names type="author" count="1">
+        <bbl:names type="author" msform="default" mslang="en-us" count="1">
           <bbl:name hash="ec08e6f01da5f3814f28a70c89c64656" un="0" uniquepart="base">
             <bbl:namepart type="family" initials="K">Knuth</bbl:namepart>
             <bbl:namepart type="given" un="0" initials="D. E">Donald E.</bbl:namepart>
           </bbl:name>
         </bbl:names>
-        <bbl:list name="location" count="1">
+        <bbl:list name="location" msform="default" mslang="en-us" count="1">
           <bbl:item>Reading, Mass.</bbl:item>
         </bbl:list>
-        <bbl:list name="publisher" count="1">
+        <bbl:list name="publisher" msform="default" mslang="en-us" count="1">
           <bbl:item>Addison-Wesley</bbl:item>
         </bbl:list>
         <bbl:field name="namehash">ec08e6f01da5f3814f28a70c89c64656</bbl:field>
         <bbl:field name="fullhash">ec08e6f01da5f3814f28a70c89c64656</bbl:field>
         <bbl:field name="bibnamehash">ec08e6f01da5f3814f28a70c89c64656</bbl:field>
-        <bbl:field name="authornamehash">ec08e6f01da5f3814f28a70c89c64656</bbl:field>
-        <bbl:field name="authorfullhash">ec08e6f01da5f3814f28a70c89c64656</bbl:field>
-        <bbl:field name="authorbibnamehash">ec08e6f01da5f3814f28a70c89c64656</bbl:field>
+        <bbl:field name="authordefaulten-usnamehash">ec08e6f01da5f3814f28a70c89c64656</bbl:field>
+        <bbl:field name="authordefaulten-usfullhash">ec08e6f01da5f3814f28a70c89c64656</bbl:field>
+        <bbl:field name="authordefaulten-usbibnamehash">ec08e6f01da5f3814f28a70c89c64656</bbl:field>
         <bbl:field name="extraname">1</bbl:field>
         <bbl:field name="labelalpha">Knu86</bbl:field>
         <bbl:field name="sortinit">K</bbl:field>
@@ -180,31 +180,31 @@
         <bbl:field name="indexsorttitle">TeX: The Program</bbl:field>
         <bbl:field name="langid">english</bbl:field>
         <bbl:field name="langidopts">variant=american</bbl:field>
-        <bbl:field name="maintitle">Computers \&amp; Typesetting</bbl:field>
-        <bbl:field name="shorttitle"></bbl:field>
-        <bbl:field name="title">: The Program</bbl:field>
+        <bbl:field name="maintitle" msform="default" mslang="en-us">Computers \&amp; Typesetting</bbl:field>
+        <bbl:field name="shorttitle" msform="default" mslang="en-us"></bbl:field>
+        <bbl:field name="title" msform="default" mslang="en-us">: The Program</bbl:field>
         <bbl:field name="volume">B</bbl:field>
         <bbl:field name="year">1986</bbl:field>
       </bbl:entry>
       <bbl:entry key="knuth:ct:c" type="book">
-        <bbl:names type="author" count="1">
+        <bbl:names type="author" msform="default" mslang="en-us" count="1">
           <bbl:name hash="ec08e6f01da5f3814f28a70c89c64656" un="0" uniquepart="base">
             <bbl:namepart type="family" initials="K">Knuth</bbl:namepart>
             <bbl:namepart type="given" un="0" initials="D. E">Donald E.</bbl:namepart>
           </bbl:name>
         </bbl:names>
-        <bbl:list name="location" count="1">
+        <bbl:list name="location" msform="default" mslang="en-us" count="1">
           <bbl:item>Reading, Mass.</bbl:item>
         </bbl:list>
-        <bbl:list name="publisher" count="1">
+        <bbl:list name="publisher" msform="default" mslang="en-us" count="1">
           <bbl:item>Addison-Wesley</bbl:item>
         </bbl:list>
         <bbl:field name="namehash">ec08e6f01da5f3814f28a70c89c64656</bbl:field>
         <bbl:field name="fullhash">ec08e6f01da5f3814f28a70c89c64656</bbl:field>
         <bbl:field name="bibnamehash">ec08e6f01da5f3814f28a70c89c64656</bbl:field>
-        <bbl:field name="authornamehash">ec08e6f01da5f3814f28a70c89c64656</bbl:field>
-        <bbl:field name="authorfullhash">ec08e6f01da5f3814f28a70c89c64656</bbl:field>
-        <bbl:field name="authorbibnamehash">ec08e6f01da5f3814f28a70c89c64656</bbl:field>
+        <bbl:field name="authordefaulten-usnamehash">ec08e6f01da5f3814f28a70c89c64656</bbl:field>
+        <bbl:field name="authordefaulten-usfullhash">ec08e6f01da5f3814f28a70c89c64656</bbl:field>
+        <bbl:field name="authordefaulten-usbibnamehash">ec08e6f01da5f3814f28a70c89c64656</bbl:field>
         <bbl:field name="extraname">2</bbl:field>
         <bbl:field name="labelalpha">Knu86</bbl:field>
         <bbl:field name="sortinit">K</bbl:field>
@@ -216,14 +216,14 @@
         <bbl:field name="indextitle">METAFONTbook, The</bbl:field>
         <bbl:field name="langid">english</bbl:field>
         <bbl:field name="langidopts">variant=american</bbl:field>
-        <bbl:field name="maintitle">Computers \&amp; Typesetting</bbl:field>
-        <bbl:field name="shorttitle">METAFONTbook</bbl:field>
-        <bbl:field name="title">The METAFONTbook</bbl:field>
+        <bbl:field name="maintitle" msform="default" mslang="en-us">Computers \&amp; Typesetting</bbl:field>
+        <bbl:field name="shorttitle" msform="default" mslang="en-us">METAFONTbook</bbl:field>
+        <bbl:field name="title" msform="default" mslang="en-us">The METAFONTbook</bbl:field>
         <bbl:field name="volume">C</bbl:field>
         <bbl:field name="year">1986</bbl:field>
       </bbl:entry>
       <bbl:entry key="reese" type="article" singletitle="true">
-        <bbl:names type="author" count="1">
+        <bbl:names type="author" msform="default" mslang="en-us" count="1">
           <bbl:name hash="d52f05e0199eae563725b4165f4b2520" un="0" uniquepart="base">
             <bbl:namepart type="family" initials="R">Reese</bbl:namepart>
             <bbl:namepart type="given" un="0" initials="T. R">Trevor R.</bbl:namepart>
@@ -232,20 +232,20 @@
         <bbl:field name="namehash">d52f05e0199eae563725b4165f4b2520</bbl:field>
         <bbl:field name="fullhash">d52f05e0199eae563725b4165f4b2520</bbl:field>
         <bbl:field name="bibnamehash">d52f05e0199eae563725b4165f4b2520</bbl:field>
-        <bbl:field name="authornamehash">d52f05e0199eae563725b4165f4b2520</bbl:field>
-        <bbl:field name="authorfullhash">d52f05e0199eae563725b4165f4b2520</bbl:field>
-        <bbl:field name="authorbibnamehash">d52f05e0199eae563725b4165f4b2520</bbl:field>
+        <bbl:field name="authordefaulten-usnamehash">d52f05e0199eae563725b4165f4b2520</bbl:field>
+        <bbl:field name="authordefaulten-usfullhash">d52f05e0199eae563725b4165f4b2520</bbl:field>
+        <bbl:field name="authordefaulten-usbibnamehash">d52f05e0199eae563725b4165f4b2520</bbl:field>
         <bbl:field name="labelalpha">Ree58</bbl:field>
         <bbl:field name="sortinit">R</bbl:field>
         <bbl:field name="sortinithash">b9c68a358aea118dfa887b6e902414a7</bbl:field>
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">title</bbl:field>
         <bbl:field name="annotation">An article entry with a series and a volume field. Note the format of the series. If the value of the series field is an integer, this number is printed as an ordinal and the string *series is appended automatically</bbl:field>
-        <bbl:field name="journaltitle">William and Mary Quarterly</bbl:field>
+        <bbl:field name="journaltitle" msform="default" mslang="en-us">William and Mary Quarterly</bbl:field>
         <bbl:field name="langid">english</bbl:field>
         <bbl:field name="langidopts">variant=american</bbl:field>
-        <bbl:field name="series">3</bbl:field>
-        <bbl:field name="title">Georgia in Anglo-Spanish Diplomacy, 1736-1739</bbl:field>
+        <bbl:field name="series" msform="default" mslang="en-us">3</bbl:field>
+        <bbl:field name="title" msform="default" mslang="en-us">Georgia in Anglo-Spanish Diplomacy, 1736-1739</bbl:field>
         <bbl:field name="volume">15</bbl:field>
         <bbl:field name="year">1958</bbl:field>
         <bbl:range name="pages">
@@ -266,42 +266,42 @@
         <bbl:inset>
           <bbl:member>stdmodel</bbl:member>
         </bbl:inset>
-        <bbl:names type="author" count="1">
+        <bbl:names type="author" msform="default" mslang="en-us" count="1">
           <bbl:name hash="5196fd7e08485dbc6a7dd05adc133fdf">
             <bbl:namepart type="family" initials="S">Salam</bbl:namepart>
             <bbl:namepart type="given" initials="A">Abdus</bbl:namepart>
           </bbl:name>
         </bbl:names>
-        <bbl:names type="editor" count="1">
+        <bbl:names type="editor" msform="default" mslang="en-us" count="1">
           <bbl:name hash="d0ec890e59163c24c111a08d2a4be982">
             <bbl:namepart type="family" initials="S">Svartholm</bbl:namepart>
             <bbl:namepart type="given" initials="N">Nils</bbl:namepart>
           </bbl:name>
         </bbl:names>
-        <bbl:list name="location" count="1">
+        <bbl:list name="location" msform="default" mslang="en-us" count="1">
           <bbl:item>Stockholm</bbl:item>
         </bbl:list>
-        <bbl:list name="publisher" count="1">
+        <bbl:list name="publisher" msform="default" mslang="en-us" count="1">
           <bbl:item>Almquist \&amp; Wiksell</bbl:item>
         </bbl:list>
         <bbl:field name="namehash">5196fd7e08485dbc6a7dd05adc133fdf</bbl:field>
         <bbl:field name="fullhash">5196fd7e08485dbc6a7dd05adc133fdf</bbl:field>
         <bbl:field name="bibnamehash">5196fd7e08485dbc6a7dd05adc133fdf</bbl:field>
-        <bbl:field name="authornamehash">5196fd7e08485dbc6a7dd05adc133fdf</bbl:field>
-        <bbl:field name="authorfullhash">5196fd7e08485dbc6a7dd05adc133fdf</bbl:field>
-        <bbl:field name="authorbibnamehash">5196fd7e08485dbc6a7dd05adc133fdf</bbl:field>
-        <bbl:field name="editornamehash">d0ec890e59163c24c111a08d2a4be982</bbl:field>
-        <bbl:field name="editorfullhash">d0ec890e59163c24c111a08d2a4be982</bbl:field>
-        <bbl:field name="editorbibnamehash">d0ec890e59163c24c111a08d2a4be982</bbl:field>
+        <bbl:field name="authordefaulten-usnamehash">5196fd7e08485dbc6a7dd05adc133fdf</bbl:field>
+        <bbl:field name="authordefaulten-usfullhash">5196fd7e08485dbc6a7dd05adc133fdf</bbl:field>
+        <bbl:field name="authordefaulten-usbibnamehash">5196fd7e08485dbc6a7dd05adc133fdf</bbl:field>
+        <bbl:field name="editordefaulten-usnamehash">d0ec890e59163c24c111a08d2a4be982</bbl:field>
+        <bbl:field name="editordefaulten-usfullhash">d0ec890e59163c24c111a08d2a4be982</bbl:field>
+        <bbl:field name="editordefaulten-usbibnamehash">d0ec890e59163c24c111a08d2a4be982</bbl:field>
         <bbl:field name="sortinit">S</bbl:field>
         <bbl:field name="sortinithash">c319cff79d99c853d775f88277d4e45f</bbl:field>
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">title</bbl:field>
-        <bbl:field name="booksubtitle">Relativistic groups and analyticity</bbl:field>
-        <bbl:field name="booktitle">Elementary particle theory</bbl:field>
-        <bbl:field name="booktitleaddon">Proceedings of the Eighth Nobel Symposium, May 19--25, 1968</bbl:field>
-        <bbl:field name="title">Weak and Electromagnetic Interactions</bbl:field>
-        <bbl:field name="venue">Aspenäsgarden, Lerum</bbl:field>
+        <bbl:field name="booksubtitle" msform="default" mslang="en-us">Relativistic groups and analyticity</bbl:field>
+        <bbl:field name="booktitle" msform="default" mslang="en-us">Elementary particle theory</bbl:field>
+        <bbl:field name="booktitleaddon" msform="default" mslang="en-us">Proceedings of the Eighth Nobel Symposium, May 19--25, 1968</bbl:field>
+        <bbl:field name="title" msform="default" mslang="en-us">Weak and Electromagnetic Interactions</bbl:field>
+        <bbl:field name="venue" msform="default" mslang="en-us">Aspenäsgarden, Lerum</bbl:field>
         <bbl:field name="year">1968</bbl:field>
         <bbl:range name="pages">
           <bbl:item length="-1">
@@ -311,7 +311,7 @@
         <bbl:warning>Field 'entryset' is no longer needed in set member entries in Biber - ignoring in entry 'stdmodel:salam'</bbl:warning>
       </bbl:entry>
       <bbl:entry key="shore" type="article" singletitle="true">
-        <bbl:names type="author" count="1">
+        <bbl:names type="author" msform="default" mslang="en-us" count="1">
           <bbl:name hash="93f17724cbd884231ef39a73755ef5bb" un="0" uniquepart="base">
             <bbl:namepart type="family" initials="S">Shore</bbl:namepart>
             <bbl:namepart type="given" un="0" initials="B">Bradd</bbl:namepart>
@@ -320,20 +320,20 @@
         <bbl:field name="namehash">93f17724cbd884231ef39a73755ef5bb</bbl:field>
         <bbl:field name="fullhash">93f17724cbd884231ef39a73755ef5bb</bbl:field>
         <bbl:field name="bibnamehash">93f17724cbd884231ef39a73755ef5bb</bbl:field>
-        <bbl:field name="authornamehash">93f17724cbd884231ef39a73755ef5bb</bbl:field>
-        <bbl:field name="authorfullhash">93f17724cbd884231ef39a73755ef5bb</bbl:field>
-        <bbl:field name="authorbibnamehash">93f17724cbd884231ef39a73755ef5bb</bbl:field>
+        <bbl:field name="authordefaulten-usnamehash">93f17724cbd884231ef39a73755ef5bb</bbl:field>
+        <bbl:field name="authordefaulten-usfullhash">93f17724cbd884231ef39a73755ef5bb</bbl:field>
+        <bbl:field name="authordefaulten-usbibnamehash">93f17724cbd884231ef39a73755ef5bb</bbl:field>
         <bbl:field name="labelalpha">Sho91</bbl:field>
         <bbl:field name="sortinit">S</bbl:field>
         <bbl:field name="sortinithash">c319cff79d99c853d775f88277d4e45f</bbl:field>
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">title</bbl:field>
         <bbl:field name="annotation">An article entry with series, volume, and number fields. Note the format of the series which is a localization key</bbl:field>
-        <bbl:field name="journaltitle">American Anthropologist</bbl:field>
+        <bbl:field name="journaltitle" msform="default" mslang="en-us">American Anthropologist</bbl:field>
         <bbl:field name="number">1</bbl:field>
-        <bbl:field name="series">newseries</bbl:field>
-        <bbl:field name="subtitle">Meaning Construction and Cultural Cognition</bbl:field>
-        <bbl:field name="title">Twice-Born, Once Conceived</bbl:field>
+        <bbl:field name="series" msform="default" mslang="en-us">newseries</bbl:field>
+        <bbl:field name="subtitle" msform="default" mslang="en-us">Meaning Construction and Cultural Cognition</bbl:field>
+        <bbl:field name="title" msform="default" mslang="en-us">Twice-Born, Once Conceived</bbl:field>
         <bbl:field name="volume">93</bbl:field>
         <bbl:field name="month">3</bbl:field>
         <bbl:field name="year" startera="ce">1991</bbl:field>
@@ -355,7 +355,7 @@
         <bbl:inset>
           <bbl:member>stdmodel</bbl:member>
         </bbl:inset>
-        <bbl:names type="author" count="1">
+        <bbl:names type="author" msform="default" mslang="en-us" count="1">
           <bbl:name hash="15e144c72b0b9d10db00ddc6d37a19e6">
             <bbl:namepart type="family" initials="W">Weinberg</bbl:namepart>
             <bbl:namepart type="given" initials="S">Steven</bbl:namepart>
@@ -364,15 +364,15 @@
         <bbl:field name="namehash">15e144c72b0b9d10db00ddc6d37a19e6</bbl:field>
         <bbl:field name="fullhash">15e144c72b0b9d10db00ddc6d37a19e6</bbl:field>
         <bbl:field name="bibnamehash">15e144c72b0b9d10db00ddc6d37a19e6</bbl:field>
-        <bbl:field name="authornamehash">15e144c72b0b9d10db00ddc6d37a19e6</bbl:field>
-        <bbl:field name="authorfullhash">15e144c72b0b9d10db00ddc6d37a19e6</bbl:field>
-        <bbl:field name="authorbibnamehash">15e144c72b0b9d10db00ddc6d37a19e6</bbl:field>
+        <bbl:field name="authordefaulten-usnamehash">15e144c72b0b9d10db00ddc6d37a19e6</bbl:field>
+        <bbl:field name="authordefaulten-usfullhash">15e144c72b0b9d10db00ddc6d37a19e6</bbl:field>
+        <bbl:field name="authordefaulten-usbibnamehash">15e144c72b0b9d10db00ddc6d37a19e6</bbl:field>
         <bbl:field name="sortinit">W</bbl:field>
         <bbl:field name="sortinithash">1af34bd8c148ffb32de1494636b49713</bbl:field>
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">title</bbl:field>
-        <bbl:field name="journaltitle">Phys. Rev. Lett.</bbl:field>
-        <bbl:field name="title">A Model of Leptons</bbl:field>
+        <bbl:field name="journaltitle" msform="default" mslang="en-us">Phys. Rev. Lett.</bbl:field>
+        <bbl:field name="title" msform="default" mslang="en-us">A Model of Leptons</bbl:field>
         <bbl:field name="volume">19</bbl:field>
         <bbl:field name="year">1967</bbl:field>
         <bbl:range name="pages">
@@ -388,7 +388,7 @@
         <bbl:inset>
           <bbl:member>set</bbl:member>
         </bbl:inset>
-        <bbl:names type="author" count="7">
+        <bbl:names type="author" msform="default" mslang="en-us" count="7">
           <bbl:name hash="e410078ecf298d6b83792df6633b2b08" un="0" uniquepart="base">
             <bbl:namepart type="family" initials="A">Aksın</bbl:namepart>
             <bbl:namepart type="given" un="0" initials="Ö">Özge</bbl:namepart>
@@ -421,18 +421,18 @@
         <bbl:field name="namehash">860705eb8ffac6e40507746c7ede79ca</bbl:field>
         <bbl:field name="fullhash">f565e365b13f55b7eb75966908d10961</bbl:field>
         <bbl:field name="bibnamehash">860705eb8ffac6e40507746c7ede79ca</bbl:field>
-        <bbl:field name="authornamehash">860705eb8ffac6e40507746c7ede79ca</bbl:field>
-        <bbl:field name="authorfullhash">f565e365b13f55b7eb75966908d10961</bbl:field>
-        <bbl:field name="authorbibnamehash">860705eb8ffac6e40507746c7ede79ca</bbl:field>
+        <bbl:field name="authordefaulten-usnamehash">860705eb8ffac6e40507746c7ede79ca</bbl:field>
+        <bbl:field name="authordefaulten-usfullhash">f565e365b13f55b7eb75966908d10961</bbl:field>
+        <bbl:field name="authordefaulten-usbibnamehash">860705eb8ffac6e40507746c7ede79ca</bbl:field>
         <bbl:field name="labelalpha">Aks\textbf{+}06</bbl:field>
         <bbl:field name="sortinit">A</bbl:field>
         <bbl:field name="sortinithash">a3dcedd53b04d1adfd5ac303ecd5e6fa</bbl:field>
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">title</bbl:field>
         <bbl:field name="indextitle">Effect of immobilization on catalytic characteristics</bbl:field>
-        <bbl:field name="journaltitle">J. Organomet. Chem.</bbl:field>
+        <bbl:field name="journaltitle" msform="default" mslang="en-us">J. Organomet. Chem.</bbl:field>
         <bbl:field name="number">13</bbl:field>
-        <bbl:field name="title">Effect of immobilization on catalytic characteristics of saturated Pd-N-heterocyclic carbenes in Mizoroki-Heck reactions</bbl:field>
+        <bbl:field name="title" msform="default" mslang="en-us">Effect of immobilization on catalytic characteristics of saturated Pd-N-heterocyclic carbenes in Mizoroki-Heck reactions</bbl:field>
         <bbl:field name="volume">691</bbl:field>
         <bbl:field name="month">02</bbl:field>
         <bbl:field name="year">2006</bbl:field>
@@ -444,7 +444,7 @@
         </bbl:range>
       </bbl:entry>
       <bbl:entry key="angenendt" type="article" singletitle="true">
-        <bbl:names type="author" count="1">
+        <bbl:names type="author" msform="default" mslang="en-us" count="1">
           <bbl:name hash="9717d2d959a4b18727868ca7928c34b4" un="0" uniquepart="base">
             <bbl:namepart type="family" initials="A">Angenendt</bbl:namepart>
             <bbl:namepart type="given" un="0" initials="A">Arnold</bbl:namepart>
@@ -453,9 +453,9 @@
         <bbl:field name="namehash">9717d2d959a4b18727868ca7928c34b4</bbl:field>
         <bbl:field name="fullhash">9717d2d959a4b18727868ca7928c34b4</bbl:field>
         <bbl:field name="bibnamehash">9717d2d959a4b18727868ca7928c34b4</bbl:field>
-        <bbl:field name="authornamehash">9717d2d959a4b18727868ca7928c34b4</bbl:field>
-        <bbl:field name="authorfullhash">9717d2d959a4b18727868ca7928c34b4</bbl:field>
-        <bbl:field name="authorbibnamehash">9717d2d959a4b18727868ca7928c34b4</bbl:field>
+        <bbl:field name="authordefaulten-usnamehash">9717d2d959a4b18727868ca7928c34b4</bbl:field>
+        <bbl:field name="authordefaulten-usfullhash">9717d2d959a4b18727868ca7928c34b4</bbl:field>
+        <bbl:field name="authordefaulten-usbibnamehash">9717d2d959a4b18727868ca7928c34b4</bbl:field>
         <bbl:field name="labelalpha">Ang02</bbl:field>
         <bbl:field name="sortinit">A</bbl:field>
         <bbl:field name="sortinithash">a3dcedd53b04d1adfd5ac303ecd5e6fa</bbl:field>
@@ -463,10 +463,10 @@
         <bbl:field name="labeltitlesource">shorttitle</bbl:field>
         <bbl:field name="annotation">A German article in a French journal. Apart from that, a typical article entry. Note the indextitle field</bbl:field>
         <bbl:field name="indextitle">In Honore Salvatoris</bbl:field>
-        <bbl:field name="journaltitle">Revue d'Histoire Ecclésiastique</bbl:field>
+        <bbl:field name="journaltitle" msform="default" mslang="en-us">Revue d'Histoire Ecclésiastique</bbl:field>
         <bbl:field name="langid">german</bbl:field>
-        <bbl:field name="shorttitle">In Honore Salvatoris</bbl:field>
-        <bbl:field name="title">In Honore Salvatoris -- Vom Sinn und Unsinn der Patrozinienkunde</bbl:field>
+        <bbl:field name="shorttitle" msform="default" mslang="en-us">In Honore Salvatoris</bbl:field>
+        <bbl:field name="title" msform="default" mslang="en-us">In Honore Salvatoris -- Vom Sinn und Unsinn der Patrozinienkunde</bbl:field>
         <bbl:field name="volume">97</bbl:field>
         <bbl:field name="year">2002</bbl:field>
         <bbl:range name="pages">
@@ -502,7 +502,7 @@
         <bbl:inset>
           <bbl:member>stdmodel</bbl:member>
         </bbl:inset>
-        <bbl:names type="author" count="1">
+        <bbl:names type="author" msform="default" mslang="en-us" count="1">
           <bbl:name hash="eb3f242602109f5bdbeb41fdd990fcc0">
             <bbl:namepart type="family" initials="G">Glashow</bbl:namepart>
             <bbl:namepart type="given" initials="S">Sheldon</bbl:namepart>
@@ -511,15 +511,15 @@
         <bbl:field name="namehash">eb3f242602109f5bdbeb41fdd990fcc0</bbl:field>
         <bbl:field name="fullhash">eb3f242602109f5bdbeb41fdd990fcc0</bbl:field>
         <bbl:field name="bibnamehash">eb3f242602109f5bdbeb41fdd990fcc0</bbl:field>
-        <bbl:field name="authornamehash">eb3f242602109f5bdbeb41fdd990fcc0</bbl:field>
-        <bbl:field name="authorfullhash">eb3f242602109f5bdbeb41fdd990fcc0</bbl:field>
-        <bbl:field name="authorbibnamehash">eb3f242602109f5bdbeb41fdd990fcc0</bbl:field>
+        <bbl:field name="authordefaulten-usnamehash">eb3f242602109f5bdbeb41fdd990fcc0</bbl:field>
+        <bbl:field name="authordefaulten-usfullhash">eb3f242602109f5bdbeb41fdd990fcc0</bbl:field>
+        <bbl:field name="authordefaulten-usbibnamehash">eb3f242602109f5bdbeb41fdd990fcc0</bbl:field>
         <bbl:field name="sortinit">G</bbl:field>
         <bbl:field name="sortinithash">62eb2aa29549e4fdbd3cb154ec5711cb</bbl:field>
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">title</bbl:field>
-        <bbl:field name="journaltitle">Nucl. Phys.</bbl:field>
-        <bbl:field name="title">Partial Symmetries of Weak Interactions</bbl:field>
+        <bbl:field name="journaltitle" msform="default" mslang="en-us">Nucl. Phys.</bbl:field>
+        <bbl:field name="title" msform="default" mslang="en-us">Partial Symmetries of Weak Interactions</bbl:field>
         <bbl:field name="volume">22</bbl:field>
         <bbl:field name="year">1961</bbl:field>
         <bbl:range name="pages">
@@ -530,24 +530,24 @@
         <bbl:warning>Field 'entryset' is no longer needed in set member entries in Biber - ignoring in entry 'stdmodel:glashow'</bbl:warning>
       </bbl:entry>
       <bbl:entry key="knuth:ct:b" type="book">
-        <bbl:names type="author" count="1">
+        <bbl:names type="author" msform="default" mslang="en-us" count="1">
           <bbl:name hash="ec08e6f01da5f3814f28a70c89c64656" un="0" uniquepart="base">
             <bbl:namepart type="family" initials="K">Knuth</bbl:namepart>
             <bbl:namepart type="given" un="0" initials="D. E">Donald E.</bbl:namepart>
           </bbl:name>
         </bbl:names>
-        <bbl:list name="location" count="1">
+        <bbl:list name="location" msform="default" mslang="en-us" count="1">
           <bbl:item>Reading, Mass.</bbl:item>
         </bbl:list>
-        <bbl:list name="publisher" count="1">
+        <bbl:list name="publisher" msform="default" mslang="en-us" count="1">
           <bbl:item>Addison-Wesley</bbl:item>
         </bbl:list>
         <bbl:field name="namehash">ec08e6f01da5f3814f28a70c89c64656</bbl:field>
         <bbl:field name="fullhash">ec08e6f01da5f3814f28a70c89c64656</bbl:field>
         <bbl:field name="bibnamehash">ec08e6f01da5f3814f28a70c89c64656</bbl:field>
-        <bbl:field name="authornamehash">ec08e6f01da5f3814f28a70c89c64656</bbl:field>
-        <bbl:field name="authorfullhash">ec08e6f01da5f3814f28a70c89c64656</bbl:field>
-        <bbl:field name="authorbibnamehash">ec08e6f01da5f3814f28a70c89c64656</bbl:field>
+        <bbl:field name="authordefaulten-usnamehash">ec08e6f01da5f3814f28a70c89c64656</bbl:field>
+        <bbl:field name="authordefaulten-usfullhash">ec08e6f01da5f3814f28a70c89c64656</bbl:field>
+        <bbl:field name="authordefaulten-usbibnamehash">ec08e6f01da5f3814f28a70c89c64656</bbl:field>
         <bbl:field name="extraname">1</bbl:field>
         <bbl:field name="labelalpha">Knu86</bbl:field>
         <bbl:field name="sortinit">K</bbl:field>
@@ -559,31 +559,31 @@
         <bbl:field name="indexsorttitle">TeX: The Program</bbl:field>
         <bbl:field name="langid">english</bbl:field>
         <bbl:field name="langidopts">variant=american</bbl:field>
-        <bbl:field name="maintitle">Computers \&amp; Typesetting</bbl:field>
-        <bbl:field name="shorttitle"></bbl:field>
-        <bbl:field name="title">: The Program</bbl:field>
+        <bbl:field name="maintitle" msform="default" mslang="en-us">Computers \&amp; Typesetting</bbl:field>
+        <bbl:field name="shorttitle" msform="default" mslang="en-us"></bbl:field>
+        <bbl:field name="title" msform="default" mslang="en-us">: The Program</bbl:field>
         <bbl:field name="volume">B</bbl:field>
         <bbl:field name="year">1986</bbl:field>
       </bbl:entry>
       <bbl:entry key="knuth:ct:c" type="book">
-        <bbl:names type="author" count="1">
+        <bbl:names type="author" msform="default" mslang="en-us" count="1">
           <bbl:name hash="ec08e6f01da5f3814f28a70c89c64656" un="0" uniquepart="base">
             <bbl:namepart type="family" initials="K">Knuth</bbl:namepart>
             <bbl:namepart type="given" un="0" initials="D. E">Donald E.</bbl:namepart>
           </bbl:name>
         </bbl:names>
-        <bbl:list name="location" count="1">
+        <bbl:list name="location" msform="default" mslang="en-us" count="1">
           <bbl:item>Reading, Mass.</bbl:item>
         </bbl:list>
-        <bbl:list name="publisher" count="1">
+        <bbl:list name="publisher" msform="default" mslang="en-us" count="1">
           <bbl:item>Addison-Wesley</bbl:item>
         </bbl:list>
         <bbl:field name="namehash">ec08e6f01da5f3814f28a70c89c64656</bbl:field>
         <bbl:field name="fullhash">ec08e6f01da5f3814f28a70c89c64656</bbl:field>
         <bbl:field name="bibnamehash">ec08e6f01da5f3814f28a70c89c64656</bbl:field>
-        <bbl:field name="authornamehash">ec08e6f01da5f3814f28a70c89c64656</bbl:field>
-        <bbl:field name="authorfullhash">ec08e6f01da5f3814f28a70c89c64656</bbl:field>
-        <bbl:field name="authorbibnamehash">ec08e6f01da5f3814f28a70c89c64656</bbl:field>
+        <bbl:field name="authordefaulten-usnamehash">ec08e6f01da5f3814f28a70c89c64656</bbl:field>
+        <bbl:field name="authordefaulten-usfullhash">ec08e6f01da5f3814f28a70c89c64656</bbl:field>
+        <bbl:field name="authordefaulten-usbibnamehash">ec08e6f01da5f3814f28a70c89c64656</bbl:field>
         <bbl:field name="extraname">2</bbl:field>
         <bbl:field name="labelalpha">Knu86</bbl:field>
         <bbl:field name="sortinit">K</bbl:field>
@@ -595,14 +595,14 @@
         <bbl:field name="indextitle">METAFONTbook, The</bbl:field>
         <bbl:field name="langid">english</bbl:field>
         <bbl:field name="langidopts">variant=american</bbl:field>
-        <bbl:field name="maintitle">Computers \&amp; Typesetting</bbl:field>
-        <bbl:field name="shorttitle">METAFONTbook</bbl:field>
-        <bbl:field name="title">The METAFONTbook</bbl:field>
+        <bbl:field name="maintitle" msform="default" mslang="en-us">Computers \&amp; Typesetting</bbl:field>
+        <bbl:field name="shorttitle" msform="default" mslang="en-us">METAFONTbook</bbl:field>
+        <bbl:field name="title" msform="default" mslang="en-us">The METAFONTbook</bbl:field>
         <bbl:field name="volume">C</bbl:field>
         <bbl:field name="year">1986</bbl:field>
       </bbl:entry>
       <bbl:entry key="reese" type="article" singletitle="true">
-        <bbl:names type="author" count="1">
+        <bbl:names type="author" msform="default" mslang="en-us" count="1">
           <bbl:name hash="d52f05e0199eae563725b4165f4b2520" un="0" uniquepart="base">
             <bbl:namepart type="family" initials="R">Reese</bbl:namepart>
             <bbl:namepart type="given" un="0" initials="T. R">Trevor R.</bbl:namepart>
@@ -611,20 +611,20 @@
         <bbl:field name="namehash">d52f05e0199eae563725b4165f4b2520</bbl:field>
         <bbl:field name="fullhash">d52f05e0199eae563725b4165f4b2520</bbl:field>
         <bbl:field name="bibnamehash">d52f05e0199eae563725b4165f4b2520</bbl:field>
-        <bbl:field name="authornamehash">d52f05e0199eae563725b4165f4b2520</bbl:field>
-        <bbl:field name="authorfullhash">d52f05e0199eae563725b4165f4b2520</bbl:field>
-        <bbl:field name="authorbibnamehash">d52f05e0199eae563725b4165f4b2520</bbl:field>
+        <bbl:field name="authordefaulten-usnamehash">d52f05e0199eae563725b4165f4b2520</bbl:field>
+        <bbl:field name="authordefaulten-usfullhash">d52f05e0199eae563725b4165f4b2520</bbl:field>
+        <bbl:field name="authordefaulten-usbibnamehash">d52f05e0199eae563725b4165f4b2520</bbl:field>
         <bbl:field name="labelalpha">Ree58</bbl:field>
         <bbl:field name="sortinit">R</bbl:field>
         <bbl:field name="sortinithash">b9c68a358aea118dfa887b6e902414a7</bbl:field>
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">title</bbl:field>
         <bbl:field name="annotation">An article entry with a series and a volume field. Note the format of the series. If the value of the series field is an integer, this number is printed as an ordinal and the string *series is appended automatically</bbl:field>
-        <bbl:field name="journaltitle">William and Mary Quarterly</bbl:field>
+        <bbl:field name="journaltitle" msform="default" mslang="en-us">William and Mary Quarterly</bbl:field>
         <bbl:field name="langid">english</bbl:field>
         <bbl:field name="langidopts">variant=american</bbl:field>
-        <bbl:field name="series">3</bbl:field>
-        <bbl:field name="title">Georgia in Anglo-Spanish Diplomacy, 1736-1739</bbl:field>
+        <bbl:field name="series" msform="default" mslang="en-us">3</bbl:field>
+        <bbl:field name="title" msform="default" mslang="en-us">Georgia in Anglo-Spanish Diplomacy, 1736-1739</bbl:field>
         <bbl:field name="volume">15</bbl:field>
         <bbl:field name="year">1958</bbl:field>
         <bbl:range name="pages">
@@ -645,42 +645,42 @@
         <bbl:inset>
           <bbl:member>stdmodel</bbl:member>
         </bbl:inset>
-        <bbl:names type="author" count="1">
+        <bbl:names type="author" msform="default" mslang="en-us" count="1">
           <bbl:name hash="5196fd7e08485dbc6a7dd05adc133fdf">
             <bbl:namepart type="family" initials="S">Salam</bbl:namepart>
             <bbl:namepart type="given" initials="A">Abdus</bbl:namepart>
           </bbl:name>
         </bbl:names>
-        <bbl:names type="editor" count="1">
+        <bbl:names type="editor" msform="default" mslang="en-us" count="1">
           <bbl:name hash="d0ec890e59163c24c111a08d2a4be982">
             <bbl:namepart type="family" initials="S">Svartholm</bbl:namepart>
             <bbl:namepart type="given" initials="N">Nils</bbl:namepart>
           </bbl:name>
         </bbl:names>
-        <bbl:list name="location" count="1">
+        <bbl:list name="location" msform="default" mslang="en-us" count="1">
           <bbl:item>Stockholm</bbl:item>
         </bbl:list>
-        <bbl:list name="publisher" count="1">
+        <bbl:list name="publisher" msform="default" mslang="en-us" count="1">
           <bbl:item>Almquist \&amp; Wiksell</bbl:item>
         </bbl:list>
         <bbl:field name="namehash">5196fd7e08485dbc6a7dd05adc133fdf</bbl:field>
         <bbl:field name="fullhash">5196fd7e08485dbc6a7dd05adc133fdf</bbl:field>
         <bbl:field name="bibnamehash">5196fd7e08485dbc6a7dd05adc133fdf</bbl:field>
-        <bbl:field name="authornamehash">5196fd7e08485dbc6a7dd05adc133fdf</bbl:field>
-        <bbl:field name="authorfullhash">5196fd7e08485dbc6a7dd05adc133fdf</bbl:field>
-        <bbl:field name="authorbibnamehash">5196fd7e08485dbc6a7dd05adc133fdf</bbl:field>
-        <bbl:field name="editornamehash">d0ec890e59163c24c111a08d2a4be982</bbl:field>
-        <bbl:field name="editorfullhash">d0ec890e59163c24c111a08d2a4be982</bbl:field>
-        <bbl:field name="editorbibnamehash">d0ec890e59163c24c111a08d2a4be982</bbl:field>
+        <bbl:field name="authordefaulten-usnamehash">5196fd7e08485dbc6a7dd05adc133fdf</bbl:field>
+        <bbl:field name="authordefaulten-usfullhash">5196fd7e08485dbc6a7dd05adc133fdf</bbl:field>
+        <bbl:field name="authordefaulten-usbibnamehash">5196fd7e08485dbc6a7dd05adc133fdf</bbl:field>
+        <bbl:field name="editordefaulten-usnamehash">d0ec890e59163c24c111a08d2a4be982</bbl:field>
+        <bbl:field name="editordefaulten-usfullhash">d0ec890e59163c24c111a08d2a4be982</bbl:field>
+        <bbl:field name="editordefaulten-usbibnamehash">d0ec890e59163c24c111a08d2a4be982</bbl:field>
         <bbl:field name="sortinit">S</bbl:field>
         <bbl:field name="sortinithash">c319cff79d99c853d775f88277d4e45f</bbl:field>
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">title</bbl:field>
-        <bbl:field name="booksubtitle">Relativistic groups and analyticity</bbl:field>
-        <bbl:field name="booktitle">Elementary particle theory</bbl:field>
-        <bbl:field name="booktitleaddon">Proceedings of the Eighth Nobel Symposium, May 19--25, 1968</bbl:field>
-        <bbl:field name="title">Weak and Electromagnetic Interactions</bbl:field>
-        <bbl:field name="venue">Aspenäsgarden, Lerum</bbl:field>
+        <bbl:field name="booksubtitle" msform="default" mslang="en-us">Relativistic groups and analyticity</bbl:field>
+        <bbl:field name="booktitle" msform="default" mslang="en-us">Elementary particle theory</bbl:field>
+        <bbl:field name="booktitleaddon" msform="default" mslang="en-us">Proceedings of the Eighth Nobel Symposium, May 19--25, 1968</bbl:field>
+        <bbl:field name="title" msform="default" mslang="en-us">Weak and Electromagnetic Interactions</bbl:field>
+        <bbl:field name="venue" msform="default" mslang="en-us">Aspenäsgarden, Lerum</bbl:field>
         <bbl:field name="year">1968</bbl:field>
         <bbl:range name="pages">
           <bbl:item length="-1">
@@ -690,7 +690,7 @@
         <bbl:warning>Field 'entryset' is no longer needed in set member entries in Biber - ignoring in entry 'stdmodel:salam'</bbl:warning>
       </bbl:entry>
       <bbl:entry key="shore" type="article" singletitle="true">
-        <bbl:names type="author" count="1">
+        <bbl:names type="author" msform="default" mslang="en-us" count="1">
           <bbl:name hash="93f17724cbd884231ef39a73755ef5bb" un="0" uniquepart="base">
             <bbl:namepart type="family" initials="S">Shore</bbl:namepart>
             <bbl:namepart type="given" un="0" initials="B">Bradd</bbl:namepart>
@@ -699,20 +699,20 @@
         <bbl:field name="namehash">93f17724cbd884231ef39a73755ef5bb</bbl:field>
         <bbl:field name="fullhash">93f17724cbd884231ef39a73755ef5bb</bbl:field>
         <bbl:field name="bibnamehash">93f17724cbd884231ef39a73755ef5bb</bbl:field>
-        <bbl:field name="authornamehash">93f17724cbd884231ef39a73755ef5bb</bbl:field>
-        <bbl:field name="authorfullhash">93f17724cbd884231ef39a73755ef5bb</bbl:field>
-        <bbl:field name="authorbibnamehash">93f17724cbd884231ef39a73755ef5bb</bbl:field>
+        <bbl:field name="authordefaulten-usnamehash">93f17724cbd884231ef39a73755ef5bb</bbl:field>
+        <bbl:field name="authordefaulten-usfullhash">93f17724cbd884231ef39a73755ef5bb</bbl:field>
+        <bbl:field name="authordefaulten-usbibnamehash">93f17724cbd884231ef39a73755ef5bb</bbl:field>
         <bbl:field name="labelalpha">Sho91</bbl:field>
         <bbl:field name="sortinit">S</bbl:field>
         <bbl:field name="sortinithash">c319cff79d99c853d775f88277d4e45f</bbl:field>
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">title</bbl:field>
         <bbl:field name="annotation">An article entry with series, volume, and number fields. Note the format of the series which is a localization key</bbl:field>
-        <bbl:field name="journaltitle">American Anthropologist</bbl:field>
+        <bbl:field name="journaltitle" msform="default" mslang="en-us">American Anthropologist</bbl:field>
         <bbl:field name="number">1</bbl:field>
-        <bbl:field name="series">newseries</bbl:field>
-        <bbl:field name="subtitle">Meaning Construction and Cultural Cognition</bbl:field>
-        <bbl:field name="title">Twice-Born, Once Conceived</bbl:field>
+        <bbl:field name="series" msform="default" mslang="en-us">newseries</bbl:field>
+        <bbl:field name="subtitle" msform="default" mslang="en-us">Meaning Construction and Cultural Cognition</bbl:field>
+        <bbl:field name="title" msform="default" mslang="en-us">Twice-Born, Once Conceived</bbl:field>
         <bbl:field name="volume">93</bbl:field>
         <bbl:field name="month">3</bbl:field>
         <bbl:field name="year" startera="ce">1991</bbl:field>
@@ -734,7 +734,7 @@
         <bbl:inset>
           <bbl:member>stdmodel</bbl:member>
         </bbl:inset>
-        <bbl:names type="author" count="1">
+        <bbl:names type="author" msform="default" mslang="en-us" count="1">
           <bbl:name hash="15e144c72b0b9d10db00ddc6d37a19e6">
             <bbl:namepart type="family" initials="W">Weinberg</bbl:namepart>
             <bbl:namepart type="given" initials="S">Steven</bbl:namepart>
@@ -743,15 +743,15 @@
         <bbl:field name="namehash">15e144c72b0b9d10db00ddc6d37a19e6</bbl:field>
         <bbl:field name="fullhash">15e144c72b0b9d10db00ddc6d37a19e6</bbl:field>
         <bbl:field name="bibnamehash">15e144c72b0b9d10db00ddc6d37a19e6</bbl:field>
-        <bbl:field name="authornamehash">15e144c72b0b9d10db00ddc6d37a19e6</bbl:field>
-        <bbl:field name="authorfullhash">15e144c72b0b9d10db00ddc6d37a19e6</bbl:field>
-        <bbl:field name="authorbibnamehash">15e144c72b0b9d10db00ddc6d37a19e6</bbl:field>
+        <bbl:field name="authordefaulten-usnamehash">15e144c72b0b9d10db00ddc6d37a19e6</bbl:field>
+        <bbl:field name="authordefaulten-usfullhash">15e144c72b0b9d10db00ddc6d37a19e6</bbl:field>
+        <bbl:field name="authordefaulten-usbibnamehash">15e144c72b0b9d10db00ddc6d37a19e6</bbl:field>
         <bbl:field name="sortinit">W</bbl:field>
         <bbl:field name="sortinithash">1af34bd8c148ffb32de1494636b49713</bbl:field>
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">title</bbl:field>
-        <bbl:field name="journaltitle">Phys. Rev. Lett.</bbl:field>
-        <bbl:field name="title">A Model of Leptons</bbl:field>
+        <bbl:field name="journaltitle" msform="default" mslang="en-us">Phys. Rev. Lett.</bbl:field>
+        <bbl:field name="title" msform="default" mslang="en-us">A Model of Leptons</bbl:field>
         <bbl:field name="volume">19</bbl:field>
         <bbl:field name="year">1967</bbl:field>
         <bbl:range name="pages">

@@ -211,4 +211,4 @@
 *** TODO inheritance templates
 *** TODO sorting templates
 *** TODO labelalphatemplate
-** TODO basically audit all ->get_field()
+** TODO basically audit all ->get_field(), ->field_exists()

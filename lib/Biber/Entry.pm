@@ -602,9 +602,12 @@ sub del_datafield {
 =cut
 
 sub field_exists {
-  my ($self, $key) = @_;
-  return (exists($self->{datafields}{$key}) ||
-          exists($self->{derivedfields}{$key})) ? 1 : 0;
+  my ($self, $key, $form, $lang) = @_;
+  no autovivification;
+  $lang = fc($lang) if $lang;
+  my $k = $self->{datafields}{$key} || $self->{derivedfields}{$key};
+  return 0 unless $k;
+  return defined($k->get_value($form, $lang))? 1 : 0;
 }
 
 =head2 date_fields_exist
