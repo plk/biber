@@ -433,12 +433,12 @@ sub set_output_entry {
 
   # The source field for labelname
   if ($lni) {
-    $acc .= "      \\field{labelnamesource}{$lni}{$lnf}{$lnl}\n";
+    $acc .= "      \\field[msform=$lnf,mslang=$lnl]{labelnamesource}{$lni}\n";
   }
 
   # The source field for labeltitle
   if (my ($lti, $ltf, $ltl) = $be->get_labeltitle_info->@*) {
-    $acc .= "      \\field{labeltitlesource}{$lti}{$ltf}{$ltl}\n";
+    $acc .= "      \\field[msform=$ltf,mslang=$ltl]{labeltitlesource}{$lti}\n";
   }
 
   if (my $ck = $be->get_field('clonesourcekey')) {
@@ -630,7 +630,7 @@ sub set_output_entry {
         foreach my $lang (Biber::Annotation->get_annotation_langs($key, $f, $n, $form)) {
           my $v = Biber::Annotation->get_annotation('field', $key, $f, $form, $lang, $n);
           my $l = Biber::Annotation->is_literal_annotation('field', $key, $f, $form, $lang, $n);
-          $acc .= "      \\annotation{field}{$f}{$form}{$lang}{$n}{}{}{$l}{$v}\n";
+          $acc .= "      \\annotation[msform=$form,mslang=$lang]{field}{$f}{$n}{}{}{$l}{$v}\n";
         }
       }
     }
@@ -643,7 +643,7 @@ sub set_output_entry {
           foreach my $c (Biber::Annotation->get_annotated_items('item', $key, $f, $n, $form, $lang)) {
             my $v = Biber::Annotation->get_annotation('item', $key, $f, $form, $lang, $n, $c);
             my $l = Biber::Annotation->is_literal_annotation('item', $key, $f, $form, $lang, $n, $c);
-            $acc .= "      \\annotation{item}{$f}{$form}{$lang}{$n}{$c}{}{$l}{$v}\n";
+            $acc .= "      \\annotation[msform=$form,mslang=$lang]{item}{$f}{$n}{$c}{}{$l}{$v}\n";
           }
         }
       }
@@ -658,7 +658,7 @@ sub set_output_entry {
             foreach my $p (Biber::Annotation->get_annotated_parts('part', $key, $f, $n, $c, $form, $lang)) {
               my $v = Biber::Annotation->get_annotation('part', $key, $f, $form, $lang, $n, $c, $p);
               my $l = Biber::Annotation->is_literal_annotation('part', $key, $f, $form, $lang, $n, $c, $p);
-              $acc .= "      \\annotation{part}{$f}{$form}{$lang}{$n}{$c}{$p}{$l}{$v}\n";
+              $acc .= "      \\annotation[msform=$form,mslang=$lang]{part}{$f}{$n}{$c}{$p}{$l}{$v}\n";
             }
           }
         }

@@ -444,7 +444,7 @@ sub _label_name {
   my $names;
   if ($namename eq 'labelname') {
     my ($lni, $lnf, $lnl) = $be->get_labelname_info->@*;
-    $realname =  $lni;
+    $realname =  $lni // ''; # Mostly for tests where entries might not have any names at all
     $names = $be->get_field($lni, $lnf, $lnl);
   }
   else {

@@ -143,20 +143,20 @@ my $ms1 = q|    \entry{ms1}{article}{}
       \field{labelalpha}{SPXeS95}
       \field{sortinit}{S}
       \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
-      \field{labelnamesource}{author}{transliteration}{ru-latn}
-      \field{labeltitlesource}{title}{translation}{fr}
+      \field[msform=transliteration,mslang=ru-latn]{labelnamesource}{author}
+      \field[msform=translation,mslang=fr]{labeltitlesource}{title}
       \field[msform=default,mslang=en-us]{title}{Title}
       \field[msform=translation,mslang=fr]{title}{Titre}
       \field{year}{1995}
       \field{dateera}{ce}
-      \annotation{item}{author}{default}{en-us}{langtags}{2}{}{0}{ru-Cyrl}
-      \annotation{item}{author}{default}{en-us}{langtags}{3}{}{0}{zh-Hant}
-      \annotation{item}{author}{transliteration}{ru-grek}{langtags}{1}{}{0}{en-US}
-      \annotation{item}{author}{transliteration}{ru-grek}{langtags}{3}{}{0}{zh-Grek}
-      \annotation{item}{author}{transliteration}{ru-latn}{langtags}{1}{}{0}{en-US}
-      \annotation{item}{author}{transliteration}{ru-latn}{langtags}{3}{}{0}{zh-Latn}
-      \annotation{item}{location}{default}{en-us}{langtags}{2}{}{0}{de}
-      \annotation{item}{location}{translation}{fr}{langtags}{2}{}{0}{de}
+      \annotation[msform=default,mslang=en-us]{item}{author}{langtags}{2}{}{0}{ru-Cyrl}
+      \annotation[msform=default,mslang=en-us]{item}{author}{langtags}{3}{}{0}{zh-Hant}
+      \annotation[msform=transliteration,mslang=ru-grek]{item}{author}{langtags}{1}{}{0}{en-US}
+      \annotation[msform=transliteration,mslang=ru-grek]{item}{author}{langtags}{3}{}{0}{zh-Grek}
+      \annotation[msform=transliteration,mslang=ru-latn]{item}{author}{langtags}{1}{}{0}{en-US}
+      \annotation[msform=transliteration,mslang=ru-latn]{item}{author}{langtags}{3}{}{0}{zh-Latn}
+      \annotation[msform=default,mslang=en-us]{item}{location}{langtags}{2}{}{0}{de}
+      \annotation[msform=translation,mslang=fr]{item}{location}{langtags}{2}{}{0}{de}
     \endentry
 |;
 

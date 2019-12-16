@@ -318,12 +318,12 @@ sub set_output_entry {
 
   # The source field for labelname
   if ($lni) {
-    $acc .= "      \\field{labelnamesource}{$lni}{$lnf}{$lnl}\n";
+    $acc .= "      \\field[msform=$lnf,mslang=$lnl]{labelnamesource}{$lni}\n";
   }
 
   # The source field for labeltitle
   if (my ($lti, $ltf, $ltl) = $be->get_labeltitle_info->@*) {
-    $acc .= "      \\field{labeltitlesource}{$lti}{$ltf}{$ltl}\n";
+    $acc .= "      \\field[msform=$ltf,mslang=$ltl]{labeltitlesource}{$lti}\n";
   }
 
   foreach my $field ($dmh->{fields}->@*) {
