@@ -196,7 +196,7 @@ sub set_output_undefkey {
 sub set_output_entry {
   my ($self, $be, $section, $dm) = @_;
   my $bee = $be->get_field('entrytype');
-  my $outtype = $dm->get_outcase($bee);
+  my $outtype = $dm->get_outcase($bee) // $bee;
   my $secnum = $section->number;
   my $key = $be->get_field('citekey');
   my $acc = '';
