@@ -160,7 +160,54 @@ my $ms1 = q|    \entry{ms1}{article}{}
     \endentry
 |;
 
+my $ms2 = q|    \entry{ms2}{inbook}{}
+      \name[msform=default,mslang=en-us]{author}{1}{}{%
+        {{hash=02c5906bf7d6156a9695735b750c744b}{%
+           family={Treacle},
+           familyi={T\bibinitperiod},
+           given={Alan},
+           giveni={A\bibinitperiod}}}%
+      }
+      \name[msform=transliteration,mslang=ru-latn]{author}{1}{}{%
+        {{hash=cb8bc4824dfe756730d5837418bf5b53}{%
+           family={Clever},
+           familyi={C\bibinitperiod},
+           given={Clive},
+           giveni={C\bibinitperiod}}}%
+      }
+      \name[msform=default,mslang=en-us]{editor}{1}{}{%
+        {{hash=da4e9104ade84cb0fcd815add03dd1fd}{%
+           family={Gimble},
+           familyi={G\bibinitperiod},
+           given={Billy},
+           giveni={B\bibinitperiod}}}%
+      }
+      \strng{namehash}{cb8bc4824dfe756730d5837418bf5b53}
+      \strng{fullhash}{cb8bc4824dfe756730d5837418bf5b53}
+      \strng{bibnamehash}{cb8bc4824dfe756730d5837418bf5b53}
+      \strng{authordefaulten-usbibnamehash}{02c5906bf7d6156a9695735b750c744b}
+      \strng{authordefaulten-usnamehash}{02c5906bf7d6156a9695735b750c744b}
+      \strng{authordefaulten-usfullhash}{02c5906bf7d6156a9695735b750c744b}
+      \strng{authortransliterationru-latnbibnamehash}{cb8bc4824dfe756730d5837418bf5b53}
+      \strng{authortransliterationru-latnnamehash}{cb8bc4824dfe756730d5837418bf5b53}
+      \strng{authortransliterationru-latnfullhash}{cb8bc4824dfe756730d5837418bf5b53}
+      \strng{editordefaulten-usbibnamehash}{da4e9104ade84cb0fcd815add03dd1fd}
+      \strng{editordefaulten-usnamehash}{da4e9104ade84cb0fcd815add03dd1fd}
+      \strng{editordefaulten-usfullhash}{da4e9104ade84cb0fcd815add03dd1fd}
+      \field{labelalpha}{Cle96}
+      \field{sortinit}{C}
+      \strng{sortinithash}{4c244ceae61406cdc0cc2ce1cb1ff703}
+      \field[msform=transliteration,mslang=ru-latn]{labelnamesource}{author}
+      \field[msform=default,mslang=en-us]{booktitle}{Book Title}
+      \field[msform=translated,mslang=fr]{booktitle}{Livre Titre}
+      \field[msform=default,mslang=en-us]{title}{Title}
+      \field{year}{1996}
+      \field{dateera}{ce}
+    \endentry
+|;
+
 #print $out->get_output_entry('ms1', $main);
 
 eq_or_diff($out->get_output_entry('ms1', $main), $ms1, 'BBL 1');
+eq_or_diff($out->get_output_entry('ms2', $main), $ms2, 'BBL 2');
 is_deeply($main->get_keys, ['ms2', 'ms1', 'bltx1'], 'sorting - 1');
