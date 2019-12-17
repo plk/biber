@@ -53,7 +53,7 @@ my $bibentries = $section->bibentries;
 my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
       \true{moreauthor}
       \true{morelabelname}
-      \name{author}{3}{useprefix=true}{%
+      \name[msform=default,mslang=en-us]{author}{3}{useprefix=true}{%
         {{hash=bdef740dab20c2b52a3b6e0563c42bdb}{%
            family={Булгаков},
            familyi={Б\\bibinitperiod},
@@ -74,14 +74,14 @@ my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
            given={Ашраф\\bibnamedelima Ахмедович},
            giveni={A\\bibinitperiod\\bibinitdelim А\\bibinitperiod}}}%
       }
-      \name{foreword}{1}{}{%
+      \name[msform=default,mslang=en-us]{foreword}{1}{}{%
         {{hash=a7a73749ea467229221b7e9cbf870988}{%
            family={Brown},
            familyi={B\\bibinitperiod},
            given={John\\bibnamedelimb },
            giveni={J\\bibinitperiod}}}%
       }
-      \name{translator}{1}{}{%
+      \name[msform=default,mslang=en-us]{translator}{1}{}{%
         {{hash=b44eba830fe9817fbe8e53c82f1cbe04}{%
            family={Smith},
            familyi={S\\bibinitperiod},
@@ -91,31 +91,31 @@ my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
       \list{language}{1}{%
         {russian}%
       }
-      \list{location}{1}{%
+      \list[msform=default,mslang=en-us]{location}{1}{%
         {Москва}%
       }
-      \list{publisher}{1}{%
+      \list[msform=default,mslang=en-us]{publisher}{1}{%
         {Наука}%
       }
       \strng{namehash}{3400c73d7bf3e361d36350deb4832ad7}
       \strng{fullhash}{3400c73d7bf3e361d36350deb4832ad7}
       \strng{bibnamehash}{3400c73d7bf3e361d36350deb4832ad7}
-      \strng{authorbibnamehash}{3400c73d7bf3e361d36350deb4832ad7}
-      \strng{authornamehash}{3400c73d7bf3e361d36350deb4832ad7}
-      \strng{authorfullhash}{3400c73d7bf3e361d36350deb4832ad7}
-      \strng{forewordbibnamehash}{a7a73749ea467229221b7e9cbf870988}
-      \strng{forewordnamehash}{a7a73749ea467229221b7e9cbf870988}
-      \strng{forewordfullhash}{a7a73749ea467229221b7e9cbf870988}
-      \strng{translatorbibnamehash}{b44eba830fe9817fbe8e53c82f1cbe04}
-      \strng{translatornamehash}{b44eba830fe9817fbe8e53c82f1cbe04}
-      \strng{translatorfullhash}{b44eba830fe9817fbe8e53c82f1cbe04}
+      \strng{authordefaulten-usbibnamehash}{3400c73d7bf3e361d36350deb4832ad7}
+      \strng{authordefaulten-usnamehash}{3400c73d7bf3e361d36350deb4832ad7}
+      \strng{authordefaulten-usfullhash}{3400c73d7bf3e361d36350deb4832ad7}
+      \strng{foreworddefaulten-usbibnamehash}{a7a73749ea467229221b7e9cbf870988}
+      \strng{foreworddefaulten-usnamehash}{a7a73749ea467229221b7e9cbf870988}
+      \strng{foreworddefaulten-usfullhash}{a7a73749ea467229221b7e9cbf870988}
+      \strng{translatordefaulten-usbibnamehash}{b44eba830fe9817fbe8e53c82f1cbe04}
+      \strng{translatordefaulten-usnamehash}{b44eba830fe9817fbe8e53c82f1cbe04}
+      \strng{translatordefaulten-usfullhash}{b44eba830fe9817fbe8e53c82f1cbe04}
       \field{sortinit}{v}
       \strng{sortinithash}{02432525618c08e2b03cac47c19764af}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{addendum}{userc}
+      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[msform=default,mslang=en-us]{addendum}{userc}
       \field{eventday}{16}
       \field{eventendday}{17}
       \field{eventendmonth}{5}
@@ -124,10 +124,10 @@ my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
       \field{eventyear}{1990}
       \field{origyear}{356}
       \field{pagetotal}{240}
-      \field{relatedstring}{Somestring}
+      \field[msform=default,mslang=en-us]{relatedstring}{Somestring}
       \field{relatedtype}{reprint}
-      \field{series}{Научно-биографическая литература}
-      \field{title}{Мухаммад ибн муса ал-Хорезми. Около 783 – около 850}
+      \field[msform=default,mslang=en-us]{series}{Научно-биографическая литература}
+      \field[msform=default,mslang=en-us]{title}{Мухаммад ибн муса ал-Хорезми. Около 783 – около 850}
       \field{urlendyear}{}
       \field{urlyear}{1991}
       \field{userb}{usera}
@@ -141,17 +141,17 @@ my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
       \field{origdateera}{bce}
       \true{urldatecirca}
       \field{urldateera}{ce}
-      \field{pages}{1\\bibrangedash 10\\bibrangessep 30\\bibrangedash 34}
+      \field{pages}{1\bibrangedash 10\bibrangessep 30\bibrangedash 34}
       \range{pages}{15}
-      \annotation{field}{author}{default}{en-us}{alt}{}{}{0}{names-ann3}
-      \annotation{field}{author}{default}{en-us}{default}{}{}{0}{names-ann}
-      \annotation{field}{language}{default}{en-us}{default}{}{}{0}{list-ann1}
-      \annotation{field}{title}{default}{en-us}{default}{}{}{0}{field-ann1}
-      \annotation{item}{author}{default}{en-us}{default}{1}{}{0}{name-ann1}
-      \annotation{item}{author}{default}{en-us}{default}{3}{}{0}{name-ann2}
-      \annotation{item}{language}{default}{en-us}{default}{1}{}{0}{item-ann1}
-      \annotation{part}{author}{default}{en-us}{default}{1}{given}{1}{namepart-ann1}
-      \annotation{part}{author}{default}{en-us}{default}{2}{family}{0}{namepart-ann2}
+      \annotation[msform=default,mslang=en-us]{field}{author}{alt}{}{}{0}{names-ann3}
+      \annotation[msform=default,mslang=en-us]{field}{author}{default}{}{}{0}{names-ann}
+      \annotation[msform=default,mslang=en-us]{field}{language}{default}{}{}{0}{list-ann1}
+      \annotation[msform=default,mslang=en-us]{field}{title}{default}{}{}{0}{field-ann1}
+      \annotation[msform=default,mslang=en-us]{item}{author}{default}{1}{}{0}{name-ann1}
+      \annotation[msform=default,mslang=en-us]{item}{author}{default}{3}{}{0}{name-ann2}
+      \annotation[msform=default,mslang=en-us]{item}{language}{default}{1}{}{0}{item-ann1}
+      \annotation[msform=default,mslang=en-us]{part}{author}{default}{1}{given}{1}{namepart-ann1}
+      \annotation[msform=default,mslang=en-us]{part}{author}{default}{2}{family}{0}{namepart-ann2}
     \endentry
 |;
 

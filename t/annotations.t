@@ -44,7 +44,7 @@ my $section = $biber->sections->get_section(0);
 my $main = $biber->datalists->get_list('nty/global//global/global');
 
 my $ann1 = q|    \entry{ann1}{misc}{}
-      \name{author}{3}{}{%
+      \name[msform=default,mslang=en-us]{author}{3}{}{%
         {{hash=89a9e5097e11e595700540379c9b3a6b}{%
            family={Last1},
            familyi={L\\bibinitperiod},
@@ -68,26 +68,26 @@ my $ann1 = q|    \entry{ann1}{misc}{}
       \strng{namehash}{90ae96c82de92e36949bc64254bbde0c}
       \strng{fullhash}{90ae96c82de92e36949bc64254bbde0c}
       \strng{bibnamehash}{90ae96c82de92e36949bc64254bbde0c}
-      \strng{authorbibnamehash}{90ae96c82de92e36949bc64254bbde0c}
-      \strng{authornamehash}{90ae96c82de92e36949bc64254bbde0c}
-      \strng{authorfullhash}{90ae96c82de92e36949bc64254bbde0c}
+      \strng{authordefaulten-usbibnamehash}{90ae96c82de92e36949bc64254bbde0c}
+      \strng{authordefaulten-usnamehash}{90ae96c82de92e36949bc64254bbde0c}
+      \strng{authordefaulten-usfullhash}{90ae96c82de92e36949bc64254bbde0c}
       \field{extraname}{1}
       \field{sortinit}{L}
       \strng{sortinithash}{dad3efd0836470093a7b4a7bb756eb8c}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{title}{The Title}
-      \annotation{field}{language}{default}{en-us}{default}{}{}{0}{ann4}
-      \annotation{field}{title}{default}{en-us}{default}{}{}{0}{one, two}
-      \annotation{item}{author}{default}{en-us}{default}{2}{}{0}{corresponding}
-      \annotation{item}{language}{default}{en-us}{default}{1}{}{0}{ann1}
-      \annotation{item}{language}{default}{en-us}{default}{2}{}{0}{ann2, ann3}
-      \annotation{part}{author}{default}{en-us}{default}{1}{family}{0}{student}
+      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[msform=default,mslang=en-us]{title}{The Title}
+      \annotation[msform=default,mslang=en-us]{field}{language}{default}{}{}{0}{ann4}
+      \annotation[msform=default,mslang=en-us]{field}{title}{default}{}{}{0}{one, two}
+      \annotation[msform=default,mslang=en-us]{item}{author}{default}{2}{}{0}{corresponding}
+      \annotation[msform=default,mslang=en-us]{item}{language}{default}{1}{}{0}{ann1}
+      \annotation[msform=default,mslang=en-us]{item}{language}{default}{2}{}{0}{ann2, ann3}
+      \annotation[msform=default,mslang=en-us]{part}{author}{default}{1}{family}{0}{student}
     \endentry
 |;
 
 my $ann2 = q|    \entry{ann2}{misc}{}
-      \name{author}{3}{}{%
+      \name[msform=default,mslang=en-us]{author}{3}{}{%
         {{hash=89a9e5097e11e595700540379c9b3a6b}{%
            family={Last1},
            familyi={L\bibinitperiod},
@@ -111,25 +111,25 @@ my $ann2 = q|    \entry{ann2}{misc}{}
       \strng{namehash}{90ae96c82de92e36949bc64254bbde0c}
       \strng{fullhash}{90ae96c82de92e36949bc64254bbde0c}
       \strng{bibnamehash}{90ae96c82de92e36949bc64254bbde0c}
-      \strng{authorbibnamehash}{90ae96c82de92e36949bc64254bbde0c}
-      \strng{authornamehash}{90ae96c82de92e36949bc64254bbde0c}
-      \strng{authorfullhash}{90ae96c82de92e36949bc64254bbde0c}
+      \strng{authordefaulten-usbibnamehash}{90ae96c82de92e36949bc64254bbde0c}
+      \strng{authordefaulten-usnamehash}{90ae96c82de92e36949bc64254bbde0c}
+      \strng{authordefaulten-usfullhash}{90ae96c82de92e36949bc64254bbde0c}
       \field{extraname}{2}
       \field{sortinit}{L}
       \strng{sortinithash}{dad3efd0836470093a7b4a7bb756eb8c}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{title}{The Title}
-      \annotation{field}{language}{default}{en-us}{alt}{}{}{0}{annz}
-      \annotation{field}{language}{default}{en-us}{default}{}{}{0}{ann4}
-      \annotation{field}{title}{default}{en-us}{default}{}{}{1}{one}
-      \annotation{field}{title}{default}{en-us}{french}{}{}{1}{un}
-      \annotation{item}{author}{default}{en-us}{default}{2}{}{0}{corresponding}
-      \annotation{item}{language}{default}{en-us}{alt}{1}{}{0}{annx}
-      \annotation{item}{language}{default}{en-us}{alt}{2}{}{1}{anny}
-      \annotation{item}{language}{default}{en-us}{default}{1}{}{0}{ann1}
-      \annotation{item}{language}{default}{en-us}{default}{2}{}{1}{ann2}
-      \annotation{part}{author}{default}{en-us}{default}{1}{family}{1}{student}
+      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[msform=default,mslang=en-us]{title}{The Title}
+      \annotation[msform=default,mslang=en-us]{field}{language}{alt}{}{}{0}{annz}
+      \annotation[msform=default,mslang=en-us]{field}{language}{default}{}{}{0}{ann4}
+      \annotation[msform=default,mslang=en-us]{field}{title}{default}{}{}{1}{one}
+      \annotation[msform=default,mslang=en-us]{field}{title}{french}{}{}{1}{un}
+      \annotation[msform=default,mslang=en-us]{item}{author}{default}{2}{}{0}{corresponding}
+      \annotation[msform=default,mslang=en-us]{item}{language}{alt}{1}{}{0}{annx}
+      \annotation[msform=default,mslang=en-us]{item}{language}{alt}{2}{}{1}{anny}
+      \annotation[msform=default,mslang=en-us]{item}{language}{default}{1}{}{0}{ann1}
+      \annotation[msform=default,mslang=en-us]{item}{language}{default}{2}{}{1}{ann2}
+      \annotation[msform=default,mslang=en-us]{part}{author}{default}{1}{family}{1}{student}
     \endentry
 |;
 

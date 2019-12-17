@@ -223,6 +223,7 @@ sub _initopts {
   $CONFIG_META_MARKERS{xname} = quotemeta(Biber::Config->getoption('xname_marker'));
 
   $CONFIG_META_MARKERS{mssep} = quotemeta(Biber::Config->getoption('mssep'));
+  $CONFIG_META_MARKERS{outputmssep} = quotemeta(Biber::Config->getoption('output_mssep'));
 
   # Setting up Log::Log4perl
   my $LOGLEVEL;

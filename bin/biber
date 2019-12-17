@@ -691,7 +691,7 @@ The legacy option B<--tool_fieldcase> is supported as an alias.
 
 =item B<--output-field-order=[field1, ... fieldn]>
 
-When outputting bibtex format data in tool mode, this option allows the customisation
+When outputting bibtex format data, this option allows the customisation
 of the order of fields within entries. The value is a comma-separated string of field names
 or classes of fields. Fields not mentioned in the list are output in sorted name order after
 the explicitly specified fields. The classes of fields are:
@@ -723,7 +723,7 @@ as an alias.
 
 =item B<--output-listsep=[sep]>
 
-As B<--listsep> but for tool mode bibtex output. Defaults to BibTeX's usual
+As B<--listsep> but for bibtex output. Defaults to BibTeX's usual
 'and'.
 
 =item B<--output-macro-fields=[field1, ... fieldn]>
@@ -734,11 +734,11 @@ The legacy option B<--tool_macro_fields> is supported as an alias.
 
 =item B<--output-mssep=[sep]>
 
-As B<--mssep> but for tool mode bibtex output. Defaults to '_'.
+As B<--mssep> but for bibtex output. Defaults to '_'.
 
 =item B<--output-namesep=[sep]>
 
-As B<--namesep> but for tool mode bibtex output. Defaults to BibTeX's usual
+As B<--namesep> but for bibtex output. Defaults to BibTeX's usual
 'and'.
 
 =item B<--output-resolve>

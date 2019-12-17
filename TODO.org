@@ -158,6 +158,7 @@
 *** DONE granular xdata doesn't work for dates
 *** DONE granular xdata at field level and below must be between same field and datatypes
 * TODO Multiscript
+** TODO LANGIDOPTS and how they interact with LANGID->mslang
 ** TODO Documentation
 *** TODO \DeclareDatamodelMultiscriptEntryfields and \ResetDatamodelMultiscriptEntryfields
 *** TODO multiscriptforms constant
@@ -219,5 +220,5 @@
 **** DONE field_exists()
 *** DONE Add inheritance test to multiscript.t
 *** DONE xsl for sorting/labelalpha templates
-*** TODO elide form/lang on output when default?
+*** DONE elide form/lang on output when default? No.
 *** TODO fix all test outputs

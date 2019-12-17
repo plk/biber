@@ -90,6 +90,7 @@ sub set_output_entry {
   my $acc = '';
   my $secnum = $section->number;
   my $key = $be->get_field('citekey');
+  my $omssep = $CONFIG_META_MARKERS{outputmssep};
 
   # Make the right casing function
   my $casing;
@@ -125,14 +126,13 @@ sub set_output_entry {
       my $lang  = $as->{lang};
       my $names = $as->{val};
 
-      $form = ($form eq 'default') ? '' : "_$form";
-      $lang = ($lang eq Biber::Config->get_mslang($key)) ? '' : "_$lang";
-      $namefield = "$namefield$form$lang";
+      $form = ($form eq 'default') ? '' : "$omssep$form";
+      $lang = ($lang eq Biber::Config->get_mslang($key)) ? '' : "$omssep$lang";
 
       # XDATA is special
       unless (Biber::Config->getoption('output_resolve_xdata')) { # already resolved
         if (my $xdata = $names->get_xdata) {
-          $acc{$casing->($namefield)} = xdatarefout($xdata);
+          $acc{$casing->($namefield) . lc($form) . lc($lang)} = xdatarefout($xdata);
           next;
         }
       }
@@ -164,11 +164,11 @@ sub set_output_entry {
         push @namelist, $name->$tonamesub;
       }
 
-      $acc{$casing->($namefield)} = join(" $namesep ", @namelist);
+      $acc{$casing->($namefield) . lc($form) . lc($lang)} = join(" $namesep ", @namelist);
 
       # Deal with morenames
       if ($names->get_morenames) {
-        $acc{$casing->($namefield)} .= " $namesep others";
+        $acc{$casing->($namefield) . lc($form) . lc($lang)} .= " $namesep others";
       }
     }
   }
@@ -181,9 +181,8 @@ sub set_output_entry {
       my $lang  = $as->{lang};
       my $list = $as->{val};
 
-      $form = ($form eq 'default') ? '' : "_$form";
-      $lang = ($lang eq Biber::Config->get_mslang($key)) ? '' : "_$lang";
-      $listfield = "$listfield$form$lang";
+      $form = ($form eq 'default') ? '' : "$omssep$form";
+      $lang = ($lang eq Biber::Config->get_mslang($key)) ? '' : "$omssep$lang";
 
       my $listsep = Biber::Config->getoption('output_listsep');
       my @plainlist;
@@ -194,7 +193,7 @@ sub set_output_entry {
         }
         push @plainlist, $item;
       }
-      $acc{$casing->($listfield)} = join(" $listsep ", @plainlist);
+      $acc{$casing->($listfield) . lc($form) . lc($lang)} = join(" $listsep ", @plainlist);
     }
   }
 
@@ -245,15 +244,14 @@ sub set_output_entry {
       my $lang  = $as->{lang};
       my $val   = $as->{val};
 
-      $form = ($form eq 'default') ? '' : "_$form";
-      $lang = ($lang eq Biber::Config->get_mslang($key)) ? '' : "_$lang";
-      $field = "$field$form$lang";
+      $form = ($form eq 'default') ? '' : "$omssep$form";
+      $lang = ($lang eq Biber::Config->get_mslang($key)) ? '' : "$omssep$lang";
 
       unless (Biber::Config->getoption('output_resolve_xdata')) {
         my $xd = xdatarefcheck($val);
         $val = $xd // $val;
       }
-      $acc{$casing->($field)} = $val;
+      $acc{$casing->($field) . lc($form) . lc($lang)} = $val;
     }
   }
 
@@ -268,16 +266,15 @@ sub set_output_entry {
       my $lang  = $as->{lang};
       my $f   = $as->{val};
 
-      $form = ($form eq 'default') ? '' : "_$form";
-      $lang = ($lang eq Biber::Config->get_mslang($key)) ? '' : "_$lang";
-      $field = "$field$form$lang";
+      $form = ($form eq 'default') ? '' : "$omssep$form";
+      $lang = ($lang eq Biber::Config->get_mslang($key)) ? '' : "$omssep$lang";
 
       my $fl = join(',', $f->get_items->@*);
       unless (Biber::Config->getoption('output_resolve_xdata')) {
         my $xd = xdatarefcheck($fl);
         $fl = $xd // $fl;
       }
-      $acc{$casing->($field)} .= $fl;
+      $acc{$casing->($field) . lc($form) . lc($lang)} .= $fl;
     }
   }
 
@@ -289,22 +286,13 @@ sub set_output_entry {
         my $xd = xdatarefcheck($rfl);
         $rfl = $xd // $rfl;
       }
-      $acc{$casing->($rfield)} .= $rfl;
+      $acc{$casing->($rfield)} = $rfl;
     }
   }
 
   # Verbatim fields
   foreach my $vfield ($dmh->{vfields}->@*) {
-    foreach my $as ($be->get_alternates_for_field($vfield)->@*) {
-
-      my $form  = $as->{form};
-      my $lang  = $as->{lang};
-      my $vf   = $as->{val};
-
-      $form = ($form eq 'default') ? '' : "_$form";
-      $lang = ($lang eq Biber::Config->get_mslang($key)) ? '' : "_$lang";
-      $vfield = "$vfield$form$lang";
-
+    if ( my $vf = $be->get_field($vfield) ) {
       unless (Biber::Config->getoption('output_resolve_xdata')) {
         my $xd = xdatarefcheck($vf);
         $vf = $xd // $vf;
@@ -326,10 +314,12 @@ sub set_output_entry {
   # Annotations
   foreach my $f (keys %acc) {
     my ($field, $form, $lang) = mssplit($f, $key);
-    if (Biber::Annotation->is_annotated_field($key, lc($f), $form, $lang)) {
-      foreach my $n (Biber::Annotation->get_annotation_names($key, lc($f), $form, $lang)) {
-        $acc{$casing->($f) . Biber::Config->getoption('output_annotation_marker') .
-            Biber::Config->getoption('output_named_annotation_marker') . $n} = construct_annotation($key, lc($f), $n, $form, $lang);
+    if (Biber::Annotation->is_annotated_field($key, lc($field), $form, $lang)) {
+      foreach my $n (Biber::Annotation->get_annotation_names($key, lc($field), $form, $lang)) {
+        my $nform = ($form eq 'default') ? '' : "$omssep$form";
+        my $nlang = ($lang eq Biber::Config->get_mslang($key)) ? '' : "$omssep$lang";
+        $acc{$casing->($field) . lc($nform) . lc($nlang) . Biber::Config->getoption('output_annotation_marker') .
+            Biber::Config->getoption('output_named_annotation_marker') . $n} = construct_annotation($key, lc($field), $n, $form, $lang);
       }
     }
   }
@@ -351,7 +341,7 @@ sub set_output_entry {
         $field eq 'dates') {
       my @donefields;
       foreach my $key (sort keys %acc) {
-        if (first {fc($_) eq fc(strip_annotation($key))} $dmh->{$classmap{$field}}->@*) {
+        if (first {fc($_) eq fc(msfield(strip_annotation($key)))} $dmh->{$classmap{$field}}->@*) {
           $acc .= bibfield($key, $acc{$key}, $max_field_len);
           push @donefields, $key;
         }

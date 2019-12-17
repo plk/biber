@@ -1,6 +1,8 @@
 # -*- cperl -*-
 use strict;
 use warnings;
+use Text::Diff::Config;
+$Text::Diff::Config::Output_Unicode = 1;
 use Test::More tests => 5;
 use Test::Differences;
 unified_diff;
@@ -89,8 +91,26 @@ my $b3 = q|@BOOK{xd1,
 
 |;
 
-eq_or_diff($out->get_output_entry('murray',), $b1, 'bibtex output 1');
-eq_or_diff($out->get_output_entry('b1',), $b2, 'bibtex output 2');
-eq_or_diff($out->get_output_entry('xd1',), $b3, 'bibtex output 3');
-ok(is_undef($out->get_output_entry('reese')), 'bibtex output 4');
-is_deeply($main->get_keys, ['murray', 'kant:ku', 'b1', 'xd1'], 'bibtex output sorting');
+my $b4 = q|@ARTICLE{ms1,
+  AUTHOR                                     = {Smith, Bill and Пушкин, Александр and 徐冰},
+  AUTHOR+an:langtags                         = {2=ru-Cyrl;3=zh-Hant},
+  AUTHOR_transliteration_ru-grek             = {Smith, Bill and Πούσκιν, Ἀλεξάντρ and Ξού, Μπίνγκ},
+  AUTHOR_transliteration_ru-grek+an:langtags = {1=en-US;3=zh-Grek},
+  AUTHOR_transliteration_ru-latn             = {Smith, Bill and Pushkin, Aleksandr and Xu, Bing},
+  AUTHOR_transliteration_ru-latn+an:langtags = {1=en-US;3=zh-Latn},
+  LOCATION                                   = {locationa and Standortb},
+  LOCATION+an:langtags                       = {2=de},
+  LOCATION_translation_fr                    = {emplacementa and Standortb},
+  LOCATION_translation_fr+an:langtags        = {2=de},
+  DATE                                       = {1995},
+  TITLE                                      = {Title},
+  TITLE_translation_fr                       = {Titre},
+}
+
+|;
+
+eq_or_diff($out->get_output_entry('murray', $main), $b1, 'bibtex output 1');
+eq_or_diff($out->get_output_entry('b1', $main), $b2, 'bibtex output 2');
+eq_or_diff($out->get_output_entry('xd1', $main), $b3, 'bibtex output 3');
+eq_or_diff(encode_utf8($out->get_output_entry('ms1', $main)), encode_utf8($b4), 'bibtex output 4');
+is_deeply($main->get_keys, ['murray', 'kant:ku', 'ms1', 'b1', 'xd1'], 'bibtex output sorting');

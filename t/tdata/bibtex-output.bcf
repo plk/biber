@@ -1976,10 +1976,12 @@
   <!-- SECTION 0 -->
   <bcf:bibdata section="0">
     <bcf:datasource type="file" datatype="bibtex">examples.bib</bcf:datasource>
+    <bcf:datasource type="file" datatype="bibtex">multiscript.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
     <bcf:citekey order="1">murray</bcf:citekey>
     <bcf:citekey order="2">kant:ku</bcf:citekey>
+    <bcf:citekey order="3">ms1</bcf:citekey>
   </bcf:section>
   <!-- SECTION 1 -->
   <bcf:bibdata section="1">
