@@ -168,6 +168,7 @@
 *** TODO all changed macros ...
 *** TODO \field in \DeclareLabelalphaTemplate to say that non-name list fields apply the template to each list member
 *** TODO Inheritance is of all alternates
+*** TODO msstrict and LANGID->mslang
 ** TODO biblatex
 *** DONE Datamodel
 **** DONE Add valid multiscript fields to datamodel
@@ -217,6 +218,6 @@
 **** DONE get_datafield()
 **** DONE field_exists()
 *** DONE Add inheritance test to multiscript.t
-*** TODO xsl for sorting/labelalpha templates
+*** DONE xsl for sorting/labelalpha templates
 *** TODO elide form/lang on output when default?
 *** TODO fix all test outputs

@@ -718,6 +718,7 @@
       <bcf:field source="shorthand" skip="true"/>
       <bcf:field source="shorthandintro" skip="true"/>
       <bcf:field source="sortkey" skip="true"/>
+      <bcf:field source="langid" skip="true"/>
     </bcf:inherit>
   </bcf:inheritance>
   <!-- UNIQUENAME TEMPLATE -->

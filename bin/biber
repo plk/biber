@@ -51,6 +51,7 @@ GetOptions(
            'mincrossrefs|m=s',
            'mslang=s',
            'mssep=s',
+           'msstrict',
            'named_annotation_marker|named-annotation-marker=s',
            'namesep=s',
            'no_bblxml_schema|no-bblxml-schema',
@@ -573,6 +574,17 @@ when no language is specified for the field. Default is 'en-US'.
 
 Use F<sep> as the separator between parts of a multiscript bibtex
 datasource field. Default is '_'.
+
+=item B<--msstrict>
+
+Strict multiscript mode. This entails: the LANGID field in an entry is used
+to set the multiscript language default of all multiscript fields in the
+entry. This is usually what you want for real multiscript support but it is
+not enabled by default because this would break the default
+labelname/labeltitle/sorting settings for entries with LANGID that differs
+from the global default. If you turn this on, be sure to modify the
+labelname/labeltitle and sorting templates to include the multiscript
+alternates that result from using this setting.
 
 =item B<--named-annotation-marker=[marker]>
 

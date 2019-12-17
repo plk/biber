@@ -1781,10 +1781,10 @@ sub mssplit {
     unless (first {fc($_) eq fc($2)} $dm->get_constant_value('multiscriptforms')) {
       biber_warn("Invalid multiscript form '$2'");
     }
-    return (fc($1), $2, ($3 // Biber::Config::get_mslang($key)));
+    return (fc($1), $2, ($3 // Biber::Config->get_mslang($key)));
   }
   else {
-    return (fc($field), 'default', Biber::Config::get_mslang($key));
+    return (fc($field), 'default', Biber::Config->get_mslang($key));
   }
 }
 

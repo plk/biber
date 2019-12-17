@@ -42,7 +42,7 @@ sub new {
 sub get_value {
   my ($self, $form, $lang) = @_;
   $form = fc($form // 'default');
-  $lang = fc($lang // Biber::Config::get_mslang($self->{key}));
+  $lang = fc($lang // Biber::Config->get_mslang($self->{key}));
   return $self->{alternates}{$form}{$lang};
 }
 
@@ -73,7 +73,7 @@ sub get_alternates {
 sub set_value {
   my ($self, $value, $form, $lang) = @_;
   $form = fc($form // 'default');
-  $lang = fc($lang // Biber::Config::get_mslang($self->{key}));
+  $lang = fc($lang // Biber::Config->get_mslang($self->{key}));
   $self->{alternates}{$form}{$lang} = $value;
   return;
 }

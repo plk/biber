@@ -126,7 +126,7 @@ sub set_output_entry {
       my $names = $as->{val};
 
       $form = ($form eq 'default') ? '' : "_$form";
-      $lang = ($lang eq Biber::Config::get_mslang($key)) ? '' : "_$lang";
+      $lang = ($lang eq Biber::Config->get_mslang($key)) ? '' : "_$lang";
       $namefield = "$namefield$form$lang";
 
       # XDATA is special
@@ -182,7 +182,7 @@ sub set_output_entry {
       my $list = $as->{val};
 
       $form = ($form eq 'default') ? '' : "_$form";
-      $lang = ($lang eq Biber::Config::get_mslang($key)) ? '' : "_$lang";
+      $lang = ($lang eq Biber::Config->get_mslang($key)) ? '' : "_$lang";
       $listfield = "$listfield$form$lang";
 
       my $listsep = Biber::Config->getoption('output_listsep');
@@ -246,7 +246,7 @@ sub set_output_entry {
       my $val   = $as->{val};
 
       $form = ($form eq 'default') ? '' : "_$form";
-      $lang = ($lang eq Biber::Config::get_mslang($key)) ? '' : "_$lang";
+      $lang = ($lang eq Biber::Config->get_mslang($key)) ? '' : "_$lang";
       $field = "$field$form$lang";
 
       unless (Biber::Config->getoption('output_resolve_xdata')) {
@@ -269,7 +269,7 @@ sub set_output_entry {
       my $f   = $as->{val};
 
       $form = ($form eq 'default') ? '' : "_$form";
-      $lang = ($lang eq Biber::Config::get_mslang($key)) ? '' : "_$lang";
+      $lang = ($lang eq Biber::Config->get_mslang($key)) ? '' : "_$lang";
       $field = "$field$form$lang";
 
       my $fl = join(',', $f->get_items->@*);
@@ -302,7 +302,7 @@ sub set_output_entry {
       my $vf   = $as->{val};
 
       $form = ($form eq 'default') ? '' : "_$form";
-      $lang = ($lang eq Biber::Config::get_mslang($key)) ? '' : "_$lang";
+      $lang = ($lang eq Biber::Config->get_mslang($key)) ? '' : "_$lang";
       $vfield = "$vfield$form$lang";
 
       unless (Biber::Config->getoption('output_resolve_xdata')) {

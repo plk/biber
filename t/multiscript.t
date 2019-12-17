@@ -6,7 +6,7 @@ no warnings 'utf8';
 use Text::Diff::Config;
 $Text::Diff::Config::Output_Unicode = 1;
 
-use Test::More tests => 21;
+use Test::More tests => 22;
 use Test::Differences;
 unified_diff;
 
@@ -39,6 +39,7 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 
 # Biber options
 Biber::Config->setoption('bcf', 'multiscript.bcf');
+Biber::Config->setoption('msstrict', 1);
 
 # Now generate the information
 $biber->prepare;
@@ -175,7 +176,7 @@ my $ms2 = q|    \entry{ms2}{inbook}{}
            given={Clive},
            giveni={C\bibinitperiod}}}%
       }
-      \name[msform=default,mslang=en-us]{editor}{1}{}{%
+      \name[msform=default,mslang=de-de]{editor}{1}{}{%
         {{hash=da4e9104ade84cb0fcd815add03dd1fd}{%
            family={Gimble},
            familyi={G\bibinitperiod},
@@ -191,14 +192,14 @@ my $ms2 = q|    \entry{ms2}{inbook}{}
       \strng{authortransliterationru-latnbibnamehash}{cb8bc4824dfe756730d5837418bf5b53}
       \strng{authortransliterationru-latnnamehash}{cb8bc4824dfe756730d5837418bf5b53}
       \strng{authortransliterationru-latnfullhash}{cb8bc4824dfe756730d5837418bf5b53}
-      \strng{editordefaulten-usbibnamehash}{da4e9104ade84cb0fcd815add03dd1fd}
-      \strng{editordefaulten-usnamehash}{da4e9104ade84cb0fcd815add03dd1fd}
-      \strng{editordefaulten-usfullhash}{da4e9104ade84cb0fcd815add03dd1fd}
+      \strng{editordefaultde-debibnamehash}{da4e9104ade84cb0fcd815add03dd1fd}
+      \strng{editordefaultde-denamehash}{da4e9104ade84cb0fcd815add03dd1fd}
+      \strng{editordefaultde-defullhash}{da4e9104ade84cb0fcd815add03dd1fd}
       \field{labelalpha}{Cle96}
       \field{sortinit}{C}
       \strng{sortinithash}{4c244ceae61406cdc0cc2ce1cb1ff703}
       \field[msform=transliteration,mslang=ru-latn]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{booktitle}{Book Title}
+      \field[msform=default,mslang=de-de]{booktitle}{Book Title}
       \field[msform=translated,mslang=fr]{booktitle}{Livre Titre}
       \field[msform=default,mslang=en-us]{title}{Title}
       \field{year}{1996}

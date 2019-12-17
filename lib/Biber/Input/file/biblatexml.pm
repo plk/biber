@@ -772,11 +772,14 @@ sub create_entry {
   foreach my $e ($entry, values %newentries) {
     next unless $e;             # newentry might be undef
 
-    # langid is important as it is a local override for mslang which is used in every field
-    # get/set and so we need to use it to set an entry scope option first, if it exists
-    if (my $lid = $e->findnodes("./$NS:langid")->get_node(1)) {
-      $lid = $lid->textContent();
-      Biber::Config->set_mslang($key, fc($LOCALE_MAP{$lid}//$lid));
+    # In strict mode, langid is important as it is a local override for
+    # mslang which is used in every field get/set and so we need to use it
+    # to set an entry scope option first, if it exists
+    if (Biber::Config->getoption('msstrict')) {
+      if (my $lid = $e->findnodes("./$NS:langid")->get_node(1)) {
+        $lid = $lid->textContent();
+        Biber::Config->set_mslang($key, fc($LOCALE_MAP{$lid}//$lid));
+      }
     }
 
     my $k = $e->getAttribute('id');
@@ -818,7 +821,7 @@ sub _annotation {
   my ($bibentry, $entry, $f, $key) = @_;
   foreach my $node ($entry->findnodes("./$f")) {
     my $form = $node->getAttribute('msform') // 'default';
-    my $lang = $node->getAttribute('mslang') // Biber::Config::get_mslang($key);
+    my $lang = $node->getAttribute('mslang') // Biber::Config->get_mslang($key);
     my $field = $node->getAttribute('field');
     my $name = $node->getAttribute('name') || 'default';
     my $literal = $node->getAttribute('literal') || '0';
@@ -873,7 +876,7 @@ sub _literal {
     my $xnsi = Biber::Config->getoption('xnamesep');
 
     my $form = $node->getAttribute('msform') // 'default';
-    my $lang = $node->getAttribute('mslang') // Biber::Config::get_mslang($key);
+    my $lang = $node->getAttribute('mslang') // Biber::Config->get_mslang($key);
 
     # XDATA is special, if found, set it
     if (my $xdatav = $node->getAttribute('xdata')) {
@@ -946,7 +949,7 @@ sub _xsv {
   foreach my $node ($entry->findnodes("./$f")) {
 
     my $form = $node->getAttribute('msform') // 'default';
-    my $lang = $node->getAttribute('mslang') // Biber::Config::get_mslang($key);
+    my $lang = $node->getAttribute('mslang') // Biber::Config->get_mslang($key);
 
     # XDATA is special
     if (fc(_norm($f)) eq 'xdata') {
@@ -971,7 +974,7 @@ sub _uri {
   my ($bibentry, $entry, $f, $key) = @_;
   my $node = $entry->findnodes("./$f")->get_node(1);
   my $form = $node->getAttribute('msform') // 'default';
-  my $lang = $node->getAttribute('mslang') // Biber::Config::get_mslang($key);
+  my $lang = $node->getAttribute('mslang') // Biber::Config->get_mslang($key);
   my $setval = $node->textContent();
   my $xdmi = Biber::Config->getoption('xdatamarker');
   my $xnsi = Biber::Config->getoption('xnamesep');
@@ -1003,7 +1006,7 @@ sub _list {
   foreach my $node ($entry->findnodes("./$f")) {
 
     my $form = $node->getAttribute('msform') // 'default';
-    my $lang = $node->getAttribute('mslang') // Biber::Config::get_mslang($key);
+    my $lang = $node->getAttribute('mslang') // Biber::Config->get_mslang($key);
 
     $bibentry->set_datafield(_norm($f),
                              Biber::Entry::List->new(_split_list($bibentry, $node, $key, $f, $form, $lang)),
@@ -1018,7 +1021,7 @@ sub _range {
   my ($bibentry, $entry, $f, $key) = @_;
   my $node = $entry->findnodes("./$f")->get_node(1);
   my $form = $node->getAttribute('msform') // 'default';
-  my $lang = $node->getAttribute('mslang') // Biber::Config::get_mslang($key);
+  my $lang = $node->getAttribute('mslang') // Biber::Config->get_mslang($key);
   my $xdmi = Biber::Config->getoption('xdatamarker');
   my $xnsi = Biber::Config->getoption('xnamesep');
 
@@ -1229,7 +1232,7 @@ sub _name {
     my $xnsi = Biber::Config->getoption('xnamesep');
 
     my $form = $node->getAttribute('msform') // 'default';
-    my $lang = $node->getAttribute('mslang') // Biber::Config::get_mslang($key);
+    my $lang = $node->getAttribute('mslang') // Biber::Config->get_mslang($key);
 
     my $names = new Biber::Entry::Names;
 

@@ -297,7 +297,7 @@ sub get_xdata_refs {
 sub get_xdata_ref {
   my ($self, $field, $form, $lang, $pos) = @_;
   $form = $form // 'default';
-  $lang = $lang // Biber::Config::get_mslang($self->{derivedfields}{citekey}->get_value);
+  $lang = $lang // Biber::Config->get_mslang($self->{derivedfields}{citekey}->get_value);
 
   foreach my $xdatum ($self->{xdatarefs}->@*) {
     if ($xdatum->{reffield} eq $field and
@@ -326,7 +326,7 @@ sub get_xdata_ref {
 sub is_xdata_resolved {
   my ($self, $field, $form, $lang, $pos) = @_;
   $form = $form // 'default';
-  $lang = $lang // Biber::Config::get_mslang($self->{derivedfields}{citekey}->get_value);
+  $lang = $lang // Biber::Config->get_mslang($self->{derivedfields}{citekey}->get_value);
 
   foreach my $xdatum ($self->{xdatarefs}->@*) {
     if ($xdatum->{reffield} eq $field and
@@ -356,7 +356,7 @@ sub is_xdata_resolved {
 sub set_labelname_info {
   my ($self, $field, $form, $lang) = @_;
   $form = fc($form // 'default');
-  $lang = fc($lang // Biber::Config::get_mslang());
+  $lang = fc($lang // Biber::Config->get_mslang());
   $self->{labelnameinfo} = [$field, $form, $lang];
   return;
 }
@@ -383,7 +383,7 @@ sub get_labelname_info {
 sub set_labelnamefh_info {
   my ($self, $field, $form, $lang) = @_;
   $form = fc($form // 'default');
-  $lang = fc($lang // Biber::Config::get_mslang());
+  $lang = fc($lang // Biber::Config->get_mslang());
   $self->{labelnamefhinfo} = [$field, $form, $lang];
   return;
 }
@@ -410,7 +410,7 @@ sub get_labelnamefh_info {
 sub set_labeltitle_info {
   my ($self, $field, $form, $lang) = @_;
   $form = fc($form // 'default');
-  $lang = fc($lang // Biber::Config::get_mslang());
+  $lang = fc($lang // Biber::Config->get_mslang());
   $self->{labeltitleinfo} = [$field, $form, $lang];
   return;
 }
