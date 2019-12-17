@@ -41,7 +41,7 @@ Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 
 
 my $S1 = q|    \entry{S1}{book}{skipbib=false,skipbiblist=false,skiplab=false}
-      \name{author}{2}{}{%
+      \name[msform=default,mslang=en-us]{author}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
            familyi={D\bibinitperiod},
@@ -53,15 +53,15 @@ my $S1 = q|    \entry{S1}{book}{skipbib=false,skipbiblist=false,skiplab=false}
            given={Albert},
            giveni={A\bibinitperiod}}}%
       }
-      \list{publisher}{1}{%
+      \list[msform=default,mslang=en-us]{publisher}{1}{%
         {Oxford}%
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
       \strng{bibnamehash}{8c77336299b25bdada7bf8038f46722f}
-      \strng{authorbibnamehash}{8c77336299b25bdada7bf8038f46722f}
-      \strng{authornamehash}{8c77336299b25bdada7bf8038f46722f}
-      \strng{authorfullhash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{authordefaulten-usbibnamehash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{authordefaulten-usnamehash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{authordefaulten-usfullhash}{8c77336299b25bdada7bf8038f46722f}
       \field{extraname}{1}
       \field{labelalpha}{DA95}
       \field{sortinit}{D}
@@ -70,15 +70,15 @@ my $S1 = q|    \entry{S1}{book}{skipbib=false,skipbiblist=false,skiplab=false}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{year}
       \field{extraalpha}{1}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{title}{Title 1}
+      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[msform=default,mslang=en-us]{title}{Title 1}
       \field{year}{1995}
     \endentry
 |;
 
 my $S2 = q|    \entry{S2}{book}{skipbib=false,skiplab=false}
-      \name{author}{2}{}{%
+      \name[msform=default,mslang=en-us]{author}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
            familyi={D\bibinitperiod},
@@ -90,15 +90,15 @@ my $S2 = q|    \entry{S2}{book}{skipbib=false,skiplab=false}
            given={Albert},
            giveni={A\bibinitperiod}}}%
       }
-      \list{publisher}{1}{%
+      \list[msform=default,mslang=en-us]{publisher}{1}{%
         {Oxford}%
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
       \strng{bibnamehash}{8c77336299b25bdada7bf8038f46722f}
-      \strng{authorbibnamehash}{8c77336299b25bdada7bf8038f46722f}
-      \strng{authornamehash}{8c77336299b25bdada7bf8038f46722f}
-      \strng{authorfullhash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{authordefaulten-usbibnamehash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{authordefaulten-usnamehash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{authordefaulten-usfullhash}{8c77336299b25bdada7bf8038f46722f}
       \field{extraname}{2}
       \field{labelalpha}{DA95}
       \field{sortinit}{D}
@@ -107,15 +107,15 @@ my $S2 = q|    \entry{S2}{book}{skipbib=false,skiplab=false}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{year}
       \field{extraalpha}{2}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{title}{Title 2}
+      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[msform=default,mslang=en-us]{title}{Title 2}
       \field{year}{1995}
     \endentry
 |;
 
 my $S3 = q|    \entry{S3}{book}{}
-      \name{author}{2}{}{%
+      \name[msform=default,mslang=en-us]{author}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
            familyi={D\bibinitperiod},
@@ -127,21 +127,21 @@ my $S3 = q|    \entry{S3}{book}{}
            given={Albert},
            giveni={A\bibinitperiod}}}%
       }
-      \list{publisher}{1}{%
+      \list[msform=default,mslang=en-us]{publisher}{1}{%
         {Oxford}%
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
       \strng{bibnamehash}{8c77336299b25bdada7bf8038f46722f}
-      \strng{authorbibnamehash}{8c77336299b25bdada7bf8038f46722f}
-      \strng{authornamehash}{8c77336299b25bdada7bf8038f46722f}
-      \strng{authorfullhash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{authordefaulten-usbibnamehash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{authordefaulten-usnamehash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{authordefaulten-usfullhash}{8c77336299b25bdada7bf8038f46722f}
       \field{sortinit}{D}
       \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
       \field{labeldatesource}{year}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{title}{Title 3}
+      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[msform=default,mslang=en-us]{title}{Title 3}
       \field{year}{1995}
     \endentry
 |;

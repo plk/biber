@@ -65,7 +65,7 @@ my $l11 = [ "Overwriting field 'year' with year value from field 'date' for entr
 my $l12 = [ "Overwriting field 'month' with month value from field 'date' for entry 'L12'" ];
 
 my $l13c = q|    \entry{L13}{book}{}
-      \name{author}{2}{}{%
+      \name[msform=default,mslang=en-us]{author}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
            familyi={D\bibinitperiod},
@@ -77,33 +77,33 @@ my $l13c = q|    \entry{L13}{book}{}
            given={Albert},
            giveni={A\bibinitperiod}}}%
       }
-      \list{publisher}{1}{%
+      \list[msform=default,mslang=en-us]{publisher}{1}{%
         {Oxford}%
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
       \strng{bibnamehash}{8c77336299b25bdada7bf8038f46722f}
-      \strng{authorbibnamehash}{8c77336299b25bdada7bf8038f46722f}
-      \strng{authornamehash}{8c77336299b25bdada7bf8038f46722f}
-      \strng{authorfullhash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{authordefaulten-usbibnamehash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{authordefaulten-usnamehash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{authordefaulten-usfullhash}{8c77336299b25bdada7bf8038f46722f}
       \field{extraname}{3}
       \field{sortinit}{D}
       \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
+      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
       \field{day}{1}
       \field{endyear}{}
       \field{month}{1}
-      \field{title}{Title 2}
+      \field[msform=default,mslang=en-us]{title}{Title 2}
       \field{year}{1996}
       \field{dateera}{ce}
     \endentry
 |;
 
 my $l14 = q|    \entry{L14}{book}{}
-      \name{author}{2}{}{%
+      \name[msform=default,mslang=en-us]{author}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
            familyi={D\bibinitperiod},
@@ -115,29 +115,29 @@ my $l14 = q|    \entry{L14}{book}{}
            given={Albert},
            giveni={A\bibinitperiod}}}%
       }
-      \list{publisher}{1}{%
+      \list[msform=default,mslang=en-us]{publisher}{1}{%
         {Oxford}%
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
       \strng{bibnamehash}{8c77336299b25bdada7bf8038f46722f}
-      \strng{authorbibnamehash}{8c77336299b25bdada7bf8038f46722f}
-      \strng{authornamehash}{8c77336299b25bdada7bf8038f46722f}
-      \strng{authorfullhash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{authordefaulten-usbibnamehash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{authordefaulten-usnamehash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{authordefaulten-usfullhash}{8c77336299b25bdada7bf8038f46722f}
       \field{extraname}{4}
       \field{sortinit}{D}
       \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
       \field{extradate}{3}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
+      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
       \field{day}{10}
       \field{endday}{12}
       \field{endmonth}{12}
       \field{endyear}{1996}
       \field{month}{12}
-      \field{title}{Title 2}
+      \field[msform=default,mslang=en-us]{title}{Title 2}
       \field{year}{1996}
       \field{enddateera}{ce}
       \field{dateera}{ce}
@@ -145,7 +145,7 @@ my $l14 = q|    \entry{L14}{book}{}
 |;
 
 my $l15 = q|    \entry{L15}{book}{}
-      \name{author}{2}{}{%
+      \name[msform=default,mslang=en-us]{author}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
            familyi={D\bibinitperiod},
@@ -157,28 +157,28 @@ my $l15 = q|    \entry{L15}{book}{}
            given={Albert},
            giveni={A\bibinitperiod}}}%
       }
-      \list{publisher}{1}{%
+      \list[msform=default,mslang=en-us]{publisher}{1}{%
         {Oxford}%
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
       \strng{bibnamehash}{8c77336299b25bdada7bf8038f46722f}
-      \strng{authorbibnamehash}{8c77336299b25bdada7bf8038f46722f}
-      \strng{authornamehash}{8c77336299b25bdada7bf8038f46722f}
-      \strng{authorfullhash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{authordefaulten-usbibnamehash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{authordefaulten-usnamehash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{authordefaulten-usfullhash}{8c77336299b25bdada7bf8038f46722f}
       \field{extraname}{12}
       \field{sortinit}{D}
       \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
       \field{extradate}{4}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{title}{Title 2}
+      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[msform=default,mslang=en-us]{title}{Title 2}
       \warn{\item Datamodel: Entry 'L15' (dateformats.bib): Missing mandatory field - one of 'date, year' must be defined}
     \endentry
 |;
 
 my $l16 = q|    \entry{L16}{proceedings}{}
-      \name{editor}{2}{}{%
+      \name[msform=default,mslang=en-us]{editor}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
            familyi={D\bibinitperiod},
@@ -190,34 +190,34 @@ my $l16 = q|    \entry{L16}{proceedings}{}
            given={Albert},
            giveni={A\bibinitperiod}}}%
       }
-      \list{publisher}{1}{%
+      \list[msform=default,mslang=en-us]{publisher}{1}{%
         {Oxford}%
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
       \strng{bibnamehash}{8c77336299b25bdada7bf8038f46722f}
-      \strng{editorbibnamehash}{8c77336299b25bdada7bf8038f46722f}
-      \strng{editornamehash}{8c77336299b25bdada7bf8038f46722f}
-      \strng{editorfullhash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{editordefaulten-usbibnamehash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{editordefaulten-usnamehash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{editordefaulten-usfullhash}{8c77336299b25bdada7bf8038f46722f}
       \field{extraname}{13}
       \field{sortinit}{D}
       \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
       \field{extradate}{7}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{event}
-      \field{labelnamesource}{editor}
-      \field{labeltitlesource}{title}
+      \field[msform=default,mslang=en-us]{labelnamesource}{editor}
+      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
       \field{eventday}{1}
       \field{eventmonth}{1}
       \field{eventyear}{1996}
-      \field{title}{Title 2}
+      \field[msform=default,mslang=en-us]{title}{Title 2}
       \field{eventdateera}{ce}
       \warn{\item Datamodel: Entry 'L16' (dateformats.bib): Missing mandatory field - one of 'date, year' must be defined}
     \endentry
 |;
 
 my $l17 = q|    \entry{L17}{proceedings}{}
-      \name{editor}{2}{}{%
+      \name[msform=default,mslang=en-us]{editor}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
            familyi={D\bibinitperiod},
@@ -229,23 +229,23 @@ my $l17 = q|    \entry{L17}{proceedings}{}
            given={Albert},
            giveni={A\bibinitperiod}}}%
       }
-      \list{publisher}{1}{%
+      \list[msform=default,mslang=en-us]{publisher}{1}{%
         {Oxford}%
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
       \strng{bibnamehash}{8c77336299b25bdada7bf8038f46722f}
-      \strng{editorbibnamehash}{8c77336299b25bdada7bf8038f46722f}
-      \strng{editornamehash}{8c77336299b25bdada7bf8038f46722f}
-      \strng{editorfullhash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{editordefaulten-usbibnamehash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{editordefaulten-usnamehash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{editordefaulten-usfullhash}{8c77336299b25bdada7bf8038f46722f}
       \field{extraname}{5}
       \field{sortinit}{D}
       \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
       \field{extradate}{4}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
-      \field{labelnamesource}{editor}
-      \field{labeltitlesource}{title}
+      \field[msform=default,mslang=en-us]{labelnamesource}{editor}
+      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
       \field{day}{10}
       \field{endday}{12}
       \field{endmonth}{12}
@@ -264,7 +264,7 @@ my $l17 = q|    \entry{L17}{proceedings}{}
       \field{origmonth}{12}
       \field{origyear}{1998}
       \field{pubstate}{inpress}
-      \field{title}{Title 2}
+      \field[msform=default,mslang=en-us]{title}{Title 2}
       \field{year}{1996}
       \field{enddateera}{ce}
       \field{dateera}{ce}
@@ -276,7 +276,7 @@ my $l17 = q|    \entry{L17}{proceedings}{}
 |;
 
 my $l17c = q|    \entry{L17}{proceedings}{}
-      \name{editor}{2}{}{%
+      \name[msform=default,mslang=en-us]{editor}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
            familyi={D\bibinitperiod},
@@ -288,22 +288,22 @@ my $l17c = q|    \entry{L17}{proceedings}{}
            given={Albert},
            giveni={A\bibinitperiod}}}%
       }
-      \list{publisher}{1}{%
+      \list[msform=default,mslang=en-us]{publisher}{1}{%
         {Oxford}%
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
       \strng{bibnamehash}{8c77336299b25bdada7bf8038f46722f}
-      \strng{editorbibnamehash}{8c77336299b25bdada7bf8038f46722f}
-      \strng{editornamehash}{8c77336299b25bdada7bf8038f46722f}
-      \strng{editorfullhash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{editordefaulten-usbibnamehash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{editordefaulten-usnamehash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{editordefaulten-usfullhash}{8c77336299b25bdada7bf8038f46722f}
       \field{extraname}{5}
       \field{sortinit}{D}
       \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{orig}
-      \field{labelnamesource}{editor}
-      \field{labeltitlesource}{title}
+      \field[msform=default,mslang=en-us]{labelnamesource}{editor}
+      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
       \field{day}{10}
       \field{endday}{12}
       \field{endmonth}{12}
@@ -322,7 +322,7 @@ my $l17c = q|    \entry{L17}{proceedings}{}
       \field{origmonth}{12}
       \field{origyear}{1998}
       \field{pubstate}{inpress}
-      \field{title}{Title 2}
+      \field[msform=default,mslang=en-us]{title}{Title 2}
       \field{year}{1996}
       \field{enddateera}{ce}
       \field{dateera}{ce}
@@ -334,7 +334,7 @@ my $l17c = q|    \entry{L17}{proceedings}{}
 |;
 
 my $l17e = q|    \entry{L17}{proceedings}{}
-      \name{editor}{2}{}{%
+      \name[msform=default,mslang=en-us]{editor}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
            familyi={D\bibinitperiod},
@@ -346,22 +346,22 @@ my $l17e = q|    \entry{L17}{proceedings}{}
            given={Albert},
            giveni={A\bibinitperiod}}}%
       }
-      \list{publisher}{1}{%
+      \list[msform=default,mslang=en-us]{publisher}{1}{%
         {Oxford}%
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
       \strng{bibnamehash}{8c77336299b25bdada7bf8038f46722f}
-      \strng{editorbibnamehash}{8c77336299b25bdada7bf8038f46722f}
-      \strng{editornamehash}{8c77336299b25bdada7bf8038f46722f}
-      \strng{editorfullhash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{editordefaulten-usbibnamehash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{editordefaulten-usnamehash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{editordefaulten-usfullhash}{8c77336299b25bdada7bf8038f46722f}
       \field{extraname}{5}
       \field{sortinit}{D}
       \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{event}
-      \field{labelnamesource}{editor}
-      \field{labeltitlesource}{title}
+      \field[msform=default,mslang=en-us]{labelnamesource}{editor}
+      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
       \field{day}{10}
       \field{endday}{12}
       \field{endmonth}{12}
@@ -380,7 +380,7 @@ my $l17e = q|    \entry{L17}{proceedings}{}
       \field{origmonth}{12}
       \field{origyear}{1998}
       \field{pubstate}{inpress}
-      \field{title}{Title 2}
+      \field[msform=default,mslang=en-us]{title}{Title 2}
       \field{year}{1996}
       \field{enddateera}{ce}
       \field{dateera}{ce}
@@ -460,11 +460,8 @@ $biber->prepare;
 $out = $biber->get_output_obj;
 eq_or_diff($bibentries->entry('L17')->get_labeldate_info->{field}{source}, 'pubstate', 'Source is non-date field');
 
-
-
-
 my $era1 = q|    \entry{era1}{article}{}
-      \name{author}{1}{}{%
+      \name[msform=default,mslang=en-us]{author}{1}{}{%
         {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
            family={Smith},
            familyi={S\\bibinitperiod},
@@ -474,21 +471,21 @@ my $era1 = q|    \entry{era1}{article}{}
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{bibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
-      \strng{authorbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
-      \strng{authornamehash}{556c8dba145b472e6a8598d506f7cbe2}
-      \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authordefaulten-usbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authordefaulten-usnamehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authordefaulten-usfullhash}{556c8dba145b472e6a8598d506f7cbe2}
       \field{extraname}{9}
       \field{sortinit}{S}
       \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{journaltitle}{Journal Title}
+      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[msform=default,mslang=en-us]{journaltitle}{Journal Title}
       \field{month}{2}
       \field{origendyear}{219}
       \field{origyear}{221}
-      \field{title}{Title}
+      \field[msform=default,mslang=en-us]{title}{Title}
       \field{year}{379}
       \field{dateera}{bce}
       \field{origenddateera}{bce}
@@ -497,7 +494,7 @@ my $era1 = q|    \entry{era1}{article}{}
 |;
 
 my $era2 = q|    \entry{era2}{inproceedings}{}
-      \name{author}{1}{}{%
+      \name[msform=default,mslang=en-us]{author}{1}{}{%
         {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
            family={Smith},
            familyi={S\\bibinitperiod},
@@ -507,21 +504,21 @@ my $era2 = q|    \entry{era2}{inproceedings}{}
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{bibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
-      \strng{authorbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
-      \strng{authornamehash}{556c8dba145b472e6a8598d506f7cbe2}
-      \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authordefaulten-usbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authordefaulten-usnamehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authordefaulten-usfullhash}{556c8dba145b472e6a8598d506f7cbe2}
       \field{extraname}{10}
       \field{sortinit}{S}
       \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{booktitle}{Book Title}
+      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[msform=default,mslang=en-us]{booktitle}{Book Title}
       \field{eventyear}{249}
       \field{origendyear}{44}
       \field{origyear}{49}
-      \field{title}{Title}
+      \field[msform=default,mslang=en-us]{title}{Title}
       \field{year}{197}
       \field{dateera}{bce}
       \field{eventdateera}{bce}
@@ -531,7 +528,7 @@ my $era2 = q|    \entry{era2}{inproceedings}{}
 |;
 
 my $era3 = q|    \entry{era3}{inproceedings}{}
-      \name{author}{1}{}{%
+      \name[msform=default,mslang=en-us]{author}{1}{}{%
         {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
            family={Smith},
            familyi={S\\bibinitperiod},
@@ -541,22 +538,22 @@ my $era3 = q|    \entry{era3}{inproceedings}{}
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{bibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
-      \strng{authorbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
-      \strng{authornamehash}{556c8dba145b472e6a8598d506f7cbe2}
-      \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authordefaulten-usbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authordefaulten-usnamehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authordefaulten-usfullhash}{556c8dba145b472e6a8598d506f7cbe2}
       \field{extraname}{11}
       \field{sortinit}{S}
       \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{booktitle}{Book Title}
+      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[msform=default,mslang=en-us]{booktitle}{Book Title}
       \field{eventday}{2}
       \field{eventmonth}{3}
       \field{eventyear}{250}
       \field{month}{2}
-      \field{title}{Title}
+      \field[msform=default,mslang=en-us]{title}{Title}
       \field{year}{196}
       \field{dateera}{bce}
       \true{eventdatejulian}
@@ -565,7 +562,7 @@ my $era3 = q|    \entry{era3}{inproceedings}{}
 |;
 
 my $era4 = q|    \entry{era4}{inproceedings}{}
-      \name{author}{1}{}{%
+      \name[msform=default,mslang=en-us]{author}{1}{}{%
         {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
            family={Smith},
            familyi={S\\bibinitperiod},
@@ -575,21 +572,21 @@ my $era4 = q|    \entry{era4}{inproceedings}{}
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{bibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
-      \strng{authorbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
-      \strng{authornamehash}{556c8dba145b472e6a8598d506f7cbe2}
-      \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authordefaulten-usbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authordefaulten-usnamehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authordefaulten-usfullhash}{556c8dba145b472e6a8598d506f7cbe2}
       \field{extraname}{6}
       \field{sortinit}{S}
       \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{booktitle}{Book Title}
+      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[msform=default,mslang=en-us]{booktitle}{Book Title}
       \field{eventyear}{1565}
       \field{origendyear}{1488}
       \field{origyear}{1487}
-      \field{title}{Title}
+      \field[msform=default,mslang=en-us]{title}{Title}
       \field{urlendyear}{1490}
       \field{urlyear}{1487}
       \field{year}{1034}
@@ -607,7 +604,7 @@ my $era4 = q|    \entry{era4}{inproceedings}{}
 |;
 
 my $time1 = q|    \entry{time1}{article}{}
-      \name{author}{1}{}{%
+      \name[msform=default,mslang=en-us]{author}{1}{}{%
         {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
            family={Smith},
            familyi={S\\bibinitperiod},
@@ -617,19 +614,19 @@ my $time1 = q|    \entry{time1}{article}{}
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{bibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
-      \strng{authorbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
-      \strng{authornamehash}{556c8dba145b472e6a8598d506f7cbe2}
-      \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authordefaulten-usbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authordefaulten-usnamehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authordefaulten-usfullhash}{556c8dba145b472e6a8598d506f7cbe2}
       \field{extraname}{2}
       \field{sortinit}{S}
       \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
+      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
       \field{day}{3}
       \field{hour}{15}
-      \field{journaltitle}{Journal Title}
+      \field[msform=default,mslang=en-us]{journaltitle}{Journal Title}
       \field{minute}{0}
       \field{month}{1}
       \field{origday}{3}
@@ -640,7 +637,7 @@ my $time1 = q|    \entry{time1}{article}{}
       \field{origtimezone}{Z}
       \field{origyear}{2001}
       \field{second}{0}
-      \field{title}{Title}
+      \field[msform=default,mslang=en-us]{title}{Title}
       \field{urlday}{3}
       \field{urlhour}{17}
       \field{urlminute}{7}
@@ -656,7 +653,7 @@ my $time1 = q|    \entry{time1}{article}{}
 |;
 
 my $range1 = q|    \entry{range1}{inproceedings}{}
-      \name{author}{1}{}{%
+      \name[msform=default,mslang=en-us]{author}{1}{}{%
         {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
            family={Smith},
            familyi={S\\bibinitperiod},
@@ -666,24 +663,24 @@ my $range1 = q|    \entry{range1}{inproceedings}{}
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{bibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
-      \strng{authorbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
-      \strng{authornamehash}{556c8dba145b472e6a8598d506f7cbe2}
-      \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authordefaulten-usbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authordefaulten-usnamehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authordefaulten-usfullhash}{556c8dba145b472e6a8598d506f7cbe2}
       \field{extraname}{7}
       \field{sortinit}{S}
       \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
       \field{extradate}{1}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{booktitle}{Book Title}
+      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[msform=default,mslang=en-us]{booktitle}{Book Title}
       \field{endyear}{}
       \field{eventendyear}{}
       \field{eventyear}{1565}
       \field{origendyear}{}
       \field{origyear}{2000}
-      \field{title}{Title}
+      \field[msform=default,mslang=en-us]{title}{Title}
       \field{urlendyear}{1034}
       \field{urlyear}{}
       \field{year}{1034}
@@ -697,7 +694,7 @@ my $range1 = q|    \entry{range1}{inproceedings}{}
 |;
 
 my $range2 = q|    \entry{range2}{inproceedings}{}
-      \name{author}{1}{}{%
+      \name[msform=default,mslang=en-us]{author}{1}{}{%
         {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
            family={Smith},
            familyi={S\\bibinitperiod},
@@ -707,24 +704,24 @@ my $range2 = q|    \entry{range2}{inproceedings}{}
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{bibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
-      \strng{authorbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
-      \strng{authornamehash}{556c8dba145b472e6a8598d506f7cbe2}
-      \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authordefaulten-usbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authordefaulten-usnamehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authordefaulten-usfullhash}{556c8dba145b472e6a8598d506f7cbe2}
       \field{extraname}{8}
       \field{sortinit}{S}
       \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
       \field{extradate}{2}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{booktitle}{Book Title}
+      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[msform=default,mslang=en-us]{booktitle}{Book Title}
       \field{endyear}{}
       \field{eventendyear}{1565}
       \field{eventyear}{}
       \field{origendyear}{2000}
       \field{origyear}{}
-      \field{title}{Title}
+      \field[msform=default,mslang=en-us]{title}{Title}
       \field{urlendyear}{1034}
       \field{urlyear}{}
       \field{year}{1034}
@@ -738,7 +735,7 @@ my $range2 = q|    \entry{range2}{inproceedings}{}
 |;
 
 my $season1 = q|    \entry{season1}{inproceedings}{}
-      \name{author}{1}{}{%
+      \name[msform=default,mslang=en-us]{author}{1}{}{%
         {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
            family={Smith},
            familyi={S\\bibinitperiod},
@@ -748,21 +745,21 @@ my $season1 = q|    \entry{season1}{inproceedings}{}
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{bibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
-      \strng{authorbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
-      \strng{authornamehash}{556c8dba145b472e6a8598d506f7cbe2}
-      \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authordefaulten-usbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authordefaulten-usnamehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authordefaulten-usfullhash}{556c8dba145b472e6a8598d506f7cbe2}
       \field{extraname}{1}
       \field{sortinit}{S}
       \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{booktitle}{Book Title}
+      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[msform=default,mslang=en-us]{booktitle}{Book Title}
       \field{eventseason}{autumn}
       \field{eventyear}{2002}
       \field{season}{spring}
-      \field{title}{Title}
+      \field[msform=default,mslang=en-us]{title}{Title}
       \field{year}{2003}
       \field{dateera}{ce}
       \field{eventdateera}{ce}
@@ -770,7 +767,7 @@ my $season1 = q|    \entry{season1}{inproceedings}{}
 |;
 
 my $unspec1 = q|    \entry{unspec1}{inproceedings}{}
-      \name{author}{1}{}{%
+      \name[msform=default,mslang=en-us]{author}{1}{}{%
         {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
            family={Smith},
            familyi={S\\bibinitperiod},
@@ -780,17 +777,17 @@ my $unspec1 = q|    \entry{unspec1}{inproceedings}{}
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{bibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
-      \strng{authorbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
-      \strng{authornamehash}{556c8dba145b472e6a8598d506f7cbe2}
-      \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authordefaulten-usbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authordefaulten-usnamehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authordefaulten-usfullhash}{556c8dba145b472e6a8598d506f7cbe2}
       \field{extraname}{4}
       \field{sortinit}{S}
       \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{booktitle}{Book Title}
+      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[msform=default,mslang=en-us]{booktitle}{Book Title}
       \field{endyear}{1999}
       \field{eventendyear}{1999}
       \field{eventyear}{1900}
@@ -798,7 +795,7 @@ my $unspec1 = q|    \entry{unspec1}{inproceedings}{}
       \field{origendyear}{1999}
       \field{origmonth}{1}
       \field{origyear}{1999}
-      \field{title}{Title}
+      \field[msform=default,mslang=en-us]{title}{Title}
       \field{urlday}{1}
       \field{urlendday}{31}
       \field{urlendmonth}{1}
@@ -823,7 +820,7 @@ my $unspec1 = q|    \entry{unspec1}{inproceedings}{}
 
 
 my $unspec2 = q|    \entry{unspec2}{article}{}
-      \name{author}{1}{}{%
+      \name[msform=default,mslang=en-us]{author}{1}{}{%
         {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
            family={Smith},
            familyi={S\\bibinitperiod},
@@ -833,23 +830,23 @@ my $unspec2 = q|    \entry{unspec2}{article}{}
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{bibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
-      \strng{authorbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
-      \strng{authornamehash}{556c8dba145b472e6a8598d506f7cbe2}
-      \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authordefaulten-usbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authordefaulten-usnamehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authordefaulten-usfullhash}{556c8dba145b472e6a8598d506f7cbe2}
       \field{extraname}{3}
       \field{sortinit}{S}
       \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
+      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
       \field{day}{1}
       \field{endday}{31}
       \field{endmonth}{12}
       \field{endyear}{1999}
-      \field{journaltitle}{Journal Title}
+      \field[msform=default,mslang=en-us]{journaltitle}{Journal Title}
       \field{month}{1}
-      \field{title}{Title}
+      \field[msform=default,mslang=en-us]{title}{Title}
       \field{year}{1999}
       \field{dateunspecified}{dayinyear}
       \field{enddateera}{ce}

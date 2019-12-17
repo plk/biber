@@ -1,5 +1,5 @@
 % $ biblatex auxiliary file $
-% $ biblatex bbl format version 3.1 $
+% $ biblatex bbl format version 4.0 $
 % Do not modify the above lines!
 %
 % This is an auxiliary file used by the 'biblatex' package.
@@ -20,7 +20,7 @@
 \refsection{0}
   \datalist[entry]{custom/global//global/global}
     \entry{F1}{book}{}
-      \name{author}{1}{}{%
+      \name[msform=default,mslang=en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
            familyi={D\bibinitperiod},
@@ -31,23 +31,23 @@
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{bibnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
-      \strng{authorbibnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
-      \strng{authornamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
-      \strng{authorfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authordefaulten-usbibnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authordefaulten-usnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authordefaulten-usfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{labelalpha}{\emph{A}}
       \field{sortinit}{A}
-      \field{sortinithash}{a3dcedd53b04d1adfd5ac303ecd5e6fa}
+      \strng{sortinithash}{a3dcedd53b04d1adfd5ac303ecd5e6fa}
       \true{singletitle}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{shorthand}{\emph{A}}
-      \field{title}{The Fullness of Times}
+      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[msform=default,mslang=en-us]{shorthand}{\emph{A}}
+      \field[msform=default,mslang=en-us]{title}{The Fullness of Times}
       \field{year}{1995}
     \endentry
   \enddatalist
   \datalist[list]{shorthand/global//global/global}
     \entry{F1}{book}{}
-      \name{author}{1}{}{%
+      \name[msform=default,mslang=en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
            familyi={D\bibinitperiod},
@@ -58,23 +58,23 @@
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{bibnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
-      \strng{authorbibnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
-      \strng{authornamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
-      \strng{authorfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authordefaulten-usbibnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authordefaulten-usnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authordefaulten-usfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{labelalpha}{\emph{A}}
       \field{sortinit}{A}
-      \field{sortinithash}{a3dcedd53b04d1adfd5ac303ecd5e6fa}
+      \strng{sortinithash}{a3dcedd53b04d1adfd5ac303ecd5e6fa}
       \true{singletitle}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{shorthand}{\emph{A}}
-      \field{title}{The Fullness of Times}
+      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[msform=default,mslang=en-us]{shorthand}{\emph{A}}
+      \field[msform=default,mslang=en-us]{title}{The Fullness of Times}
       \field{year}{1995}
     \endentry
   \enddatalist
   \datalist[entry]{nty/global//global/global}
     \entry{F1}{book}{}
-      \name{author}{1}{}{%
+      \name[msform=default,mslang=en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
            familyi={D\bibinitperiod},
@@ -85,17 +85,17 @@
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{bibnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
-      \strng{authorbibnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
-      \strng{authornamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
-      \strng{authorfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authordefaulten-usbibnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authordefaulten-usnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authordefaulten-usfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{labelalpha}{\emph{A}}
       \field{sortinit}{D}
-      \field{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
+      \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
       \true{singletitle}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{shorthand}{\emph{A}}
-      \field{title}{The Fullness of Times}
+      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[msform=default,mslang=en-us]{shorthand}{\emph{A}}
+      \field[msform=default,mslang=en-us]{title}{The Fullness of Times}
       \field{year}{1995}
     \endentry
   \enddatalist

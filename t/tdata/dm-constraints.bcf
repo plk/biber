@@ -1041,10 +1041,16 @@
       <bcf:field>journalsubtitle</bcf:field>
       <bcf:field>journaltitle</bcf:field>
       <bcf:field>location</bcf:field>
+      <bcf:field>lista</bcf:field>
+      <bcf:field>listb</bcf:field>
+      <bcf:field>listc</bcf:field>
       <bcf:field>mainsubtitle</bcf:field>
       <bcf:field>maintitle</bcf:field>
       <bcf:field>maintitleaddon</bcf:field>
       <bcf:field>nameaddon</bcf:field>
+      <bcf:field>namea</bcf:field>
+      <bcf:field>nameb</bcf:field>
+      <bcf:field>namec</bcf:field>
       <bcf:field>note</bcf:field>
       <bcf:field>organization</bcf:field>
       <bcf:field>origlanguage</bcf:field>

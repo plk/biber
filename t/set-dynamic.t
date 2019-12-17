@@ -57,7 +57,7 @@ my $string1 = q|    \entry{DynSet}{set}{}
 
 my $string2 = q|    \entry{Dynamic1}{book}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}
       \inset{DynSet}
-      \name{author}{1}{}{%
+      \name[msform=default,mslang=en-us]{author}{1}{}{%
         {{hash=252caa7921a061ca92087a1a52f15b78}{%
            family={Dynamism},
            familyi={D\bibinitperiod},
@@ -67,24 +67,24 @@ my $string2 = q|    \entry{Dynamic1}{book}{skipbib=true,skipbiblist=true,skiplab
       \strng{namehash}{252caa7921a061ca92087a1a52f15b78}
       \strng{fullhash}{252caa7921a061ca92087a1a52f15b78}
       \strng{bibnamehash}{252caa7921a061ca92087a1a52f15b78}
-      \strng{authorbibnamehash}{252caa7921a061ca92087a1a52f15b78}
-      \strng{authornamehash}{252caa7921a061ca92087a1a52f15b78}
-      \strng{authorfullhash}{252caa7921a061ca92087a1a52f15b78}
+      \strng{authordefaulten-usbibnamehash}{252caa7921a061ca92087a1a52f15b78}
+      \strng{authordefaulten-usnamehash}{252caa7921a061ca92087a1a52f15b78}
+      \strng{authordefaulten-usfullhash}{252caa7921a061ca92087a1a52f15b78}
       \field{sortinit}{8}
       \strng{sortinithash}{1b24cab5087933ef0826a7cd3b99e994}
       \field{labeldatesource}{year}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
+      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
       \field{annotation}{Some Dynamic Note}
-      \field{shorthand}{d1}
-      \field{title}{Doing Daring Deeds}
+      \field[msform=default,mslang=en-us]{shorthand}{d1}
+      \field[msform=default,mslang=en-us]{title}{Doing Daring Deeds}
       \field{year}{2002}
     \endentry
 |;
 
 my $string3 = q|    \entry{Dynamic2}{book}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}
       \inset{DynSet}
-      \name{author}{1}{}{%
+      \name[msform=default,mslang=en-us]{author}{1}{}{%
         {{hash=894a5fe6de820f5dcce84a65581667f4}{%
            family={Bunting},
            familyi={B\bibinitperiod},
@@ -94,23 +94,23 @@ my $string3 = q|    \entry{Dynamic2}{book}{skipbib=true,skipbiblist=true,skiplab
       \strng{namehash}{894a5fe6de820f5dcce84a65581667f4}
       \strng{fullhash}{894a5fe6de820f5dcce84a65581667f4}
       \strng{bibnamehash}{894a5fe6de820f5dcce84a65581667f4}
-      \strng{authorbibnamehash}{894a5fe6de820f5dcce84a65581667f4}
-      \strng{authornamehash}{894a5fe6de820f5dcce84a65581667f4}
-      \strng{authorfullhash}{894a5fe6de820f5dcce84a65581667f4}
+      \strng{authordefaulten-usbibnamehash}{894a5fe6de820f5dcce84a65581667f4}
+      \strng{authordefaulten-usnamehash}{894a5fe6de820f5dcce84a65581667f4}
+      \strng{authordefaulten-usfullhash}{894a5fe6de820f5dcce84a65581667f4}
       \field{sortinit}{9}
       \strng{sortinithash}{54047ffb55bdefa0694bbd554c1b11a0}
       \field{labeldatesource}{year}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{shorthand}{d2}
-      \field{title}{Beautiful Birthdays}
+      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[msform=default,mslang=en-us]{shorthand}{d2}
+      \field[msform=default,mslang=en-us]{title}{Beautiful Birthdays}
       \field{year}{2010}
     \endentry
 |;
 
 my $string4 = q|    \entry{Dynamic3}{book}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}
       \inset{DynSet}
-      \name{author}{1}{}{%
+      \name[msform=default,mslang=en-us]{author}{1}{}{%
         {{hash=fc3cc97631ceaecdde2aee6cc60ab42b}{%
            family={Regardless},
            familyi={R\bibinitperiod},
@@ -120,16 +120,16 @@ my $string4 = q|    \entry{Dynamic3}{book}{skipbib=true,skipbiblist=true,skiplab
       \strng{namehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \strng{fullhash}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \strng{bibnamehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
-      \strng{authorbibnamehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
-      \strng{authornamehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
-      \strng{authorfullhash}{fc3cc97631ceaecdde2aee6cc60ab42b}
+      \strng{authordefaulten-usbibnamehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
+      \strng{authordefaulten-usnamehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
+      \strng{authordefaulten-usfullhash}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \field{sortinit}{1}
       \strng{sortinithash}{50c6687d7fc80f50136d75228e3c59ba}
       \field{labeldatesource}{year}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{shorthand}{d3}
-      \field{title}{Reckless Ravishings}
+      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[msform=default,mslang=en-us]{shorthand}{d3}
+      \field[msform=default,mslang=en-us]{title}{Reckless Ravishings}
       \field{year}{2000}
     \endentry
 |;
@@ -137,7 +137,7 @@ my $string4 = q|    \entry{Dynamic3}{book}{skipbib=true,skipbiblist=true,skiplab
 # Labelyear is now here as skiplab is not set for this entry when cited in section
 # without citation of a set it is a member of
 my $string5 = q|    \entry{Dynamic3}{book}{}
-      \name{author}{1}{}{%
+      \name[msform=default,mslang=en-us]{author}{1}{}{%
         {{hash=fc3cc97631ceaecdde2aee6cc60ab42b}{%
            family={Regardless},
            familyi={R\bibinitperiod},
@@ -147,17 +147,17 @@ my $string5 = q|    \entry{Dynamic3}{book}{}
       \strng{namehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \strng{fullhash}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \strng{bibnamehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
-      \strng{authorbibnamehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
-      \strng{authornamehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
-      \strng{authorfullhash}{fc3cc97631ceaecdde2aee6cc60ab42b}
+      \strng{authordefaulten-usbibnamehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
+      \strng{authordefaulten-usnamehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
+      \strng{authordefaulten-usfullhash}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \field{sortinit}{1}
       \strng{sortinithash}{50c6687d7fc80f50136d75228e3c59ba}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{year}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{shorthand}{d3}
-      \field{title}{Reckless Ravishings}
+      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[msform=default,mslang=en-us]{shorthand}{d3}
+      \field[msform=default,mslang=en-us]{title}{Reckless Ravishings}
       \field{year}{2000}
     \endentry
 |;

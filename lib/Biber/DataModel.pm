@@ -902,9 +902,13 @@ sub check_data_constraints {
         push @warnings, "Datamodel: Pattern constraint has no pattern!";
       }
       foreach my $f ($c->{fields}->@*) {
-        if (my $fv = $be->get_field($f)) {
+        foreach my $alts ($be->get_alternates_for_field($f)->@*) {
+          my $fv = $alts->{val};
+          my $form = $alts->{form};
+          my $lang = $alts->{lang};
+
           unless (imatch($fv, $patt)) {
-            push @warnings, "Datamodel: Entry '$key' ($ds): Invalid value (pattern match fails) for field '$f'";
+            push @warnings, "Datamodel: Entry '$key' ($ds): Invalid value (pattern match fails) for field '$f/$form/$lang'";
           }
         }
       }

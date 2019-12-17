@@ -101,129 +101,129 @@ my $ss = { locale => 'en-US',
 my $l4 = q|    \entry{L4}{book}{}
       \true{moreauthor}
       \true{morelabelname}
-      \name{author}{1}{}{%
+      \name[msform=default,mslang=en-us]{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
            familyi={D\bibinitperiod},
            given={John},
            giveni={J\bibinitperiod}}}%
       }
-      \list{location}{1}{%
+      \list[msform=default,mslang=en-us]{location}{1}{%
         {Cambridge}%
       }
-      \list{publisher}{1}{%
+      \list[msform=default,mslang=en-us]{publisher}{1}{%
         {Another press}%
       }
       \strng{namehash}{6eb389989020e8246fee90ac93fcecbe}
       \strng{fullhash}{6eb389989020e8246fee90ac93fcecbe}
       \strng{bibnamehash}{6eb389989020e8246fee90ac93fcecbe}
-      \strng{authorbibnamehash}{6eb389989020e8246fee90ac93fcecbe}
-      \strng{authornamehash}{6eb389989020e8246fee90ac93fcecbe}
-      \strng{authorfullhash}{6eb389989020e8246fee90ac93fcecbe}
+      \strng{authordefaulten-usbibnamehash}{6eb389989020e8246fee90ac93fcecbe}
+      \strng{authordefaulten-usnamehash}{6eb389989020e8246fee90ac93fcecbe}
+      \strng{authordefaulten-usfullhash}{6eb389989020e8246fee90ac93fcecbe}
       \field{extraname}{2}
       \field{labelalpha}{Doe\textbf{+}95}
       \field{sortinit}{D}
       \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
       \field{extraalpha}{2}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{title}{Some title about sorting}
+      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[msform=default,mslang=en-us]{title}{Some title about sorting}
       \field{year}{1995}
     \endentry
 |;
 
 my $l1 = q|    \entry{L1}{book}{}
-      \name{author}{1}{}{%
+      \name[msform=default,mslang=en-us]{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
            familyi={D\bibinitperiod},
            given={John},
            giveni={J\bibinitperiod}}}%
       }
-      \list{location}{1}{%
+      \list[msform=default,mslang=en-us]{location}{1}{%
         {Cambridge}%
       }
-      \list{publisher}{1}{%
+      \list[msform=default,mslang=en-us]{publisher}{1}{%
         {A press}%
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{bibnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
-      \strng{authorbibnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
-      \strng{authornamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
-      \strng{authorfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authordefaulten-usbibnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authordefaulten-usnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authordefaulten-usfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{extraname}{1}
       \field{labelalpha}{Doe95}
       \field{sortinit}{D}
       \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
       \field{extraalpha}{1}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{title}{Algorithms For Sorting}
+      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[msform=default,mslang=en-us]{title}{Algorithms For Sorting}
       \field{year}{1995}
     \endentry
 |;
 
 my $l2 = q|    \entry{L2}{book}{}
-      \name{author}{1}{}{%
+      \name[msform=default,mslang=en-us]{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
            familyi={D\bibinitperiod},
            given={John},
            giveni={J\bibinitperiod}}}%
       }
-      \list{location}{1}{%
+      \list[msform=default,mslang=en-us]{location}{1}{%
         {Cambridge}%
       }
-      \list{publisher}{1}{%
+      \list[msform=default,mslang=en-us]{publisher}{1}{%
         {A press}%
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{bibnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
-      \strng{authorbibnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
-      \strng{authornamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
-      \strng{authorfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authordefaulten-usbibnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authordefaulten-usnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authordefaulten-usfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{extraname}{3}
       \field{labelalpha}{Doe95}
       \field{sortinit}{D}
       \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
       \field{extraalpha}{3}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{title}{Sorting Algorithms}
+      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[msform=default,mslang=en-us]{title}{Sorting Algorithms}
       \field{year}{1995}
     \endentry
 |;
 
 my $l3 = q|    \entry{L3}{book}{}
-      \name{author}{1}{}{%
+      \name[msform=default,mslang=en-us]{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
            familyi={D\bibinitperiod},
            given={John},
            giveni={J\bibinitperiod}}}%
       }
-      \list{location}{1}{%
+      \list[msform=default,mslang=en-us]{location}{1}{%
         {Cambridge}%
       }
-      \list{publisher}{1}{%
+      \list[msform=default,mslang=en-us]{publisher}{1}{%
         {A press}%
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{bibnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
-      \strng{authorbibnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
-      \strng{authornamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
-      \strng{authorfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authordefaulten-usbibnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authordefaulten-usnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authordefaulten-usfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{extraname}{2}
       \field{labelalpha}{Doe95}
       \field{sortinit}{D}
       \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
       \field{extraalpha}{2}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{title}{More and More Algorithms}
+      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[msform=default,mslang=en-us]{title}{More and More Algorithms}
       \field{year}{1995}
     \endentry
 |;
@@ -231,33 +231,33 @@ my $l3 = q|    \entry{L3}{book}{}
 my $l5 = q|    \entry{L5}{book}{}
       \true{moreauthor}
       \true{morelabelname}
-      \name{author}{1}{}{%
+      \name[msform=default,mslang=en-us]{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
            familyi={D\bibinitperiod},
            given={John},
            giveni={J\bibinitperiod}}}%
       }
-      \list{location}{1}{%
+      \list[msform=default,mslang=en-us]{location}{1}{%
         {Cambridge}%
       }
-      \list{publisher}{1}{%
+      \list[msform=default,mslang=en-us]{publisher}{1}{%
         {Another press}%
       }
       \strng{namehash}{6eb389989020e8246fee90ac93fcecbe}
       \strng{fullhash}{6eb389989020e8246fee90ac93fcecbe}
       \strng{bibnamehash}{6eb389989020e8246fee90ac93fcecbe}
-      \strng{authorbibnamehash}{6eb389989020e8246fee90ac93fcecbe}
-      \strng{authornamehash}{6eb389989020e8246fee90ac93fcecbe}
-      \strng{authorfullhash}{6eb389989020e8246fee90ac93fcecbe}
+      \strng{authordefaulten-usbibnamehash}{6eb389989020e8246fee90ac93fcecbe}
+      \strng{authordefaulten-usnamehash}{6eb389989020e8246fee90ac93fcecbe}
+      \strng{authordefaulten-usfullhash}{6eb389989020e8246fee90ac93fcecbe}
       \field{extraname}{1}
       \field{labelalpha}{Doe\textbf{+}95}
       \field{sortinit}{D}
       \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
       \field{extraalpha}{1}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{title}{Some other title about sorting}
+      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[msform=default,mslang=en-us]{title}{Some other title about sorting}
       \field{year}{1995}
     \endentry
 |;

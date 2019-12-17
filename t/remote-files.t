@@ -53,7 +53,7 @@ my $main = $biber->datalists->get_list('nty/global//global/global');
 my $bibentries = $section->bibentries;
 
 my $dl1 = q|    \entry{AbdelbarH98}{article}{}
-      \name{author}{2}{}{%
+      \name[msform=default,mslang=en-us]{author}{2}{}{%
         {{un=0,uniquepart=base,hash=03fb065ad674e2c6269f3542112e30df}{%
            family={Abdelbar},
            familyi={A\bibinitperiod},
@@ -70,17 +70,17 @@ my $dl1 = q|    \entry{AbdelbarH98}{article}{}
       \strng{namehash}{bb887c5d0458bfb1f3f7e6afc8d1def4}
       \strng{fullhash}{bb887c5d0458bfb1f3f7e6afc8d1def4}
       \strng{bibnamehash}{bb887c5d0458bfb1f3f7e6afc8d1def4}
-      \strng{authorbibnamehash}{bb887c5d0458bfb1f3f7e6afc8d1def4}
-      \strng{authornamehash}{bb887c5d0458bfb1f3f7e6afc8d1def4}
-      \strng{authorfullhash}{bb887c5d0458bfb1f3f7e6afc8d1def4}
+      \strng{authordefaulten-usbibnamehash}{bb887c5d0458bfb1f3f7e6afc8d1def4}
+      \strng{authordefaulten-usnamehash}{bb887c5d0458bfb1f3f7e6afc8d1def4}
+      \strng{authordefaulten-usfullhash}{bb887c5d0458bfb1f3f7e6afc8d1def4}
       \field{sortinit}{A}
       \strng{sortinithash}{a3dcedd53b04d1adfd5ac303ecd5e6fa}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{year}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{journaltitle}{Artificial Intelligence}
-      \field{title}{Approximating {MAP}s for belief networks is {NP}-hard and other theorems}
+      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[msform=default,mslang=en-us]{journaltitle}{Artificial Intelligence}
+      \field[msform=default,mslang=en-us]{title}{Approximating {MAP}s for belief networks is {NP}-hard and other theorems}
       \field{volume}{102}
       \field{year}{1998}
       \field{pages}{21\bibrangedash 38}

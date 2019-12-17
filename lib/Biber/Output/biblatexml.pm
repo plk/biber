@@ -169,7 +169,7 @@ sub set_output_entry {
 
       # XDATA is special
       if (not Biber::Config->getoption('output_resolve_xdata') or
-         not $be->is_xdata_resolved($namefield)) {
+         not $be->is_xdata_resolved($namefield, $as->{form}, $as->{lang})) {
         if (my $xdata = $nf->get_xdata) {
           $xml->emptyTag([$xml_prefix, 'names'], 'xdata' => NFC(xdatarefout($xdata, 1)));
           next;
@@ -205,7 +205,7 @@ sub set_output_entry {
 
         # XDATA is special
         if (not Biber::Config->getoption('output_resolve_xdata') or
-           not $be->is_xdata_resolved($namefield, $i+1)) {
+           not $be->is_xdata_resolved($namefield, $as->{form}, $as->{lang}, $i+1)) {
           if (my $xdata = $n->get_xdata) {
             $xml->emptyTag([$xml_prefix, 'name'], 'xdata' => NFC(xdatarefout($xdata, 1)));
             next;
@@ -235,7 +235,7 @@ sub set_output_entry {
 
       # XDATA is special
       if (not Biber::Config->getoption('output_resolve_xdata') or
-          not $be->is_xdata_resolved($listfield)) {
+          not $be->is_xdata_resolved($listfield, $as->{form}, $as->{lang})) {
         if (my $val = xdatarefcheck($lf, 1)) {
           $xml->emptyTag([$xml_prefix, $listfield], 'xdata' => NFC($val));
           next;
@@ -264,7 +264,7 @@ sub set_output_entry {
 
         # XDATA is special
         if (not Biber::Config->getoption('output_resolve_xdata') or
-            not $be->is_xdata_resolved($listfield, $i+1)) {
+            not $be->is_xdata_resolved($listfield, $as->{form}, $as->{lang}, $i+1)) {
           if (my $val = xdatarefcheck($f, 1)) {
             $xml->emptyTag([$xml_prefix, 'item'], 'xdata' => NFC($val));
             next;
@@ -298,7 +298,7 @@ sub set_output_entry {
 
       # XDATA is special
       if (not Biber::Config->getoption('output_resolve_xdata') or
-          not $be->is_xdata_resolved($field)) {
+          not $be->is_xdata_resolved($field, $as->{form}, $as->{lang})) {
 
         if (my $xval = xdatarefcheck($val, 1)) {
           $xml->emptyTag([$xml_prefix, $field], 'xdata' => NFC($xval));
@@ -308,7 +308,7 @@ sub set_output_entry {
 
       if (length($val) or      # length() catches '0' values, which we want
           ($dm->field_is_nullok($field) and
-           $be->field_exists($field, $form, $lang))) {
+           $be->field_exists($field, $as->{form}, $as->{lang}))) {
         next if $dm->get_fieldformat($field) eq 'xsv';
         next if $field eq 'crossref'; # this is handled above
         my @attrs;
@@ -338,7 +338,7 @@ sub set_output_entry {
 
       # XDATA is special
       if (not Biber::Config->getoption('output_resolve_xdata') or
-          not $be->is_xdata_resolved($xsvf)) {
+          not $be->is_xdata_resolved($xsvf, $form, $lang)) {
         if (my $val = xdatarefcheck($f, 1)) {
           $xml->emptyTag([$xml_prefix, $xsvf], 'xdata' => NFC($val));
           next;

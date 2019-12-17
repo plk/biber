@@ -330,8 +330,9 @@ sub is_xdata_resolved {
 
   foreach my $xdatum ($self->{xdatarefs}->@*) {
     if ($xdatum->{reffield} eq $field and
-        $xdatum->{refform} eq $form and
-        $xdatum->{reflang} eq $lang) {
+        # form/lang won't exist for whole xdata fields
+        (not $xdatum->{refform} or $xdatum->{refform} eq $form) and
+        (not $xdatum->{reflang} or $xdatum->{reflang} eq $lang)) {
         if ($pos) {
         if ($xdatum->{refposition} == $pos) {
           return $xdatum->{resolved};
@@ -465,6 +466,13 @@ sub set_field {
   my ($self, $field, $val, $form, $lang) = @_;
   no autovivification;
   $lang = fc($lang) if $lang;
+
+  # citekey is required to be set by normal calls to this sub and so it should be set first
+  # and caught here. This is really only a problem for dynamic sets.
+  if ($field eq 'citekey') {
+    $self->{derivedfields}{citekey} = Biber::Entry::FieldValue->new($val, $val);
+    return;
+  }
 
   if (defined($self->{derivedfields}{$field})) {
     $self->{derivedfields}{$field}->set_value($val, $form, $lang);

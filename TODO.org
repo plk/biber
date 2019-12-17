@@ -221,4 +221,4 @@
 *** DONE Add inheritance test to multiscript.t
 *** DONE xsl for sorting/labelalpha templates
 *** DONE elide form/lang on output when default? No.
-*** TODO fix all test outputs
+*** DONE fix all test outputs

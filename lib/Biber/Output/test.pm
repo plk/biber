@@ -8,6 +8,7 @@ use Biber::Config;
 use Biber::Constants;
 use Biber::Entry;
 use Biber::Utils;
+use Scalar::Util qw(looks_like_number);
 use IO::File;
 use Log::Log4perl qw( :no_extra_logdie_message );
 my $logger = Log::Log4perl::get_logger('main');
@@ -221,7 +222,7 @@ sub set_output_entry {
   }
 
   # List fields
-  foreach my $listfield ($dm->get_fields_of_fieldtype('list')->@*) {
+  foreach my $listfield ($dmh->{lists}->@*) {
     foreach my $alts ($be->get_alternates_for_field($listfield)->@*) {
       my $lf = $alts->{val};
       my $form = $alts->{form};

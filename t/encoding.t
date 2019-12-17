@@ -33,7 +33,7 @@ Log::Log4perl->init(\$l4pconf);
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 
 my $encode1 = q|    \entry{testŠ}{book}{}
-      \name{author}{1}{}{%
+      \name[msform=default,mslang=en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=06a47edae2e847800cfd78323a0e6be8}{%
            family={Encalcer},
            familyi={E\bibinitperiod},
@@ -41,29 +41,29 @@ my $encode1 = q|    \entry{testŠ}{book}{}
            giveni={E\bibinitperiod},
            givenun=0}}%
       }
-      \list{publisher}{1}{%
+      \list[msform=default,mslang=en-us]{publisher}{1}{%
         {A press}%
       }
       \strng{namehash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{bibnamehash}{06a47edae2e847800cfd78323a0e6be8}
-      \strng{authorbibnamehash}{06a47edae2e847800cfd78323a0e6be8}
-      \strng{authornamehash}{06a47edae2e847800cfd78323a0e6be8}
-      \strng{authorfullhash}{06a47edae2e847800cfd78323a0e6be8}
+      \strng{authordefaulten-usbibnamehash}{06a47edae2e847800cfd78323a0e6be8}
+      \strng{authordefaulten-usnamehash}{06a47edae2e847800cfd78323a0e6be8}
+      \strng{authordefaulten-usfullhash}{06a47edae2e847800cfd78323a0e6be8}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
       \strng{sortinithash}{c554bd1a0b76ea92b9f105fe36d9c7b0}
       \field{labeldatesource}{year}
       \true{singletitle}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{title}{Šome title}
+      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[msform=default,mslang=en-us]{title}{Šome title}
       \field{year}{1999}
     \endentry
 |;
 
 my $encode2 = q|    \entry{test1}{book}{}
-      \name{author}{1}{}{%
+      \name[msform=default,mslang=en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=06a47edae2e847800cfd78323a0e6be8}{%
            family={Encalcer},
            familyi={E\bibinitperiod},
@@ -71,29 +71,29 @@ my $encode2 = q|    \entry{test1}{book}{}
            giveni={E\bibinitperiod},
            givenun=0}}%
       }
-      \list{publisher}{1}{%
+      \list[msform=default,mslang=en-us]{publisher}{1}{%
         {A press}%
       }
       \strng{namehash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{bibnamehash}{06a47edae2e847800cfd78323a0e6be8}
-      \strng{authorbibnamehash}{06a47edae2e847800cfd78323a0e6be8}
-      \strng{authornamehash}{06a47edae2e847800cfd78323a0e6be8}
-      \strng{authorfullhash}{06a47edae2e847800cfd78323a0e6be8}
+      \strng{authordefaulten-usbibnamehash}{06a47edae2e847800cfd78323a0e6be8}
+      \strng{authordefaulten-usnamehash}{06a47edae2e847800cfd78323a0e6be8}
+      \strng{authordefaulten-usfullhash}{06a47edae2e847800cfd78323a0e6be8}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
       \strng{sortinithash}{c554bd1a0b76ea92b9f105fe36d9c7b0}
       \field{labeldatesource}{year}
       \true{singletitle}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{title}{Söme title}
+      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[msform=default,mslang=en-us]{title}{Söme title}
       \field{year}{1999}
     \endentry
 |;
 
 my $encode3 = q|    \entry{test1}{book}{}
-      \name{author}{1}{}{%
+      \name[msform=default,mslang=en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=06a47edae2e847800cfd78323a0e6be8}{%
            family={Encalcer},
            familyi={E\bibinitperiod},
@@ -101,29 +101,29 @@ my $encode3 = q|    \entry{test1}{book}{}
            giveni={E\bibinitperiod},
            givenun=0}}%
       }
-      \list{publisher}{1}{%
+      \list[msform=default,mslang=en-us]{publisher}{1}{%
         {A press}%
       }
       \strng{namehash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{bibnamehash}{06a47edae2e847800cfd78323a0e6be8}
-      \strng{authorbibnamehash}{06a47edae2e847800cfd78323a0e6be8}
-      \strng{authornamehash}{06a47edae2e847800cfd78323a0e6be8}
-      \strng{authorfullhash}{06a47edae2e847800cfd78323a0e6be8}
+      \strng{authordefaulten-usbibnamehash}{06a47edae2e847800cfd78323a0e6be8}
+      \strng{authordefaulten-usnamehash}{06a47edae2e847800cfd78323a0e6be8}
+      \strng{authordefaulten-usfullhash}{06a47edae2e847800cfd78323a0e6be8}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
       \strng{sortinithash}{c554bd1a0b76ea92b9f105fe36d9c7b0}
       \field{labeldatesource}{year}
       \true{singletitle}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{title}{Żome title}
+      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[msform=default,mslang=en-us]{title}{Żome title}
       \field{year}{1999}
     \endentry
 |;
 
 my $encode5 = q|    \entry{test}{book}{}
-      \name{author}{1}{}{%
+      \name[msform=default,mslang=en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=06a47edae2e847800cfd78323a0e6be8}{%
            family={Encalcer},
            familyi={E\bibinitperiod},
@@ -131,29 +131,29 @@ my $encode5 = q|    \entry{test}{book}{}
            giveni={E\bibinitperiod},
            givenun=0}}%
       }
-      \list{publisher}{1}{%
+      \list[msform=default,mslang=en-us]{publisher}{1}{%
         {A press}%
       }
       \strng{namehash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{bibnamehash}{06a47edae2e847800cfd78323a0e6be8}
-      \strng{authorbibnamehash}{06a47edae2e847800cfd78323a0e6be8}
-      \strng{authornamehash}{06a47edae2e847800cfd78323a0e6be8}
-      \strng{authorfullhash}{06a47edae2e847800cfd78323a0e6be8}
+      \strng{authordefaulten-usbibnamehash}{06a47edae2e847800cfd78323a0e6be8}
+      \strng{authordefaulten-usnamehash}{06a47edae2e847800cfd78323a0e6be8}
+      \strng{authordefaulten-usfullhash}{06a47edae2e847800cfd78323a0e6be8}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
       \strng{sortinithash}{c554bd1a0b76ea92b9f105fe36d9c7b0}
       \field{labeldatesource}{year}
       \true{singletitle}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{title}{à titlé}
+      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[msform=default,mslang=en-us]{title}{à titlé}
       \field{year}{1999}
     \endentry
 |;
 
 my $encode6 = q|    \entry{test}{book}{}
-      \name{author}{1}{}{%
+      \name[msform=default,mslang=en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=06a47edae2e847800cfd78323a0e6be8}{%
            family={Encalcer},
            familyi={E\bibinitperiod},
@@ -161,29 +161,29 @@ my $encode6 = q|    \entry{test}{book}{}
            giveni={E\bibinitperiod},
            givenun=0}}%
       }
-      \list{publisher}{1}{%
+      \list[msform=default,mslang=en-us]{publisher}{1}{%
         {A press}%
       }
       \strng{namehash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{bibnamehash}{06a47edae2e847800cfd78323a0e6be8}
-      \strng{authorbibnamehash}{06a47edae2e847800cfd78323a0e6be8}
-      \strng{authornamehash}{06a47edae2e847800cfd78323a0e6be8}
-      \strng{authorfullhash}{06a47edae2e847800cfd78323a0e6be8}
+      \strng{authordefaulten-usbibnamehash}{06a47edae2e847800cfd78323a0e6be8}
+      \strng{authordefaulten-usnamehash}{06a47edae2e847800cfd78323a0e6be8}
+      \strng{authordefaulten-usfullhash}{06a47edae2e847800cfd78323a0e6be8}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
       \strng{sortinithash}{c554bd1a0b76ea92b9f105fe36d9c7b0}
       \field{labeldatesource}{year}
       \true{singletitle}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{title}{↑\`{a} titl\'{e}}
+      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[msform=default,mslang=en-us]{title}{↑\`{a} titl\'{e}}
       \field{year}{1999}
     \endentry
 |;
 
 my $encode7 = q|    \entry{test}{book}{}
-      \name{author}{1}{}{%
+      \name[msform=default,mslang=en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=06a47edae2e847800cfd78323a0e6be8}{%
            family={Encalcer},
            familyi={E\bibinitperiod},
@@ -191,23 +191,23 @@ my $encode7 = q|    \entry{test}{book}{}
            giveni={E\bibinitperiod},
            givenun=0}}%
       }
-      \list{publisher}{1}{%
+      \list[msform=default,mslang=en-us]{publisher}{1}{%
         {A press}%
       }
       \strng{namehash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{bibnamehash}{06a47edae2e847800cfd78323a0e6be8}
-      \strng{authorbibnamehash}{06a47edae2e847800cfd78323a0e6be8}
-      \strng{authornamehash}{06a47edae2e847800cfd78323a0e6be8}
-      \strng{authorfullhash}{06a47edae2e847800cfd78323a0e6be8}
+      \strng{authordefaulten-usbibnamehash}{06a47edae2e847800cfd78323a0e6be8}
+      \strng{authordefaulten-usnamehash}{06a47edae2e847800cfd78323a0e6be8}
+      \strng{authordefaulten-usfullhash}{06a47edae2e847800cfd78323a0e6be8}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
       \strng{sortinithash}{c554bd1a0b76ea92b9f105fe36d9c7b0}
       \field{labeldatesource}{year}
       \true{singletitle}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{title}{{$\uparrow$}\`{a} titl\'{e}}
+      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[msform=default,mslang=en-us]{title}{{$\uparrow$}\`{a} titl\'{e}}
       \field{year}{1999}
     \endentry
 |;

@@ -57,33 +57,33 @@ my $main = $biber->datalists->get_list('nty/global//global/global');
 my $out = $biber->get_output_obj;
 
 my $xd1 = q|    \entry{xd1}{book}{}
-      \name{author}{1}{}{%
+      \name[msform=default,mslang=en-us]{author}{1}{}{%
         {{hash=51db4bfd331cba22959ce2d224c517cd}{%
            family={Ellington},
            familyi={E\bibinitperiod},
            given={Edward},
            giveni={E\bibinitperiod}}}%
       }
-      \list{location}{2}{%
+      \list[msform=default,mslang=en-us]{location}{2}{%
         {New York}%
         {London}%
       }
-      \list{publisher}{1}{%
+      \list[msform=default,mslang=en-us]{publisher}{1}{%
         {Macmillan}%
       }
       \strng{namehash}{51db4bfd331cba22959ce2d224c517cd}
       \strng{fullhash}{51db4bfd331cba22959ce2d224c517cd}
       \strng{bibnamehash}{51db4bfd331cba22959ce2d224c517cd}
-      \strng{authorbibnamehash}{51db4bfd331cba22959ce2d224c517cd}
-      \strng{authornamehash}{51db4bfd331cba22959ce2d224c517cd}
-      \strng{authorfullhash}{51db4bfd331cba22959ce2d224c517cd}
+      \strng{authordefaulten-usbibnamehash}{51db4bfd331cba22959ce2d224c517cd}
+      \strng{authordefaulten-usnamehash}{51db4bfd331cba22959ce2d224c517cd}
+      \strng{authordefaulten-usfullhash}{51db4bfd331cba22959ce2d224c517cd}
       \field{extraname}{2}
       \field{sortinit}{E}
       \strng{sortinithash}{c554bd1a0b76ea92b9f105fe36d9c7b0}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
-      \field{labelnamesource}{author}
-      \field{note}{A Note}
+      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[msform=default,mslang=en-us]{note}{A Note}
       \field{year}{2007}
       \field{dateera}{ce}
       \warn{\item Entry 'xd1' references XDATA entry 'missingxd' which does not exist, not resolving (section 0)}
@@ -91,42 +91,42 @@ my $xd1 = q|    \entry{xd1}{book}{}
 |;
 
 my $xd2 = q|    \entry{xd2}{book}{}
-      \name{author}{1}{}{%
+      \name[msform=default,mslang=en-us]{author}{1}{}{%
         {{hash=68539e0ce4922cc4957c6cabf35e6fc8}{%
            family={Pillington},
            familyi={P\bibinitperiod},
            given={Peter},
            giveni={P\bibinitperiod}}}%
       }
-      \list{location}{2}{%
+      \list[msform=default,mslang=en-us]{location}{2}{%
         {New York}%
         {London}%
       }
-      \list{publisher}{1}{%
+      \list[msform=default,mslang=en-us]{publisher}{1}{%
         {Routledge}%
       }
       \strng{namehash}{68539e0ce4922cc4957c6cabf35e6fc8}
       \strng{fullhash}{68539e0ce4922cc4957c6cabf35e6fc8}
       \strng{bibnamehash}{68539e0ce4922cc4957c6cabf35e6fc8}
-      \strng{authorbibnamehash}{68539e0ce4922cc4957c6cabf35e6fc8}
-      \strng{authornamehash}{68539e0ce4922cc4957c6cabf35e6fc8}
-      \strng{authorfullhash}{68539e0ce4922cc4957c6cabf35e6fc8}
+      \strng{authordefaulten-usbibnamehash}{68539e0ce4922cc4957c6cabf35e6fc8}
+      \strng{authordefaulten-usnamehash}{68539e0ce4922cc4957c6cabf35e6fc8}
+      \strng{authordefaulten-usfullhash}{68539e0ce4922cc4957c6cabf35e6fc8}
       \field{sortinit}{P}
       \strng{sortinithash}{bb5b15f2db90f7aef79bb9e83defefcb}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
-      \field{labelnamesource}{author}
-      \field{abstract}{An abstract}
-      \field{addendum}{Москва}
-      \field{note}{A Note}
-      \field{venue}{venue}
+      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[msform=default,mslang=en-us]{abstract}{An abstract}
+      \field[msform=default,mslang=en-us]{addendum}{Москва}
+      \field[msform=default,mslang=en-us]{note}{A Note}
+      \field[msform=default,mslang=en-us]{venue}{venue}
       \field{year}{2003}
       \field{dateera}{ce}
     \endentry
 |;
 
 my $gxd1 = q|    \entry{gxd1}{book}{}
-      \name{author}{2}{}{%
+      \name[msform=default,mslang=en-us]{author}{2}{}{%
         {{hash=6b3653417f9aa97391c37cff5dfda7fa}{%
            family={Smith},
            familyi={S\bibinitperiod},
@@ -138,56 +138,56 @@ my $gxd1 = q|    \entry{gxd1}{book}{}
            given={Brian},
            giveni={B\bibinitperiod}}}%
       }
-      \name{editor}{1}{}{%
+      \name[msform=default,mslang=en-us]{editor}{1}{}{%
         {{hash=6238b302317c6baeba56035f2c4998c9}{%
            family={Frill},
            familyi={F\bibinitperiod},
            given={Frank},
            giveni={F\bibinitperiod}}}%
       }
-      \name{namea}{1}{}{%
+      \name[msform=default,mslang=en-us]{namea}{1}{}{%
         {{hash=d41d8cd98f00b204e9800998ecf8427e}{%
 }}%
       }
-      \name{translator}{1}{}{%
+      \name[msform=default,mslang=en-us]{translator}{1}{}{%
         {{hash=d41d8cd98f00b204e9800998ecf8427e}{%
 }}%
       }
-      \list{lista}{1}{%
+      \list[msform=default,mslang=en-us]{lista}{1}{%
         {xdata=gxd3-location-5}%
       }
-      \list{location}{2}{%
+      \list[msform=default,mslang=en-us]{location}{2}{%
         {A}%
         {B}%
       }
-      \list{organization}{1}{%
+      \list[msform=default,mslang=en-us]{organization}{1}{%
         {xdata=gxd2-author-3}%
       }
-      \list{publisher}{1}{%
+      \list[msform=default,mslang=en-us]{publisher}{1}{%
         {xdata=gxd2}%
       }
       \strng{namehash}{167d3a67f6ee19fe4d131fc34dcd9ede}
       \strng{fullhash}{167d3a67f6ee19fe4d131fc34dcd9ede}
       \strng{bibnamehash}{167d3a67f6ee19fe4d131fc34dcd9ede}
-      \strng{authorbibnamehash}{167d3a67f6ee19fe4d131fc34dcd9ede}
-      \strng{authornamehash}{167d3a67f6ee19fe4d131fc34dcd9ede}
-      \strng{authorfullhash}{167d3a67f6ee19fe4d131fc34dcd9ede}
-      \strng{editorbibnamehash}{6238b302317c6baeba56035f2c4998c9}
-      \strng{editornamehash}{6238b302317c6baeba56035f2c4998c9}
-      \strng{editorfullhash}{6238b302317c6baeba56035f2c4998c9}
-      \strng{nameabibnamehash}{d41d8cd98f00b204e9800998ecf8427e}
-      \strng{nameanamehash}{d41d8cd98f00b204e9800998ecf8427e}
-      \strng{nameafullhash}{d41d8cd98f00b204e9800998ecf8427e}
-      \strng{translatorbibnamehash}{d41d8cd98f00b204e9800998ecf8427e}
-      \strng{translatornamehash}{d41d8cd98f00b204e9800998ecf8427e}
-      \strng{translatorfullhash}{d41d8cd98f00b204e9800998ecf8427e}
+      \strng{authordefaulten-usbibnamehash}{167d3a67f6ee19fe4d131fc34dcd9ede}
+      \strng{authordefaulten-usnamehash}{167d3a67f6ee19fe4d131fc34dcd9ede}
+      \strng{authordefaulten-usfullhash}{167d3a67f6ee19fe4d131fc34dcd9ede}
+      \strng{editordefaulten-usbibnamehash}{6238b302317c6baeba56035f2c4998c9}
+      \strng{editordefaulten-usnamehash}{6238b302317c6baeba56035f2c4998c9}
+      \strng{editordefaulten-usfullhash}{6238b302317c6baeba56035f2c4998c9}
+      \strng{nameadefaulten-usbibnamehash}{d41d8cd98f00b204e9800998ecf8427e}
+      \strng{nameadefaulten-usnamehash}{d41d8cd98f00b204e9800998ecf8427e}
+      \strng{nameadefaulten-usfullhash}{d41d8cd98f00b204e9800998ecf8427e}
+      \strng{translatordefaulten-usbibnamehash}{d41d8cd98f00b204e9800998ecf8427e}
+      \strng{translatordefaulten-usnamehash}{d41d8cd98f00b204e9800998ecf8427e}
+      \strng{translatordefaulten-usfullhash}{d41d8cd98f00b204e9800998ecf8427e}
       \field{sortinit}{S}
       \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{addendum}{xdata=missing}
-      \field{note}{xdata=gxd2-note}
-      \field{title}{Some title}
+      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[msform=default,mslang=en-us]{addendum}{xdata=missing}
+      \field[msform=default,mslang=en-us]{note}{xdata=gxd2-note}
+      \field[msform=default,mslang=en-us]{title}{Some title}
       \warn{\item Entry 'gxd1' has XDATA reference from field 'publisher/default/en-us' that contains no source field (section 0)}
       \warn{\\item Entry 'gxd1' has XDATA reference from field 'addendum/default/en-us' that contains no source field (section 0)}
       \warn{\item Field 'note/default/en-us' in entry 'gxd1' references XDATA field 'note/default/en-us' in entry 'gxd2' and this field does not exist, not resolving (section 0)}
@@ -199,7 +199,7 @@ my $gxd1 = q|    \entry{gxd1}{book}{}
 |;
 
 my $bltxgxd1 = q|    \entry{bltxgxd1}{book}{}
-      \name{author}{2}{}{%
+      \name[msform=default,mslang=en-us]{author}{2}{}{%
         {{hash=ecc4a87e596c582a09b19d4ab187d8c2}{%
            family={Brian},
            familyi={B\bibinitperiod},
@@ -211,49 +211,49 @@ my $bltxgxd1 = q|    \entry{bltxgxd1}{book}{}
            given={Clue},
            giveni={C\bibinitperiod}}}%
       }
-      \name{editor}{1}{}{%
+      \name[msform=default,mslang=en-us]{editor}{1}{}{%
         {{hash=c8eb0270ad4e434f36dca28e219e81a8}{%
            family={Lee},
            familyi={L\bibinitperiod},
            given={Lay},
            giveni={L\bibinitperiod}}}%
       }
-      \name{translator}{1}{}{%
+      \name[msform=default,mslang=en-us]{translator}{1}{}{%
         {{hash=d41d8cd98f00b204e9800998ecf8427e}{%
 }}%
       }
-      \list{lista}{1}{%
+      \list[msform=default,mslang=en-us]{lista}{1}{%
         {xdata=bltxgxd3-location-5}%
       }
-      \list{location}{2}{%
+      \list[msform=default,mslang=en-us]{location}{2}{%
         {A}%
         {B}%
       }
-      \list{organization}{1}{%
+      \list[msform=default,mslang=en-us]{organization}{1}{%
         {xdata=bltxgxd2-author-3}%
       }
-      \list{publisher}{1}{%
+      \list[msform=default,mslang=en-us]{publisher}{1}{%
         {xdata=bltxgxd2}%
       }
       \strng{namehash}{f3cbd0df6512c5a3653f60e9e9849c69}
       \strng{fullhash}{f3cbd0df6512c5a3653f60e9e9849c69}
       \strng{bibnamehash}{f3cbd0df6512c5a3653f60e9e9849c69}
-      \strng{authorbibnamehash}{f3cbd0df6512c5a3653f60e9e9849c69}
-      \strng{authornamehash}{f3cbd0df6512c5a3653f60e9e9849c69}
-      \strng{authorfullhash}{f3cbd0df6512c5a3653f60e9e9849c69}
-      \strng{editorbibnamehash}{c8eb0270ad4e434f36dca28e219e81a8}
-      \strng{editornamehash}{c8eb0270ad4e434f36dca28e219e81a8}
-      \strng{editorfullhash}{c8eb0270ad4e434f36dca28e219e81a8}
-      \strng{translatorbibnamehash}{d41d8cd98f00b204e9800998ecf8427e}
-      \strng{translatornamehash}{d41d8cd98f00b204e9800998ecf8427e}
-      \strng{translatorfullhash}{d41d8cd98f00b204e9800998ecf8427e}
+      \strng{authordefaulten-usbibnamehash}{f3cbd0df6512c5a3653f60e9e9849c69}
+      \strng{authordefaulten-usnamehash}{f3cbd0df6512c5a3653f60e9e9849c69}
+      \strng{authordefaulten-usfullhash}{f3cbd0df6512c5a3653f60e9e9849c69}
+      \strng{editordefaulten-usbibnamehash}{c8eb0270ad4e434f36dca28e219e81a8}
+      \strng{editordefaulten-usnamehash}{c8eb0270ad4e434f36dca28e219e81a8}
+      \strng{editordefaulten-usfullhash}{c8eb0270ad4e434f36dca28e219e81a8}
+      \strng{translatordefaulten-usbibnamehash}{d41d8cd98f00b204e9800998ecf8427e}
+      \strng{translatordefaulten-usnamehash}{d41d8cd98f00b204e9800998ecf8427e}
+      \strng{translatordefaulten-usfullhash}{d41d8cd98f00b204e9800998ecf8427e}
       \field{sortinit}{B}
       \strng{sortinithash}{8de16967003c7207dae369d874f1456e}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{addendum}{xdata=missing}
-      \field{note}{xdata=bltxgxd2-note}
-      \field{title}{Some title}
+      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[msform=default,mslang=en-us]{addendum}{xdata=missing}
+      \field[msform=default,mslang=en-us]{note}{xdata=bltxgxd2-note}
+      \field[msform=default,mslang=en-us]{title}{Some title}
       \warn{\item Entry 'bltxgxd1' has XDATA reference from field 'publisher/default/en-us' that contains no source field (section 0)}
       \warn{\item Entry 'bltxgxd1' has XDATA reference from field 'addendum/default/en-us' that contains no source field (section 0)}
       \warn{\item Field 'translator/default/en-us' in entry 'bltxgxd1' references field 'author/default/en-us' position 3 in entry 'bltxgxd2' and this position does not exist, not resolving (section 0)}

@@ -167,64 +167,64 @@ is_deeply($biber->datalists->get_lists_by_attrs(section           => 0,
                                        labelalphanametemplatename => 'global')->[0]->get_keys, ['K11', 'K1', 'K2', 'K4', 'K3', 'K7', 'K5', 'K8', 'K9', 'K10', 'K12', 'K6'], 'List - sorting name key templates - 1');
 
 my $K11 = q|    \entry{K11}{book}{}
-      \name{author}{1}{sortingnamekeytemplatename=snk1}{%
+      \name[msform=default,mslang=en-us]{author}{1}{sortingnamekeytemplatename=snk1}{%
         {{hash=4edc280a0ef229f9c061e3b121b17482}{%
            family={Xanax},
            familyi={X\bibinitperiod},
            given={Xavier},
            giveni={X\bibinitperiod}}}%
       }
-      \list{location}{1}{%
+      \list[msform=default,mslang=en-us]{location}{1}{%
         {Moscow}%
       }
-      \list{publisher}{1}{%
+      \list[msform=default,mslang=en-us]{publisher}{1}{%
         {Publisher}%
       }
       \strng{namehash}{4edc280a0ef229f9c061e3b121b17482}
       \strng{fullhash}{4edc280a0ef229f9c061e3b121b17482}
       \strng{bibnamehash}{4edc280a0ef229f9c061e3b121b17482}
-      \strng{authorbibnamehash}{4edc280a0ef229f9c061e3b121b17482}
-      \strng{authornamehash}{4edc280a0ef229f9c061e3b121b17482}
-      \strng{authorfullhash}{4edc280a0ef229f9c061e3b121b17482}
+      \strng{authordefaulten-usbibnamehash}{4edc280a0ef229f9c061e3b121b17482}
+      \strng{authordefaulten-usnamehash}{4edc280a0ef229f9c061e3b121b17482}
+      \strng{authordefaulten-usfullhash}{4edc280a0ef229f9c061e3b121b17482}
       \field{sortinit}{a}
       \strng{sortinithash}{a3dcedd53b04d1adfd5ac303ecd5e6fa}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{title}{One}
+      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[msform=default,mslang=en-us]{title}{One}
       \field{year}{1983}
       \field{dateera}{ce}
     \endentry
 |;
 
 my $K12 = q|    \entry{K12}{book}{}
-      \name{author}{1}{}{%
+      \name[msform=default,mslang=en-us]{author}{1}{}{%
         {{sortingnamekeytemplatename=snk2,hash=a846a485fc9cbb59b0ebeedd6ac637e4}{%
            family={Allen},
            familyi={A\bibinitperiod},
            given={Arthur},
            giveni={A\bibinitperiod}}}%
       }
-      \list{location}{1}{%
+      \list[msform=default,mslang=en-us]{location}{1}{%
         {Moscow}%
       }
-      \list{publisher}{1}{%
+      \list[msform=default,mslang=en-us]{publisher}{1}{%
         {Publisher}%
       }
       \strng{namehash}{a846a485fc9cbb59b0ebeedd6ac637e4}
       \strng{fullhash}{a846a485fc9cbb59b0ebeedd6ac637e4}
       \strng{bibnamehash}{a846a485fc9cbb59b0ebeedd6ac637e4}
-      \strng{authorbibnamehash}{a846a485fc9cbb59b0ebeedd6ac637e4}
-      \strng{authornamehash}{a846a485fc9cbb59b0ebeedd6ac637e4}
-      \strng{authorfullhash}{a846a485fc9cbb59b0ebeedd6ac637e4}
+      \strng{authordefaulten-usbibnamehash}{a846a485fc9cbb59b0ebeedd6ac637e4}
+      \strng{authordefaulten-usnamehash}{a846a485fc9cbb59b0ebeedd6ac637e4}
+      \strng{authordefaulten-usfullhash}{a846a485fc9cbb59b0ebeedd6ac637e4}
       \field{sortinit}{Z}
       \strng{sortinithash}{8f7b480688e809b50b6f6577b16f3db5}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{title}{Two}
+      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[msform=default,mslang=en-us]{title}{Two}
       \field{year}{1983}
       \field{dateera}{ce}
     \endentry

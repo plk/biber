@@ -82,7 +82,7 @@ my $dmv =  [
 my $bln = [ {content => 'author'}, {content => 'editor'} ];
 
 my $l1 = q|    \entry{L1}{book}{}
-      \name{author}{1}{}{%
+      \name[msform=default,mslang=en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
            familyi={D\bibinitperiod},
@@ -90,27 +90,27 @@ my $l1 = q|    \entry{L1}{book}{}
            giveni={J\bibinitperiod},
            givenun=0}}%
       }
-      \list{publisher}{1}{%
+      \list[msform=default,mslang=en-us]{publisher}{1}{%
         {Oxford}%
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{bibnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
-      \strng{authorbibnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
-      \strng{authornamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
-      \strng{authorfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authordefaulten-usbibnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authordefaulten-usnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authordefaulten-usfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{sortinit}{D}
       \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
+      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
       \field{day}{5}
       \field{month}{4}
       \field{origday}{30}
       \field{origmonth}{10}
       \field{origyear}{1985}
-      \field{title}{Title 1}
+      \field[msform=default,mslang=en-us]{title}{Title 1}
       \field{year}{1998}
       \field{dateera}{ce}
       \field{origdateera}{ce}
@@ -119,7 +119,7 @@ my $l1 = q|    \entry{L1}{book}{}
 |;
 
 my $l2 = q|    \entry{L2}{book}{maxalphanames=10,maxbibnames=3,maxcitenames=3,maxitems=2}
-      \name{author}{1}{}{%
+      \name[msform=default,mslang=en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=19eec87c959944d6d9c72434a42856ba}{%
            family={Edwards},
            familyi={E\bibinitperiod},
@@ -127,31 +127,31 @@ my $l2 = q|    \entry{L2}{book}{maxalphanames=10,maxbibnames=3,maxcitenames=3,ma
            giveni={E\bibinitperiod},
            givenun=0}}%
       }
-      \list{publisher}{1}{%
+      \list[msform=default,mslang=en-us]{publisher}{1}{%
         {Oxford}%
       }
       \strng{namehash}{19eec87c959944d6d9c72434a42856ba}
       \strng{fullhash}{19eec87c959944d6d9c72434a42856ba}
       \strng{bibnamehash}{19eec87c959944d6d9c72434a42856ba}
-      \strng{authorbibnamehash}{19eec87c959944d6d9c72434a42856ba}
-      \strng{authornamehash}{19eec87c959944d6d9c72434a42856ba}
-      \strng{authorfullhash}{19eec87c959944d6d9c72434a42856ba}
+      \strng{authordefaulten-usbibnamehash}{19eec87c959944d6d9c72434a42856ba}
+      \strng{authordefaulten-usnamehash}{19eec87c959944d6d9c72434a42856ba}
+      \strng{authordefaulten-usfullhash}{19eec87c959944d6d9c72434a42856ba}
       \field{sortinit}{E}
       \strng{sortinithash}{c554bd1a0b76ea92b9f105fe36d9c7b0}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
+      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
       \field{day}{5}
       \field{month}{4}
-      \field{title}{Title 2}
+      \field[msform=default,mslang=en-us]{title}{Title 2}
       \field{year}{1998}
       \field{dateera}{ce}
     \endentry
 |;
 
 my $l3 = q|    \entry{L3}{book}{blah=10}
-      \name{author}{1}{}{%
+      \name[msform=default,mslang=en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=490250da1f3b92580d97563dc96c6c84}{%
            family={Bluntford},
            familyi={B\bibinitperiod},
@@ -159,24 +159,24 @@ my $l3 = q|    \entry{L3}{book}{blah=10}
            giveni={B\bibinitperiod},
            givenun=0}}%
       }
-      \list{publisher}{1}{%
+      \list[msform=default,mslang=en-us]{publisher}{1}{%
         {Oxford}%
       }
       \strng{namehash}{490250da1f3b92580d97563dc96c6c84}
       \strng{fullhash}{490250da1f3b92580d97563dc96c6c84}
       \strng{bibnamehash}{490250da1f3b92580d97563dc96c6c84}
-      \strng{authorbibnamehash}{490250da1f3b92580d97563dc96c6c84}
-      \strng{authornamehash}{490250da1f3b92580d97563dc96c6c84}
-      \strng{authorfullhash}{490250da1f3b92580d97563dc96c6c84}
+      \strng{authordefaulten-usbibnamehash}{490250da1f3b92580d97563dc96c6c84}
+      \strng{authordefaulten-usnamehash}{490250da1f3b92580d97563dc96c6c84}
+      \strng{authordefaulten-usfullhash}{490250da1f3b92580d97563dc96c6c84}
       \field{sortinit}{B}
       \strng{sortinithash}{8de16967003c7207dae369d874f1456e}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
+      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
       \field{day}{5}
       \field{month}{4}
-      \field{title}{Title 3}
+      \field[msform=default,mslang=en-us]{title}{Title 3}
       \field{year}{1999}
       \field{dateera}{ce}
     \endentry

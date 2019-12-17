@@ -1330,9 +1330,9 @@ sub instantiate_dynamic {
     $section->set_dynamic_set($dset, @realmems);
 
     my $be = new Biber::Entry;
+    $be->set_field('citekey', $dset); # Must set this first, see set_field()
     $be->set_field('entrytype', 'set');
     $be->set_field('entryset', Biber::Entry::List->new([ @members ]));
-    $be->set_field('citekey', $dset);
     $be->set_field('datatype', 'dynamic');
     $section->bibentries->add_entry($dset, $be);
     if ($logger->is_debug()) {# performance tune

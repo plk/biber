@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/xsl" href="../../data/bcf.xsl"?>
 <?xml-model href="../../data/schemata/bcf.rnc" type="application/relax-ng-compact-syntax"?>
-<bcf:controlfile version="3.7" bltxversion="4.0" xmlns:bcf="https://sourceforge.net/projects/biblatex">
+<bcf:controlfile version="4.0" bltxversion="4.0" xmlns:bcf="https://sourceforge.net/projects/biblatex">
   <!-- OPTIONS -->
   <bcf:options component="biber" type="global">
     <bcf:option type="singlevalued">
@@ -1747,10 +1747,16 @@
       <bcf:field>journalsubtitle</bcf:field>
       <bcf:field>journaltitle</bcf:field>
       <bcf:field>location</bcf:field>
+      <bcf:field>lista</bcf:field>
+      <bcf:field>listb</bcf:field>
+      <bcf:field>listc</bcf:field>
       <bcf:field>mainsubtitle</bcf:field>
       <bcf:field>maintitle</bcf:field>
       <bcf:field>maintitleaddon</bcf:field>
       <bcf:field>nameaddon</bcf:field>
+      <bcf:field>namea</bcf:field>
+      <bcf:field>nameb</bcf:field>
+      <bcf:field>namec</bcf:field>
       <bcf:field>note</bcf:field>
       <bcf:field>organization</bcf:field>
       <bcf:field>origlanguage</bcf:field>
