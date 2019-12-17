@@ -176,6 +176,8 @@ start =
           attribute names { text }?,
           attribute namessep { string }?,
           attribute noalphaothers { xsd:boolean }?,
+          attribute form { text }?,
+          attribute lang { text }?,
           xsd:string
         }+
       }+
@@ -483,6 +485,8 @@ sort =
       attribute pad_side { "left" | "right" }?,
       attribute pad_width { xsd:integer }?,
       attribute pad_char { xsd:string { minLength = "1" maxLength = "1" } }?,
+      attribute form { text }?,
+      attribute lang { text }?,
       text
     }+
   }+

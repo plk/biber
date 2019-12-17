@@ -216,7 +216,7 @@
 **** DONE get_field()
 **** DONE get_datafield()
 **** DONE field_exists()
-*** TODO Add inheritance test to multiscript.t
+*** DONE Add inheritance test to multiscript.t
 *** TODO xsl for sorting/labelalpha templates
 *** TODO elide form/lang on output when default?
 *** TODO fix all test outputs

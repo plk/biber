@@ -143,6 +143,7 @@
                       </span>
                     </xsl:if>
                     <xsl:value-of select="./text()"/>
+                    <xsl:if test="./@form">(<span class="ms"><xsl:value-of select="./@form"/>,<xsl:value-of select="./@lang"/></span>)</xsl:if>
                     <!-- right padding -->
                     <xsl:if test="./@pad_side='right'">
                       <span class="sort_padding">
@@ -228,10 +229,13 @@
             font-size: 60%;
             font-family: "Courier New",monospace;
           }
+          .ms {
+            font-style: italic;
+          }
           .la_fieldkey {
             font-style: italic;
             color: #AAAAAA;
-            }
+          }
           .la_final {
             color: #FF0000;
           }
@@ -321,9 +325,7 @@
                       <td><tt><xsl:for-each select="./bcf:value">
                         <xsl:sort select="./@order"/>
                         <xsl:value-of select="./text()"/>
-                        <xsl:if test="./@form">
-                          (<xsl:value-of select="./@form"/>,<xsl:value-of select="./@lang"/>)
-                        </xsl:if>
+                        <xsl:if test="./@form">(<span class="ms"><xsl:value-of select="./@form"/>,<xsl:value-of select="./@lang"/></span>)</xsl:if>
                         <xsl:if test="not(position()=last())">
                           <xsl:text disable-output-escaping="yes">,&amp;nbsp;</xsl:text>
                         </xsl:if>
@@ -591,6 +593,7 @@
                                 </span>
                               </xsl:if>
                               <xsl:value-of select="./text()"/>
+                        <xsl:if test="./@form">(<span class="ms"><xsl:value-of select="./@form"/>,<xsl:value-of select="./@lang"/></span>)</xsl:if>
                               <xsl:if test="./@namessep">
                                 <span><xsl:attribute name="class">la_namessep</xsl:attribute>(<xsl:value-of select="./@namessep"/>)</span>
                               </xsl:if>

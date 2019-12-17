@@ -432,6 +432,12 @@
                       <data type="boolean"/>
                     </attribute>
                   </optional>
+                  <optional>
+                    <attribute name="form"/>
+                  </optional>
+                  <optional>
+                    <attribute name="lang"/>
+                  </optional>
                   <data type="string"/>
                 </element>
               </oneOrMore>
@@ -1215,6 +1221,12 @@
                   <param name="maxLength">1</param>
                 </data>
               </attribute>
+            </optional>
+            <optional>
+              <attribute name="form"/>
+            </optional>
+            <optional>
+              <attribute name="lang"/>
             </optional>
             <text/>
           </element>
