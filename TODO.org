@@ -160,30 +160,33 @@
 * TODO Multiscript
 ** TODO LANGIDOPTS and how they interact with LANGID->mslang
 ** TODO Documentation
-*** TODO \DeclareDatamodelMultiscriptEntryfields and \ResetDatamodelMultiscriptEntryfields
-*** TODO multiscriptforms constant
-*** TODO 'langtags' special annotation name.
-*** TODO msform/mslang biblatex global options. The options control which alternates are selected in various templates by biber and which alternates are selected by \cites/\print* in refcontexts.
-*** TODO msform/mslang refcontext options to select the defaults for \printfield and cites etc. Don't need to be passed to biber via .bcf as the biber needs for mslang/msform are already addressed as they indirectly change the current refcontext templates which in turn changes data. These options are there to influence the biblatex side of things. Default to globals.
-*** TODO biber mslang option and that this is checked after biblatex global/entry(LANGID) (for tool mode use)
-*** TODO all changed macros ...
-*** TODO \field in \DeclareLabelalphaTemplate to say that non-name list fields apply the template to each list member
-*** TODO Inheritance is of all alternates
-*** TODO msstrict and LANGID->mslang
+*** TODO Add general docs about citations to main MS doc section
+*** TODO Default global mslang to main document language BCP47 tag equivalent
+*** DONE \DeclareDatamodelMultiscriptEntryfields and \ResetDatamodelMultiscriptEntryfields
+*** DONE multiscriptforms constant
+*** DONE 'langtags' special annotation name.
+*** DONE msform/mslang biblatex global options. The options control which alternates are selected in various templates by biber and which alternates are selected by \cites/\print* in refcontexts.
+*** DONE msform/mslang refcontext options to select the defaults for \printfield and cites etc. Don't need to be passed to biber via .bcf as the biber needs for mslang/msform are already addressed as they indirectly change the current refcontext templates which in turn changes data. These options are there to influence the biblatex side of things. Default to globals.
+*** DONE biber mslang option and that this is checked after biblatex global/entry(LANGID) (for tool mode use)
+*** DONE \field in \DeclareLabelalphaTemplate to say that non-name list fields apply the template to each list member
+*** DONE Inheritance is of all alternates
+*** DONE msstrict and LANGID->mslang
 ** TODO biblatex
 *** DONE Datamodel
 **** DONE Add valid multiscript fields to datamodel
 **** DONE Add new datamodel constant list of default forms (original, transliteration, transcription, translation)
-*** TODO msform and mslang biblatex global options
-*** TODO msform and mslang biblatex refcontext options (but not passed to biber), inherit from global
-*** TODO around 4560 in biblatex.sty - add mslang name option and set some macro, expose to user
-*** TODO output sortlocale/mslang in .bcf as BCP-47 if possible (polyglossia 1.47+)
-*** TODO sorting templates
-*** TODO labelalphatemplate
-*** TODO labelnamespec/labeltitlespec
-*** TODO labelnamesource/labeltitlesource (2 extra args)
+*** DONE msform and mslang biblatex global options
+*** DONE msform and mslang biblatex refcontext options (but not passed to biber), inherit from global
+*** DONE around 4560 in biblatex.sty - add mslang name option and set some macro, expose to user
+*** DONE sorting templates
+*** DONE labelalphatemplate
+*** DONE labelnamespec/labeltitlespec
+*** TODO labelnamesource/labeltitlesource opt args
+*** TODO multiscript fields have opt args
 *** TODO NAMEnamehash, NAMEbibnamehash are now NAMEFORMLANGnamehash and NAMEFORMLANGbibnamehash
-** TODO biber
+*** TODO Default global mslang to main document language BCP47 tag equivalent
+*** TODO output sortlocale/mslang in .bcf as BCP-47 if possible (polyglossia 1.47+)
+** DONE biber
 *** DONE Decomm DOT output
 *** DONE Parsing BCP47 function https://tools.ietf.org/html/bcp47
 *** DONE Names and lists
