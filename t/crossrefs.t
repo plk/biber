@@ -87,8 +87,8 @@ my $cr1 = q|    \entry{cr1}{inbook}{}
       \true{singletitle}
       \true{uniquetitle}
       \true{uniquework}
-      \field[default][en-us]{labelnamesource}{author}
-      \field[default][en-us]{labeltitlesource}{title}
+      \fieldsource{labelnamesource}{author}{default}{en-us}
+      \fieldsource{labeltitlesource}{title}{default}{en-us}
       \field[default][en-us]{booktitle}{Graphs of the Continent}
       \strng{crossref}{cr_m}
       \field{eprintclass}{SOMECLASS}
@@ -136,8 +136,8 @@ my $cr2 = q|    \entry{cr2}{inbook}{}
       \true{singletitle}
       \true{uniquetitle}
       \true{uniquework}
-      \field[default][en-us]{labelnamesource}{author}
-      \field[default][en-us]{labeltitlesource}{title}
+      \fieldsource{labelnamesource}{author}{default}{en-us}
+      \fieldsource{labeltitlesource}{title}{default}{en-us}
       \field[default][en-us]{booktitle}{Graphs of the Continent}
       \strng{crossref}{cr_m}
       \field{origyear}{1943}
@@ -169,7 +169,7 @@ my $cr_m = q|    \entry{cr_m}{book}{}
       \strng{sortinithash}{62eb2aa29549e4fdbd3cb154ec5711cb}
       \true{crossrefsource}
       \true{uniquetitle}
-      \field[default][en-us]{labeltitlesource}{title}
+      \fieldsource{labeltitlesource}{title}{default}{en-us}
       \field[default][en-us]{title}{Graphs of the Continent}
       \field{year}{1974}
     \endentry
@@ -208,8 +208,8 @@ my $cr3 = q|    \entry{cr3}{inbook}{}
       \true{singletitle}
       \true{uniquetitle}
       \true{uniquework}
-      \field[default][en-us]{labelnamesource}{author}
-      \field[default][en-us]{labeltitlesource}{title}
+      \fieldsource{labelnamesource}{author}{default}{en-us}
+      \fieldsource{labeltitlesource}{title}{default}{en-us}
       \field[default][en-us]{booktitle}{Beasts of the Burbling Burns}
       \strng{crossref}{crt}
       \field{eprinttype}{sometype}
@@ -253,8 +253,8 @@ my $cr4 = q|    \entry{cr4}{inbook}{}
       \true{singletitle}
       \true{uniquetitle}
       \true{uniquework}
-      \field[default][en-us]{labelnamesource}{author}
-      \field[default][en-us]{labeltitlesource}{title}
+      \fieldsource{labelnamesource}{author}{default}{en-us}
+      \fieldsource{labeltitlesource}{title}{default}{en-us}
       \field[default][en-us]{booktitle}{Vanquished, Victor, Vandal}
       \field{origyear}{1911}
       \field[default][en-us]{title}{Enterprising Entities}
@@ -282,7 +282,7 @@ my $crt = q|    \entry{crt}{book}{}
       \field{sortinit}{B}
       \strng{sortinithash}{8de16967003c7207dae369d874f1456e}
       \true{uniquetitle}
-      \field[default][en-us]{labeltitlesource}{title}
+      \fieldsource{labeltitlesource}{title}{default}{en-us}
       \field[default][en-us]{title}{Beasts of the Burbling Burns}
       \field{year}{1996}
     \endentry
@@ -319,8 +319,8 @@ my $cr6 = q|    \entry{cr6}{inproceedings}{}
       \strng{sortinithash}{a3dcedd53b04d1adfd5ac303ecd5e6fa}
       \true{uniquetitle}
       \true{uniquework}
-      \field[default][en-us]{labelnamesource}{author}
-      \field[default][en-us]{labeltitlesource}{title}
+      \fieldsource{labelnamesource}{author}{default}{en-us}
+      \fieldsource{labeltitlesource}{title}{default}{en-us}
       \field[default][en-us]{booktitle}{Manual booktitle}
       \field{eventday}{21}
       \field{eventendday}{24}
@@ -372,8 +372,8 @@ my $cr7 = q|    \entry{cr7}{inbook}{}
       \strng{sortinithash}{a3dcedd53b04d1adfd5ac303ecd5e6fa}
       \true{uniquetitle}
       \true{uniquework}
-      \field[default][en-us]{labelnamesource}{author}
-      \field[default][en-us]{labeltitlesource}{title}
+      \fieldsource{labelnamesource}{author}{default}{en-us}
+      \fieldsource{labeltitlesource}{title}{default}{en-us}
       \field[default][en-us]{booksubtitle}{Book Subtitle}
       \field[default][en-us]{booktitle}{Book Title}
       \field[default][en-us]{booktitleaddon}{Book Titleaddon}
@@ -408,8 +408,8 @@ my $cr8 = q|    \entry{cr8}{incollection}{}
       \true{singletitle}
       \true{uniquetitle}
       \true{uniquework}
-      \field[default][en-us]{labelnamesource}{author}
-      \field[default][en-us]{labeltitlesource}{title}
+      \fieldsource{labelnamesource}{author}{default}{en-us}
+      \fieldsource{labeltitlesource}{title}{default}{en-us}
       \field[default][en-us]{booktitle}{Book Title}
       \field[default][en-us]{title}{Title of Collection bit}
       \field{year}{2010}
@@ -438,8 +438,8 @@ my $xr1 = q|    \entry{xr1}{inbook}{}
       \true{singletitle}
       \true{uniquetitle}
       \true{uniquework}
-      \field[default][en-us]{labelnamesource}{author}
-      \field[default][en-us]{labeltitlesource}{title}
+      \fieldsource{labelnamesource}{author}{default}{en-us}
+      \fieldsource{labeltitlesource}{title}{default}{en-us}
       \field{origyear}{1921}
       \field[default][en-us]{title}{Moods Mildly Modified}
       \strng{xref}{xrm}
@@ -467,8 +467,8 @@ my $xr2 = q|    \entry{xr2}{inbook}{}
       \true{singletitle}
       \true{uniquetitle}
       \true{uniquework}
-      \field[default][en-us]{labelnamesource}{author}
-      \field[default][en-us]{labeltitlesource}{title}
+      \fieldsource{labelnamesource}{author}{default}{en-us}
+      \fieldsource{labeltitlesource}{title}{default}{en-us}
       \field{origyear}{1926}
       \field[default][en-us]{title}{Migraines Multiplying Madly}
       \strng{xref}{xrm}
@@ -497,7 +497,7 @@ my $xrm = q|    \entry{xrm}{book}{}
       \strng{sortinithash}{4c244ceae61406cdc0cc2ce1cb1ff703}
       \true{xrefsource}
       \true{uniquetitle}
-      \field[default][en-us]{labeltitlesource}{title}
+      \fieldsource{labeltitlesource}{title}{default}{en-us}
       \field[default][en-us]{title}{Calligraphy, Calisthenics, Culture}
       \field{year}{1970}
     \endentry
@@ -523,8 +523,8 @@ my $xr3 = q|    \entry{xr3}{inbook}{}
       \true{singletitle}
       \true{uniquetitle}
       \true{uniquework}
-      \field[default][en-us]{labelnamesource}{author}
-      \field[default][en-us]{labeltitlesource}{title}
+      \fieldsource{labelnamesource}{author}{default}{en-us}
+      \fieldsource{labeltitlesource}{title}{default}{en-us}
       \field{origyear}{1923}
       \field[default][en-us]{title}{Russian Regalia Revisited}
       \strng{xref}{xrt}
@@ -551,7 +551,7 @@ my $xrt = q|    \entry{xrt}{book}{}
       \field{sortinit}{K}
       \strng{sortinithash}{d3edc18d54b9438a72c24c925bfb38f4}
       \true{uniquetitle}
-      \field[default][en-us]{labeltitlesource}{title}
+      \fieldsource{labeltitlesource}{title}{default}{en-us}
       \field[default][en-us]{title}{Kings, Cork and Calculation}
       \field{year}{1977}
     \endentry
@@ -576,8 +576,8 @@ my $xr4 = q|    \entry{xr4}{inbook}{}
       \field{extraname}{1}
       \field{sortinit}{M}
       \strng{sortinithash}{2e5c2f51f7fa2d957f3206819bf86dc3}
-      \field[default][en-us]{labelnamesource}{author}
-      \field[default][en-us]{labeltitlesource}{title}
+      \fieldsource{labelnamesource}{author}{default}{en-us}
+      \fieldsource{labeltitlesource}{title}{default}{en-us}
       \field{origyear}{1933}
       \field[default][en-us]{title}{Lumbering Lunatics}
       \strng{xref}{xrn}
@@ -604,8 +604,8 @@ my $mxr = q|    \entry{mxr}{inbook}{}
       \field{extraname}{2}
       \field{sortinit}{M}
       \strng{sortinithash}{2e5c2f51f7fa2d957f3206819bf86dc3}
-      \field[default][en-us]{labelnamesource}{author}
-      \field[default][en-us]{labeltitlesource}{title}
+      \fieldsource{labelnamesource}{author}{default}{en-us}
+      \fieldsource{labeltitlesource}{title}{default}{en-us}
       \field{origyear}{1933}
       \field[default][en-us]{title}{Lumbering Lunatics}
       \field{origdateera}{ce}
@@ -629,8 +629,8 @@ my $mcr = q|    \entry{mcr}{inbook}{}
       \field{extraname}{3}
       \field{sortinit}{M}
       \strng{sortinithash}{2e5c2f51f7fa2d957f3206819bf86dc3}
-      \field[default][en-us]{labelnamesource}{author}
-      \field[default][en-us]{labeltitlesource}{title}
+      \fieldsource{labelnamesource}{author}{default}{en-us}
+      \fieldsource{labeltitlesource}{title}{default}{en-us}
       \field{origyear}{1933}
       \field[default][en-us]{title}{Lumbering Lunatics}
       \field{origdateera}{ce}
@@ -666,8 +666,8 @@ my $ccr1 = q|    \entry{ccr2}{book}{}
       \strng{sortinithash}{02432525618c08e2b03cac47c19764af}
       \true{uniquetitle}
       \true{uniquework}
-      \field[default][en-us]{labelnamesource}{author}
-      \field[default][en-us]{labeltitlesource}{title}
+      \fieldsource{labelnamesource}{author}{default}{en-us}
+      \fieldsource{labeltitlesource}{title}{default}{en-us}
       \strng{crossref}{ccr1}
       \field[default][en-us]{title}{Misc etc.}
       \field{year}{1923}
@@ -699,7 +699,7 @@ my $ccr2 = q|    \entry{ccr3}{inbook}{}
       \field{sortinit}{P}
       \strng{sortinithash}{bb5b15f2db90f7aef79bb9e83defefcb}
       \true{uniquetitle}
-      \field[default][en-us]{labeltitlesource}{title}
+      \fieldsource{labeltitlesource}{title}{default}{en-us}
       \field[default][en-us]{booktitle}{Misc etc.}
       \strng{crossref}{ccr2}
       \field[default][en-us]{title}{Perhaps, Perchance, Possibilities?}
@@ -719,7 +719,7 @@ my $ccr3 = q|    \entry{ccr4}{inbook}{}
       }
       \field{sortinit}{V}
       \strng{sortinithash}{4125bb4c3a0eb3eaee3ea6da32eb70c8}
-      \field[default][en-us]{labeltitlesource}{title}
+      \fieldsource{labeltitlesource}{title}{default}{en-us}
       \field[default][en-us]{booktitle}{Misc etc.}
       \field[default][en-us]{title}{Stuff Concerning Varia}
       \field{year}{1911}
@@ -731,7 +731,7 @@ my $s1 = q|    \entry{s1}{inbook}{}
       \field{sortinit}{S}
       \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
       \true{uniquetitle}
-      \field[default][en-us]{labeltitlesource}{title}
+      \fieldsource{labeltitlesource}{title}{default}{en-us}
       \strng{crossref}{s2}
       \field[default][en-us]{title}{Subtitle}
     \endentry
@@ -765,7 +765,7 @@ my $xc2 = q|    \entry{xc2}{inbook}{}
       \field{sortinit}{C}
       \strng{sortinithash}{4c244ceae61406cdc0cc2ce1cb1ff703}
       \true{xrefsource}
-      \field[default][en-us]{labelnamesource}{author}
+      \fieldsource{labelnamesource}{author}{default}{en-us}
       \field[default][en-us]{booktitle}{Title}
     \endentry
 |;
@@ -809,8 +809,8 @@ my $sup1 = q|    \entry{sup1}{mvbook}{}
       \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
       \true{crossrefsource}
       \true{singletitle}
-      \field[default][en-us]{labelnamesource}{author}
-      \field[default][en-us]{labeltitlesource}{title}
+      \fieldsource{labelnamesource}{author}{default}{en-us}
+      \fieldsource{labeltitlesource}{title}{default}{en-us}
       \field[default][en-us]{title}{Title1}
     \endentry
 |;
@@ -833,8 +833,8 @@ my $sup2 = q|    \entry{sup2}{book}{}
       \field{sortinit}{S}
       \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
       \true{singletitle}
-      \field[default][en-us]{labelnamesource}{author}
-      \field[default][en-us]{labeltitlesource}{title}
+      \fieldsource{labelnamesource}{author}{default}{en-us}
+      \fieldsource{labeltitlesource}{title}{default}{en-us}
       \strng{crossref}{sup1}
       \field[default][en-us]{note}{Book sup2}
       \field[default][en-us]{title}{Title1}

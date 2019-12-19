@@ -112,9 +112,9 @@ my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
       \field{sortinit}{v}
       \strng{sortinithash}{02432525618c08e2b03cac47c19764af}
       \field{extradatescope}{labelyear}
-      \field{labeldatesource}{}
-      \field[default][en-us]{labelnamesource}{author}
-      \field[default][en-us]{labeltitlesource}{title}
+      \fieldsource{labeldatesource}{}{}{}
+      \fieldsource{labelnamesource}{author}{default}{en-us}
+      \fieldsource{labeltitlesource}{title}{default}{en-us}
       \field[default][en-us]{addendum}{userc}
       \field{eventday}{16}
       \field{eventendday}{17}

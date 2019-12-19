@@ -72,9 +72,9 @@ my $string2 = q|    \entry{Dynamic1}{book}{skipbib=true,skipbiblist=true,skiplab
       \strng{authordefaulten-usfullhash}{252caa7921a061ca92087a1a52f15b78}
       \field{sortinit}{8}
       \strng{sortinithash}{1b24cab5087933ef0826a7cd3b99e994}
-      \field{labeldatesource}{year}
-      \field[default][en-us]{labelnamesource}{author}
-      \field[default][en-us]{labeltitlesource}{title}
+      \fieldsource{labeldatesource}{year}{}{}
+      \fieldsource{labelnamesource}{author}{default}{en-us}
+      \fieldsource{labeltitlesource}{title}{default}{en-us}
       \field{annotation}{Some Dynamic Note}
       \field[default][en-us]{shorthand}{d1}
       \field[default][en-us]{title}{Doing Daring Deeds}
@@ -99,9 +99,9 @@ my $string3 = q|    \entry{Dynamic2}{book}{skipbib=true,skipbiblist=true,skiplab
       \strng{authordefaulten-usfullhash}{894a5fe6de820f5dcce84a65581667f4}
       \field{sortinit}{9}
       \strng{sortinithash}{54047ffb55bdefa0694bbd554c1b11a0}
-      \field{labeldatesource}{year}
-      \field[default][en-us]{labelnamesource}{author}
-      \field[default][en-us]{labeltitlesource}{title}
+      \fieldsource{labeldatesource}{year}{}{}
+      \fieldsource{labelnamesource}{author}{default}{en-us}
+      \fieldsource{labeltitlesource}{title}{default}{en-us}
       \field[default][en-us]{shorthand}{d2}
       \field[default][en-us]{title}{Beautiful Birthdays}
       \field{year}{2010}
@@ -125,9 +125,9 @@ my $string4 = q|    \entry{Dynamic3}{book}{skipbib=true,skipbiblist=true,skiplab
       \strng{authordefaulten-usfullhash}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \field{sortinit}{1}
       \strng{sortinithash}{50c6687d7fc80f50136d75228e3c59ba}
-      \field{labeldatesource}{year}
-      \field[default][en-us]{labelnamesource}{author}
-      \field[default][en-us]{labeltitlesource}{title}
+      \fieldsource{labeldatesource}{year}{}{}
+      \fieldsource{labelnamesource}{author}{default}{en-us}
+      \fieldsource{labeltitlesource}{title}{default}{en-us}
       \field[default][en-us]{shorthand}{d3}
       \field[default][en-us]{title}{Reckless Ravishings}
       \field{year}{2000}
@@ -153,9 +153,9 @@ my $string5 = q|    \entry{Dynamic3}{book}{}
       \field{sortinit}{1}
       \strng{sortinithash}{50c6687d7fc80f50136d75228e3c59ba}
       \field{extradatescope}{labelyear}
-      \field{labeldatesource}{year}
-      \field[default][en-us]{labelnamesource}{author}
-      \field[default][en-us]{labeltitlesource}{title}
+      \fieldsource{labeldatesource}{year}{}{}
+      \fieldsource{labelnamesource}{author}{default}{en-us}
+      \fieldsource{labeltitlesource}{title}{default}{en-us}
       \field[default][en-us]{shorthand}{d3}
       \field[default][en-us]{title}{Reckless Ravishings}
       \field{year}{2000}

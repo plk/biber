@@ -100,8 +100,8 @@ my $u1 = q|    \entry{u1}{misc}{}
       \strng{sortinithash}{a3dcedd53b04d1adfd5ac303ecd5e6fa}
       \true{singletitle}
       \true{uniquework}
-      \field[default][en-us]{labelnamesource}{author}
-      \field[default][en-us]{labeltitlesource}{title}
+      \fieldsource{labelnamesource}{author}{default}{en-us}
+      \fieldsource{labeltitlesource}{title}{default}{en-us}
       \field[default][en-us]{note}{0}
       \field[default][en-us]{title}{A title}
       \field{year}{2000}
@@ -234,8 +234,8 @@ my $murray1 = q|    \entry{murray}{article}{}
       \strng{sortinithash}{6db6145dae8dc9e1271a8d556090b50a}
       \true{singletitle}
       \true{uniquework}
-      \field[default][en-us]{labelnamesource}{author}
-      \field[default][en-us]{labeltitlesource}{shorttitle}
+      \fieldsource{labelnamesource}{author}{default}{en-us}
+      \fieldsource{labeltitlesource}{shorttitle}{default}{en-us}
       \field{annotation}{An \texttt{article} entry with \arabic{author} authors. By default, long author and editor lists are automatically truncated. This is configurable}
       \field{indextitle}{Alkanethiolate gold cluster molecules}
       \field[default][en-us]{journaltitle}{Langmuir}
@@ -351,8 +351,8 @@ my $murray2 = q|    \entry{murray}{article}{}
       \strng{sortinithash}{6db6145dae8dc9e1271a8d556090b50a}
       \true{singletitle}
       \true{uniquework}
-      \field[default][en-us]{labelnamesource}{author}
-      \field[default][en-us]{labeltitlesource}{shorttitle}
+      \fieldsource{labelnamesource}{author}{default}{en-us}
+      \fieldsource{labeltitlesource}{shorttitle}{default}{en-us}
       \field{annotation}{An \texttt{article} entry with \arabic{author} authors. By default, long author and editor lists are automatically truncated. This is configurable}
       \field{indextitle}{Alkanethiolate gold cluster molecules}
       \field[default][en-us]{journaltitle}{Langmuir}
@@ -391,8 +391,8 @@ my $t1 = q+    \entry{t1}{misc}{}
       \field{sortinit}{B}
       \strng{sortinithash}{8de16967003c7207dae369d874f1456e}
       \true{uniquework}
-      \field[default][en-us]{labelnamesource}{author}
-      \field[default][en-us]{labeltitlesource}{title}
+      \fieldsource{labelnamesource}{author}{default}{en-us}
+      \fieldsource{labeltitlesource}{title}{default}{en-us}
       \field[default][en-us]{title}{10\\% of [100] and 90% of $Normal_2$ | \\& # things {$^3$}}
       \field{year}{1992}
       \field{pages}{100\bibrangedash}
@@ -421,8 +421,8 @@ my $t2 = q|    \entry{t2}{misc}{}
       \field{sortinit}{B}
       \strng{sortinithash}{8de16967003c7207dae369d874f1456e}
       \true{uniquework}
-      \field[default][en-us]{labelnamesource}{author}
-      \field[default][en-us]{labeltitlesource}{title}
+      \fieldsource{labelnamesource}{author}{default}{en-us}
+      \fieldsource{labeltitlesource}{title}{default}{en-us}
       \field[default][en-us]{title}{Signs of W$\\frac{o}{a}$nder}
       \field{year}{1994}
       \field{pages}{100\bibrangedash 108}
@@ -455,8 +455,8 @@ my $anon1 = q|    \entry{anon1}{unpublished}{}
       \strng{sortinithash}{a3dcedd53b04d1adfd5ac303ecd5e6fa}
       \true{singletitle}
       \true{uniquework}
-      \field[default][en-us]{labelnamesource}{shortauthor}
-      \field[default][en-us]{labeltitlesource}{shorttitle}
+      \fieldsource{labelnamesource}{shortauthor}{default}{en-us}
+      \fieldsource{labeltitlesource}{shorttitle}{default}{en-us}
       \field{langid}{english}
       \field{langidopts}{variant=american}
       \field[default][en-us]{note}{anon1}
@@ -494,8 +494,8 @@ my $anon2 = q|    \entry{anon2}{unpublished}{}
       \strng{sortinithash}{a3dcedd53b04d1adfd5ac303ecd5e6fa}
       \true{singletitle}
       \true{uniquework}
-      \field[default][en-us]{labelnamesource}{shortauthor}
-      \field[default][en-us]{labeltitlesource}{shorttitle}
+      \fieldsource{labelnamesource}{shortauthor}{default}{en-us}
+      \fieldsource{labeltitlesource}{shorttitle}{default}{en-us}
       \field{langid}{english}
       \field{langidopts}{variant=american}
       \field[default][en-us]{note}{anon2}
@@ -528,7 +528,7 @@ my $url1 = q|    \entry{url1}{misc}{}
       \field{sortinit}{A}
       \strng{sortinithash}{a3dcedd53b04d1adfd5ac303ecd5e6fa}
       \field{extraalpha}{4}
-      \field[default][en-us]{labelnamesource}{author}
+      \fieldsource{labelnamesource}{author}{default}{en-us}
       \field{year}{2005}
       \field{dateera}{ce}
       \verb{urlraw}
@@ -712,7 +712,7 @@ my $isbn1 = q|    \entry{isbn1}{misc}{}
       \field{sortinit}{F}
       \strng{sortinithash}{fb0c0faa89eb6abae8213bf60e6799ea}
       \field{extraalpha}{1}
-      \field[default][en-us]{labelnamesource}{author}
+      \fieldsource{labelnamesource}{author}{default}{en-us}
       \field{isbn}{978-0-8165-2066-4}
     \endentry
 |;
@@ -737,7 +737,7 @@ my $isbn2 = q|    \entry{isbn2}{misc}{}
       \field{sortinit}{F}
       \strng{sortinithash}{fb0c0faa89eb6abae8213bf60e6799ea}
       \field{extraalpha}{2}
-      \field[default][en-us]{labelnamesource}{author}
+      \fieldsource{labelnamesource}{author}{default}{en-us}
       \field{isbn}{978-0-8165-2066-4}
     \endentry
 |;
@@ -780,7 +780,7 @@ my $clone1 = q|    \entry{snk1}{book}{}
       \field{sortinit}{v}
       \strng{sortinithash}{02432525618c08e2b03cac47c19764af}
       \field{extraalpha}{2}
-      \field[default][en-us]{labelnamesource}{author}
+      \fieldsource{labelnamesource}{author}{default}{en-us}
     \endentry
 |;
 
@@ -809,7 +809,7 @@ my $clone2 = q|    \entry{clone-snk1}{book}{}
       \field{sortinit}{v}
       \strng{sortinithash}{02432525618c08e2b03cac47c19764af}
       \field{extraalpha}{1}
-      \field[default][en-us]{labelnamesource}{author}
+      \fieldsource{labelnamesource}{author}{default}{en-us}
       \field[default][en-us]{addendum}{add}
     \endentry
 |;
@@ -841,7 +841,7 @@ my $ent1 = q|    \entry{ent1}{book}{}
       \field{sortinit}{S}
       \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
       \true{singletitle}
-      \field[default][en-us]{labelnamesource}{author}
+      \fieldsource{labelnamesource}{author}{default}{en-us}
     \endentry
 |;
 
@@ -864,7 +864,7 @@ my $verb1 = q|    \entry{verb1}{book}{}
       \field{sortinit}{A}
       \strng{sortinithash}{a3dcedd53b04d1adfd5ac303ecd5e6fa}
       \true{singletitle}
-      \field[default][en-us]{labelnamesource}{author}
+      \fieldsource{labelnamesource}{author}{default}{en-us}
       \verb{verba}
       \verb \=y.\"a
       \endverb

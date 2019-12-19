@@ -68,10 +68,10 @@ my $S1 = q|    \entry{S1}{book}{skipbib=false,skipbiblist=false,skiplab=false}
       \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
       \field{extradate}{1}
       \field{extradatescope}{labelyear}
-      \field{labeldatesource}{year}
+      \fieldsource{labeldatesource}{year}{}{}
       \field{extraalpha}{1}
-      \field[default][en-us]{labelnamesource}{author}
-      \field[default][en-us]{labeltitlesource}{title}
+      \fieldsource{labelnamesource}{author}{default}{en-us}
+      \fieldsource{labeltitlesource}{title}{default}{en-us}
       \field[default][en-us]{title}{Title 1}
       \field{year}{1995}
     \endentry
@@ -105,10 +105,10 @@ my $S2 = q|    \entry{S2}{book}{skipbib=false,skiplab=false}
       \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
       \field{extradate}{2}
       \field{extradatescope}{labelyear}
-      \field{labeldatesource}{year}
+      \fieldsource{labeldatesource}{year}{}{}
       \field{extraalpha}{2}
-      \field[default][en-us]{labelnamesource}{author}
-      \field[default][en-us]{labeltitlesource}{title}
+      \fieldsource{labelnamesource}{author}{default}{en-us}
+      \fieldsource{labeltitlesource}{title}{default}{en-us}
       \field[default][en-us]{title}{Title 2}
       \field{year}{1995}
     \endentry
@@ -138,9 +138,9 @@ my $S3 = q|    \entry{S3}{book}{}
       \strng{authordefaulten-usfullhash}{8c77336299b25bdada7bf8038f46722f}
       \field{sortinit}{D}
       \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
-      \field{labeldatesource}{year}
-      \field[default][en-us]{labelnamesource}{author}
-      \field[default][en-us]{labeltitlesource}{title}
+      \fieldsource{labeldatesource}{year}{}{}
+      \fieldsource{labelnamesource}{author}{default}{en-us}
+      \fieldsource{labeltitlesource}{title}{default}{en-us}
       \field[default][en-us]{title}{Title 3}
       \field{year}{1995}
     \endentry
