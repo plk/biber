@@ -54,7 +54,7 @@ my $string1 = q|    \entry{Static1}{set}{}
 
 my $string2 = q|    \entry{Static2}{book}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}
       \inset{Static1}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=43874d80d7ce68027102819f16c47df1}{%
            family={Bumble},
            familyi={B\bibinitperiod},
@@ -70,17 +70,17 @@ my $string2 = q|    \entry{Static2}{book}{skipbib=true,skipbiblist=true,skiplab=
       \field{sortinit}{B}
       \strng{sortinithash}{8de16967003c7207dae369d874f1456e}
       \field{labeldatesource}{year}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
       \field{annotation}{Some Blessed Note}
-      \field[msform=default,mslang=en-us]{title}{Blessed Brains}
+      \field[default][en-us]{title}{Blessed Brains}
       \field{year}{2001}
     \endentry
 |;
 
 my $string3 = q|    \entry{Static3}{book}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}
       \inset{Static1}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=22dafa5cd57bb5dd7f3e3bab98fd539c}{%
            family={Dingle},
            familyi={D\bibinitperiod},
@@ -96,16 +96,16 @@ my $string3 = q|    \entry{Static3}{book}{skipbib=true,skipbiblist=true,skiplab=
       \field{sortinit}{D}
       \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
       \field{labeldatesource}{year}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{title}{Castles and Crime}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{title}{Castles and Crime}
       \field{year}{2002}
     \endentry
 |;
 
 my $string4 = q|    \entry{Static4}{book}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}
       \inset{Static1}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=da80091c8cd89e5269bd55af1bd5d2fa}{%
            family={Crenellation},
            familyi={C\bibinitperiod},
@@ -121,9 +121,9 @@ my $string4 = q|    \entry{Static4}{book}{skipbib=true,skipbiblist=true,skiplab=
       \field{sortinit}{C}
       \strng{sortinithash}{4c244ceae61406cdc0cc2ce1cb1ff703}
       \field{labeldatesource}{year}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{title}{Dungeons, Dark and Dangerous}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{title}{Dungeons, Dark and Dangerous}
       \field{year}{2005}
     \endentry
 |;
@@ -131,7 +131,7 @@ my $string4 = q|    \entry{Static4}{book}{skipbib=true,skipbiblist=true,skiplab=
 # Labelyear is now here as skiplab is not set for this entry when cited in section
 # without citation of a set it is a member of
 my $string5 = q|    \entry{Static2}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=43874d80d7ce68027102819f16c47df1}{%
            family={Bumble},
            familyi={B\bibinitperiod},
@@ -148,10 +148,10 @@ my $string5 = q|    \entry{Static2}{book}{}
       \strng{sortinithash}{50c6687d7fc80f50136d75228e3c59ba}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{year}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
       \field{annotation}{Some Blessed Note}
-      \field[msform=default,mslang=en-us]{title}{Blessed Brains}
+      \field[default][en-us]{title}{Blessed Brains}
       \field{year}{2001}
     \endentry
 |;

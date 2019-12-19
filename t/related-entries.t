@@ -43,7 +43,7 @@ my $main = $biber->datalists->get_list('none/global//global/global');
 my $shs = $biber->datalists->get_list('shorthand/global//global/global', 0, 'list');
 
 my $k1 = q|    \entry{key1}{article}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=a517747c3d12f99244ae598910d979c5}{%
            family={Author},
            familyi={A\bibinitperiod}}}%
@@ -59,13 +59,13 @@ my $k1 = q|    \entry{key1}{article}{}
       \strng{sortinithash}{50c6687d7fc80f50136d75228e3c59ba}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{journaltitle}{Journal Title}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{journaltitle}{Journal Title}
       \field{number}{5}
       \field{relatedtype}{reprintas}
-      \field[msform=default,mslang=en-us]{shorthand}{RK1}
-      \field[msform=default,mslang=en-us]{title}{Original Title}
+      \field[default][en-us]{shorthand}{RK1}
+      \field[default][en-us]{title}{Original Title}
       \field{volume}{12}
       \field{year}{1998}
       \field{dateera}{ce}
@@ -76,15 +76,15 @@ my $k1 = q|    \entry{key1}{article}{}
 |;
 
 my $k2 = q|    \entry{key2}{inbook}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=a517747c3d12f99244ae598910d979c5}{%
            family={Author},
            familyi={A\bibinitperiod}}}%
       }
-      \list[msform=default,mslang=en-us]{location}{1}{%
+      \list[default][en-us]{location}{1}{%
         {Location}%
       }
-      \list[msform=default,mslang=en-us]{publisher}{1}{%
+      \list[default][en-us]{publisher}{1}{%
         {Publisher}%
       }
       \strng{namehash}{a517747c3d12f99244ae598910d979c5}
@@ -98,14 +98,14 @@ my $k2 = q|    \entry{key2}{inbook}{}
       \strng{sortinithash}{ed39bb39cf854d5250e95b1c1f94f4ed}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{booktitle}{Booktitle}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{booktitle}{Booktitle}
       \field{month}{2}
-      \field[msform=default,mslang=en-us]{relatedstring}{First}
+      \field[default][en-us]{relatedstring}{First}
       \field{relatedtype}{reprintof}
-      \field[msform=default,mslang=en-us]{shorthand}{RK2}
-      \field[msform=default,mslang=en-us]{title}{Reprint Title}
+      \field[default][en-us]{shorthand}{RK2}
+      \field[default][en-us]{title}{Reprint Title}
       \field{year}{2009}
       \true{dateuncertain}
       \field{dateera}{ce}
@@ -117,7 +117,7 @@ my $k2 = q|    \entry{key2}{inbook}{}
 
 
 my $kck1 = q|    \entry{c2add694bf942dc77b376592d9c862cd}{article}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=a517747c3d12f99244ae598910d979c5}{%
            family={Author},
            familyi={A\bibinitperiod}}}%
@@ -129,14 +129,14 @@ my $kck1 = q|    \entry{c2add694bf942dc77b376592d9c862cd}{article}{skipbib=true,
       \strng{authordefaulten-usnamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authordefaulten-usfullhash}{a517747c3d12f99244ae598910d979c5}
       \field{labeldatesource}{}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
       \field{clonesourcekey}{key1}
-      \field[msform=default,mslang=en-us]{journaltitle}{Journal Title}
+      \field[default][en-us]{journaltitle}{Journal Title}
       \field{number}{5}
       \field{relatedtype}{reprintas}
-      \field[msform=default,mslang=en-us]{shorthand}{RK1}
-      \field[msform=default,mslang=en-us]{title}{Original Title}
+      \field[default][en-us]{shorthand}{RK1}
+      \field[default][en-us]{title}{Original Title}
       \field{volume}{12}
       \field{year}{1998}
       \field{dateera}{ce}
@@ -147,15 +147,15 @@ my $kck1 = q|    \entry{c2add694bf942dc77b376592d9c862cd}{article}{skipbib=true,
 |;
 
 my $kck2 = q|    \entry{78f825aaa0103319aaa1a30bf4fe3ada}{inbook}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=a517747c3d12f99244ae598910d979c5}{%
            family={Author},
            familyi={A\bibinitperiod}}}%
       }
-      \list[msform=default,mslang=en-us]{location}{1}{%
+      \list[default][en-us]{location}{1}{%
         {Location}%
       }
-      \list[msform=default,mslang=en-us]{publisher}{1}{%
+      \list[default][en-us]{publisher}{1}{%
         {Publisher}%
       }
       \strng{namehash}{a517747c3d12f99244ae598910d979c5}
@@ -165,15 +165,15 @@ my $kck2 = q|    \entry{78f825aaa0103319aaa1a30bf4fe3ada}{inbook}{skipbib=true,s
       \strng{authordefaulten-usnamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authordefaulten-usfullhash}{a517747c3d12f99244ae598910d979c5}
       \field{labeldatesource}{}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
       \field{clonesourcekey}{key2}
-      \field[msform=default,mslang=en-us]{booktitle}{Booktitle}
+      \field[default][en-us]{booktitle}{Booktitle}
       \field{month}{2}
-      \field[msform=default,mslang=en-us]{relatedstring}{First}
+      \field[default][en-us]{relatedstring}{First}
       \field{relatedtype}{reprintof}
-      \field[msform=default,mslang=en-us]{shorthand}{RK2}
-      \field[msform=default,mslang=en-us]{title}{Reprint Title}
+      \field[default][en-us]{shorthand}{RK2}
+      \field[default][en-us]{title}{Reprint Title}
       \field{year}{2009}
       \true{dateuncertain}
       \field{dateera}{ce}
@@ -184,15 +184,15 @@ my $kck2 = q|    \entry{78f825aaa0103319aaa1a30bf4fe3ada}{inbook}{skipbib=true,s
 |;
 
 my $kck3 = q|    \entry{3631578538a2d6ba5879b31a9a42f290}{inbook}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=a517747c3d12f99244ae598910d979c5}{%
            family={Author},
            familyi={A\bibinitperiod}}}%
       }
-      \list[msform=default,mslang=en-us]{location}{1}{%
+      \list[default][en-us]{location}{1}{%
         {Location}%
       }
-      \list[msform=default,mslang=en-us]{publisher}{1}{%
+      \list[default][en-us]{publisher}{1}{%
         {Publisher2}%
       }
       \strng{namehash}{a517747c3d12f99244ae598910d979c5}
@@ -202,14 +202,14 @@ my $kck3 = q|    \entry{3631578538a2d6ba5879b31a9a42f290}{inbook}{skipbib=true,s
       \strng{authordefaulten-usnamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authordefaulten-usfullhash}{a517747c3d12f99244ae598910d979c5}
       \field{labeldatesource}{}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
       \field{clonesourcekey}{key3}
-      \field[msform=default,mslang=en-us]{booktitle}{Booktitle}
+      \field[default][en-us]{booktitle}{Booktitle}
       \field{month}{1}
       \field{relatedtype}{translationof}
-      \field[msform=default,mslang=en-us]{shorthand}{RK3}
-      \field[msform=default,mslang=en-us]{title}{Reprint Title}
+      \field[default][en-us]{shorthand}{RK3}
+      \field[default][en-us]{title}{Reprint Title}
       \field{year}{2010}
       \true{datecirca}
       \field{dateera}{bce}
@@ -220,15 +220,15 @@ my $kck3 = q|    \entry{3631578538a2d6ba5879b31a9a42f290}{inbook}{skipbib=true,s
 |;
 
 my $kck4 = q|    \entry{caf8e34be07426ae7127c1b4829983c1}{inbook}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false,useeditor=false}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=a517747c3d12f99244ae598910d979c5}{%
            family={Author},
            familyi={A\bibinitperiod}}}%
       }
-      \list[msform=default,mslang=en-us]{location}{1}{%
+      \list[default][en-us]{location}{1}{%
         {Location}%
       }
-      \list[msform=default,mslang=en-us]{publisher}{1}{%
+      \list[default][en-us]{publisher}{1}{%
         {Publisher2}%
       }
       \strng{namehash}{a517747c3d12f99244ae598910d979c5}
@@ -238,13 +238,13 @@ my $kck4 = q|    \entry{caf8e34be07426ae7127c1b4829983c1}{inbook}{skipbib=true,s
       \strng{authordefaulten-usnamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authordefaulten-usfullhash}{a517747c3d12f99244ae598910d979c5}
       \field{labeldatesource}{}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
       \field{clonesourcekey}{key4}
-      \field[msform=default,mslang=en-us]{booktitle}{Booktitle}
+      \field[default][en-us]{booktitle}{Booktitle}
       \field{season}{summer}
-      \field[msform=default,mslang=en-us]{shorthand}{RK4}
-      \field[msform=default,mslang=en-us]{title}{Orig Language Title}
+      \field[default][en-us]{shorthand}{RK4}
+      \field[default][en-us]{title}{Orig Language Title}
       \field{year}{2011}
       \field{dateera}{ce}
       \field{pages}{33\bibrangedash 57}
@@ -272,7 +272,7 @@ my $c3k = q|    \entry{0a3d72134fb3d6c024db4c510bc1605b}{book}{skipbib=true,skip
 |;
 
 my $s1 = q|    \entry{8ddf878039b70767c4a5bcf4f0c4f65e}{book}{skipbib=false,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false,usecustom=false}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=a517747c3d12f99244ae598910d979c5}{%
            family={Author},
            familyi={A\\bibinitperiod}}}%
@@ -283,10 +283,10 @@ my $s1 = q|    \entry{8ddf878039b70767c4a5bcf4f0c4f65e}{book}{skipbib=false,skip
       \strng{authordefaulten-usbibnamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authordefaulten-usnamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authordefaulten-usfullhash}{a517747c3d12f99244ae598910d979c5}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
       \field{clonesourcekey}{s1}
-      \field[msform=default,mslang=en-us]{title}{Title 1}
+      \field[default][en-us]{title}{Title 1}
     \endentry
 |;
 
@@ -319,7 +319,7 @@ eq_or_diff( $out->get_output_entry('0a3d72134fb3d6c024db4c510bc1605b', $main), $
 eq_or_diff( $out->get_output_entry('8ddf878039b70767c4a5bcf4f0c4f65e', $main), $s1, 'Custom options - 1' ) ;
 
 my $un1 = q|    \entry{kullback}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=34c5bbf9876c37127c3abe4e7d7a7198}{%
            family={Kullback},
            familyi={K\bibinitperiod},
@@ -327,10 +327,10 @@ my $un1 = q|    \entry{kullback}{book}{}
            giveni={S\bibinitperiod},
            givenun=0}}%
       }
-      \list[msform=default,mslang=en-us]{location}{1}{%
+      \list[default][en-us]{location}{1}{%
         {New York}%
       }
-      \list[msform=default,mslang=en-us]{publisher}{1}{%
+      \list[default][en-us]{publisher}{1}{%
         {John Wiley \& Sons}%
       }
       \strng{namehash}{34c5bbf9876c37127c3abe4e7d7a7198}
@@ -343,17 +343,17 @@ my $un1 = q|    \entry{kullback}{book}{}
       \field{sortinit}{5}
       \strng{sortinithash}{5dd416adbafacc8226114bc0202d5fdd}
       \field{extradatescope}{year}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
       \field{langid}{english}
       \field{langidopts}{variant=american}
-      \field[msform=default,mslang=en-us]{title}{Information Theory and Statistics}
+      \field[default][en-us]{title}{Information Theory and Statistics}
       \field{year}{1959}
     \\endentry
 |;
 
 my $un2 = q|    \entry{kullback:related}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=34c5bbf9876c37127c3abe4e7d7a7198}{%
            family={Kullback},
            familyi={K\bibinitperiod},
@@ -361,10 +361,10 @@ my $un2 = q|    \entry{kullback:related}{book}{}
            giveni={S\bibinitperiod},
            givenun=0}}%
       }
-      \list[msform=default,mslang=en-us]{location}{1}{%
+      \list[default][en-us]{location}{1}{%
         {New York}%
       }
-      \list[msform=default,mslang=en-us]{publisher}{1}{%
+      \list[default][en-us]{publisher}{1}{%
         {Dover Publications}%
       }
       \strng{namehash}{34c5bbf9876c37127c3abe4e7d7a7198}
@@ -377,13 +377,13 @@ my $un2 = q|    \entry{kullback:related}{book}{}
       \field{sortinit}{6}
       \strng{sortinithash}{7851c86048328b027313775d8fbd2131}
       \field{extradatescope}{year}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
       \field{annotation}{A reprint of the \texttt{kullback} entry. Note the format of the \texttt{related} and \texttt{relatedtype} fields}
       \field{langid}{english}
       \field{langidopts}{variant=american}
       \field{relatedtype}{origpubin}
-      \field[msform=default,mslang=en-us]{title}{Information Theory and Statistics}
+      \field[default][en-us]{title}{Information Theory and Statistics}
       \field{year}{1997}
       \field{related}{7963607e635f427aafeffbf28942c3bb}
     \endentry

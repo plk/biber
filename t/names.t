@@ -180,7 +180,7 @@ my $namex1 =
       suffix              => {string => undef, initial => undef}};
 
 my $l1 = q|    \entry{L1}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=72287a68c1714cb1b9f4ab9e03a88b96}{%
            family={Adler},
            familyi={A\bibinitperiod},
@@ -195,12 +195,12 @@ my $l1 = q|    \entry{L1}{book}{}
       \strng{authordefaulten-usfullhash}{72287a68c1714cb1b9f4ab9e03a88b96}
       \field{sortinit}{A}
       \strng{sortinithash}{a3dcedd53b04d1adfd5ac303ecd5e6fa}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[default][en-us]{labelnamesource}{author}
     \endentry
 |;
 
 my $l2 = q|    \entry{L2}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=2098d59d0f19a2e003ee06c1aa750d57}{%
            family={Bull},
            familyi={B\bibinitperiod},
@@ -215,12 +215,12 @@ my $l2 = q|    \entry{L2}{book}{}
       \strng{authordefaulten-usfullhash}{2098d59d0f19a2e003ee06c1aa750d57}
       \field{sortinit}{B}
       \strng{sortinithash}{8de16967003c7207dae369d874f1456e}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[default][en-us]{labelnamesource}{author}
     \endentry
 |;
 
 my $l3 = q|    \entry{L3}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=c8b06fe88bde128b25eb0b3b1cc5837c}{%
            family={Crop},
            familyi={C\bibinitperiod},
@@ -235,12 +235,12 @@ my $l3 = q|    \entry{L3}{book}{}
       \strng{authordefaulten-usfullhash}{c8b06fe88bde128b25eb0b3b1cc5837c}
       \field{sortinit}{C}
       \strng{sortinithash}{4c244ceae61406cdc0cc2ce1cb1ff703}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[default][en-us]{labelnamesource}{author}
     \endentry
 |;
 
 my $l4 = q|    \entry{L4}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=5ec958b850c0c2de7de7c42c84b9c419}{%
            family={Decket},
            familyi={D\bibinitperiod},
@@ -255,12 +255,12 @@ my $l4 = q|    \entry{L4}{book}{}
       \strng{authordefaulten-usfullhash}{5ec958b850c0c2de7de7c42c84b9c419}
       \field{sortinit}{D}
       \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[default][en-us]{labelnamesource}{author}
     \endentry
 |;
 
 my $l5 = q|    \entry{L5}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=c6b9d281cc1ff3f35570f76f463d4244}{%
            family={Eel},
            familyi={E\\bibinitperiod},
@@ -277,12 +277,12 @@ my $l5 = q|    \entry{L5}{book}{}
       \strng{authordefaulten-usfullhash}{c6b9d281cc1ff3f35570f76f463d4244}
       \field{sortinit}{v}
       \strng{sortinithash}{02432525618c08e2b03cac47c19764af}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[default][en-us]{labelnamesource}{author}
     \endentry
 |;
 
 my $l6 = q|    \entry{L6}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=5fd24d3d1608a310ec205a6b201a5495}{%
            family={Frome},
            familyi={F\\bibinitperiod},
@@ -299,12 +299,12 @@ my $l6 = q|    \entry{L6}{book}{}
       \strng{authordefaulten-usfullhash}{5fd24d3d1608a310ec205a6b201a5495}
       \field{sortinit}{v}
       \strng{sortinithash}{02432525618c08e2b03cac47c19764af}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[default][en-us]{labelnamesource}{author}
     \endentry
 |;
 
 my $l7 = q|    \entry{L7}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=98edb0b90251df22b74328d9227eceb7}{%
            family={Gloom},
            familyi={G\\bibinitperiod},
@@ -321,12 +321,12 @@ my $l7 = q|    \entry{L7}{book}{}
       \strng{authordefaulten-usfullhash}{98edb0b90251df22b74328d9227eceb7}
       \field{sortinit}{v}
       \strng{sortinithash}{02432525618c08e2b03cac47c19764af}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[default][en-us]{labelnamesource}{author}
     \endentry
 |;
 
 my $l8 = q|    \entry{L8}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=1211dc8dbbc191cbcab4da3c3c1fc48a}{%
            family={Henkel},
            familyi={H\\bibinitperiod},
@@ -343,12 +343,12 @@ my $l8 = q|    \entry{L8}{book}{}
       \strng{authordefaulten-usfullhash}{1211dc8dbbc191cbcab4da3c3c1fc48a}
       \field{sortinit}{v}
       \strng{sortinithash}{02432525618c08e2b03cac47c19764af}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[default][en-us]{labelnamesource}{author}
     \endentry
 |;
 
 my $l9 = q|    \entry{L9}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=bae61a889ab149a6deafe45333204cf0}{%
            family={{Iliad Ipswich}},
            familyi={I\bibinitperiod},
@@ -363,13 +363,13 @@ my $l9 = q|    \entry{L9}{book}{}
       \strng{authordefaulten-usfullhash}{bae61a889ab149a6deafe45333204cf0}
       \field{sortinit}{I}
       \strng{sortinithash}{9417e9a1288a9371e2691d999083ed39}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[default][en-us]{labelnamesource}{author}
     \endentry
 |;
 
 
 my $l10 = q|    \entry{L10}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=37b4325752e394ddfb2fc810f6c88e27}{%
            family={Jolly},
            familyi={J\\bibinitperiod},
@@ -386,13 +386,13 @@ my $l10 = q|    \entry{L10}{book}{}
       \strng{authordefaulten-usfullhash}{37b4325752e394ddfb2fc810f6c88e27}
       \field{sortinit}{J}
       \strng{sortinithash}{c45040a764d616897e7f5b30174d7b92}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[default][en-us]{labelnamesource}{author}
     \endentry
 |;
 
 
 my $l10a = q|    \entry{L10a}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=7bf2c9d8b89a1930ee91bfddcaf20c9c}{%
            family={Pimentel},
            familyi={P\\bibinitperiod},
@@ -409,13 +409,13 @@ my $l10a = q|    \entry{L10a}{book}{}
       \strng{authordefaulten-usfullhash}{7bf2c9d8b89a1930ee91bfddcaf20c9c}
       \field{sortinit}{P}
       \strng{sortinithash}{bb5b15f2db90f7aef79bb9e83defefcb}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[default][en-us]{labelnamesource}{author}
     \endentry
 |;
 
 
 my $l11 = q|    \entry{L11}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=9f48d231be68c9435fab4faca55a5caf}{%
            family={Kluster},
            familyi={K\\bibinitperiod},
@@ -434,12 +434,12 @@ my $l11 = q|    \entry{L11}{book}{}
       \strng{authordefaulten-usfullhash}{9f48d231be68c9435fab4faca55a5caf}
       \field{sortinit}{v}
       \strng{sortinithash}{02432525618c08e2b03cac47c19764af}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[default][en-us]{labelnamesource}{author}
     \endentry
 |;
 
 my $l12 = q|    \entry{L12}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=d7ca88c13a8f7ce1c23e920010a31f83}{%
            family={Vallée\\bibnamedelima Poussin},
            familyi={V\\bibinitperiod\\bibinitdelim P\\bibinitperiod},
@@ -457,12 +457,12 @@ my $l12 = q|    \entry{L12}{book}{}
       \field{sortinit}{d}
       \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
       \true{uniqueprimaryauthor}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[default][en-us]{labelnamesource}{author}
     \endentry
 |;
 
 my $l13 = q|    \entry{L13}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=227ac48bb788a658cfaa4eefc71ff0cc}{%
            family={Van\bibnamedelimb de\bibnamedelima Graaff},
            familyi={V\bibinitperiod\bibinitdelim d\bibinitperiod\bibinitdelim G\bibinitperiod},
@@ -477,12 +477,12 @@ my $l13 = q|    \entry{L13}{book}{}
       \strng{authordefaulten-usfullhash}{227ac48bb788a658cfaa4eefc71ff0cc}
       \field{sortinit}{V}
       \strng{sortinithash}{02432525618c08e2b03cac47c19764af}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[default][en-us]{labelnamesource}{author}
     \endentry
 |;
 
 my $l14 = q|    \entry{L14}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=779475052c17ed56dc3be900d0dfdf87}{%
            family={St\bibnamedelima John-Mollusc},
            familyi={S\bibinitperiod\bibinitdelim J\bibinithyphendelim M\bibinitperiod},
@@ -497,12 +497,12 @@ my $l14 = q|    \entry{L14}{book}{}
       \strng{authordefaulten-usfullhash}{779475052c17ed56dc3be900d0dfdf87}
       \field{sortinit}{S}
       \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[default][en-us]{labelnamesource}{author}
     \endentry
 |;
 
 my $l15 = q|    \entry{L15}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=783c636e853e47a854ae034ebe9dde62}{%
            family={Gompel},
            familyi={G\\bibinitperiod},
@@ -520,12 +520,12 @@ my $l15 = q|    \entry{L15}{book}{}
       \field{extraname}{1}
       \field{sortinit}{v}
       \strng{sortinithash}{02432525618c08e2b03cac47c19764af}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[default][en-us]{labelnamesource}{author}
     \endentry
 |;
 
 my $l16 = q|    \entry{L16}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=783c636e853e47a854ae034ebe9dde62}{%
            family={Gompel},
            familyi={G\\bibinitperiod},
@@ -543,12 +543,12 @@ my $l16 = q|    \entry{L16}{book}{}
       \field{extraname}{2}
       \field{sortinit}{v}
       \strng{sortinithash}{02432525618c08e2b03cac47c19764af}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[default][en-us]{labelnamesource}{author}
     \endentry
 |;
 
 my $l17 = q|    \entry{L17}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=b51f667a3384d92ea5458ba80716bff7}{%
            family={Lovecraft},
            familyi={L\bibinitperiod},
@@ -564,12 +564,12 @@ my $l17 = q|    \entry{L17}{book}{}
       \field{extraname}{1}
       \field{sortinit}{L}
       \strng{sortinithash}{dad3efd0836470093a7b4a7bb756eb8c}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[default][en-us]{labelnamesource}{author}
     \endentry
 |;
 
 my $l18 = q|    \entry{L18}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=b51f667a3384d92ea5458ba80716bff7}{%
            family={Lovecraft},
            familyi={L\bibinitperiod},
@@ -585,12 +585,12 @@ my $l18 = q|    \entry{L18}{book}{}
       \field{extraname}{2}
       \field{sortinit}{L}
       \strng{sortinithash}{dad3efd0836470093a7b4a7bb756eb8c}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[default][en-us]{labelnamesource}{author}
     \endentry
 |;
 
 my $l19 = q|    \entry{L19}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=83caa52f21f97e572dd3267bdf62978a}{%
            family={Mustermann},
            familyi={M\bibinitperiod},
@@ -605,12 +605,12 @@ my $l19 = q|    \entry{L19}{book}{}
       \strng{authordefaulten-usfullhash}{83caa52f21f97e572dd3267bdf62978a}
       \field{sortinit}{M}
       \strng{sortinithash}{2e5c2f51f7fa2d957f3206819bf86dc3}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[default][en-us]{labelnamesource}{author}
     \endentry
 |;
 
 my $l19a = q|    \entry{L19a}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=0963f6904ccfeaac2770c5882a587001}{%
            family={Lam},
            familyi={L\bibinitperiod},
@@ -625,13 +625,13 @@ my $l19a = q|    \entry{L19a}{book}{}
       \strng{authordefaulten-usfullhash}{0963f6904ccfeaac2770c5882a587001}
       \field{sortinit}{L}
       \strng{sortinithash}{dad3efd0836470093a7b4a7bb756eb8c}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[default][en-us]{labelnamesource}{author}
     \endentry
 |;
 
 
 my $l20 = q|    \entry{L20}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=5f26c2f3b33095d5b005714893f4d698}{%
            family={Ford},
            familyi={F\bibinitperiod},
@@ -646,12 +646,12 @@ my $l20 = q|    \entry{L20}{book}{}
       \strng{authordefaulten-usfullhash}{5f26c2f3b33095d5b005714893f4d698}
       \field{sortinit}{F}
       \strng{sortinithash}{fb0c0faa89eb6abae8213bf60e6799ea}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[default][en-us]{labelnamesource}{author}
     \endentry
 |;
 
 my $l21 = q|    \entry{L21}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=4389a3c0dc7da74487b50808ba9436ad}{%
            family={Smith},
            familyi={S\bibinitperiod},
@@ -667,12 +667,12 @@ my $l21 = q|    \entry{L21}{book}{}
       \field{extraname}{1}
       \field{sortinit}{S}
       \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[default][en-us]{labelnamesource}{author}
     \endentry
 |;
 
 my $l22u = q|    \entry{L22}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=e58b861545799d0eaf883402a882126e}{%
            family={Šmith},
            familyi={Š\bibinitperiod},
@@ -688,13 +688,13 @@ my $l22u = q|    \entry{L22}{book}{}
       \field{extraname}{1}
       \field{sortinit}{Š}
       \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[default][en-us]{labelnamesource}{author}
     \endentry
 |;
 
 
 my $l22 = q|    \entry{L22}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=e58b861545799d0eaf883402a882126e}{%
            family={\v{S}mith},
            familyi={\v{S}\bibinitperiod},
@@ -710,13 +710,13 @@ my $l22 = q|    \entry{L22}{book}{}
       \field{extraname}{1}
       \field{sortinit}{\v{S}}
       \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[default][en-us]{labelnamesource}{author}
     \endentry
 |;
 
 
 my $l23 = q|    \entry{L23}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=4389a3c0dc7da74487b50808ba9436ad}{%
            family={Smith},
            familyi={S\bibinitperiod},
@@ -732,12 +732,12 @@ my $l23 = q|    \entry{L23}{book}{}
       \field{extraname}{2}
       \field{sortinit}{S}
       \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[default][en-us]{labelnamesource}{author}
     \endentry
 |;
 
 my $l24 = q|    \entry{L24}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=e58b861545799d0eaf883402a882126e}{%
            family={Šmith},
            familyi={Š\bibinitperiod},
@@ -753,12 +753,12 @@ my $l24 = q|    \entry{L24}{book}{}
       \field{extraname}{2}
       \field{sortinit}{Š}
       \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[default][en-us]{labelnamesource}{author}
     \endentry
 |;
 
 my $l25 = q|    \entry{L25}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=d7cd2c5ea0848abc3e90609558b84a45}{%
            family={{American Psychological Association, Task Force on the Sexualization of Girls}},
            familyi={A\bibinitperiod}}}%
@@ -771,12 +771,12 @@ my $l25 = q|    \entry{L25}{book}{}
       \strng{authordefaulten-usfullhash}{d7cd2c5ea0848abc3e90609558b84a45}
       \field{sortinit}{A}
       \strng{sortinithash}{a3dcedd53b04d1adfd5ac303ecd5e6fa}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[default][en-us]{labelnamesource}{author}
     \endentry
 |;
 
 my $l26 = q|    \entry{L26}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=8eee1dbafdbd0a4b73157e60f18b4784}{%
            family={{Sci-Art Publishers}},
            familyi={S\bibinitperiod}}}%
@@ -789,12 +789,12 @@ my $l26 = q|    \entry{L26}{book}{}
       \strng{authordefaulten-usfullhash}{8eee1dbafdbd0a4b73157e60f18b4784}
       \field{sortinit}{S}
       \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[default][en-us]{labelnamesource}{author}
     \endentry
 |;
 
 my $l29 = q|    \entry{L29}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=27ad192a3a715aa89152b2a4ee392e8c}{%
            family={{U.S. Department of Health and Human Services, National Institute of Mental Health, National Heart, Lung and Blood Institute}},
            familyi={U\bibinitperiod}}}%
@@ -807,26 +807,26 @@ my $l29 = q|    \entry{L29}{book}{}
       \strng{authordefaulten-usfullhash}{27ad192a3a715aa89152b2a4ee392e8c}
       \field{sortinit}{U}
       \strng{sortinithash}{77a6935510e008adcf5b555e7b4f0711}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[default][en-us]{labelnamesource}{author}
     \endentry
 |;
 
 my $l31 = q|    \entry{L31}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=29c3ff92fff79d09a8b44d2f775de0b1}{%
            family={\~{Z}elly},
            familyi={\~{Z}\\bibinitperiod},
            given={Arthur},
            giveni={A\bibinitperiod}}}%
       }
-      \name[msform=default,mslang=en-us]{editor}{1}{}{%
+      \name[default][en-us]{editor}{1}{}{%
         {{hash=29c3ff92fff79d09a8b44d2f775de0b1}{%
            family={\~{Z}elly},
            familyi={\~{Z}\\bibinitperiod},
            given={Arthur},
            giveni={A\bibinitperiod}}}%
       }
-      \name[msform=default,mslang=en-us]{translator}{1}{}{%
+      \name[default][en-us]{translator}{1}{}{%
         {{hash=29c3ff92fff79d09a8b44d2f775de0b1}{%
            family={{\~{Z}}elly},
            familyi={\~{Z}\\bibinitperiod},
@@ -848,7 +848,7 @@ my $l31 = q|    \entry{L31}{book}{}
       \field{sortinit}{\~{Z}}
       \strng{sortinithash}{8f7b480688e809b50b6f6577b16f3db5}
       \true{uniqueprimaryauthor}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[default][en-us]{labelnamesource}{author}
     \endentry
 |;
 

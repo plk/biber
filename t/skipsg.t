@@ -41,7 +41,7 @@ Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 
 
 my $S1 = q|    \entry{S1}{book}{skipbib=false,skipbiblist=false,skiplab=false}
-      \name[msform=default,mslang=en-us]{author}{2}{}{%
+      \name[default][en-us]{author}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
            familyi={D\bibinitperiod},
@@ -53,7 +53,7 @@ my $S1 = q|    \entry{S1}{book}{skipbib=false,skipbiblist=false,skiplab=false}
            given={Albert},
            giveni={A\bibinitperiod}}}%
       }
-      \list[msform=default,mslang=en-us]{publisher}{1}{%
+      \list[default][en-us]{publisher}{1}{%
         {Oxford}%
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
@@ -70,15 +70,15 @@ my $S1 = q|    \entry{S1}{book}{skipbib=false,skipbiblist=false,skiplab=false}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{year}
       \field{extraalpha}{1}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{title}{Title 1}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{title}{Title 1}
       \field{year}{1995}
     \endentry
 |;
 
 my $S2 = q|    \entry{S2}{book}{skipbib=false,skiplab=false}
-      \name[msform=default,mslang=en-us]{author}{2}{}{%
+      \name[default][en-us]{author}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
            familyi={D\bibinitperiod},
@@ -90,7 +90,7 @@ my $S2 = q|    \entry{S2}{book}{skipbib=false,skiplab=false}
            given={Albert},
            giveni={A\bibinitperiod}}}%
       }
-      \list[msform=default,mslang=en-us]{publisher}{1}{%
+      \list[default][en-us]{publisher}{1}{%
         {Oxford}%
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
@@ -107,15 +107,15 @@ my $S2 = q|    \entry{S2}{book}{skipbib=false,skiplab=false}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{year}
       \field{extraalpha}{2}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{title}{Title 2}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{title}{Title 2}
       \field{year}{1995}
     \endentry
 |;
 
 my $S3 = q|    \entry{S3}{book}{}
-      \name[msform=default,mslang=en-us]{author}{2}{}{%
+      \name[default][en-us]{author}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
            familyi={D\bibinitperiod},
@@ -127,7 +127,7 @@ my $S3 = q|    \entry{S3}{book}{}
            given={Albert},
            giveni={A\bibinitperiod}}}%
       }
-      \list[msform=default,mslang=en-us]{publisher}{1}{%
+      \list[default][en-us]{publisher}{1}{%
         {Oxford}%
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
@@ -139,9 +139,9 @@ my $S3 = q|    \entry{S3}{book}{}
       \field{sortinit}{D}
       \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
       \field{labeldatesource}{year}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{title}{Title 3}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{title}{Title 3}
       \field{year}{1995}
     \endentry
 |;

@@ -56,21 +56,21 @@ print "$stdout"; # needed for usual say(), dd() debugging due to capture() above
 
 # crossref field is included as the parent is included by being crossrefed >= mincrossrefs times
 my $cr1 = q|    \entry{cr1}{inbook}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=121b6dc164b5b619c81c670fbd823f12}{%
            family={Gullam},
            familyi={G\bibinitperiod},
            given={Graham},
            giveni={G\bibinitperiod}}}%
       }
-      \name[msform=default,mslang=en-us]{editor}{1}{}{%
+      \name[default][en-us]{editor}{1}{}{%
         {{hash=c129df5593fdaa7475548811bfbb227d}{%
            family={Erbriss},
            familyi={E\bibinitperiod},
            given={Edgar},
            giveni={E\bibinitperiod}}}%
       }
-      \list[msform=default,mslang=en-us]{publisher}{1}{%
+      \list[default][en-us]{publisher}{1}{%
         {Grimble}%
       }
       \strng{namehash}{121b6dc164b5b619c81c670fbd823f12}
@@ -87,14 +87,14 @@ my $cr1 = q|    \entry{cr1}{inbook}{}
       \true{singletitle}
       \true{uniquetitle}
       \true{uniquework}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{booktitle}{Graphs of the Continent}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{booktitle}{Graphs of the Continent}
       \strng{crossref}{cr_m}
       \field{eprintclass}{SOMECLASS}
       \field{eprinttype}{SomEPrFiX}
       \field{origyear}{1955}
-      \field[msform=default,mslang=en-us]{title}{Great and Good Graphs}
+      \field[default][en-us]{title}{Great and Good Graphs}
       \field{year}{1974}
       \field{origdateera}{ce}
     \endentry
@@ -102,24 +102,24 @@ my $cr1 = q|    \entry{cr1}{inbook}{}
 
 # crossref field is included as the parent is included by being crossrefed >= mincrossrefs times
 my $cr2 = q|    \entry{cr2}{inbook}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=2d51a96bc0a6804995b3a9ff350c3384}{%
            family={Fumble},
            familyi={F\bibinitperiod},
            given={Frederick},
            giveni={F\bibinitperiod}}}%
       }
-      \name[msform=default,mslang=en-us]{editor}{1}{}{%
+      \name[default][en-us]{editor}{1}{}{%
         {{hash=c129df5593fdaa7475548811bfbb227d}{%
            family={Erbriss},
            familyi={E\bibinitperiod},
            given={Edgar},
            giveni={E\bibinitperiod}}}%
       }
-      \list[msform=default,mslang=en-us]{institution}{1}{%
+      \list[default][en-us]{institution}{1}{%
         {Institution}%
       }
-      \list[msform=default,mslang=en-us]{publisher}{1}{%
+      \list[default][en-us]{publisher}{1}{%
         {Grimble}%
       }
       \strng{namehash}{2d51a96bc0a6804995b3a9ff350c3384}
@@ -136,12 +136,12 @@ my $cr2 = q|    \entry{cr2}{inbook}{}
       \true{singletitle}
       \true{uniquetitle}
       \true{uniquework}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{booktitle}{Graphs of the Continent}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{booktitle}{Graphs of the Continent}
       \strng{crossref}{cr_m}
       \field{origyear}{1943}
-      \field[msform=default,mslang=en-us]{title}{Fabulous Fourier Forms}
+      \field[default][en-us]{title}{Fabulous Fourier Forms}
       \field{year}{1974}
       \field{origdateera}{ce}
     \endentry
@@ -152,14 +152,14 @@ my $cr2 = q|    \entry{cr2}{inbook}{}
 # EDITOR and useeditor is false This is also why there is no
 # \true{uniquework}
 my $cr_m = q|    \entry{cr_m}{book}{}
-      \name[msform=default,mslang=en-us]{editor}{1}{}{%
+      \name[default][en-us]{editor}{1}{}{%
         {{hash=c129df5593fdaa7475548811bfbb227d}{%
            family={Erbriss},
            familyi={E\bibinitperiod},
            given={Edgar},
            giveni={E\bibinitperiod}}}%
       }
-      \list[msform=default,mslang=en-us]{publisher}{1}{%
+      \list[default][en-us]{publisher}{1}{%
         {Grimble}%
       }
       \strng{editordefaulten-usbibnamehash}{c129df5593fdaa7475548811bfbb227d}
@@ -169,29 +169,29 @@ my $cr_m = q|    \entry{cr_m}{book}{}
       \strng{sortinithash}{62eb2aa29549e4fdbd3cb154ec5711cb}
       \true{crossrefsource}
       \true{uniquetitle}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{title}{Graphs of the Continent}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{title}{Graphs of the Continent}
       \field{year}{1974}
     \endentry
 |;
 
 # crossref field is included as the parent is cited
 my $cr3 = q|    \entry{cr3}{inbook}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=2baf676a220704f6914223aefccaaa88}{%
            family={Aptitude},
            familyi={A\bibinitperiod},
            given={Arthur},
            giveni={A\bibinitperiod}}}%
       }
-      \name[msform=default,mslang=en-us]{editor}{1}{}{%
+      \name[default][en-us]{editor}{1}{}{%
         {{hash=a1f5c22413396d599ec766725b226735}{%
            family={Monkley},
            familyi={M\bibinitperiod},
            given={Mark},
            giveni={M\bibinitperiod}}}%
       }
-      \list[msform=default,mslang=en-us]{publisher}{1}{%
+      \list[default][en-us]{publisher}{1}{%
         {Rancour}%
       }
       \strng{namehash}{2baf676a220704f6914223aefccaaa88}
@@ -208,13 +208,13 @@ my $cr3 = q|    \entry{cr3}{inbook}{}
       \true{singletitle}
       \true{uniquetitle}
       \true{uniquework}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{booktitle}{Beasts of the Burbling Burns}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{booktitle}{Beasts of the Burbling Burns}
       \strng{crossref}{crt}
       \field{eprinttype}{sometype}
       \field{origyear}{1934}
-      \field[msform=default,mslang=en-us]{title}{Arrangements of All Articles}
+      \field[default][en-us]{title}{Arrangements of All Articles}
       \field{year}{1996}
       \field{origdateera}{ce}
     \endentry
@@ -222,21 +222,21 @@ my $cr3 = q|    \entry{cr3}{inbook}{}
 
 # No crossref field as parent is not cited (mincrossrefs < 2)
 my $cr4 = q|    \entry{cr4}{inbook}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=50ef7fd3a1be33bccc5de2768b013836}{%
            family={Mumble},
            familyi={M\bibinitperiod},
            given={Morris},
            giveni={M\bibinitperiod}}}%
       }
-      \name[msform=default,mslang=en-us]{editor}{1}{}{%
+      \name[default][en-us]{editor}{1}{}{%
         {{hash=6ea89bd4958743a20b70fe17647d6af5}{%
            family={Jermain},
            familyi={J\bibinitperiod},
            given={Jeremy},
            giveni={J\bibinitperiod}}}%
       }
-      \list[msform=default,mslang=en-us]{publisher}{1}{%
+      \list[default][en-us]{publisher}{1}{%
         {Pillsbury}%
       }
       \strng{namehash}{50ef7fd3a1be33bccc5de2768b013836}
@@ -253,11 +253,11 @@ my $cr4 = q|    \entry{cr4}{inbook}{}
       \true{singletitle}
       \true{uniquetitle}
       \true{uniquework}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{booktitle}{Vanquished, Victor, Vandal}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{booktitle}{Vanquished, Victor, Vandal}
       \field{origyear}{1911}
-      \field[msform=default,mslang=en-us]{title}{Enterprising Entities}
+      \field[default][en-us]{title}{Enterprising Entities}
       \field{year}{1945}
       \field{origdateera}{ce}
     \endentry
@@ -266,14 +266,14 @@ my $cr4 = q|    \entry{cr4}{inbook}{}
 # cited as normal
 # No singletitle as useeditor is false
 my $crt = q|    \entry{crt}{book}{}
-      \name[msform=default,mslang=en-us]{editor}{1}{}{%
+      \name[default][en-us]{editor}{1}{}{%
         {{hash=a1f5c22413396d599ec766725b226735}{%
            family={Monkley},
            familyi={M\bibinitperiod},
            given={Mark},
            giveni={M\bibinitperiod}}}%
       }
-      \list[msform=default,mslang=en-us]{publisher}{1}{%
+      \list[default][en-us]{publisher}{1}{%
         {Rancour}%
       }
       \strng{editordefaulten-usbibnamehash}{a1f5c22413396d599ec766725b226735}
@@ -282,27 +282,27 @@ my $crt = q|    \entry{crt}{book}{}
       \field{sortinit}{B}
       \strng{sortinithash}{8de16967003c7207dae369d874f1456e}
       \true{uniquetitle}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{title}{Beasts of the Burbling Burns}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{title}{Beasts of the Burbling Burns}
       \field{year}{1996}
     \endentry
 |;
 
 # various event fields inherited correctly
 my $cr6 = q|    \entry{cr6}{inproceedings}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=8ab39ee68c55046dc1f05d657fcefed9}{%
            family={Author},
            familyi={A\bibinitperiod},
            given={Firstname},
            giveni={F\bibinitperiod}}}%
       }
-      \name[msform=default,mslang=en-us]{editor}{1}{}{%
+      \name[default][en-us]{editor}{1}{}{%
         {{hash=344a7f427fb765610ef96eb7bce95257}{%
            family={Editor},
            familyi={E\bibinitperiod}}}%
       }
-      \list[msform=default,mslang=en-us]{location}{1}{%
+      \list[default][en-us]{location}{1}{%
         {Address}%
       }
       \strng{namehash}{8ab39ee68c55046dc1f05d657fcefed9}
@@ -319,9 +319,9 @@ my $cr6 = q|    \entry{cr6}{inproceedings}{}
       \strng{sortinithash}{a3dcedd53b04d1adfd5ac303ecd5e6fa}
       \true{uniquetitle}
       \true{uniquework}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{booktitle}{Manual booktitle}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{booktitle}{Manual booktitle}
       \field{eventday}{21}
       \field{eventendday}{24}
       \field{eventendmonth}{8}
@@ -329,8 +329,8 @@ my $cr6 = q|    \entry{cr6}{inproceedings}{}
       \field{eventmonth}{8}
       \field{eventtitle}{Title of the event}
       \field{eventyear}{2009}
-      \field[msform=default,mslang=en-us]{title}{Title of inproceeding}
-      \field[msform=default,mslang=en-us]{venue}{Location of event}
+      \field[default][en-us]{title}{Title of inproceeding}
+      \field[default][en-us]{venue}{Location of event}
       \field{year}{2009}
       \field{eventenddateera}{ce}
       \field{eventdateera}{ce}
@@ -341,21 +341,21 @@ my $cr6 = q|    \entry{cr6}{inproceedings}{}
 
 # Special fields inherited correctly
 my $cr7 = q|    \entry{cr7}{inbook}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=8ab39ee68c55046dc1f05d657fcefed9}{%
            family={Author},
            familyi={A\bibinitperiod},
            given={Firstname},
            giveni={F\bibinitperiod}}}%
       }
-      \name[msform=default,mslang=en-us]{bookauthor}{1}{}{%
+      \name[default][en-us]{bookauthor}{1}{}{%
         {{hash=91a1dd4aeed3c4ec29ca74c4e778be5f}{%
            family={Bookauthor},
            familyi={B\bibinitperiod},
            given={Brian},
            giveni={B\bibinitperiod}}}%
       }
-      \list[msform=default,mslang=en-us]{publisher}{1}{%
+      \list[default][en-us]{publisher}{1}{%
         {Publisher of proceeding}%
       }
       \strng{namehash}{8ab39ee68c55046dc1f05d657fcefed9}
@@ -372,12 +372,12 @@ my $cr7 = q|    \entry{cr7}{inbook}{}
       \strng{sortinithash}{a3dcedd53b04d1adfd5ac303ecd5e6fa}
       \true{uniquetitle}
       \true{uniquework}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{booksubtitle}{Book Subtitle}
-      \field[msform=default,mslang=en-us]{booktitle}{Book Title}
-      \field[msform=default,mslang=en-us]{booktitleaddon}{Book Titleaddon}
-      \field[msform=default,mslang=en-us]{title}{Title of Book bit}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{booksubtitle}{Book Subtitle}
+      \field[default][en-us]{booktitle}{Book Title}
+      \field[default][en-us]{booktitleaddon}{Book Titleaddon}
+      \field[default][en-us]{title}{Title of Book bit}
       \field{year}{2010}
       \field{pages}{123\bibrangedash 126}
       \range{pages}{4}
@@ -389,7 +389,7 @@ my $cr7 = q|    \entry{cr7}{inbook}{}
 
 # Default inheritance supressed except for specified
 my $cr8 = q|    \entry{cr8}{incollection}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=3d449e56eb3ca1ae80dc99a18d689795}{%
            family={Smith},
            familyi={S\bibinitperiod},
@@ -408,10 +408,10 @@ my $cr8 = q|    \entry{cr8}{incollection}{}
       \true{singletitle}
       \true{uniquetitle}
       \true{uniquework}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{booktitle}{Book Title}
-      \field[msform=default,mslang=en-us]{title}{Title of Collection bit}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{booktitle}{Book Title}
+      \field[default][en-us]{title}{Title of Collection bit}
       \field{year}{2010}
       \field{pages}{1\bibrangedash 12}
       \range{pages}{12}
@@ -420,7 +420,7 @@ my $cr8 = q|    \entry{cr8}{incollection}{}
 
 # xref field is included as the parent is included by being crossrefed >= mincrossrefs times
 my $xr1 = q|    \entry{xr1}{inbook}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=e0ecc4fc668ee499d1afba44e1ac064d}{%
            family={Zentrum},
            familyi={Z\bibinitperiod},
@@ -438,10 +438,10 @@ my $xr1 = q|    \entry{xr1}{inbook}{}
       \true{singletitle}
       \true{uniquetitle}
       \true{uniquework}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
       \field{origyear}{1921}
-      \field[msform=default,mslang=en-us]{title}{Moods Mildly Modified}
+      \field[default][en-us]{title}{Moods Mildly Modified}
       \strng{xref}{xrm}
       \field{origdateera}{ce}
     \endentry
@@ -449,7 +449,7 @@ my $xr1 = q|    \entry{xr1}{inbook}{}
 
 # xref field is included as the parent is included by being crossrefed >= mincrossrefs times
 my $xr2 = q|    \entry{xr2}{inbook}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=6afa09374ecfd6b394ce714d2d9709c7}{%
            family={Instant},
            familyi={I\bibinitperiod},
@@ -467,10 +467,10 @@ my $xr2 = q|    \entry{xr2}{inbook}{}
       \true{singletitle}
       \true{uniquetitle}
       \true{uniquework}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
       \field{origyear}{1926}
-      \field[msform=default,mslang=en-us]{title}{Migraines Multiplying Madly}
+      \field[default][en-us]{title}{Migraines Multiplying Madly}
       \strng{xref}{xrm}
       \field{origdateera}{ce}
     \endentry
@@ -480,14 +480,14 @@ my $xr2 = q|    \entry{xr2}{inbook}{}
 # labelname and labelname hashes because the only name is EDITOR and
 # useeditor is false
 my $xrm = q|    \entry{xrm}{book}{}
-      \name[msform=default,mslang=en-us]{editor}{1}{}{%
+      \name[default][en-us]{editor}{1}{}{%
         {{hash=809950f9b59ae207092b909a19dcb27b}{%
            family={Prendergast},
            familyi={P\bibinitperiod},
            given={Peter},
            giveni={P\bibinitperiod}}}%
       }
-      \list[msform=default,mslang=en-us]{publisher}{1}{%
+      \list[default][en-us]{publisher}{1}{%
         {Mainstream}%
       }
       \strng{editordefaulten-usbibnamehash}{809950f9b59ae207092b909a19dcb27b}
@@ -497,15 +497,15 @@ my $xrm = q|    \entry{xrm}{book}{}
       \strng{sortinithash}{4c244ceae61406cdc0cc2ce1cb1ff703}
       \true{xrefsource}
       \true{uniquetitle}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{title}{Calligraphy, Calisthenics, Culture}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{title}{Calligraphy, Calisthenics, Culture}
       \field{year}{1970}
     \endentry
 |;
 
 # xref field is included as the parent is cited
 my $xr3 = q|    \entry{xr3}{inbook}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=9788055665b9bb4b37c776c3f6b74f16}{%
            family={Normal},
            familyi={N\bibinitperiod},
@@ -523,10 +523,10 @@ my $xr3 = q|    \entry{xr3}{inbook}{}
       \true{singletitle}
       \true{uniquetitle}
       \true{uniquework}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
       \field{origyear}{1923}
-      \field[msform=default,mslang=en-us]{title}{Russian Regalia Revisited}
+      \field[default][en-us]{title}{Russian Regalia Revisited}
       \strng{xref}{xrt}
       \field{origdateera}{ce}
     \endentry
@@ -535,14 +535,14 @@ my $xr3 = q|    \entry{xr3}{inbook}{}
 # cited as normal
 # Note no singletitle as useeditor is false
 my $xrt = q|    \entry{xrt}{book}{}
-      \name[msform=default,mslang=en-us]{editor}{1}{}{%
+      \name[default][en-us]{editor}{1}{}{%
         {{hash=bf7d6b02f3e073913e5bfe5059508dd5}{%
            family={Lunders},
            familyi={L\bibinitperiod},
            given={Lucy},
            giveni={L\bibinitperiod}}}%
       }
-      \list[msform=default,mslang=en-us]{publisher}{1}{%
+      \list[default][en-us]{publisher}{1}{%
         {Middling}%
       }
       \strng{editordefaulten-usbibnamehash}{bf7d6b02f3e073913e5bfe5059508dd5}
@@ -551,8 +551,8 @@ my $xrt = q|    \entry{xrt}{book}{}
       \field{sortinit}{K}
       \strng{sortinithash}{d3edc18d54b9438a72c24c925bfb38f4}
       \true{uniquetitle}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{title}{Kings, Cork and Calculation}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{title}{Kings, Cork and Calculation}
       \field{year}{1977}
     \endentry
 |;
@@ -560,7 +560,7 @@ my $xrt = q|    \entry{xrt}{book}{}
 
 # No crossref field as parent is not cited (mincrossrefs < 2)
 my $xr4 = q|    \entry{xr4}{inbook}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=7804ffef086c0c4686c235807f5cb502}{%
            family={Mistrel},
            familyi={M\bibinitperiod},
@@ -576,10 +576,10 @@ my $xr4 = q|    \entry{xr4}{inbook}{}
       \field{extraname}{1}
       \field{sortinit}{M}
       \strng{sortinithash}{2e5c2f51f7fa2d957f3206819bf86dc3}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
       \field{origyear}{1933}
-      \field[msform=default,mslang=en-us]{title}{Lumbering Lunatics}
+      \field[default][en-us]{title}{Lumbering Lunatics}
       \strng{xref}{xrn}
       \field{origdateera}{ce}
     \endentry
@@ -588,7 +588,7 @@ my $xr4 = q|    \entry{xr4}{inbook}{}
 # Missing keys in xref/crossref should be deleted during datasource parse
 # So these two should have no xref/crossref data in them
 my $mxr = q|    \entry{mxr}{inbook}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=7804ffef086c0c4686c235807f5cb502}{%
            family={Mistrel},
            familyi={M\bibinitperiod},
@@ -604,16 +604,16 @@ my $mxr = q|    \entry{mxr}{inbook}{}
       \field{extraname}{2}
       \field{sortinit}{M}
       \strng{sortinithash}{2e5c2f51f7fa2d957f3206819bf86dc3}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
       \field{origyear}{1933}
-      \field[msform=default,mslang=en-us]{title}{Lumbering Lunatics}
+      \field[default][en-us]{title}{Lumbering Lunatics}
       \field{origdateera}{ce}
     \endentry
 |;
 
 my $mcr = q|    \entry{mcr}{inbook}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=7804ffef086c0c4686c235807f5cb502}{%
            family={Mistrel},
            familyi={M\bibinitperiod},
@@ -629,23 +629,23 @@ my $mcr = q|    \entry{mcr}{inbook}{}
       \field{extraname}{3}
       \field{sortinit}{M}
       \strng{sortinithash}{2e5c2f51f7fa2d957f3206819bf86dc3}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
       \field{origyear}{1933}
-      \field[msform=default,mslang=en-us]{title}{Lumbering Lunatics}
+      \field[default][en-us]{title}{Lumbering Lunatics}
       \field{origdateera}{ce}
     \endentry
 |;
 
 my $ccr1 = q|    \entry{ccr2}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=6268941b408d3263bddb208a54899ea9}{%
            family={Various},
            familyi={V\bibinitperiod},
            given={Vince},
            giveni={V\bibinitperiod}}}%
       }
-      \name[msform=default,mslang=en-us]{editor}{1}{}{%
+      \name[default][en-us]{editor}{1}{}{%
         {{hash=cfee758a1c82df2e26af1985e061bb0a}{%
            family={Editor},
            familyi={E\bibinitperiod},
@@ -666,24 +666,24 @@ my $ccr1 = q|    \entry{ccr2}{book}{}
       \strng{sortinithash}{02432525618c08e2b03cac47c19764af}
       \true{uniquetitle}
       \true{uniquework}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
       \strng{crossref}{ccr1}
-      \field[msform=default,mslang=en-us]{title}{Misc etc.}
+      \field[default][en-us]{title}{Misc etc.}
       \field{year}{1923}
       \field{dateera}{ce}
     \endentry
 |;
 
 my $ccr2 = q|    \entry{ccr3}{inbook}{}
-      \name[msform=default,mslang=en-us]{bookauthor}{1}{}{%
+      \name[default][en-us]{bookauthor}{1}{}{%
         {{hash=6268941b408d3263bddb208a54899ea9}{%
            family={Various},
            familyi={V\bibinitperiod},
            given={Vince},
            giveni={V\bibinitperiod}}}%
       }
-      \name[msform=default,mslang=en-us]{editor}{1}{}{%
+      \name[default][en-us]{editor}{1}{}{%
         {{hash=cfee758a1c82df2e26af1985e061bb0a}{%
            family={Editor},
            familyi={E\bibinitperiod},
@@ -699,10 +699,10 @@ my $ccr2 = q|    \entry{ccr3}{inbook}{}
       \field{sortinit}{P}
       \strng{sortinithash}{bb5b15f2db90f7aef79bb9e83defefcb}
       \true{uniquetitle}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{booktitle}{Misc etc.}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{booktitle}{Misc etc.}
       \strng{crossref}{ccr2}
-      \field[msform=default,mslang=en-us]{title}{Perhaps, Perchance, Possibilities?}
+      \field[default][en-us]{title}{Perhaps, Perchance, Possibilities?}
       \field{year}{1911}
       \field{dateera}{ce}
     \endentry
@@ -711,17 +711,17 @@ my $ccr2 = q|    \entry{ccr3}{inbook}{}
 # This is strange in what it gets from where but it shows information being inherited from two
 # sources
 my $ccr3 = q|    \entry{ccr4}{inbook}{}
-      \name[msform=default,mslang=en-us]{bookauthor}{1}{}{%
+      \name[default][en-us]{bookauthor}{1}{}{%
         {{hash=6268941b408d3263bddb208a54899ea9}{Various}{V\bibinitperiod}{Vince}{V\bibinitperiod}{}{}{}{}}%
       }
-      \name[msform=default,mslang=en-us]{editor}{1}{}{%
+      \name[default][en-us]{editor}{1}{}{%
         {{hash=cfee758a1c82df2e26af1985e061bb0a}{Editor}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
       }
       \field{sortinit}{V}
       \strng{sortinithash}{4125bb4c3a0eb3eaee3ea6da32eb70c8}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{booktitle}{Misc etc.}
-      \field[msform=default,mslang=en-us]{title}{Stuff Concerning Varia}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{booktitle}{Misc etc.}
+      \field[default][en-us]{title}{Stuff Concerning Varia}
       \field{year}{1911}
       \field{dateera}{ce}
     \endentry
@@ -731,21 +731,21 @@ my $s1 = q|    \entry{s1}{inbook}{}
       \field{sortinit}{S}
       \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
       \true{uniquetitle}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[default][en-us]{labeltitlesource}{title}
       \strng{crossref}{s2}
-      \field[msform=default,mslang=en-us]{title}{Subtitle}
+      \field[default][en-us]{title}{Subtitle}
     \endentry
 |;
 
 my $xc2 = q|    \entry{xc2}{inbook}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=1a0f7d518cccdad859a74412ef956474}{%
            family={Crust},
            familyi={C\bibinitperiod},
            given={Xavier},
            giveni={X\bibinitperiod}}}%
       }
-      \name[msform=default,mslang=en-us]{bookauthor}{1}{}{%
+      \name[default][en-us]{bookauthor}{1}{}{%
         {{hash=1a0f7d518cccdad859a74412ef956474}{%
            family={Crust},
            familyi={C\bibinitperiod},
@@ -765,8 +765,8 @@ my $xc2 = q|    \entry{xc2}{inbook}{}
       \field{sortinit}{C}
       \strng{sortinithash}{4c244ceae61406cdc0cc2ce1cb1ff703}
       \true{xrefsource}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{booktitle}{Title}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{booktitle}{Title}
     \endentry
 |;
 
@@ -791,7 +791,7 @@ my $b1 = q|    \entry{b1}{inbook}{}
 # in this case because of the "suppress=singletitle" in the inheritance
 # definitions in the .bcf
 my $sup1 = q|    \entry{sup1}{mvbook}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
            family={Smith},
            familyi={S\bibinitperiod},
@@ -809,14 +809,14 @@ my $sup1 = q|    \entry{sup1}{mvbook}{}
       \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
       \true{crossrefsource}
       \true{singletitle}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{title}{Title1}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{title}{Title1}
     \endentry
 |;
 
 my $sup2 = q|    \entry{sup2}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
            family={Smith},
            familyi={S\bibinitperiod},
@@ -833,11 +833,11 @@ my $sup2 = q|    \entry{sup2}{book}{}
       \field{sortinit}{S}
       \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
       \true{singletitle}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
       \strng{crossref}{sup1}
-      \field[msform=default,mslang=en-us]{note}{Book sup2}
-      \field[msform=default,mslang=en-us]{title}{Title1}
+      \field[default][en-us]{note}{Book sup2}
+      \field[default][en-us]{title}{Title1}
     \endentry
 |;
 

@@ -44,7 +44,7 @@ my $section = $biber->sections->get_section(0);
 my $main = $biber->datalists->get_list('nty/global//global/global');
 
 my $ann1 = q|    \entry{ann1}{misc}{}
-      \name[msform=default,mslang=en-us]{author}{3}{}{%
+      \name[default][en-us]{author}{3}{}{%
         {{hash=89a9e5097e11e595700540379c9b3a6b}{%
            family={Last1},
            familyi={L\\bibinitperiod},
@@ -74,20 +74,20 @@ my $ann1 = q|    \entry{ann1}{misc}{}
       \field{extraname}{1}
       \field{sortinit}{L}
       \strng{sortinithash}{dad3efd0836470093a7b4a7bb756eb8c}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{title}{The Title}
-      \annotation[msform=default,mslang=en-us]{field}{language}{default}{}{}{0}{ann4}
-      \annotation[msform=default,mslang=en-us]{field}{title}{default}{}{}{0}{one, two}
-      \annotation[msform=default,mslang=en-us]{item}{author}{default}{2}{}{0}{corresponding}
-      \annotation[msform=default,mslang=en-us]{item}{language}{default}{1}{}{0}{ann1}
-      \annotation[msform=default,mslang=en-us]{item}{language}{default}{2}{}{0}{ann2, ann3}
-      \annotation[msform=default,mslang=en-us]{part}{author}{default}{1}{family}{0}{student}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{title}{The Title}
+      \annotation[default][en-us]{field}{language}{default}{}{}{0}{ann4}
+      \annotation[default][en-us]{field}{title}{default}{}{}{0}{one, two}
+      \annotation[default][en-us]{item}{author}{default}{2}{}{0}{corresponding}
+      \annotation[default][en-us]{item}{language}{default}{1}{}{0}{ann1}
+      \annotation[default][en-us]{item}{language}{default}{2}{}{0}{ann2, ann3}
+      \annotation[default][en-us]{part}{author}{default}{1}{family}{0}{student}
     \endentry
 |;
 
 my $ann2 = q|    \entry{ann2}{misc}{}
-      \name[msform=default,mslang=en-us]{author}{3}{}{%
+      \name[default][en-us]{author}{3}{}{%
         {{hash=89a9e5097e11e595700540379c9b3a6b}{%
            family={Last1},
            familyi={L\bibinitperiod},
@@ -117,19 +117,19 @@ my $ann2 = q|    \entry{ann2}{misc}{}
       \field{extraname}{2}
       \field{sortinit}{L}
       \strng{sortinithash}{dad3efd0836470093a7b4a7bb756eb8c}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{title}{The Title}
-      \annotation[msform=default,mslang=en-us]{field}{language}{alt}{}{}{0}{annz}
-      \annotation[msform=default,mslang=en-us]{field}{language}{default}{}{}{0}{ann4}
-      \annotation[msform=default,mslang=en-us]{field}{title}{default}{}{}{1}{one}
-      \annotation[msform=default,mslang=en-us]{field}{title}{french}{}{}{1}{un}
-      \annotation[msform=default,mslang=en-us]{item}{author}{default}{2}{}{0}{corresponding}
-      \annotation[msform=default,mslang=en-us]{item}{language}{alt}{1}{}{0}{annx}
-      \annotation[msform=default,mslang=en-us]{item}{language}{alt}{2}{}{1}{anny}
-      \annotation[msform=default,mslang=en-us]{item}{language}{default}{1}{}{0}{ann1}
-      \annotation[msform=default,mslang=en-us]{item}{language}{default}{2}{}{1}{ann2}
-      \annotation[msform=default,mslang=en-us]{part}{author}{default}{1}{family}{1}{student}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{title}{The Title}
+      \annotation[default][en-us]{field}{language}{alt}{}{}{0}{annz}
+      \annotation[default][en-us]{field}{language}{default}{}{}{0}{ann4}
+      \annotation[default][en-us]{field}{title}{default}{}{}{1}{one}
+      \annotation[default][en-us]{field}{title}{french}{}{}{1}{un}
+      \annotation[default][en-us]{item}{author}{default}{2}{}{0}{corresponding}
+      \annotation[default][en-us]{item}{language}{alt}{1}{}{0}{annx}
+      \annotation[default][en-us]{item}{language}{alt}{2}{}{1}{anny}
+      \annotation[default][en-us]{item}{language}{default}{1}{}{0}{ann1}
+      \annotation[default][en-us]{item}{language}{default}{2}{}{1}{ann2}
+      \annotation[default][en-us]{part}{author}{default}{1}{family}{1}{student}
     \endentry
 |;
 

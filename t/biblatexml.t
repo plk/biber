@@ -53,7 +53,7 @@ my $bibentries = $section->bibentries;
 my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
       \true{moreauthor}
       \true{morelabelname}
-      \name[msform=default,mslang=en-us]{author}{3}{useprefix=true}{%
+      \name[default][en-us]{author}{3}{useprefix=true}{%
         {{hash=bdef740dab20c2b52a3b6e0563c42bdb}{%
            family={Булгаков},
            familyi={Б\\bibinitperiod},
@@ -74,14 +74,14 @@ my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
            given={Ашраф\\bibnamedelima Ахмедович},
            giveni={A\\bibinitperiod\\bibinitdelim А\\bibinitperiod}}}%
       }
-      \name[msform=default,mslang=en-us]{foreword}{1}{}{%
+      \name[default][en-us]{foreword}{1}{}{%
         {{hash=a7a73749ea467229221b7e9cbf870988}{%
            family={Brown},
            familyi={B\\bibinitperiod},
            given={John\\bibnamedelimb },
            giveni={J\\bibinitperiod}}}%
       }
-      \name[msform=default,mslang=en-us]{translator}{1}{}{%
+      \name[default][en-us]{translator}{1}{}{%
         {{hash=b44eba830fe9817fbe8e53c82f1cbe04}{%
            family={Smith},
            familyi={S\\bibinitperiod},
@@ -91,10 +91,10 @@ my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
       \list{language}{1}{%
         {russian}%
       }
-      \list[msform=default,mslang=en-us]{location}{1}{%
+      \list[default][en-us]{location}{1}{%
         {Москва}%
       }
-      \list[msform=default,mslang=en-us]{publisher}{1}{%
+      \list[default][en-us]{publisher}{1}{%
         {Наука}%
       }
       \strng{namehash}{3400c73d7bf3e361d36350deb4832ad7}
@@ -113,9 +113,9 @@ my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
       \strng{sortinithash}{02432525618c08e2b03cac47c19764af}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{addendum}{userc}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{addendum}{userc}
       \field{eventday}{16}
       \field{eventendday}{17}
       \field{eventendmonth}{5}
@@ -124,10 +124,10 @@ my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
       \field{eventyear}{1990}
       \field{origyear}{356}
       \field{pagetotal}{240}
-      \field[msform=default,mslang=en-us]{relatedstring}{Somestring}
+      \field[default][en-us]{relatedstring}{Somestring}
       \field{relatedtype}{reprint}
-      \field[msform=default,mslang=en-us]{series}{Научно-биографическая литература}
-      \field[msform=default,mslang=en-us]{title}{Мухаммад ибн муса ал-Хорезми. Около 783 – около 850}
+      \field[default][en-us]{series}{Научно-биографическая литература}
+      \field[default][en-us]{title}{Мухаммад ибн муса ал-Хорезми. Около 783 – около 850}
       \field{urlendyear}{}
       \field{urlyear}{1991}
       \field{userb}{usera}
@@ -143,15 +143,15 @@ my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
       \field{urldateera}{ce}
       \field{pages}{1\bibrangedash 10\bibrangessep 30\bibrangedash 34}
       \range{pages}{15}
-      \annotation[msform=default,mslang=en-us]{field}{author}{alt}{}{}{0}{names-ann3}
-      \annotation[msform=default,mslang=en-us]{field}{author}{default}{}{}{0}{names-ann}
-      \annotation[msform=default,mslang=en-us]{field}{language}{default}{}{}{0}{list-ann1}
-      \annotation[msform=default,mslang=en-us]{field}{title}{default}{}{}{0}{field-ann1}
-      \annotation[msform=default,mslang=en-us]{item}{author}{default}{1}{}{0}{name-ann1}
-      \annotation[msform=default,mslang=en-us]{item}{author}{default}{3}{}{0}{name-ann2}
-      \annotation[msform=default,mslang=en-us]{item}{language}{default}{1}{}{0}{item-ann1}
-      \annotation[msform=default,mslang=en-us]{part}{author}{default}{1}{given}{1}{namepart-ann1}
-      \annotation[msform=default,mslang=en-us]{part}{author}{default}{2}{family}{0}{namepart-ann2}
+      \annotation[default][en-us]{field}{author}{alt}{}{}{0}{names-ann3}
+      \annotation[default][en-us]{field}{author}{default}{}{}{0}{names-ann}
+      \annotation[default][en-us]{field}{language}{default}{}{}{0}{list-ann1}
+      \annotation[default][en-us]{field}{title}{default}{}{}{0}{field-ann1}
+      \annotation[default][en-us]{item}{author}{default}{1}{}{0}{name-ann1}
+      \annotation[default][en-us]{item}{author}{default}{3}{}{0}{name-ann2}
+      \annotation[default][en-us]{item}{language}{default}{1}{}{0}{item-ann1}
+      \annotation[default][en-us]{part}{author}{default}{1}{given}{1}{namepart-ann1}
+      \annotation[default][en-us]{part}{author}{default}{2}{family}{0}{namepart-ann2}
     \endentry
 |;
 

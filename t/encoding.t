@@ -33,7 +33,7 @@ Log::Log4perl->init(\$l4pconf);
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 
 my $encode1 = q|    \entry{testŠ}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=06a47edae2e847800cfd78323a0e6be8}{%
            family={Encalcer},
            familyi={E\bibinitperiod},
@@ -41,7 +41,7 @@ my $encode1 = q|    \entry{testŠ}{book}{}
            giveni={E\bibinitperiod},
            givenun=0}}%
       }
-      \list[msform=default,mslang=en-us]{publisher}{1}{%
+      \list[default][en-us]{publisher}{1}{%
         {A press}%
       }
       \strng{namehash}{06a47edae2e847800cfd78323a0e6be8}
@@ -55,15 +55,15 @@ my $encode1 = q|    \entry{testŠ}{book}{}
       \strng{sortinithash}{c554bd1a0b76ea92b9f105fe36d9c7b0}
       \field{labeldatesource}{year}
       \true{singletitle}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{title}{Šome title}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{title}{Šome title}
       \field{year}{1999}
     \endentry
 |;
 
 my $encode2 = q|    \entry{test1}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=06a47edae2e847800cfd78323a0e6be8}{%
            family={Encalcer},
            familyi={E\bibinitperiod},
@@ -71,7 +71,7 @@ my $encode2 = q|    \entry{test1}{book}{}
            giveni={E\bibinitperiod},
            givenun=0}}%
       }
-      \list[msform=default,mslang=en-us]{publisher}{1}{%
+      \list[default][en-us]{publisher}{1}{%
         {A press}%
       }
       \strng{namehash}{06a47edae2e847800cfd78323a0e6be8}
@@ -85,15 +85,15 @@ my $encode2 = q|    \entry{test1}{book}{}
       \strng{sortinithash}{c554bd1a0b76ea92b9f105fe36d9c7b0}
       \field{labeldatesource}{year}
       \true{singletitle}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{title}{Söme title}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{title}{Söme title}
       \field{year}{1999}
     \endentry
 |;
 
 my $encode3 = q|    \entry{test1}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=06a47edae2e847800cfd78323a0e6be8}{%
            family={Encalcer},
            familyi={E\bibinitperiod},
@@ -101,7 +101,7 @@ my $encode3 = q|    \entry{test1}{book}{}
            giveni={E\bibinitperiod},
            givenun=0}}%
       }
-      \list[msform=default,mslang=en-us]{publisher}{1}{%
+      \list[default][en-us]{publisher}{1}{%
         {A press}%
       }
       \strng{namehash}{06a47edae2e847800cfd78323a0e6be8}
@@ -115,15 +115,15 @@ my $encode3 = q|    \entry{test1}{book}{}
       \strng{sortinithash}{c554bd1a0b76ea92b9f105fe36d9c7b0}
       \field{labeldatesource}{year}
       \true{singletitle}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{title}{Żome title}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{title}{Żome title}
       \field{year}{1999}
     \endentry
 |;
 
 my $encode5 = q|    \entry{test}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=06a47edae2e847800cfd78323a0e6be8}{%
            family={Encalcer},
            familyi={E\bibinitperiod},
@@ -131,7 +131,7 @@ my $encode5 = q|    \entry{test}{book}{}
            giveni={E\bibinitperiod},
            givenun=0}}%
       }
-      \list[msform=default,mslang=en-us]{publisher}{1}{%
+      \list[default][en-us]{publisher}{1}{%
         {A press}%
       }
       \strng{namehash}{06a47edae2e847800cfd78323a0e6be8}
@@ -145,15 +145,15 @@ my $encode5 = q|    \entry{test}{book}{}
       \strng{sortinithash}{c554bd1a0b76ea92b9f105fe36d9c7b0}
       \field{labeldatesource}{year}
       \true{singletitle}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{title}{à titlé}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{title}{à titlé}
       \field{year}{1999}
     \endentry
 |;
 
 my $encode6 = q|    \entry{test}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=06a47edae2e847800cfd78323a0e6be8}{%
            family={Encalcer},
            familyi={E\bibinitperiod},
@@ -161,7 +161,7 @@ my $encode6 = q|    \entry{test}{book}{}
            giveni={E\bibinitperiod},
            givenun=0}}%
       }
-      \list[msform=default,mslang=en-us]{publisher}{1}{%
+      \list[default][en-us]{publisher}{1}{%
         {A press}%
       }
       \strng{namehash}{06a47edae2e847800cfd78323a0e6be8}
@@ -175,15 +175,15 @@ my $encode6 = q|    \entry{test}{book}{}
       \strng{sortinithash}{c554bd1a0b76ea92b9f105fe36d9c7b0}
       \field{labeldatesource}{year}
       \true{singletitle}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{title}{↑\`{a} titl\'{e}}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{title}{↑\`{a} titl\'{e}}
       \field{year}{1999}
     \endentry
 |;
 
 my $encode7 = q|    \entry{test}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=06a47edae2e847800cfd78323a0e6be8}{%
            family={Encalcer},
            familyi={E\bibinitperiod},
@@ -191,7 +191,7 @@ my $encode7 = q|    \entry{test}{book}{}
            giveni={E\bibinitperiod},
            givenun=0}}%
       }
-      \list[msform=default,mslang=en-us]{publisher}{1}{%
+      \list[default][en-us]{publisher}{1}{%
         {A press}%
       }
       \strng{namehash}{06a47edae2e847800cfd78323a0e6be8}
@@ -205,9 +205,9 @@ my $encode7 = q|    \entry{test}{book}{}
       \strng{sortinithash}{c554bd1a0b76ea92b9f105fe36d9c7b0}
       \field{labeldatesource}{year}
       \true{singletitle}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{title}{{$\uparrow$}\`{a} titl\'{e}}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{title}{{$\uparrow$}\`{a} titl\'{e}}
       \field{year}{1999}
     \endentry
 |;

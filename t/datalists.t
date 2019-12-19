@@ -167,17 +167,17 @@ is_deeply($biber->datalists->get_lists_by_attrs(section           => 0,
                                        labelalphanametemplatename => 'global')->[0]->get_keys, ['K11', 'K1', 'K2', 'K4', 'K3', 'K7', 'K5', 'K8', 'K9', 'K10', 'K12', 'K6'], 'List - sorting name key templates - 1');
 
 my $K11 = q|    \entry{K11}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{sortingnamekeytemplatename=snk1}{%
+      \name[default][en-us]{author}{1}{sortingnamekeytemplatename=snk1}{%
         {{hash=4edc280a0ef229f9c061e3b121b17482}{%
            family={Xanax},
            familyi={X\bibinitperiod},
            given={Xavier},
            giveni={X\bibinitperiod}}}%
       }
-      \list[msform=default,mslang=en-us]{location}{1}{%
+      \list[default][en-us]{location}{1}{%
         {Moscow}%
       }
-      \list[msform=default,mslang=en-us]{publisher}{1}{%
+      \list[default][en-us]{publisher}{1}{%
         {Publisher}%
       }
       \strng{namehash}{4edc280a0ef229f9c061e3b121b17482}
@@ -190,26 +190,26 @@ my $K11 = q|    \entry{K11}{book}{}
       \strng{sortinithash}{a3dcedd53b04d1adfd5ac303ecd5e6fa}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{title}{One}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{title}{One}
       \field{year}{1983}
       \field{dateera}{ce}
     \endentry
 |;
 
 my $K12 = q|    \entry{K12}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{sortingnamekeytemplatename=snk2,hash=a846a485fc9cbb59b0ebeedd6ac637e4}{%
            family={Allen},
            familyi={A\bibinitperiod},
            given={Arthur},
            giveni={A\bibinitperiod}}}%
       }
-      \list[msform=default,mslang=en-us]{location}{1}{%
+      \list[default][en-us]{location}{1}{%
         {Moscow}%
       }
-      \list[msform=default,mslang=en-us]{publisher}{1}{%
+      \list[default][en-us]{publisher}{1}{%
         {Publisher}%
       }
       \strng{namehash}{a846a485fc9cbb59b0ebeedd6ac637e4}
@@ -222,9 +222,9 @@ my $K12 = q|    \entry{K12}{book}{}
       \strng{sortinithash}{8f7b480688e809b50b6f6577b16f3db5}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{title}{Two}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{title}{Two}
       \field{year}{1983}
       \field{dateera}{ce}
     \endentry

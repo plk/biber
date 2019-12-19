@@ -20,7 +20,7 @@
 \refsection{0}
   \datalist[entry]{custom/global//global/global}
     \entry{F1}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
            familyi={D\bibinitperiod},
@@ -38,16 +38,16 @@
       \field{sortinit}{A}
       \strng{sortinithash}{a3dcedd53b04d1adfd5ac303ecd5e6fa}
       \true{singletitle}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{shorthand}{\emph{A}}
-      \field[msform=default,mslang=en-us]{title}{The Fullness of Times}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{shorthand}{\emph{A}}
+      \field[default][en-us]{title}{The Fullness of Times}
       \field{year}{1995}
     \endentry
   \enddatalist
   \datalist[list]{shorthand/global//global/global}
     \entry{F1}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
            familyi={D\bibinitperiod},
@@ -65,16 +65,16 @@
       \field{sortinit}{A}
       \strng{sortinithash}{a3dcedd53b04d1adfd5ac303ecd5e6fa}
       \true{singletitle}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{shorthand}{\emph{A}}
-      \field[msform=default,mslang=en-us]{title}{The Fullness of Times}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{shorthand}{\emph{A}}
+      \field[default][en-us]{title}{The Fullness of Times}
       \field{year}{1995}
     \endentry
   \enddatalist
   \datalist[entry]{nty/global//global/global}
     \entry{F1}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
            familyi={D\bibinitperiod},
@@ -92,10 +92,10 @@
       \field{sortinit}{D}
       \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
       \true{singletitle}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{shorthand}{\emph{A}}
-      \field[msform=default,mslang=en-us]{title}{The Fullness of Times}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{shorthand}{\emph{A}}
+      \field[default][en-us]{title}{The Fullness of Times}
       \field{year}{1995}
     \endentry
   \enddatalist

@@ -51,7 +51,7 @@ my $string1 = q|    \entry{Elias1955}{set}{}
 
 my $string2 = q|    \entry{Elias1955a}{article}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}
       \inset{Elias1955}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=68f587f427e068e26043d54745351d58}{%
            family={Elias},
            familyi={E\bibinitperiod},
@@ -65,13 +65,13 @@ my $string2 = q|    \entry{Elias1955a}{article}{skipbib=true,skipbiblist=true,sk
       \strng{authordefaulten-usnamehash}{68f587f427e068e26043d54745351d58}
       \strng{authordefaulten-usfullhash}{68f587f427e068e26043d54745351d58}
       \field{labeldatesource}{year}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
       \field{issn}{0096-1000}
-      \field[msform=default,mslang=en-us]{journaltitle}{IRE Transactions on Information Theory}
+      \field[default][en-us]{journaltitle}{IRE Transactions on Information Theory}
       \field{month}{3}
       \field{number}{1}
-      \field[msform=default,mslang=en-us]{title}{Predictive coding--I}
+      \field[default][en-us]{title}{Predictive coding--I}
       \field{volume}{1}
       \field{year}{1955}
       \field{pages}{16\bibrangedash 24}
@@ -85,7 +85,7 @@ my $string2 = q|    \entry{Elias1955a}{article}{skipbib=true,skipbiblist=true,sk
 
 my $string3 = q|    \entry{Elias1955b}{article}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}
       \inset{Elias1955}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=68f587f427e068e26043d54745351d58}{%
            family={Elias},
            familyi={E\bibinitperiod},
@@ -99,13 +99,13 @@ my $string3 = q|    \entry{Elias1955b}{article}{skipbib=true,skipbiblist=true,sk
       \strng{authordefaulten-usnamehash}{68f587f427e068e26043d54745351d58}
       \strng{authordefaulten-usfullhash}{68f587f427e068e26043d54745351d58}
       \field{labeldatesource}{year}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
       \field{issn}{0096-1000}
-      \field[msform=default,mslang=en-us]{journaltitle}{IRE Transactions on Information Theory}
+      \field[default][en-us]{journaltitle}{IRE Transactions on Information Theory}
       \field{month}{3}
       \field{number}{1}
-      \field[msform=default,mslang=en-us]{title}{Predictive coding--II}
+      \field[default][en-us]{title}{Predictive coding--II}
       \field{volume}{1}
       \field{year}{1955}
       \field{pages}{24\bibrangedash 33}

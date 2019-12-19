@@ -53,7 +53,7 @@ my $main = $biber->datalists->get_list('nty/global//global/global');
 my $bibentries = $section->bibentries;
 
 my $dl1 = q|    \entry{AbdelbarH98}{article}{}
-      \name[msform=default,mslang=en-us]{author}{2}{}{%
+      \name[default][en-us]{author}{2}{}{%
         {{un=0,uniquepart=base,hash=03fb065ad674e2c6269f3542112e30df}{%
            family={Abdelbar},
            familyi={A\bibinitperiod},
@@ -77,10 +77,10 @@ my $dl1 = q|    \entry{AbdelbarH98}{article}{}
       \strng{sortinithash}{a3dcedd53b04d1adfd5ac303ecd5e6fa}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{year}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{journaltitle}{Artificial Intelligence}
-      \field[msform=default,mslang=en-us]{title}{Approximating {MAP}s for belief networks is {NP}-hard and other theorems}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{journaltitle}{Artificial Intelligence}
+      \field[default][en-us]{title}{Approximating {MAP}s for belief networks is {NP}-hard and other theorems}
       \field{volume}{102}
       \field{year}{1998}
       \field{pages}{21\bibrangedash 38}

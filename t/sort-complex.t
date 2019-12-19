@@ -101,17 +101,17 @@ my $ss = { locale => 'en-US',
 my $l4 = q|    \entry{L4}{book}{}
       \true{moreauthor}
       \true{morelabelname}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
            familyi={D\bibinitperiod},
            given={John},
            giveni={J\bibinitperiod}}}%
       }
-      \list[msform=default,mslang=en-us]{location}{1}{%
+      \list[default][en-us]{location}{1}{%
         {Cambridge}%
       }
-      \list[msform=default,mslang=en-us]{publisher}{1}{%
+      \list[default][en-us]{publisher}{1}{%
         {Another press}%
       }
       \strng{namehash}{6eb389989020e8246fee90ac93fcecbe}
@@ -125,25 +125,25 @@ my $l4 = q|    \entry{L4}{book}{}
       \field{sortinit}{D}
       \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
       \field{extraalpha}{2}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{title}{Some title about sorting}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{title}{Some title about sorting}
       \field{year}{1995}
     \endentry
 |;
 
 my $l1 = q|    \entry{L1}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
            familyi={D\bibinitperiod},
            given={John},
            giveni={J\bibinitperiod}}}%
       }
-      \list[msform=default,mslang=en-us]{location}{1}{%
+      \list[default][en-us]{location}{1}{%
         {Cambridge}%
       }
-      \list[msform=default,mslang=en-us]{publisher}{1}{%
+      \list[default][en-us]{publisher}{1}{%
         {A press}%
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
@@ -157,25 +157,25 @@ my $l1 = q|    \entry{L1}{book}{}
       \field{sortinit}{D}
       \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
       \field{extraalpha}{1}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{title}{Algorithms For Sorting}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{title}{Algorithms For Sorting}
       \field{year}{1995}
     \endentry
 |;
 
 my $l2 = q|    \entry{L2}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
            familyi={D\bibinitperiod},
            given={John},
            giveni={J\bibinitperiod}}}%
       }
-      \list[msform=default,mslang=en-us]{location}{1}{%
+      \list[default][en-us]{location}{1}{%
         {Cambridge}%
       }
-      \list[msform=default,mslang=en-us]{publisher}{1}{%
+      \list[default][en-us]{publisher}{1}{%
         {A press}%
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
@@ -189,25 +189,25 @@ my $l2 = q|    \entry{L2}{book}{}
       \field{sortinit}{D}
       \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
       \field{extraalpha}{3}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{title}{Sorting Algorithms}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{title}{Sorting Algorithms}
       \field{year}{1995}
     \endentry
 |;
 
 my $l3 = q|    \entry{L3}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
            familyi={D\bibinitperiod},
            given={John},
            giveni={J\bibinitperiod}}}%
       }
-      \list[msform=default,mslang=en-us]{location}{1}{%
+      \list[default][en-us]{location}{1}{%
         {Cambridge}%
       }
-      \list[msform=default,mslang=en-us]{publisher}{1}{%
+      \list[default][en-us]{publisher}{1}{%
         {A press}%
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
@@ -221,9 +221,9 @@ my $l3 = q|    \entry{L3}{book}{}
       \field{sortinit}{D}
       \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
       \field{extraalpha}{2}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{title}{More and More Algorithms}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{title}{More and More Algorithms}
       \field{year}{1995}
     \endentry
 |;
@@ -231,17 +231,17 @@ my $l3 = q|    \entry{L3}{book}{}
 my $l5 = q|    \entry{L5}{book}{}
       \true{moreauthor}
       \true{morelabelname}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
            familyi={D\bibinitperiod},
            given={John},
            giveni={J\bibinitperiod}}}%
       }
-      \list[msform=default,mslang=en-us]{location}{1}{%
+      \list[default][en-us]{location}{1}{%
         {Cambridge}%
       }
-      \list[msform=default,mslang=en-us]{publisher}{1}{%
+      \list[default][en-us]{publisher}{1}{%
         {Another press}%
       }
       \strng{namehash}{6eb389989020e8246fee90ac93fcecbe}
@@ -255,9 +255,9 @@ my $l5 = q|    \entry{L5}{book}{}
       \field{sortinit}{D}
       \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
       \field{extraalpha}{1}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{title}{Some other title about sorting}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{title}{Some other title about sorting}
       \field{year}{1995}
     \endentry
 |;

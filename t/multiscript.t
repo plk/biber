@@ -72,7 +72,7 @@ eq_or_diff($bibentries->entry('bltx1')->get_field('author', 'transliteration', '
 
 # BBL output tests
 my $ms1 = q|    \entry{ms1}{article}{}
-      \name[msform=default,mslang=en-us]{author}{3}{}{%
+      \name[default][en-us]{author}{3}{}{%
         {{mslang=en-us,hash=c221fa2d0fd5443df81b6bc63acf958a}{%
            family={Smith},
            familyi={S\bibinitperiod},
@@ -87,7 +87,7 @@ my $ms1 = q|    \entry{ms1}{article}{}
            family={徐冰},
            familyi={徐\bibinitperiod}}}%
       }
-      \name[msform=transliteration,mslang=ru-grek]{author}{3}{}{%
+      \name[transliteration][ru-grek]{author}{3}{}{%
         {{mslang=en-us,hash=c221fa2d0fd5443df81b6bc63acf958a}{%
            family={Smith},
            familyi={S\bibinitperiod},
@@ -104,7 +104,7 @@ my $ms1 = q|    \entry{ms1}{article}{}
            given={Μπίνγκ},
            giveni={Μ\bibinitperiod}}}%
       }
-      \name[msform=transliteration,mslang=ru-latn]{author}{3}{}{%
+      \name[transliteration][ru-latn]{author}{3}{}{%
         {{mslang=en-us,hash=c221fa2d0fd5443df81b6bc63acf958a}{%
            family={Smith},
            familyi={S\bibinitperiod},
@@ -121,11 +121,11 @@ my $ms1 = q|    \entry{ms1}{article}{}
            given={Bing},
            giveni={B\bibinitperiod}}}%
       }
-      \list[msform=default,mslang=en-us]{location}{2}{%
+      \list[default][en-us]{location}{2}{%
         {locationa}%
         {Standortb}%
       }
-      \list[msform=translation,mslang=fr]{location}{2}{%
+      \list[translation][fr]{location}{2}{%
         {emplacementa}%
         {Standortb}%
       }
@@ -144,39 +144,39 @@ my $ms1 = q|    \entry{ms1}{article}{}
       \field{labelalpha}{SPXeS95}
       \field{sortinit}{S}
       \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
-      \field[msform=transliteration,mslang=ru-latn]{labelnamesource}{author}
-      \field[msform=translation,mslang=fr]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{title}{Title}
-      \field[msform=translation,mslang=fr]{title}{Titre}
+      \field[transliteration][ru-latn]{labelnamesource}{author}
+      \field[translation][fr]{labeltitlesource}{title}
+      \field[default][en-us]{title}{Title}
+      \field[translation][fr]{title}{Titre}
       \field{year}{1995}
       \field{dateera}{ce}
-      \annotation[msform=default,mslang=en-us]{item}{author}{langtags}{2}{}{0}{ru-Cyrl}
-      \annotation[msform=default,mslang=en-us]{item}{author}{langtags}{3}{}{0}{zh-Hant}
-      \annotation[msform=transliteration,mslang=ru-grek]{item}{author}{langtags}{1}{}{0}{en-US}
-      \annotation[msform=transliteration,mslang=ru-grek]{item}{author}{langtags}{3}{}{0}{zh-Grek}
-      \annotation[msform=transliteration,mslang=ru-latn]{item}{author}{langtags}{1}{}{0}{en-US}
-      \annotation[msform=transliteration,mslang=ru-latn]{item}{author}{langtags}{3}{}{0}{zh-Latn}
-      \annotation[msform=default,mslang=en-us]{item}{location}{langtags}{2}{}{0}{de}
-      \annotation[msform=translation,mslang=fr]{item}{location}{langtags}{2}{}{0}{de}
+      \annotation[default][en-us]{item}{author}{langtags}{2}{}{0}{ru-Cyrl}
+      \annotation[default][en-us]{item}{author}{langtags}{3}{}{0}{zh-Hant}
+      \annotation[transliteration][ru-grek]{item}{author}{langtags}{1}{}{0}{en-US}
+      \annotation[transliteration][ru-grek]{item}{author}{langtags}{3}{}{0}{zh-Grek}
+      \annotation[transliteration][ru-latn]{item}{author}{langtags}{1}{}{0}{en-US}
+      \annotation[transliteration][ru-latn]{item}{author}{langtags}{3}{}{0}{zh-Latn}
+      \annotation[default][en-us]{item}{location}{langtags}{2}{}{0}{de}
+      \annotation[translation][fr]{item}{location}{langtags}{2}{}{0}{de}
     \endentry
 |;
 
 my $ms2 = q|    \entry{ms2}{inbook}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=02c5906bf7d6156a9695735b750c744b}{%
            family={Treacle},
            familyi={T\bibinitperiod},
            given={Alan},
            giveni={A\bibinitperiod}}}%
       }
-      \name[msform=transliteration,mslang=ru-latn]{author}{1}{}{%
+      \name[transliteration][ru-latn]{author}{1}{}{%
         {{hash=cb8bc4824dfe756730d5837418bf5b53}{%
            family={Clever},
            familyi={C\bibinitperiod},
            given={Clive},
            giveni={C\bibinitperiod}}}%
       }
-      \name[msform=default,mslang=de-de]{editor}{1}{}{%
+      \name[default][de-de]{editor}{1}{}{%
         {{hash=da4e9104ade84cb0fcd815add03dd1fd}{%
            family={Gimble},
            familyi={G\bibinitperiod},
@@ -198,10 +198,10 @@ my $ms2 = q|    \entry{ms2}{inbook}{}
       \field{labelalpha}{Cle96}
       \field{sortinit}{C}
       \strng{sortinithash}{4c244ceae61406cdc0cc2ce1cb1ff703}
-      \field[msform=transliteration,mslang=ru-latn]{labelnamesource}{author}
-      \field[msform=default,mslang=de-de]{booktitle}{Book Title}
-      \field[msform=translated,mslang=fr]{booktitle}{Livre Titre}
-      \field[msform=default,mslang=en-us]{title}{Title}
+      \field[transliteration][ru-latn]{labelnamesource}{author}
+      \field[default][de-de]{booktitle}{Book Title}
+      \field[translated][fr]{booktitle}{Livre Titre}
+      \field[default][en-us]{title}{Title}
       \field{year}{1996}
       \field{dateera}{ce}
     \endentry

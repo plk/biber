@@ -47,7 +47,7 @@ my $main = $biber->datalists->get_list('nty/global//global/global');
 my $out = $biber->get_output_obj;
 
 my $us1 = q|    \entry{us1}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=6a9b0705c275273262103333472cc656}{%
            family={Elk},
            familyi={E\bibinitperiod},
@@ -66,9 +66,9 @@ my $us1 = q|    \entry{us1}{book}{}
       \strng{sortinithash}{c554bd1a0b76ea92b9f105fe36d9c7b0}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{title}{A Theory on Brontosauruses}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{title}{A Theory on Brontosauruses}
       \field{year}{1972}
       \field{dateera}{ce}
     \endentry
@@ -77,7 +77,7 @@ my $us1 = q|    \entry{us1}{book}{}
 my $us2a = q|    \entry{us2}{book}{}
       \true{moreauthor}
       \true{morelabelname}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=6a9b0705c275273262103333472cc656}{%
            family={Elk},
            familyi={E\bibinitperiod},
@@ -96,16 +96,16 @@ my $us2a = q|    \entry{us2}{book}{}
       \strng{sortinithash}{c554bd1a0b76ea92b9f105fe36d9c7b0}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{title}{A Theory on Einiosauruses}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{title}{A Theory on Einiosauruses}
       \field{year}{1972}
       \field{dateera}{ce}
     \endentry
 |;
 
 my $us3 = q|    \entry{us3}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=e06f6e5a8c1d5204dea326aa5f4f8d17}{%
            family={Uthor},
            familyi={U\bibinitperiod},
@@ -124,9 +124,9 @@ my $us3 = q|    \entry{us3}{book}{}
       \strng{sortinithash}{77a6935510e008adcf5b555e7b4f0711}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{title}{Title B}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{title}{Title B}
       \field{year}{2000}
       \field{dateera}{ce}
     \endentry
@@ -134,7 +134,7 @@ my $us3 = q|    \entry{us3}{book}{}
 
 
 my $us4a = q|    \entry{us4}{book}{}
-      \name[msform=default,mslang=en-us]{author}{4}{}{%
+      \name[default][en-us]{author}{4}{}{%
         {{un=0,uniquepart=base,hash=e06f6e5a8c1d5204dea326aa5f4f8d17}{%
            family={Uthor},
            familyi={U\bibinitperiod},
@@ -174,9 +174,9 @@ my $us4a = q|    \entry{us4}{book}{}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
       \field{extraalpha}{1}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{title}{Title A}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{title}{Title A}
       \field{year}{2000}
       \field{dateera}{ce}
     \endentry
@@ -185,7 +185,7 @@ my $us4a = q|    \entry{us4}{book}{}
 my $us2b = q|    \entry{us2}{book}{}
       \true{moreauthor}
       \true{morelabelname}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=6a9b0705c275273262103333472cc656}{%
            family={Elk},
            familyi={E\bibinitperiod},
@@ -206,9 +206,9 @@ my $us2b = q|    \entry{us2}{book}{}
       \field{extradate}{2}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{title}{A Theory on Einiosauruses}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{title}{A Theory on Einiosauruses}
       \field{year}{1972}
       \field{dateera}{ce}
     \endentry
@@ -216,7 +216,7 @@ my $us2b = q|    \entry{us2}{book}{}
 
 
 my $us4b = q|    \entry{us4}{book}{}
-      \name[msform=default,mslang=en-us]{author}{4}{}{%
+      \name[default][en-us]{author}{4}{}{%
         {{un=0,uniquepart=base,hash=e06f6e5a8c1d5204dea326aa5f4f8d17}{%
            family={Uthor},
            familyi={U\bibinitperiod},
@@ -256,16 +256,16 @@ my $us4b = q|    \entry{us4}{book}{}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
       \field{extraalpha}{1}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{title}{Title A}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{title}{Title A}
       \field{year}{2000}
       \field{dateera}{ce}
     \endentry
 |;
 
 my $us6 = q|    \entry{us6}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=cbe9a5912d961199801c3fcd32356ecf}{%
            family={Red},
            familyi={R\bibinitperiod},
@@ -284,9 +284,9 @@ my $us6 = q|    \entry{us6}{book}{}
       \strng{sortinithash}{b9c68a358aea118dfa887b6e902414a7}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{title}{Ragged Rubles}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{title}{Ragged Rubles}
       \field{year}{1971}
       \field{dateera}{ce}
     \endentry
@@ -295,7 +295,7 @@ my $us6 = q|    \entry{us6}{book}{}
 my $us7 = q|    \entry{us7}{misc}{}
       \true{moreauthor}
       \true{morelabelname}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=cbe9a5912d961199801c3fcd32356ecf}{%
            family={Red},
            familyi={R\bibinitperiod},
@@ -314,16 +314,16 @@ my $us7 = q|    \entry{us7}{misc}{}
       \strng{sortinithash}{b9c68a358aea118dfa887b6e902414a7}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{title}{Ragged Rupees}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{title}{Ragged Rupees}
       \field{year}{1971}
       \field{dateera}{ce}
     \endentry
 |;
 
 my $us8 = q|    \entry{us8}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=a280925c093d27fe81e88f11d8f0e537}{%
            family={Sly},
            familyi={S\bibinitperiod},
@@ -344,16 +344,16 @@ my $us8 = q|    \entry{us8}{book}{}
       \field{extradate}{1}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{title}{Title B}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{title}{Title B}
       \field{year}{2000}
       \field{dateera}{ce}
     \endentry
 |;
 
 my $us9 = q|    \entry{us9}{book}{}
-      \name[msform=default,mslang=en-us]{author}{4}{}{%
+      \name[default][en-us]{author}{4}{}{%
         {{un=0,uniquepart=base,hash=a280925c093d27fe81e88f11d8f0e537}{%
            family={Sly},
            familyi={S\bibinitperiod},
@@ -391,9 +391,9 @@ my $us9 = q|    \entry{us9}{book}{}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
       \field{extraalpha}{1}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{title}{Title A}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{title}{Title A}
       \field{year}{2000}
       \field{dateera}{ce}
     \endentry

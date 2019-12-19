@@ -75,7 +75,7 @@ vangennep knuth:ct angenendtsa spiegelberg bertram brandt set:aksin chiu nietzsc
 set:yoon maron coleridge tvonb t2 u1 u2 i1 i2 tmn1 tmn2 tmn3 tmn4 lne1 alias1 alias2 alias5 url1 ol1 pages1 pages2 pages3 pages4 pages5 pages6 pages7 pages8 us1 labelstest list1 sn1 pages9 isbn1 isbn2 snk1 clone-snk1 newtestkey ent1 avona rvonr verb1 over1 others1 others2 recurse1 final};
 
 my $u1 = q|    \entry{u1}{misc}{}
-      \name[msform=default,mslang=en-us]{author}{4}{ul=4}{%
+      \name[default][en-us]{author}{4}{ul=4}{%
         {{un=0,uniquepart=base,hash=e1faffb3e614e6c2fba74296962386b7}{%
            family={AAA},
            familyi={A\bibinitperiod}}}%
@@ -100,10 +100,10 @@ my $u1 = q|    \entry{u1}{misc}{}
       \strng{sortinithash}{a3dcedd53b04d1adfd5ac303ecd5e6fa}
       \true{singletitle}
       \true{uniquework}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{note}{0}
-      \field[msform=default,mslang=en-us]{title}{A title}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{note}{0}
+      \field[default][en-us]{title}{A title}
       \field{year}{2000}
       \field{dateera}{ce}
     \endentry
@@ -137,7 +137,7 @@ $out = $biber->get_output_obj;
 is_deeply( \@keys, \@allkeys, 'citekeys 2') ;
 
 my $murray1 = q|    \entry{murray}{article}{}
-      \name[msform=default,mslang=en-us]{author}{14}{}{%
+      \name[default][en-us]{author}{14}{}{%
         {{un=0,uniquepart=base,hash=1c180cd8a2042c60a0f1dda22e34794a}{%
            family={Hostetler},
            familyi={H\bibinitperiod},
@@ -234,17 +234,17 @@ my $murray1 = q|    \entry{murray}{article}{}
       \strng{sortinithash}{6db6145dae8dc9e1271a8d556090b50a}
       \true{singletitle}
       \true{uniquework}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{shorttitle}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{shorttitle}
       \field{annotation}{An \texttt{article} entry with \arabic{author} authors. By default, long author and editor lists are automatically truncated. This is configurable}
       \field{indextitle}{Alkanethiolate gold cluster molecules}
-      \field[msform=default,mslang=en-us]{journaltitle}{Langmuir}
+      \field[default][en-us]{journaltitle}{Langmuir}
       \field{langid}{english}
       \field{langidopts}{variant=american}
       \field{number}{1}
-      \field[msform=default,mslang=en-us]{shorttitle}{Alkanethiolate gold cluster molecules}
-      \field[msform=default,mslang=en-us]{subtitle}{Core and monolayer properties as a function of core size}
-      \field[msform=default,mslang=en-us]{title}{Alkanethiolate gold cluster molecules with core diameters from 1.5 to 5.2~nm}
+      \field[default][en-us]{shorttitle}{Alkanethiolate gold cluster molecules}
+      \field[default][en-us]{subtitle}{Core and monolayer properties as a function of core size}
+      \field[default][en-us]{title}{Alkanethiolate gold cluster molecules with core diameters from 1.5 to 5.2~nm}
       \field{volume}{14}
       \field{year}{1998}
       \field{pages}{17\bibrangedash 30}
@@ -254,7 +254,7 @@ my $murray1 = q|    \entry{murray}{article}{}
 |;
 
 my $murray2 = q|    \entry{murray}{article}{}
-      \name[msform=default,mslang=en-us]{author}{14}{}{%
+      \name[default][en-us]{author}{14}{}{%
         {{un=0,uniquepart=base,hash=1c180cd8a2042c60a0f1dda22e34794a}{%
            family={Hostetler},
            familyi={H\bibinitperiod},
@@ -351,17 +351,17 @@ my $murray2 = q|    \entry{murray}{article}{}
       \strng{sortinithash}{6db6145dae8dc9e1271a8d556090b50a}
       \true{singletitle}
       \true{uniquework}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{shorttitle}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{shorttitle}
       \field{annotation}{An \texttt{article} entry with \arabic{author} authors. By default, long author and editor lists are automatically truncated. This is configurable}
       \field{indextitle}{Alkanethiolate gold cluster molecules}
-      \field[msform=default,mslang=en-us]{journaltitle}{Langmuir}
+      \field[default][en-us]{journaltitle}{Langmuir}
       \field{langid}{english}
       \field{langidopts}{variant=american}
       \field{number}{1}
-      \field[msform=default,mslang=en-us]{shorttitle}{Alkanethiolate gold cluster molecules}
-      \field[msform=default,mslang=en-us]{subtitle}{Core and monolayer properties as a function of core size}
-      \field[msform=default,mslang=en-us]{title}{Alkanethiolate gold cluster molecules with core diameters from 1.5 to 5.2~nm}
+      \field[default][en-us]{shorttitle}{Alkanethiolate gold cluster molecules}
+      \field[default][en-us]{subtitle}{Core and monolayer properties as a function of core size}
+      \field[default][en-us]{title}{Alkanethiolate gold cluster molecules with core diameters from 1.5 to 5.2~nm}
       \field{volume}{14}
       \field{year}{1998}
       \field{pages}{17\bibrangedash 30}
@@ -372,7 +372,7 @@ my $murray2 = q|    \entry{murray}{article}{}
 
 # This example wouldn't compile - it's just to test escaping
 my $t1 = q+    \entry{t1}{misc}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=858fcf9483ec29b7707a7dda2dde7a6f}{%
            family={Brown},
            familyi={B\bibinitperiod},
@@ -391,9 +391,9 @@ my $t1 = q+    \entry{t1}{misc}{}
       \field{sortinit}{B}
       \strng{sortinithash}{8de16967003c7207dae369d874f1456e}
       \true{uniquework}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{title}{10\\% of [100] and 90% of $Normal_2$ | \\& # things {$^3$}}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{title}{10\\% of [100] and 90% of $Normal_2$ | \\& # things {$^3$}}
       \field{year}{1992}
       \field{pages}{100\bibrangedash}
       \range{pages}{-1}
@@ -402,7 +402,7 @@ my $t1 = q+    \entry{t1}{misc}{}
 +;
 
 my $t2 = q|    \entry{t2}{misc}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=858fcf9483ec29b7707a7dda2dde7a6f}{%
            family={Brown},
            familyi={B\bibinitperiod},
@@ -421,9 +421,9 @@ my $t2 = q|    \entry{t2}{misc}{}
       \field{sortinit}{B}
       \strng{sortinithash}{8de16967003c7207dae369d874f1456e}
       \true{uniquework}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{title}
-      \field[msform=default,mslang=en-us]{title}{Signs of W$\\frac{o}{a}$nder}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{labeltitlesource}{title}
+      \field[default][en-us]{title}{Signs of W$\\frac{o}{a}$nder}
       \field{year}{1994}
       \field{pages}{100\bibrangedash 108}
       \range{pages}{9}
@@ -431,12 +431,12 @@ my $t2 = q|    \entry{t2}{misc}{}
 |;
 
 my $anon1 = q|    \entry{anon1}{unpublished}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=a66f357fe2fd356fe49959173522a651}{%
            family={AnonymousX},
            familyi={A\bibinitperiod}}}%
       }
-      \name[msform=default,mslang=en-us]{shortauthor}{1}{}{%
+      \name[default][en-us]{shortauthor}{1}{}{%
         {{un=0,uniquepart=base,hash=9873a6cc65c553faa2b21aaad626fe4b}{%
            family={XAnony},
            familyi={X\bibinitperiod}}}%
@@ -455,13 +455,13 @@ my $anon1 = q|    \entry{anon1}{unpublished}{}
       \strng{sortinithash}{a3dcedd53b04d1adfd5ac303ecd5e6fa}
       \true{singletitle}
       \true{uniquework}
-      \field[msform=default,mslang=en-us]{labelnamesource}{shortauthor}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{shorttitle}
+      \field[default][en-us]{labelnamesource}{shortauthor}
+      \field[default][en-us]{labeltitlesource}{shorttitle}
       \field{langid}{english}
       \field{langidopts}{variant=american}
-      \field[msform=default,mslang=en-us]{note}{anon1}
-      \field[msform=default,mslang=en-us]{shorttitle}{Shorttitle}
-      \field[msform=default,mslang=en-us]{title}{Title1}
+      \field[default][en-us]{note}{anon1}
+      \field[default][en-us]{shorttitle}{Shorttitle}
+      \field[default][en-us]{title}{Title1}
       \field{year}{1835}
       \field{pages}{111\bibrangedash 118}
       \range{pages}{8}
@@ -470,12 +470,12 @@ my $anon1 = q|    \entry{anon1}{unpublished}{}
 |;
 
 my $anon2 = q|    \entry{anon2}{unpublished}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{hash=a0bccee4041bc840e14c06e5ba7f083c}{%
            family={AnonymousY},
            familyi={A\bibinitperiod}}}%
       }
-      \name[msform=default,mslang=en-us]{shortauthor}{1}{}{%
+      \name[default][en-us]{shortauthor}{1}{}{%
         {{un=0,uniquepart=base,hash=f64c29e89ea49402b997956610b58ef6}{%
            family={YAnony},
            familyi={Y\bibinitperiod}}}%
@@ -494,13 +494,13 @@ my $anon2 = q|    \entry{anon2}{unpublished}{}
       \strng{sortinithash}{a3dcedd53b04d1adfd5ac303ecd5e6fa}
       \true{singletitle}
       \true{uniquework}
-      \field[msform=default,mslang=en-us]{labelnamesource}{shortauthor}
-      \field[msform=default,mslang=en-us]{labeltitlesource}{shorttitle}
+      \field[default][en-us]{labelnamesource}{shortauthor}
+      \field[default][en-us]{labeltitlesource}{shorttitle}
       \field{langid}{english}
       \field{langidopts}{variant=american}
-      \field[msform=default,mslang=en-us]{note}{anon2}
-      \field[msform=default,mslang=en-us]{shorttitle}{Shorttitle}
-      \field[msform=default,mslang=en-us]{title}{Title2}
+      \field[default][en-us]{note}{anon2}
+      \field[default][en-us]{shorttitle}{Shorttitle}
+      \field[default][en-us]{title}{Title2}
       \field{year}{1839}
       \field{pages}{1176\bibrangedash 1276}
       \range{pages}{101}
@@ -509,7 +509,7 @@ my $anon2 = q|    \entry{anon2}{unpublished}{}
 |;
 
 my $url1 = q|    \entry{url1}{misc}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=b2106a3dda6c5a4879a0cab37e9cca55}{%
            family={Alias},
            familyi={A\bibinitperiod},
@@ -528,7 +528,7 @@ my $url1 = q|    \entry{url1}{misc}{}
       \field{sortinit}{A}
       \strng{sortinithash}{a3dcedd53b04d1adfd5ac303ecd5e6fa}
       \field{extraalpha}{4}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[default][en-us]{labelnamesource}{author}
       \field{year}{2005}
       \field{dateera}{ce}
       \verb{urlraw}
@@ -546,7 +546,7 @@ my $url1 = q|    \entry{url1}{misc}{}
 
 my $list1 = q|    \entry{list1}{book}{}
       \true{morelocation}
-      \list[msform=default,mslang=en-us]{location}{2}{%
+      \list[default][en-us]{location}{2}{%
         {ÁAA}%
         {BBB}%
       }
@@ -693,7 +693,7 @@ eq_or_diff( $out->get_output_entry('list1', $main), $list1, 'Entry with others l
 eq_or_diff($out->get_output_entry('over1', $main), $over1, 'Overwrite test - 1');
 
 my $isbn1 = q|    \entry{isbn1}{misc}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=f6595ccb9db5f634e7bb242a3f78e5f9}{%
            family={Flummox},
            familyi={F\bibinitperiod},
@@ -712,13 +712,13 @@ my $isbn1 = q|    \entry{isbn1}{misc}{}
       \field{sortinit}{F}
       \strng{sortinithash}{fb0c0faa89eb6abae8213bf60e6799ea}
       \field{extraalpha}{1}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[default][en-us]{labelnamesource}{author}
       \field{isbn}{978-0-8165-2066-4}
     \endentry
 |;
 
 my $isbn2 = q|    \entry{isbn2}{misc}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=f6595ccb9db5f634e7bb242a3f78e5f9}{%
            family={Flummox},
            familyi={F\bibinitperiod},
@@ -737,7 +737,7 @@ my $isbn2 = q|    \entry{isbn2}{misc}{}
       \field{sortinit}{F}
       \strng{sortinithash}{fb0c0faa89eb6abae8213bf60e6799ea}
       \field{extraalpha}{2}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[default][en-us]{labelnamesource}{author}
       \field{isbn}{978-0-8165-2066-4}
     \endentry
 |;
@@ -749,14 +749,14 @@ eq_or_diff($out->get_output_entry('isbn2', $main), $isbn2, 'ISBN options - 2');
 my $new1 = q|    \entry{newtestkey}{book}{}
       \field{sortinit}{}
       \strng{sortinithash}{495dc9894017a8b12cafa9c619d10c0c}
-      \field[msform=default,mslang=en-us]{note}{note}
+      \field[default][en-us]{note}{note}
       \field{usera}{RC-6947}
       \field{userb}{RC}
     \endentry
 |;
 
 my $clone1 = q|    \entry{snk1}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=83330b0520b5d4ea57529a23b404d43d}{%
            family={Doe},
            familyi={D\bibinitperiod},
@@ -780,12 +780,12 @@ my $clone1 = q|    \entry{snk1}{book}{}
       \field{sortinit}{v}
       \strng{sortinithash}{02432525618c08e2b03cac47c19764af}
       \field{extraalpha}{2}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[default][en-us]{labelnamesource}{author}
     \endentry
 |;
 
 my $clone2 = q|    \entry{clone-snk1}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=83330b0520b5d4ea57529a23b404d43d}{%
            family={Doe},
            familyi={D\bibinitperiod},
@@ -809,13 +809,13 @@ my $clone2 = q|    \entry{clone-snk1}{book}{}
       \field{sortinit}{v}
       \strng{sortinithash}{02432525618c08e2b03cac47c19764af}
       \field{extraalpha}{1}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
-      \field[msform=default,mslang=en-us]{addendum}{add}
+      \field[default][en-us]{labelnamesource}{author}
+      \field[default][en-us]{addendum}{add}
     \endentry
 |;
 
 my $ent1 = q|    \entry{ent1}{book}{}
-      \name[msform=default,mslang=en-us]{author}{2}{sortingnamekeytemplatename=snks1}{%
+      \name[default][en-us]{author}{2}{sortingnamekeytemplatename=snks1}{%
         {{un=0,uniquepart=base,hash=6b3653417f9aa97391c37cff5dfda7fa}{%
            family={Smith},
            familyi={S\bibinitperiod},
@@ -841,12 +841,12 @@ my $ent1 = q|    \entry{ent1}{book}{}
       \field{sortinit}{S}
       \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
       \true{singletitle}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[default][en-us]{labelnamesource}{author}
     \endentry
 |;
 
 my $verb1 = q|    \entry{verb1}{book}{}
-      \name[msform=default,mslang=en-us]{author}{1}{}{%
+      \name[default][en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=cac5a25f503e71f5ef28f474e14007b6}{%
            family={Allright},
            familyi={A\\bibinitperiod},
@@ -864,7 +864,7 @@ my $verb1 = q|    \entry{verb1}{book}{}
       \field{sortinit}{A}
       \strng{sortinithash}{a3dcedd53b04d1adfd5ac303ecd5e6fa}
       \true{singletitle}
-      \field[msform=default,mslang=en-us]{labelnamesource}{author}
+      \field[default][en-us]{labelnamesource}{author}
       \verb{verba}
       \verb \=y.\"a
       \endverb

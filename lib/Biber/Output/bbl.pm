@@ -271,7 +271,7 @@ sub set_output_entry {
       # non-multiscript fields but it is on output
       my $ms = '';
       if ($dm->is_multiscript($namefield)) {
-        $ms = "[msform=$form,mslang=$lang]";
+        $ms = "[$form][$lang]";
       }
 
       # Did we have "and others" in the data?
@@ -336,7 +336,7 @@ sub set_output_entry {
       # non-multiscript fields but it is on output
       my $ms = '';
       if ($dm->is_multiscript($listfield)) {
-        $ms = "[msform=$form,mslang=$lang]";
+        $ms = "[$form][$lang]";
       }
 
       if ( lc($lf->last_item) eq Biber::Config->getoption('others_string') ) {
@@ -433,12 +433,12 @@ sub set_output_entry {
 
   # The source field for labelname
   if ($lni) {
-    $acc .= "      \\field[msform=$lnf,mslang=$lnl]{labelnamesource}{$lni}\n";
+    $acc .= "      \\field[$lnf][$lnl]{labelnamesource}{$lni}\n";
   }
 
   # The source field for labeltitle
   if (my ($lti, $ltf, $ltl) = $be->get_labeltitle_info->@*) {
-    $acc .= "      \\field[msform=$ltf,mslang=$ltl]{labeltitlesource}{$lti}\n";
+    $acc .= "      \\field[$ltf][$ltl]{labeltitlesource}{$lti}\n";
   }
 
   if (my $ck = $be->get_field('clonesourcekey')) {
@@ -455,7 +455,7 @@ sub set_output_entry {
       # non-multiscript fields but it is on output
       my $ms = '';
       if ($dm->is_multiscript($field)) {
-        $ms = "[msform=$form,mslang=$lang]";
+        $ms = "[$form][$lang]";
       }
 
       if ( length($val) or     # length() catches '0' values, which we want
@@ -550,7 +550,7 @@ sub set_output_entry {
       # non-multiscript fields but it is on output
       my $ms = '';
       if ($dm->is_multiscript($field)) {
-        $ms = "[msform=$form,mslang=$lang]";
+        $ms = "[$form][$lang]";
       }
 
       $acc .= _printfield($be, $field, join(',', $f->get_items->@*), $ms);
@@ -630,7 +630,7 @@ sub set_output_entry {
         foreach my $lang (Biber::Annotation->get_annotation_langs($key, $f, $n, $form)) {
           my $v = Biber::Annotation->get_annotation('field', $key, $f, $form, $lang, $n);
           my $l = Biber::Annotation->is_literal_annotation('field', $key, $f, $form, $lang, $n);
-          $acc .= "      \\annotation[msform=$form,mslang=$lang]{field}{$f}{$n}{}{}{$l}{$v}\n";
+          $acc .= "      \\annotation[$form][$lang]{field}{$f}{$n}{}{}{$l}{$v}\n";
         }
       }
     }
@@ -643,7 +643,7 @@ sub set_output_entry {
           foreach my $c (Biber::Annotation->get_annotated_items('item', $key, $f, $n, $form, $lang)) {
             my $v = Biber::Annotation->get_annotation('item', $key, $f, $form, $lang, $n, $c);
             my $l = Biber::Annotation->is_literal_annotation('item', $key, $f, $form, $lang, $n, $c);
-            $acc .= "      \\annotation[msform=$form,mslang=$lang]{item}{$f}{$n}{$c}{}{$l}{$v}\n";
+            $acc .= "      \\annotation[$form][$lang]{item}{$f}{$n}{$c}{}{$l}{$v}\n";
           }
         }
       }
@@ -658,7 +658,7 @@ sub set_output_entry {
             foreach my $p (Biber::Annotation->get_annotated_parts('part', $key, $f, $n, $c, $form, $lang)) {
               my $v = Biber::Annotation->get_annotation('part', $key, $f, $form, $lang, $n, $c, $p);
               my $l = Biber::Annotation->is_literal_annotation('part', $key, $f, $form, $lang, $n, $c, $p);
-              $acc .= "      \\annotation[msform=$form,mslang=$lang]{part}{$f}{$n}{$c}{$p}{$l}{$v}\n";
+              $acc .= "      \\annotation[$form][$lang]{part}{$f}{$n}{$c}{$p}{$l}{$v}\n";
             }
           }
         }

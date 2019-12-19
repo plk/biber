@@ -167,7 +167,7 @@ sub set_output_entry {
       # non-multiscript fields but it is on output
       my $ms = '';
       if ($dm->is_multiscript($namefield)) {
-        $ms = "[msform=$form,mslang=$lang]";
+        $ms = "[$form][$lang]";
       }
 
       # Did we have "and others" in the data?
@@ -232,7 +232,7 @@ sub set_output_entry {
       # non-multiscript fields but it is on output
       my $ms = '';
       if ($dm->is_multiscript($listfield)) {
-        $ms = "[msform=$form,mslang=$lang]";
+        $ms = "[$form][$lang]";
       }
 
       if ( lc($lf->last_item) eq Biber::Config->getoption('others_string') ) {
@@ -319,12 +319,12 @@ sub set_output_entry {
 
   # The source field for labelname
   if ($lni) {
-    $acc .= "      \\field[msform=$lnf,mslang=$lnl]{labelnamesource}{$lni}\n";
+    $acc .= "      \\field[$lnf][$lnl]{labelnamesource}{$lni}\n";
   }
 
   # The source field for labeltitle
   if (my ($lti, $ltf, $ltl) = $be->get_labeltitle_info->@*) {
-    $acc .= "      \\field[msform=$ltf,mslang=$ltl]{labeltitlesource}{$lti}\n";
+    $acc .= "      \\field[$ltf][$ltl]{labeltitlesource}{$lti}\n";
   }
 
   foreach my $field ($dmh->{fields}->@*) {
@@ -337,7 +337,7 @@ sub set_output_entry {
       # non-multiscript fields but it is on output
       my $ms = '';
       if ($dm->is_multiscript($field)) {
-        $ms = "[msform=$form,mslang=$lang]";
+        $ms = "[$form][$lang]";
       }
 
       if ( length($val) or     # length() catches '0' values, which we want
@@ -374,7 +374,7 @@ sub set_output_entry {
       # non-multiscript fields but it is on output
       my $ms = '';
       if ($dm->is_multiscript($field)) {
-        $ms = "[msform=$form,mslang=$lang]";
+        $ms = "[$form][$lang]";
       }
 
       $acc .= _printfield($be, $field, join(',', $f->get_items->@*), $ms);
