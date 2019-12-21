@@ -184,7 +184,8 @@
 *** DONE labelalphatemplate
 *** DONE labelnamespec/labeltitlespec
 *** DONE Xsource fields need to be \fieldsource and have two optional args. #1source calls audit
-*** TODO per-refcontext and per-entry csvs of used msforms and mslangs, expose in biblatex
+*** TODO \msforms \mslangs read into global vars for loading langs
+*** TODO Save list of forms and langs per entry@field and make user macros
 *** TODO multiscript fields/lists/names
 **** TODO 7372 - blx@bbl@msdef@i uncommment and then all abx@field, abx@list and abx@name calls need examining
 *** TODO Default global mslang to main document language BCP47 tag equivalent

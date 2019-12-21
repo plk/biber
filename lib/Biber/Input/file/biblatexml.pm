@@ -828,6 +828,8 @@ sub _annotation {
     my $ann = $node->textContent();
     my $item = $node->getAttribute('item');
     my $part = $node->getAttribute('part');
+    Biber::Config->add_form($form);
+    Biber::Config->add_lang($lang);
 
     if ($field) {# Complex metadata annotation for another field
       if ($part) {
@@ -877,6 +879,8 @@ sub _literal {
 
     my $form = $node->getAttribute('msform') // 'default';
     my $lang = $node->getAttribute('mslang') // Biber::Config->get_mslang($key);
+    Biber::Config->add_form($form);
+    Biber::Config->add_lang($lang);
 
     # XDATA is special, if found, set it
     if (my $xdatav = $node->getAttribute('xdata')) {
@@ -950,6 +954,8 @@ sub _xsv {
 
     my $form = $node->getAttribute('msform') // 'default';
     my $lang = $node->getAttribute('mslang') // Biber::Config->get_mslang($key);
+    Biber::Config->add_form($form);
+    Biber::Config->add_lang($lang);
 
     # XDATA is special
     if (fc(_norm($f)) eq 'xdata') {
@@ -978,6 +984,8 @@ sub _uri {
   my $setval = $node->textContent();
   my $xdmi = Biber::Config->getoption('xdatamarker');
   my $xnsi = Biber::Config->getoption('xnamesep');
+  Biber::Config->add_form($form);
+  Biber::Config->add_lang($lang);
 
   # XDATA is special, if found, set it
   if (my $xdatav = $node->getAttribute('xdata')) {
@@ -1007,6 +1015,8 @@ sub _list {
 
     my $form = $node->getAttribute('msform') // 'default';
     my $lang = $node->getAttribute('mslang') // Biber::Config->get_mslang($key);
+    Biber::Config->add_form($form);
+    Biber::Config->add_lang($lang);
 
     $bibentry->set_datafield(_norm($f),
                              Biber::Entry::List->new(_split_list($bibentry, $node, $key, $f, $form, $lang)),
@@ -1024,6 +1034,8 @@ sub _range {
   my $lang = $node->getAttribute('mslang') // Biber::Config->get_mslang($key);
   my $xdmi = Biber::Config->getoption('xdatamarker');
   my $xnsi = Biber::Config->getoption('xnamesep');
+  Biber::Config->add_form($form);
+  Biber::Config->add_lang($lang);
 
   # XDATA is special, if found, set it
   if (my $xdatav = $node->getAttribute('xdata')) {
@@ -1233,6 +1245,8 @@ sub _name {
 
     my $form = $node->getAttribute('msform') // 'default';
     my $lang = $node->getAttribute('mslang') // Biber::Config->get_mslang($key);
+    Biber::Config->add_form($form);
+    Biber::Config->add_lang($lang);
 
     my $names = new Biber::Entry::Names;
 

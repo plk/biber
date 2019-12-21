@@ -2006,6 +2006,13 @@ sub generate_bblxml_schema {
 
   $writer->endTag();# refsection element
   $writer->endTag();# oneOrMore
+
+  $writer->startTag('element', 'name' => "$bbl:msforms");
+  $writer->emptyTag('text');# text
+  $writer->endTag();    # msforms
+  $writer->startTag('element', 'name' => "$bbl:mslangs");
+  $writer->emptyTag('text');# text
+  $writer->endTag();    # mslangs
   $writer->endTag();# refsections element
   $writer->endTag();# start
 

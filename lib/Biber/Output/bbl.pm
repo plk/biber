@@ -92,7 +92,10 @@ sub create_output_misc {
     }
     $self->{output_data}{HEAD} .= "\\preamble{%\n$pa%\n}\n\n";
   }
-  $self->{output_data}{TAIL} .= "\\endinput\n\n";
+  my $forms = Biber::Config->get_forms;
+  my $langs = Biber::Config->get_langs;
+
+  $self->{output_data}{TAIL} .= "\\msforms{$forms}\n\\mslangs{$langs}\n\\endinput\n\n";
   return;
 }
 

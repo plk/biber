@@ -346,7 +346,6 @@ sub is_xdata_resolved {
   return 0;
 }
 
-
 =head2 set_labelname_info
 
   Record the labelname information. This is special

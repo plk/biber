@@ -81,6 +81,12 @@ $CONFIG->{state}{control_file_location} = '';
 # Data files per section being used by biber
 $CONFIG->{state}{datafiles} = [];
 
+# Multiscript forms seen
+$CONFIG->{state}{forms} = {};
+
+# Multiscript langs seen
+$CONFIG->{state}{langs} = {};
+
 =head2 _init
 
     Reset internal hashes to defaults.
@@ -665,7 +671,6 @@ sub config_file {
 ##############################
 
 
-
 =head2 add_uniq_ignore
 
     Track uniqueness ignore settings found in inheritance data
@@ -722,6 +727,54 @@ sub postprocess_biber_opts {
       }
     }
   }
+}
+
+=head2 add_form
+
+    Adds to the list of seen multiscript forms
+
+=cut
+
+sub add_form {
+  shift;
+  my $form = shift;
+  $CONFIG->{state}{forms}{$form} = 1;
+  return;
+}
+
+=head2 add_lang
+
+    Adds to the list of seen multiscript langs
+
+=cut
+
+sub add_lang {
+  shift;
+  my $lang = shift;
+  $CONFIG->{state}{langs}{$lang} = 1;
+  return;
+}
+
+=head2 get_forms
+
+    Gets the list of seen multiscript forms as CSV
+
+=cut
+
+sub get_forms {
+  shift;
+  return join(',', keys $CONFIG->{state}{forms}->%*);
+}
+
+=head2 get_langs
+
+    Gets the list of seen multiscript langs as CSV
+
+=cut
+
+sub get_langs {
+  shift;
+  return join(',', keys $CONFIG->{state}{langs}->%*);
 }
 
 

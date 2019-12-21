@@ -763,4 +763,6 @@
       </bbl:entry>
     </bbl:datalist>
   </bbl:refsection>
+  <bbl:msforms>default</bbl:msforms>
+  <bbl:mslangs>en-us</bbl:mslangs>
 </bbl:refsections>

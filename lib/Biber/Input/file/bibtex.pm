@@ -926,6 +926,8 @@ sub _create_entry {
 
     # Split any multiscript fields
     my ($field, $form, $lang) = mssplit($tbfield, $k);
+    Biber::Config->add_form($form);
+    Biber::Config->add_lang($lang);
 
     # We have to process local options as early as possible in order
     # to make them available for things that need them like parsename()
