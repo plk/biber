@@ -161,6 +161,7 @@
 ** TODO LANGIDOPTS and how they interact with LANGID->mslang
 ** TODO Documentation
 *** TODO Annotation macros + MS args
+*** TODO NAMEnamehash, NAMEbibnamehash NAMEfullhas etc. are now NAMEFORMLANGnamehash and NAMEFORMLANGbibnamehash (also doc in changes as incompat change)
 *** TODO Add general docs about citations to main MS doc section
 *** TODO Default global mslang to main document language BCP47 tag equivalent
 *** DONE \DeclareDatamodelMultiscriptEntryfields and \ResetDatamodelMultiscriptEntryfields
@@ -182,11 +183,10 @@
 *** DONE sorting templates
 *** DONE labelalphatemplate
 *** DONE labelnamespec/labeltitlespec
-*** TODO refcontext msform/mslang overrides should like be global and reset on close
-*** TODO Xsource fields need to be \fieldsource and have two optional args. #1source calls audit
+*** DONE Xsource fields need to be \fieldsource and have two optional args. #1source calls audit
+*** TODO per-refcontext and per-entry csvs of used msforms and mslangs, expose in biblatex
 *** TODO multiscript fields/lists/names
 **** TODO 7372 - blx@bbl@msdef@i uncommment and then all abx@field, abx@list and abx@name calls need examining
-*** TODO NAMEnamehash, NAMEbibnamehash are now NAMEFORMLANGnamehash and NAMEFORMLANGbibnamehash
 *** TODO Default global mslang to main document language BCP47 tag equivalent
 *** TODO output sortlocale/mslang in .bcf as BCP-47 if possible (polyglossia 1.47+)
 ** DONE biber
