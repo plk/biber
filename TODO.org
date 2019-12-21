@@ -160,6 +160,7 @@
 * TODO Multiscript
 ** TODO LANGIDOPTS and how they interact with LANGID->mslang
 ** TODO Documentation
+*** TODO \msformloop{fieldname} \mslangloop{fieldname} (only in formats)
 *** TODO Annotation macros + MS args
 *** TODO NAMEnamehash, NAMEbibnamehash NAMEfullhas etc. are now NAMEFORMLANGnamehash and NAMEFORMLANGbibnamehash (also doc in changes as incompat change)
 *** TODO Add general docs about citations to main MS doc section
@@ -184,8 +185,8 @@
 *** DONE labelalphatemplate
 *** DONE labelnamespec/labeltitlespec
 *** DONE Xsource fields need to be \fieldsource and have two optional args. #1source calls audit
-*** TODO \msforms \mslangs read into global vars for loading langs
-*** TODO Save list of forms and langs per entry@field and make user macros
+*** TODO \blx@bbl@msformsdef and  \blx@bbl@mslangsdef are csvs of all forms/langs used for loading langs
+*** DONE Save list of forms and langs per entry@field and make user macros
 *** TODO multiscript fields/lists/names
 **** TODO 7372 - blx@bbl@msdef@i uncommment and then all abx@field, abx@list and abx@name calls need examining
 *** TODO Default global mslang to main document language BCP47 tag equivalent
