@@ -2013,6 +2013,13 @@ sub generate_bblxml_schema {
   $writer->startTag('element', 'name' => "$bbl:mslangs");
   $writer->emptyTag('text');# text
   $writer->endTag();    # mslangs
+  $writer->startTag('oneOrMore');
+  $writer->startTag('element', 'name' => "$bbl:msmaplang");
+  $writer->emptyTag('attribute', 'name' => 'langtag');
+  $writer->emptyTag('attribute', 'name' => 'lang');
+  $writer->endTag();    # msmaplang
+  $writer->endTag();# oneOrMore
+
   $writer->endTag();# refsections element
   $writer->endTag();# start
 

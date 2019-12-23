@@ -816,6 +816,10 @@ sub output {
   }
   $xml->dataElement([$xml_prefix, 'msforms'], Biber::Config->get_forms);
   $xml->dataElement([$xml_prefix, 'mslangs'], Biber::Config->get_langs);
+  foreach my $tag (split(/,/, Biber::Config->get_langs)) {
+    $xml->emptyTag([$xml_prefix, 'msmaplang'], 'langtag' => $tag, 'lang' => $LOCALE_MAP_R{$tag});
+  }
+
   $xml->endTag();    # refsections
 
   $logger->info("Output to $target_string");

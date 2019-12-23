@@ -160,10 +160,14 @@
 * TODO Multiscript
 ** TODO LANGIDOPTS and how they interact with LANGID->mslang
 ** TODO Documentation
-*** TODO \msformloop{fieldname} \mslangloop{fieldname} (only in formats)
-*** TODO Annotation macros + MS args
-*** TODO NAMEnamehash, NAMEbibnamehash NAMEfullhas etc. are now NAMEFORMLANGnamehash and NAMEFORMLANGbibnamehash (also doc in changes as incompat change)
-*** TODO Add general docs about citations to main MS doc section
+*** DONE \fieldmsforms{fieldname} \fieldmslangs{fieldname} (only in formats)
+*** DONE \currentmsforms and  \curentmslangs (only in formats)
+*** DONE Annotation macros + MS args
+*** DONE NAMEnamehash, NAMEbibnamehash NAMEfullhas etc. are now NAMEFORMLANGnamehash and NAMEFORMLANGbibnamehash (also doc in changes as incompat change)
+*** TODO \ifmsentryfield
+*** TODO Add to general docs
+**** TODO general citation/print*/if*
+**** TODO Must always provide both msform/mslang or neither
 *** TODO Default global mslang to main document language BCP47 tag equivalent
 *** DONE \DeclareDatamodelMultiscriptEntryfields and \ResetDatamodelMultiscriptEntryfields
 *** DONE multiscriptforms constant
@@ -185,10 +189,14 @@
 *** DONE labelalphatemplate
 *** DONE labelnamespec/labeltitlespec
 *** DONE Xsource fields need to be \fieldsource and have two optional args. #1source calls audit
-*** TODO \blx@bbl@msformsdef and  \blx@bbl@mslangsdef are csvs of all forms/langs used for loading langs
+*** DONE \blx@bbl@msformsdef and  \blx@bbl@mslangsdef are csvs of all forms/langs used for loading langs
 *** DONE Save list of forms and langs per entry@field and make user macros
 *** TODO multiscript fields/lists/names
-**** TODO 7372 - blx@bbl@msdef@i uncommment and then all abx@field, abx@list and abx@name calls need examining
+**** TODO 7410 - blx@bbl@msdef@i uncommment and then all abx@field, abx@list and abx@name calls need examining
+**** TODO \printfield (doc alts)
+**** TODO \printlist (doc alts)
+**** TODO \printname (doc alts)
+**** TODO \iffieldundef (doc that tests for any alternates)
 *** TODO Default global mslang to main document language BCP47 tag equivalent
 *** TODO output sortlocale/mslang in .bcf as BCP-47 if possible (polyglossia 1.47+)
 ** DONE biber

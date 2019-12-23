@@ -94,8 +94,19 @@ sub create_output_misc {
   }
   my $forms = Biber::Config->get_forms;
   my $langs = Biber::Config->get_langs;
+  my $maplangs;
+  foreach my $tag (split(/,/, $langs)) {
+    $maplangs .= "\\msmaplang{$tag}{" . $LOCALE_MAP_R{$tag} . "}\n";
+  }
 
-  $self->{output_data}{TAIL} .= "\\msforms{$forms}\n\\mslangs{$langs}\n\\endinput\n\n";
+  $self->{output_data}{TAIL} .= <<~END;
+    \\msforms{$forms}
+    \\mslangs{$langs}
+    $maplangs
+    \\endinput
+
+    END
+
   return;
 }
 
