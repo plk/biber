@@ -58,7 +58,7 @@ my $shs = $biber->datalists->get_list('shorthand/global//global/global', 0, 'lis
 
 my $out = $biber->get_output_obj;
 
-my $ss = { locale => 'en-US',
+my $ss = { locale => 'en-us',
            spec => [
            [
             {},

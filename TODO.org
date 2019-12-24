@@ -165,9 +165,9 @@
 *** DONE Annotation macros + MS args
 *** DONE NAMEnamehash, NAMEbibnamehash NAMEfullhas etc. are now NAMEFORMLANGnamehash and NAMEFORMLANGbibnamehash (also doc in changes as incompat change)
 *** TODO \ifmsentryfield
+*** TODO \currentmsform \currentmslang
 *** TODO Add to general docs
 **** TODO general citation/print*/if*
-**** TODO Must always provide both msform/mslang or neither
 *** TODO Default global mslang to main document language BCP47 tag equivalent
 *** DONE \DeclareDatamodelMultiscriptEntryfields and \ResetDatamodelMultiscriptEntryfields
 *** DONE multiscriptforms constant
@@ -192,11 +192,11 @@
 *** DONE \blx@bbl@msformsdef and  \blx@bbl@mslangsdef are csvs of all forms/langs used for loading langs
 *** DONE Save list of forms and langs per entry@field and make user macros
 *** TODO multiscript fields/lists/names
-**** TODO 7410 - blx@bbl@msdef@i uncommment and then all abx@field, abx@list and abx@name calls need examining
-**** TODO \printfield (doc alts)
-**** TODO \printlist (doc alts)
-**** TODO \printname (doc alts)
-**** TODO \iffieldundef (doc that tests for any alternates)
+**** TODO 7442 - blx@bbl@msdef@i uncommment and then all abx@field, abx@list and abx@name calls need examining
+**** DONE \printfield
+**** TODO \printlist
+**** TODO \printname
+**** TODO \iffieldundef (doc that tests for any alternates with no ms args)
 *** TODO Default global mslang to main document language BCP47 tag equivalent
 *** TODO output sortlocale/mslang in .bcf as BCP-47 if possible (polyglossia 1.47+)
 ** DONE biber
