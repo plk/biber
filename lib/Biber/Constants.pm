@@ -385,6 +385,7 @@ our %LOCALE_MAP_R = (
                      'de-at-1996' => 'naustrian',
                      'de-ch'      => 'swissgerman',
                      'de-ch-1996' => 'nswissgerman',
+                     'de'         => 'german',
                      'de-de'      => 'german',
                      'de-de-1996' => 'ngerman',
                      'dsb'        => 'lowersorbian',
