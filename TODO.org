@@ -164,8 +164,13 @@
 *** DONE \currentmsforms and  \curentmslangs (only in formats)
 *** DONE Annotation macros + MS args
 *** DONE NAMEnamehash, NAMEbibnamehash NAMEfullhas etc. are now NAMEFORMLANGnamehash and NAMEFORMLANGbibnamehash (also doc in changes as incompat change)
+*** TODO \printfield
+*** TODO \printlist
+*** TODO \printname
+*** TODO \iffieldundef (doc that tests for any alternates with no ms args)
 *** TODO \ifmsentryfield
 *** TODO \currentmsform \currentmslang
+*** TODO langtags annotation overrides entry/field language
 *** TODO Add to general docs
 **** TODO general citation/print*/if*
 *** TODO Default global mslang to main document language BCP47 tag equivalent
@@ -194,10 +199,11 @@
 *** TODO multiscript fields/lists/names
 **** TODO 7442 - blx@bbl@msdef@i uncommment and then all abx@field, abx@list and abx@name calls need examining
 **** DONE \printfield
-**** TODO \printlist
-**** TODO \printname
-**** DONE \iffieldundef (doc that tests for any alternates with no ms args)
-**** TODO langtags annotation override for print*
+**** DONE \printlist
+**** DONE \printname
+**** DONE \iffieldundef
+**** DONE langtags annotation override for print*
+
 *** TODO Default global mslang to main document language BCP47 tag equivalent
 *** TODO output sortlocale/mslang in .bcf as BCP-47 if possible (polyglossia 1.47+)
 ** DONE biber

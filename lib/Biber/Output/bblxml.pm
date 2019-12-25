@@ -617,11 +617,15 @@ sub set_output_entry {
           my $v = Biber::Annotation->get_annotation('field', $key, $f, $form, $lang, $n);
           $v = lc($v) if $n eq 'langtags'; # normalise langtags
           my $l = Biber::Annotation->is_literal_annotation('field', $key, $f, $form, $lang, $n);
+          my @ms = ();
+          if ($dm->is_multiscript($f)) {
+            push @ms, ('msform' => $form) if $form;
+            push @ms, ('mslang' => $lang) if $lang;
+          }
           $xml->dataElement([$xml_prefix, 'annotation'],
                             scope => 'field',
                             field => _bblxml_norm($f),
-                            msform => $form,
-                            mslang => $lang,
+                            @ms,
                             name  => bblxml_norm($n),
                             literal => $l,
                             value => _bblxml_norm($v)
@@ -639,11 +643,15 @@ sub set_output_entry {
             my $v = Biber::Annotation->get_annotation('item', $key, $f, $form, $lang, $n, $c);
             $v = lc($v) if $n eq 'langtags'; # normalise langtags
             my $l = Biber::Annotation->is_literal_annotation('item', $key, $f, $form, $lang, $n, $c);
+            my @ms = ();
+            if ($dm->is_multiscript($f)) {
+              push @ms, ('msform' => $form) if $form;
+              push @ms, ('mslang' => $lang) if $lang;
+            }
             $xml->dataElement([$xml_prefix, 'annotation'],
                               scope => 'item',
                               field => _bblxml_norm($f),
-                              msform => $form,
-                              mslang => $lang,
+                              @ms,
                               name  => bblxml_norm($n),
                               literal => $l,
                               item  => _bblxml_norm($c),
@@ -664,11 +672,15 @@ sub set_output_entry {
               my $v = Biber::Annotation->get_annotation('part', $key, $f, $form, $lang, $n, $c, $p);
               $v = lc($v) if $n eq 'langtags'; # normalise langtags
               my $l = Biber::Annotation->is_literal_annotation('part', $key, $f, $form, $lang, $n, $c, $p);
+              my @ms = ();
+              if ($dm->is_multiscript($f)) {
+                push @ms, ('msform' => $form) if $form;
+                push @ms, ('mslang' => $lang) if $lang;
+              }
               $xml->dataElement([$xml_prefix, 'annotation'],
                                 scope => 'part',
                                 field => _bblxml_norm($f),
-                                msform => $form,
-                                mslang => $lang,
+                                @ms,
                                 name  => bblxml_norm($n),
                                 literal => $l,
                                 item  => _bblxml_norm($c),

@@ -648,7 +648,11 @@ sub set_output_entry {
           my $v = Biber::Annotation->get_annotation('field', $key, $f, $form, $lang, $n);
           $v = lc($v) if $n eq 'langtags'; # normalise langtags
           my $l = Biber::Annotation->is_literal_annotation('field', $key, $f, $form, $lang, $n);
-          $acc .= "      \\annotation[$form][$lang]{field}{$f}{$n}{}{}{$l}{$v}\n";
+          my $ms = '';
+          if ($dm->is_multiscript($f)) {
+            $ms = "[$form][$lang]";
+          }
+          $acc .= "      \\annotation${ms}{field}{$f}{$n}{}{}{$l}{$v}\n";
         }
       }
     }
@@ -662,7 +666,11 @@ sub set_output_entry {
             my $v = Biber::Annotation->get_annotation('item', $key, $f, $form, $lang, $n, $c);
             $v = lc($v) if $n eq 'langtags'; # normalise langtags
             my $l = Biber::Annotation->is_literal_annotation('item', $key, $f, $form, $lang, $n, $c);
-            $acc .= "      \\annotation[$form][$lang]{item}{$f}{$n}{$c}{}{$l}{$v}\n";
+            my $ms = '';
+            if ($dm->is_multiscript($f)) {
+              $ms = "[$form][$lang]";
+            }
+            $acc .= "      \\annotation${ms}{item}{$f}{$n}{$c}{}{$l}{$v}\n";
           }
         }
       }
@@ -678,7 +686,11 @@ sub set_output_entry {
               my $v = Biber::Annotation->get_annotation('part', $key, $f, $form, $lang, $n, $c, $p);
               $v = lc($v) if $n eq 'langtags'; # normalise langtags
               my $l = Biber::Annotation->is_literal_annotation('part', $key, $f, $form, $lang, $n, $c, $p);
-              $acc .= "      \\annotation[$form][$lang]{part}{$f}{$n}{$c}{$p}{$l}{$v}\n";
+              my $ms = '';
+              if ($dm->is_multiscript($f)) {
+                $ms = "[$form][$lang]";
+              }
+              $acc .= "      \\annotation${ms}{part}{$f}{$n}{$c}{$p}{$l}{$v}\n";
             }
           }
         }

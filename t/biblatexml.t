@@ -145,11 +145,11 @@ my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
       \range{pages}{15}
       \annotation[default][en-us]{field}{author}{alt}{}{}{0}{names-ann3}
       \annotation[default][en-us]{field}{author}{default}{}{}{0}{names-ann}
-      \annotation[default][en-us]{field}{language}{default}{}{}{0}{list-ann1}
+      \annotation{field}{language}{default}{}{}{0}{list-ann1}
       \annotation[default][en-us]{field}{title}{default}{}{}{0}{field-ann1}
       \annotation[default][en-us]{item}{author}{default}{1}{}{0}{name-ann1}
       \annotation[default][en-us]{item}{author}{default}{3}{}{0}{name-ann2}
-      \annotation[default][en-us]{item}{language}{default}{1}{}{0}{item-ann1}
+      \annotation{item}{language}{default}{1}{}{0}{item-ann1}
       \annotation[default][en-us]{part}{author}{default}{1}{given}{1}{namepart-ann1}
       \annotation[default][en-us]{part}{author}{default}{2}{family}{0}{namepart-ann2}
     \endentry

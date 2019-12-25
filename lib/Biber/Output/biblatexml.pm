@@ -554,9 +554,12 @@ sub set_output_entry {
         foreach my $n (Biber::Annotation->get_annotations('field', $key, $f, $form, $lang)) {
           my $v = Biber::Annotation->get_annotation('field', $key, $f, $form, $lang, $n);
           my $l = Biber::Annotation->is_literal_annotation('field', $key, $f, $form, $lang, $n);
+
           my @ms;
-          push @ms, (msform => $form) unless $form eq 'default';
-          push @ms, (mslang => $lang) unless $lang eq Biber::Config->get_mslang($key);
+          if ($dm->is_multiscript($f)) {
+            push @ms, ('msform' => $form) unless $form eq 'default';
+            push @ms, ('mslang' => $lang) unless $lang eq Biber::Config->get_mslang($key);
+          }
           $xml->dataElement([$xml_prefix, 'annotation'],
                             $v,
                             field => $f,
@@ -576,8 +579,11 @@ sub set_output_entry {
             my $v = Biber::Annotation->get_annotation('item', $key, $f, $form, $lang, $n, $c);
             my $l = Biber::Annotation->is_literal_annotation('item', $key, $f, $form, $lang, $n, $c);
             my @ms;
-            push @ms, (msform => $form) unless $form eq 'default';
-            push @ms, (mslang => $lang) unless $lang eq Biber::Config->get_mslang($key);
+            if ($dm->is_multiscript($f)) {
+              push @ms, ('msform' => $form) unless $form eq 'default';
+              push @ms, ('mslang' => $lang) unless $lang eq Biber::Config->get_mslang($key);
+            }
+
             $xml->dataElement([$xml_prefix, 'annotation'],
                               $v,
                               field => $f,
@@ -600,8 +606,10 @@ sub set_output_entry {
               my $v = Biber::Annotation->get_annotation('part', $key, $f, $form, $lang, $n, $c, $p);
               my $l = Biber::Annotation->is_literal_annotation('part', $key, $f, $form, $lang, $n, $c, $p);
               my @ms;
-              push @ms, (msform => $form) unless $form eq 'default';
-              push @ms, (mslang => $lang) unless $lang eq Biber::Config->get_mslang($key);
+              if ($dm->is_multiscript($f)) {
+                push @ms, ('msform' => $form) unless $form eq 'default';
+                push @ms, ('mslang' => $lang) unless $lang eq Biber::Config->get_mslang($key);
+              }
               $xml->dataElement([$xml_prefix, 'annotation'],
                                 $v,
                                 field => $f,
