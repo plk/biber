@@ -64,7 +64,7 @@ sub set_annotation {
   }
 
   # Record all forms/langs for an annotation
-  $ANN->{ms}{$key}{$field}{$name}{$form}{$lang} = 1;
+  $ANN->{ms}{$key}{$field}{$form}{$lang}{$name} = 1;
 
   return;
 }
@@ -121,9 +121,8 @@ sub get_annotation {
 
 sub get_annotation_forms {
   shift; # class method so don't care about class name
-  my ($key, $field, $name) = @_;
-  $name = $name // 'default';
-  return sort keys $ANN->{ms}{$key}{$field}{$name}->%*;
+  my ($key, $field) = @_;
+  return sort keys $ANN->{ms}{$key}{$field}->%*;
 }
 
 =head2 get_annotation_langs
@@ -134,10 +133,9 @@ sub get_annotation_forms {
 
 sub get_annotation_langs {
   shift; # class method so don't care about class name
-  my ($key, $field, $name, $form) = @_;
-  $name = $name // 'default';
+  my ($key, $field, $form) = @_;
   $form = $form // 'default';
-  return sort keys $ANN->{ms}{$key}{$field}{$name}{$form}->%*;
+  return sort keys $ANN->{ms}{$key}{$field}{$form}->%*;
 }
 
 =head2 get_annotation_names
@@ -292,7 +290,7 @@ sub del_annotation {
   $ANN->{names}{$key}{$field}{$form}{$lang} = [grep {$_ ne $name} $ANN->{names}{$key}{$field}{$form}{$lang}->@*];
 
   delete $ANN->{fieldswithname}{$key}{$name};
-  delete $ANN->{ms}{$key}{$name};
+  delete $ANN->{ms}{$key}{$field}{$form}{$lang}{$name};
 
   return;
 }

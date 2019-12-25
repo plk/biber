@@ -611,10 +611,11 @@ sub set_output_entry {
 
   # Output annotations
   foreach my $f (Biber::Annotation->get_annotated_fields('field', $key)) {
-    foreach my $n (Biber::Annotation->get_annotations('field', $key, $f)) {
-      foreach my $form (Biber::Annotation->get_annotation_forms($key, $f, $n)) {
-        foreach my $lang (Biber::Annotation->get_annotation_langs($key, $f, $n, $form)) {
+    foreach my $form (Biber::Annotation->get_annotation_forms($key, $f)) {
+      foreach my $lang (Biber::Annotation->get_annotation_langs($key, $f, $form)) {
+        foreach my $n (Biber::Annotation->get_annotations('field', $key, $f, $form, $lang)) {
           my $v = Biber::Annotation->get_annotation('field', $key, $f, $form, $lang, $n);
+          $v = lc($v) if $n eq 'langtags'; # normalise langtags
           my $l = Biber::Annotation->is_literal_annotation('field', $key, $f, $form, $lang, $n);
           $xml->dataElement([$xml_prefix, 'annotation'],
                             scope => 'field',
@@ -631,11 +632,12 @@ sub set_output_entry {
   }
 
   foreach my $f (Biber::Annotation->get_annotated_fields('item', $key)) {
-    foreach my $n (Biber::Annotation->get_annotations('item', $key, $f)) {
-      foreach my $form (Biber::Annotation->get_annotation_forms($key, $f, $n)) {
-        foreach my $lang (Biber::Annotation->get_annotation_langs($key, $f, $n, $form)) {
+    foreach my $form (Biber::Annotation->get_annotation_forms($key, $f)) {
+      foreach my $lang (Biber::Annotation->get_annotation_langs($key, $f, $form)) {
+        foreach my $n (Biber::Annotation->get_annotations('item', $key, $f, $form, $lang)) {
           foreach my $c (Biber::Annotation->get_annotated_items('item', $key, $f, $n, $form, $lang)) {
             my $v = Biber::Annotation->get_annotation('item', $key, $f, $form, $lang, $n, $c);
+            $v = lc($v) if $n eq 'langtags'; # normalise langtags
             my $l = Biber::Annotation->is_literal_annotation('item', $key, $f, $form, $lang, $n, $c);
             $xml->dataElement([$xml_prefix, 'annotation'],
                               scope => 'item',
@@ -654,12 +656,13 @@ sub set_output_entry {
   }
 
   foreach my $f (Biber::Annotation->get_annotated_fields('part', $key)) {
-    foreach my $n (Biber::Annotation->get_annotations('part', $key, $f)) {
-      foreach my $form (Biber::Annotation->get_annotation_forms($key, $f, $n)) {
-        foreach my $lang (Biber::Annotation->get_annotation_langs($key, $f, $n, $form)) {
+    foreach my $form (Biber::Annotation->get_annotation_forms($key, $f)) {
+      foreach my $lang (Biber::Annotation->get_annotation_langs($key, $f, $form)) {
+        foreach my $n (Biber::Annotation->get_annotations('part', $key, $f, $form, $lang)) {
           foreach my $c (Biber::Annotation->get_annotated_items('part', $key, $f, $n, $form, $lang)) {
             foreach my $p (Biber::Annotation->get_annotated_parts('part', $key, $f, $n, $c, $form, $lang)) {
               my $v = Biber::Annotation->get_annotation('part', $key, $f, $form, $lang, $n, $c, $p);
+              $v = lc($v) if $n eq 'langtags'; # normalise langtags
               my $l = Biber::Annotation->is_literal_annotation('part', $key, $f, $form, $lang, $n, $c, $p);
               $xml->dataElement([$xml_prefix, 'annotation'],
                                 scope => 'part',

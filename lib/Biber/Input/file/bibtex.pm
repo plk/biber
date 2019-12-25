@@ -990,6 +990,7 @@ sub _annotation {
       $literal = 1;
       $annotations = $1;
     }
+
     if ($part) {
       Biber::Annotation->set_annotation('part', $key, $field, $form, $lang, $name, $annotations, $literal, $item, $part);
     }
