@@ -45,8 +45,8 @@ is_deeply($biber->langtags->parse('az-Arab-x-AZE-derbend')->dump, { language => 
 is_deeply($biber->langtags->parse('en-US-u-islamcal')->dump, { language => 'en', region => 'us', extension => {'u' => 'islamcal'} }, 'BCP47 - 15');
 is_deeply($biber->langtags->parse('en-a-myext-b-another')->dump, { language => 'en', extension => {a => 'myext', b => 'another'} }, 'BCP47 - 16');
 is_deeply($biber->langtags->parse('zh-CN-a-myext-x-private')->dump, { language => 'zh', region => 'cn', extension => {a => 'myext'}, privateuse => ['private'] }, 'BCP47 - 17');
-is_deeply($biber->langtags->parse('de-419-DE'), undef, 'BCP47 - 18');
-is_deeply($biber->langtags->parse('a-DE'), undef, 'BCP47 - 19');
+is_deeply($biber->langtags->parse('de-419-DE')->as_string, 'invalidtag', 'BCP47 - 18');
+is_deeply($biber->langtags->parse('a-DE')->as_string, 'invalidtag', 'BCP47 - 19');
 
 # Testing reversability
 eq_or_diff($biber->langtags->parse('de')->as_string, 'de', 'BCP47 - 20');

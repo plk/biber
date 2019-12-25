@@ -90,7 +90,7 @@ sub parse {
   my $tree = $self->{parser}->languagetag($tag);
   unless (defined($tree)) {
     biber_warn("Invalid BCP47 language tag '$tag'");
-    return undef;
+    return Biber::LangTag->new(tag => $tag, invalid => 1);
   }
 
   return Biber::LangTag->new(tag => $tag, _bcp47extract($tree)->%*);

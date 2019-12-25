@@ -150,14 +150,14 @@ my $ms1 = q|    \entry{ms1}{article}{}
       \field[translation][fr]{title}{Titre}
       \field{year}{1995}
       \field{dateera}{ce}
-      \annotation[default][en-us]{item}{author}{langtags}{2}{}{0}{ru-Cyrl}
-      \annotation[default][en-us]{item}{author}{langtags}{3}{}{0}{zh-Hant}
-      \annotation[transliteration][ru-grek]{item}{author}{langtags}{1}{}{0}{en-US}
-      \annotation[transliteration][ru-grek]{item}{author}{langtags}{3}{}{0}{zh-Grek}
-      \annotation[transliteration][ru-latn]{item}{author}{langtags}{1}{}{0}{en-US}
-      \annotation[transliteration][ru-latn]{item}{author}{langtags}{3}{}{0}{zh-Latn}
-      \annotation[default][en-us]{item}{location}{langtags}{2}{}{0}{de}
-      \annotation[translation][fr]{item}{location}{langtags}{2}{}{0}{de}
+      \annotation[default][en-us]{item}{author}{langtags}{2}{}{1}{ru-Cyrl}
+      \annotation[default][en-us]{item}{author}{langtags}{3}{}{1}{zh-Hant}
+      \annotation[transliteration][ru-grek]{item}{author}{langtags}{1}{}{1}{en-US}
+      \annotation[transliteration][ru-grek]{item}{author}{langtags}{3}{}{1}{zh-Grek}
+      \annotation[transliteration][ru-latn]{item}{author}{langtags}{1}{}{1}{en-US}
+      \annotation[transliteration][ru-latn]{item}{author}{langtags}{3}{}{1}{zh-Latn}
+      \annotation[default][en-us]{item}{location}{langtags}{2}{}{1}{de}
+      \annotation[translation][fr]{item}{location}{langtags}{2}{}{1}{de}
     \endentry
 |;
 
@@ -207,7 +207,7 @@ my $ms2 = q|    \entry{ms2}{inbook}{}
     \endentry
 |;
 
-#print $out->get_output_entry('ms1', $main);
+# print $out->get_output_entry('ms1', $main);
 
 eq_or_diff($out->get_output_entry('ms1', $main), $ms1, 'BBL 1');
 eq_or_diff($out->get_output_entry('ms2', $main), $ms2, 'BBL 2');

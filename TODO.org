@@ -196,7 +196,8 @@
 **** DONE \printfield
 **** TODO \printlist
 **** TODO \printname
-**** TODO \iffieldundef (doc that tests for any alternates with no ms args)
+**** DONE \iffieldundef (doc that tests for any alternates with no ms args)
+**** TODO langtags annotation override for print*
 *** TODO Default global mslang to main document language BCP47 tag equivalent
 *** TODO output sortlocale/mslang in .bcf as BCP-47 if possible (polyglossia 1.47+)
 ** DONE biber

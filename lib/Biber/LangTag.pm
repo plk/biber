@@ -47,6 +47,9 @@ sub new {
 sub as_string {
   my $self = shift;
   my $acc = '';
+
+  return "invalidtag" if $self->{invalid};
+
   if (my $s = $self->{grandfathered}) {
     return $s;
   }
