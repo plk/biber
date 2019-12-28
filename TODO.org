@@ -198,13 +198,63 @@
 *** DONE \blx@bbl@msformsdef and  \blx@bbl@mslangsdef are csvs of all forms/langs used for loading langs
 *** DONE Save list of forms and langs per entry@field and make user macros
 *** TODO multiscript fields/lists/names
-**** TODO 7442 - blx@bbl@msdef@i uncommment and then all abx@field, abx@list and abx@name calls need examining
+**** DONE 7442 - blx@bbl@msdef@i uncommment and then all abx@field, abx@list and abx@name calls need examining
 **** DONE \printfield
 **** DONE \printlist
 **** DONE \printname
 **** DONE \iffieldundef
 **** DONE langtags annotation override for print*
-
+**** DONE indexfield
+**** DONE indexlist
+**** DONE indexname
+**** TODO \blx@imc@thefield
+**** TODO \blx@imc@strfield
+**** TODO \blx@imc@usefield
+**** TODO \blx@imc@strlist
+**** TODO \blx@imc@thefirstlistitem
+**** TODO \blx@imc@strfirstlistitem
+**** TODO \blx@imc@thename
+**** TODO \blx@imc@strname
+**** TODO \blx@imc@clearfield
+**** TODO \blx@imc@clearlist
+**** TODO \blx@imc@clearname
+**** TODO \blx@imc@restorefield
+**** TODO \blx@imc@restorelist
+**** TODO \blx@imc@restorename
+**** TODO \blx@imc@iffieldsequal
+**** TODO \blx@imc@iflistssequal
+**** TODO \blx@imc@ifnamesequal
+**** TODO \blx@imc@iffieldequals
+**** TODO \blx@imc@iflistequals
+**** TODO \blx@imc@ifnameequals
+**** TODO \blx@imc@iffieldequalcs
+**** TODO \blx@imc@iflistequalcs
+**** TODO \blx@imc@ifnameequalcs
+**** TODO \blx@imc@iffieldequalstr
+**** TODO \blx@iffieldxref
+**** TODO \blx@iflistxref
+**** TODO \blx@ifnamexref
+**** TODO \citefield
+**** TODO \citelist
+**** TODO \citename
+**** TODO \blx@imc@docsvfield
+**** TODO \blx@imc@forcsvfiel
+**** TODO \blx@imc@iffieldequals
+**** TODO \blx@imc@iffieldequalstr
+**** TODO \blx@imc@iffieldxref
+**** TODO \blx@imc@iffieldint
+**** TODO \blx@imc@iffieldnum
+**** TODO \blx@imc@iffieldnums
+**** TODO \blx@imc@iffieldpages
+**** TODO \blx@imc@iffieldbibstring
+**** TODO \blx@imc@iffieldplusstringbibstring
+**** TODO \blx@imc@iflistequals
+**** TODO \blx@imc@iflistxref
+**** TODO \blx@imc@ifnameequals
+**** TODO \blx@imc@ifnamexref
+**** TODO \blx@savename
+**** TODO \blx@savelist
+**** TODO \blx@savefield
 *** TODO Default global mslang to main document language BCP47 tag equivalent
 *** TODO output sortlocale/mslang in .bcf as BCP-47 if possible (polyglossia 1.47+)
 ** DONE biber
