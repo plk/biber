@@ -674,7 +674,17 @@ sub create_entry {
 
             # Field map
             if ($fieldsource = maploopreplace($step->{map_field_source}, $maploop)) {
-              $fieldsource = fc($fieldsource);
+
+              # Multiscript form/lang
+              my $fieldsourceform = '';
+              my $fieldsourcelang = '';
+              if (my $f = $step->{map_field_source_form}) {
+                $fieldsourceform = $CONFIG_META_MARKERS{mssep} . $f;
+              }
+              if (my $l = $step->{map_field_source_lang}) {
+                $fieldsourcelang = $CONFIG_META_MARKERS{mssep} . $l;
+              }
+              $fieldsource = fc("$fieldsource$fieldsourceform$fieldsourcelang");
 
               # key is a pseudo-field. It's guaranteed to exist so
               # just check if that's what's being asked for
@@ -766,8 +776,19 @@ sub create_entry {
               }
 
               # Set to a different target if there is one
-              if (my $target = maploopreplace($step->{map_field_target}, $maploop)) {
-                $target = fc($target);
+              if (my $fieldtarget = maploopreplace($step->{map_field_target}, $maploop)) {
+
+                # Multiscript form/lang
+                my $fieldtargetform = '';
+                my $fieldtargetlang = '';
+                if (my $f = $step->{map_field_target_form}) {
+                  $fieldtargetform = $CONFIG_META_MARKERS{mssep} . $f;
+                }
+                if (my $l = $step->{map_field_target_lang}) {
+                  $fieldtargetlang = $CONFIG_META_MARKERS{mssep} . $l;
+                }
+                $fieldtarget = fc("$fieldtarget$fieldtargetform$fieldtargetlang");
+
                 # Can't remap entry key pseudo-field
                 if ($fieldsource eq 'entrykey') {
                   if ($logger->is_debug()) { # performance tune
@@ -776,22 +797,22 @@ sub create_entry {
                   next;
                 }
 
-                if ($etarget->exists($target)) {
+                if ($etarget->exists($fieldtarget)) {
                   if ($map->{map_overwrite} // $smap->{map_overwrite}) {
                     if ($logger->is_debug()) { # performance tune
-                      $logger->debug("Source mapping (type=$level, key=$etargetkey): Overwriting existing field '$target'");
+                      $logger->debug("Source mapping (type=$level, key=$etargetkey): Overwriting existing field '$fieldtarget'");
                     }
                   }
                   else {
                     if ($logger->is_debug()) { # performance tune
-                      $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$fieldsource' is mapped to field '$target' but both are defined, skipping ...");
+                      $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$fieldsource' is mapped to field '$fieldtarget' but both are defined, skipping ...");
                     }
                     next;
                   }
                 }
-                # $target and $fieldsource are already casefolded, which is correct as it
+                # $fieldtarget and $fieldsource are already casefolded, which is correct as it
                 # does not come from Text::BibTeX's list of fields
-                $etarget->set(encode('UTF-8', NFC($target)),
+                $etarget->set(encode('UTF-8', NFC($fieldtarget)),
                               encode('UTF-8', NFC($entry->get(encode('UTF-8', NFC($fieldsource))))));
                 $etarget->delete($fieldsource);
               }

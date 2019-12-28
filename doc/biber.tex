@@ -804,9 +804,13 @@ examples. A \opt{map} element looks like this:
   +\textcolor{blue}{<per\_nottype>\textcolor{red}{entrytype}</per\_nottype>}+
   <map_step  +\textcolor{blue}{map\_type\_source="\textcolor{red}{source-entrytype}"}+
              +\textcolor{blue}{map\_field\_source="\textcolor{red}{source-field}"}+
+             +\textcolor{blue}{map\_field\_source\_form="\textcolor{red}{source-field-form}"}+
+             +\textcolor{blue}{map\_field\_source\_lang="\textcolor{red}{source-field-lang}"}+
              +\textcolor{blue}{map\_notfield="\textcolor{red}{source-field}"}+
              +\textcolor{blue}{map\_type\_target="\textcolor{red}{target-entrytype}"}+
              +\textcolor{blue}{map\_field\_target="\textcolor{red}{target-field}"}+
+             +\textcolor{blue}{map\_field\_target\_form="\textcolor{red}{target-field-form}"}+
+             +\textcolor{blue}{map\_field\_target\_lang="\textcolor{red}{target-field-lang}"}+
              +\textcolor{blue}{map\_match="\textcolor{red}{match-regexp}"}+
              +\textcolor{blue}{map\_nomatch="\textcolor{red}{match-regexp}"}+
              +\textcolor{blue}{map\_replace="\textcolor{red}{replace-regexp}"}+
@@ -899,8 +903,14 @@ datasource entry being processed. A \opt{map\_step} works like this:
   \textcolor{blue}{\texttt{map\_final}} is set then if the entrytype of the
   entry is not \textcolor{red}{\texttt{source-entrytype}}, processing of
   this \opt{map} immediately terminates.
-\item Change the \textcolor{red}{\texttt{source-field}} to
-  \textcolor{red}{\texttt{target-field}}, if defined. If
+\item Change the \textcolor{red}{\texttt{source-field}} (optionally a
+  particular alternate of the \textcolor{red}{\texttt{source-field}} as
+  specified by \textcolor{red}{\texttt{source-field-form}} and
+  \textcolor{red}{\texttt{source-field-lang}}) to
+  \textcolor{red}{\texttt{target-field}} (optionally a
+  particular alternate of the \textcolor{red}{\texttt{target-field}} as
+  specified by \textcolor{red}{\texttt{target-field-form}} and
+  \textcolor{red}{\texttt{target-field-lang}}), if defined. If
   \textcolor{blue}{\texttt{map\_final}} is set, then if there is no
   \textcolor{red}{\texttt{source-field}} field in the entry, processing of
   this \opt{map} immediately terminates.

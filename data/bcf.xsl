@@ -461,9 +461,12 @@
                         select="./@map_entry_newtype"/> created with key &quot;<xsl:value-of select="./@map_entry_new"/>&quot;</span>
                       </xsl:if>
                       <xsl:if test="./@map_field_source">
-                        <span><xsl:value-of select="./@map_field_source"/></span>
+                        <span>
+                          <xsl:value-of select="./@map_field_source"/><xsl:if test="./@map_field_source_form">/<xsl:value-of select="./@map_field_source_form"/></xsl:if><xsl:if test="./@map_field_source_lang">/<xsl:value-of select="./@map_field_source_lang"/></xsl:if>
+                        </span>
                         <xsl:if test="./@map_field_target">
                           <xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text><xsl:value-of select="./@map_field_target"/>
+                          <xsl:if test="./@map_field_target_form">/<xsl:value-of select="./@map_field_target_form"/></xsl:if><xsl:if test="./@map_field_target_lang">/<xsl:value-of select="./@map_field_target_lang"/></xsl:if>
                         </xsl:if>
                         <xsl:if test="./@map_match"> <xsl:text disable-output-escaping="yes">&amp;asymp;</xsl:text> <span class="map_regexp"><xsl:value-of select="./@map_match"/></span></xsl:if>
                         <xsl:if test="./@map_replace"> <xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text> <span class="map_regexp"><xsl:value-of select="./@map_replace"/></span></xsl:if>

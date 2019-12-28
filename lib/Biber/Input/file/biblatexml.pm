@@ -568,7 +568,7 @@ sub create_entry {
           }
 
           # Field map
-          if ($xp_fieldsource_s = _getpath(maploopreplace($step->{map_field_source}, $maploop))) {
+          if ($xp_fieldsource_s = _getpath(maploopreplace($step->{map_field_source}, $maploop), $step->{map_field_source_form}, $step->{map_field_source_lang})) {
             $xp_fieldsource = XML::LibXML::XPathExpression->new($xp_fieldsource_s);
 
             # key is a pseudo-field. It's guaranteed to exist so
@@ -651,7 +651,7 @@ sub create_entry {
             }
 
             # Set to a different target if there is one
-            if (my $xp_target_s = _getpath(maploopreplace($step->{map_field_target}, $maploop))) {
+            if (my $xp_target_s = _getpath(maploopreplace($step->{map_field_target}, $maploop), $step->{map_field_target_form}, $step->{map_field_target_lang})) {
               my $xp_target = XML::LibXML::XPathExpression->new($xp_target_s);
 
               # Can't remap entry key pseudo-field
@@ -1457,7 +1457,7 @@ sub _get_handler {
 
 # Changes node $xp_target_s (XPATH 1.0) to $value in the biblatexml entry $e, puts errors
 # into $error. Quite complicated because of the various node types that can be changed and
-# also due to the requirements of creating new targets when then don't exist.
+# also due to the requirements of creating new targets when they don't exist.
 sub _changenode {
   my ($e, $xp_target_s, $value, $error) = @_;
 
@@ -1571,7 +1571,7 @@ sub _changenode {
 }
 
 sub _getpath {
-  my $string = shift;
+  my ($string, $form, $lang) = @_;
   return undef unless $string;
   my $dm = Biber::Config->get_dm;
   if ($string =~ m|/|) {
@@ -1579,12 +1579,18 @@ sub _getpath {
   }
   else {
     if ($dm->is_field($string)) {
+      $form = $form ? (" \@msform='" . fc($form) . "'") : '';
+      $lang = $lang ? (" \@mslang='" . fc($lang) . "'") : '';
+      my $fl = '';
+      if ($form or $lang) {
+        $fl = "[$form$lang]"
+      }
       my $dms = $dm->get_dm_for_field($string);
       if ($dms->{fieldtype} eq 'list' and $dms->{datatype} eq 'name') {
-        return "./bltx:names[\@type='$string']";
+        return "./bltx:names[\@type='$string'$form$lang]";
       }
       else {
-        return "./bltx:$string";
+        return "./bltx:$string$fl";
       }
     }
     else {

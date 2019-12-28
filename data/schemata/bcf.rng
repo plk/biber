@@ -2124,6 +2124,20 @@
                 </attribute>
               </optional>
               <optional>
+                <attribute name="map_field_source_form">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                  </data>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="map_field_source_lang">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                  </data>
+                </attribute>
+              </optional>
+              <optional>
                 <attribute name="map_notfield">
                   <data type="string">
                     <param name="minLength">1</param>
@@ -2132,6 +2146,20 @@
               </optional>
               <optional>
                 <attribute name="map_field_target">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                  </data>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="map_field_target_form">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                  </data>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="map_field_target_lang">
                   <data type="string">
                     <param name="minLength">1</param>
                   </data>

@@ -207,14 +207,16 @@
 **** DONE indexfield
 **** DONE indexlist
 **** DONE indexname
-**** TODO \blx@imc@thefield
-**** TODO \blx@imc@strfield
-**** TODO \blx@imc@usefield
-**** TODO \blx@imc@strlist
-**** TODO \blx@imc@thefirstlistitem
-**** TODO \blx@imc@strfirstlistitem
-**** TODO \blx@imc@thename
-**** TODO \blx@imc@strname
+**** DONE \blx@imc@thefield
+**** DONE \blx@imc@strfield
+**** DONE \blx@imc@usefield
+**** DONE \blx@imc@thelist
+**** DONE \blx@imc@strlist
+**** DONE \blx@imc@thefirstlistitem
+**** DONE \blx@imc@strfirstlistitem
+**** DONE \blx@imc@usefirstlistitem
+**** DONE \blx@imc@thename
+**** DONE \blx@imc@strname
 **** TODO \blx@imc@clearfield
 **** TODO \blx@imc@clearlist
 **** TODO \blx@imc@clearname
@@ -258,6 +260,7 @@
 *** TODO Default global mslang to main document language BCP47 tag equivalent
 *** TODO output sortlocale/mslang in .bcf as BCP-47 if possible (polyglossia 1.47+)
 ** DONE biber
+*** TODO isms, form= and lang= in maps
 *** DONE Decomm DOT output
 *** DONE Parsing BCP47 function https://tools.ietf.org/html/bcp47
 *** DONE Names and lists
