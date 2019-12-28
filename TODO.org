@@ -260,7 +260,10 @@
 *** TODO Default global mslang to main document language BCP47 tag equivalent
 *** TODO output sortlocale/mslang in .bcf as BCP-47 if possible (polyglossia 1.47+)
 ** DONE biber
-*** TODO isms, form= and lang= in maps
+*** TODO form= and lang= in maps
+**** TODO fix error in multiscript test when _fr is changed to _es
+**** TODO Put in map in multiscript.bcf to change _es to _fr
+**** TODO Add map_field_source/target_form/lang to biblatex output and document
 *** DONE Decomm DOT output
 *** DONE Parsing BCP47 function https://tools.ietf.org/html/bcp47
 *** DONE Names and lists
