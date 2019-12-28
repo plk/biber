@@ -900,7 +900,7 @@ sub _create_entry {
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $ds = $section->get_keytods($k);
 
-  # In strict modelangid is important as it is a local override for mslang
+  # In strict mode langid is important as it is a local override for mslang
   # which is used in every field get/set and so we need to use it to set an
   # entry scope option first, if it exists
   if (Biber::Config->getoption('msstrict')) {

@@ -164,13 +164,14 @@
 *** DONE \currentmsforms and  \curentmslangs (only in formats)
 *** DONE Annotation macros + MS args
 *** DONE NAMEnamehash, NAMEbibnamehash NAMEfullhas etc. are now NAMEFORMLANGnamehash and NAMEFORMLANGbibnamehash (also doc in changes as incompat change)
-*** TODO \printfield
-*** TODO \printlist
-*** TODO \printname
-*** TODO \iffieldundef (doc that tests for any alternates with no ms args)
-*** TODO \ifmsentryfield
-*** TODO \currentmsform \currentmslang
-*** TODO langtags annotation overrides entry/field language
+*** DONE CHANGES - breaking get/has/if*annotation have opt args as #1 and #2 and so need defaulting if not present [][]
+*** DONE \printfield
+*** DONE \printlist*
+*** DONE \printname
+*** DONE \iffieldundef (doc that tests for any alternates with no ms args)
+*** DONE \ifmsentryfield
+*** DONE \currentmsform \currentmslang only defined for MS fields
+*** DONE langtags annotation overrides entry/field language
 *** TODO Add to general docs
 **** TODO general citation/print*/if*
 *** TODO Default global mslang to main document language BCP47 tag equivalent
