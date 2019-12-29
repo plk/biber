@@ -567,8 +567,15 @@ sub create_entry {
             }
           }
 
+          my $sf = $step->{map_field_source};
+          my $sff = $step->{map_field_source_form};
+          my $sfl = $step->{map_field_source_lang};
+          my $tf = $step->{map_field_target};
+          my $tff = $step->{map_field_target_form};
+          my $tfl = $step->{map_field_target_lang};
+
           # Field map
-          if ($xp_fieldsource_s = _getpath(maploopreplace($step->{map_field_source}, $maploop), $step->{map_field_source_form}, $step->{map_field_source_lang})) {
+          if ($xp_fieldsource_s = _getpath(maploopreplace($sf, $maploop), $sff, $sfl)) {
             $xp_fieldsource = XML::LibXML::XPathExpression->new($xp_fieldsource_s);
 
             # key is a pseudo-field. It's guaranteed to exist so
@@ -651,7 +658,7 @@ sub create_entry {
             }
 
             # Set to a different target if there is one
-            if (my $xp_target_s = _getpath(maploopreplace($step->{map_field_target}, $maploop), $step->{map_field_target_form}, $step->{map_field_target_lang})) {
+            if (my $xp_target_s = _getpath(maploopreplace($tf, $maploop), $tff, $tfl)) {
               my $xp_target = XML::LibXML::XPathExpression->new($xp_target_s);
 
               # Can't remap entry key pseudo-field
@@ -679,6 +686,32 @@ sub create_entry {
                 biber_warn("Source mapping (type=$level, key=$key): $cnerror");
               }
               $etarget->findnodes($xp_fieldsource)->get_node(1)->unbindNode();
+
+              # Now we need to change any annotations of this field to the new target field
+              # name to or else they will be orphaned and dropped. That is, when we do:
+              #
+              # SOURCEFIELDNAME -> TARGETFIELDNAME
+              #
+              # we also need to do
+              #
+              # SOURCEFIELDNAME+an... -> TARGETFIELDNAME+an...
+              if ($logger->is_debug()) { # performance tune
+                $logger->debug("Source mapping (type=$level, key=$etargetkey): auto-remapping annotations for remapped target '$tf/$tff/$tfl'");
+              }
+              my $sffl ='';
+              $sffl .= "[\@msform='$sff']" if $sff;
+              $sffl .= "[\@mslang='$sfl']" if $sfl;
+
+              my $sft = _ungetpath($sf);
+
+              foreach my $f ($etarget->findnodes("./bltx:annotation[\@field='$sft']$sffl")) {
+                if ($logger->is_trace()) { # performance tune
+                  $logger->trace("Source mapping (type=$level, key=$etargetkey): auto-remapping annotation '$sf/$sff/$sfl' for remapped target '$tf/$tff/$tfl'");
+                }
+                $f->setAttribute('field', $tf);
+                $f->setAttribute('msform', $tff) if $tff;
+                $f->setAttribute('mslang', $tfl) if $tfl;
+              }
             }
           }
 
@@ -819,6 +852,7 @@ sub create_entry {
 # Annotations are special - there is a literal field and also more complex annotations
 sub _annotation {
   my ($bibentry, $entry, $f, $key) = @_;
+  my $dm = Biber::Config->get_dm;
   foreach my $node ($entry->findnodes("./$f")) {
     my $form = $node->getAttribute('msform') // 'default';
     my $lang = $node->getAttribute('mslang') // Biber::Config->get_mslang($key);
@@ -830,6 +864,20 @@ sub _annotation {
     my $part = $node->getAttribute('part');
     Biber::Config->add_form($form);
     Biber::Config->add_lang($lang);
+
+    # Get field this is supposed to be an annotation of and make sure that it exists.
+    my $xp_f;
+    if ($dm->is_multiscript($field) and $form ne 'default' and $lang ne 'Biber::Config->get_mslang($key)') {
+      $xp_f = XML::LibXML::XPathExpression->new(_getpath($field, $form, $lang));
+    }
+    else {
+      $xp_f = XML::LibXML::XPathExpression->new(_getpath($field));
+    }
+
+    unless ($entry->findnodes($xp_f)) {
+      biber_warn("Trying to data annotate non-existent field '$field/$form/$lang' ignoring data annotation", $bibentry);
+      next;
+    }
 
     if ($field) {# Complex metadata annotation for another field
       if ($part) {
@@ -1579,15 +1627,16 @@ sub _getpath {
   }
   else {
     if ($dm->is_field($string)) {
-      $form = $form ? (" \@msform='" . fc($form) . "'") : '';
-      $lang = $lang ? (" \@mslang='" . fc($lang) . "'") : '';
+      $form = $form ? ("[\@msform='" . fc($form) . "']") : '';
+      # This XPATh 1.0 hack is safe on BCP47 tags as they are ASCII
+      $lang = $lang ? ("[translate(\@mslang,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')='" . fc($lang) . "']") : '';
       my $fl = '';
       if ($form or $lang) {
-        $fl = "[$form$lang]"
+        $fl = "$form$lang"
       }
       my $dms = $dm->get_dm_for_field($string);
       if ($dms->{fieldtype} eq 'list' and $dms->{datatype} eq 'name') {
-        return "./bltx:names[\@type='$string'$form$lang]";
+        return "./bltx:names[\@type='$string']$form$lang";
       }
       else {
         return "./bltx:$string$fl";
@@ -1597,6 +1646,24 @@ sub _getpath {
       return $string; # not a field, presumably just a string value
     }
   }
+}
+
+# Gets a field name from a path
+sub _ungetpath {
+  my $string = shift;
+  return undef unless $string;
+
+  if ($string !~ m|/|) {
+    return $string;             # presumably not XPath
+  }
+  my $ret;
+  if (($ret) = $string =~ m/bltx:names\[\@type='(.+)'\]/) {
+    return $ret;
+  }
+  else {
+    ($ret) = $string =~ m|^(?:\./bltx:)?([a-zA-Z]+)|;
+  }
+  return $ret;
 }
 
 

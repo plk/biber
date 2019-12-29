@@ -83,6 +83,7 @@ my $ann1 = q|    \entry{ann1}{misc}{}
       \annotation{item}{language}{default}{1}{}{0}{ann1}
       \annotation{item}{language}{default}{2}{}{0}{ann2, ann3}
       \annotation[default][en-us]{part}{author}{default}{1}{family}{0}{student}
+      \warn{\item Trying to data annotate non-existent field 'note', ignoring data annotation}
     \endentry
 |;
 

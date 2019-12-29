@@ -565,6 +565,14 @@
         <bcf:map_step map_field_source="key" map_field_target="sortkey"/>
         <bcf:map_step map_field_source="pdf" map_field_target="file"/>
       </bcf:map>
+      <bcf:map>
+        <bcf:map_step map_field_source="location"
+                      map_field_source_form="translation"
+                      map_field_source_lang="es"
+                      map_field_target="location"
+                      map_field_target_form="translation"
+                      map_field_target_lang="fr"/>
+      </bcf:map>
     </bcf:maps>
   </bcf:sourcemap>
   <!-- LABELALPHA NAME TEMPLATE -->

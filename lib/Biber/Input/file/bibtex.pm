@@ -815,6 +815,29 @@ sub create_entry {
                 $etarget->set(encode('UTF-8', NFC($fieldtarget)),
                               encode('UTF-8', NFC($entry->get(encode('UTF-8', NFC($fieldsource))))));
                 $etarget->delete($fieldsource);
+
+                # Now we need to change any annotations of this field to the new target field
+                # name to or else they will be orphaned and dropped. That is, when we do:
+                #
+                # SOURCEFIELDNAME -> TARGETFIELDNAME
+                #
+                # we also need to do
+                #
+                # SOURCEFIELDNAME+an... -> TARGETFIELDNAME+an...
+                if ($logger->is_debug()) { # performance tune
+                  $logger->debug("Source mapping (type=$level, key=$etargetkey): auto-remapping annotations for remapped target '$fieldtarget'");
+                }
+                my $ann = $CONFIG_META_MARKERS{annotation};
+                foreach my $f ($entry->fieldlist) {
+                  if ($f =~ /^$fieldsource($ann.+)$/) {
+                    if ($logger->is_trace()) { # performance tune
+                      $logger->trace("Source mapping (type=$level, key=$etargetkey): auto-remapping annotation '$f' for remapped target '$fieldtarget'");
+                    }
+                    $etarget->set(encode('UTF-8', NFC("$fieldtarget$1")),
+                                  encode('UTF-8', NFC($entry->get(encode('UTF-8', NFC($f))))));
+                    $etarget->delete($f);
+                  }
+                }
               }
             }
 
@@ -997,10 +1020,18 @@ sub _annotation {
   my ($bibentry, $entry, $value, $tbfield, $field, $form, $lang, $key) = @_;
   my $ann = $CONFIG_META_MARKERS{annotation};
   my $nam = $CONFIG_META_MARKERS{namedannotation};
+
   # Get annotation name, "default" if none
   my $name = 'default';
-  if ($tbfield =~ s/^(.+$ann)$nam(.+)$/$1/) {
-    $name = $2;
+  if ($tbfield =~ m/^.+$ann$nam(.+)$/) {
+    $name = $1;
+  }
+
+  # Get field this is supposed to be an annotation of and make sure that it exists.
+  my ($annfield) = $tbfield =~ m/^(.+)$ann/;
+  unless ($entry->get(encode('UTF-8', NFC($annfield)))) {
+    biber_warn("Trying to data annotate non-existent field '$annfield', ignoring data annotation", $bibentry);
+    return;
   }
 
   foreach my $a (split(/\s*;\s*/, $value)) {
