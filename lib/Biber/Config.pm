@@ -356,6 +356,7 @@ sub _config_file_set {
                                                             qr/\Asortexclusion\z/,
                                                             qr/\Aexclusion\z/,
                                                             qr/\Asortingtemplate\z/,
+                                                            qr/\Aconstant\z/,
                                                             qr/\Asort\z/,
                                                             qr/\Alabelalpha(?:name)?template\z/,
                                                             qr/\Asortitem\z/,
