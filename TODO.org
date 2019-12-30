@@ -217,9 +217,9 @@
 **** DONE \blx@imc@usefirstlistitem
 **** DONE \blx@imc@thename
 **** DONE \blx@imc@strname
-**** TODO \blx@imc@clearfield
-**** TODO \blx@imc@clearlist
-**** TODO \blx@imc@clearname
+**** TODO \blx@imc@clearfield (must provide both form/lang or neither)
+**** TODO \blx@imc@clearlist (must provide both form/lang or neither)
+**** TODO \blx@imc@clearname (must provide both form/lang or neither)
 **** TODO \blx@imc@restorefield
 **** TODO \blx@imc@restorelist
 **** TODO \blx@imc@restorename
@@ -257,13 +257,19 @@
 **** TODO \blx@savename
 **** TODO \blx@savelist
 **** TODO \blx@savefield
+**** TODO blx@imc@savefield
+**** TODO blx@imc@savelist
+**** TODO blx@imc@savename
+**** TODO blx@imc@savefieldcs
+**** TODO blx@imc@savelistcs
+**** TODO blx@imc@savenamecs
 *** TODO Default global mslang to main document language BCP47 tag equivalent
 *** TODO output sortlocale/mslang in .bcf as BCP-47 if possible (polyglossia 1.47+)
 ** DONE biber
-*** TODO form= and lang= in maps
-**** TODO fix error in multiscript test when _fr is changed to _es
-**** TODO Put in map in multiscript.bcf to change _es to _fr
-**** TODO Add map_field_source/target_form/lang to biblatex output and document
+*** DONE form= and lang= in maps
+**** DONE fix error in multiscript test when _fr is changed to _es
+**** DONE Put in map in multiscript.bcf to change _es to _fr
+**** DONE Add map_field_source/target_form/lang to biblatex output and document
 *** DONE Decomm DOT output
 *** DONE Parsing BCP47 function https://tools.ietf.org/html/bcp47
 *** DONE Names and lists
