@@ -55,6 +55,7 @@ GetOptions(
            'no_bblxml_schema|no-bblxml-schema',
            'no_bltxml_schema|no-bltxml-schema',
            'noconf',
+           'no_default_datamodel|no-default-datamodel',
            'nodieonerror',
            'nolog',
            'nostdmacros',
@@ -609,6 +610,17 @@ model.
 
 Don't look for a configfile.
 
+=item B<--no-default-datamodel>
+
+Do not load the default datamodel coming from either the F<.bcf> or, when
+in tool mode, from the default tool mode config file. Use of this option
+implies that you will provide a complete datamodel in a config file. This
+option is useful when you wish to make major modifications to the datamodel
+because the simple add/modify operations to the default datamodel via a user
+config file are not enough. For example, to remove things from the default
+datamodel, you would use this option and supply a complete, reduced
+datamodel in the user config file.
+
 =item B<--nodieonerror>
 
 Don't exit on errors, just log and continue as far as possible.
@@ -953,7 +965,7 @@ L<https://github.com/plk/biber/issues>.
 =head1 COPYRIGHT & LICENSE
 
 Copyright 2009-2012 François Charette and Philip Kime, all rights reserved.
-Copyright 2012-2019 Philip Kime, all rights reserved.
+Copyright 2012-2020 Philip Kime, all rights reserved.
 
 This module is free software.  You can redistribute it and/or
 modify it under the terms of the Artistic License 2.0.

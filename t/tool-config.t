@@ -1,7 +1,7 @@
 # -*- cperl -*-
 use strict;
 use warnings;
-use Test::More tests => 5;
+use Test::More tests => 12;
 use Test::Differences;
 unified_diff;
 
@@ -56,3 +56,10 @@ is_deeply (Biber::Config->getblxoption(0, 'sortingtemplate'), {tool => { locale 
 # This is only in the user conf datamodel
 ok((first {$_ eq 'newliteralfield'} $dm->get_fields_of_type('field', 'literal')->@*), 'Options 4');
 ok($dm->is_field_for_entrytype('article', 'newliteralfield'), 'Options 5');
+ok($dm->is_field_for_entrytype('xyz', 'author'), 'Options 6');
+ok($dm->is_field_for_entrytype('xyz', 'file'), 'Options 7');
+ok($dm->is_field_for_entrytype('xyz', 'abc'), 'Options 8');
+ok($dm->is_field_for_entrytype('article', 'abc'), 'Options 9');
+ok($dm->is_field_for_entrytype('book', 'bookzzz'), 'Options 10');
+ok($dm->is_field_for_entrytype('article', 'bookzzz')==0, 'Options 11');
+ok((first {$_ eq 'month'} $dm->get_fields_of_type('field', 'literal')->@*), 'Options 12');

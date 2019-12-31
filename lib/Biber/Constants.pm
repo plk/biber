@@ -130,6 +130,7 @@ our $CONFIG_DEFAULT_BIBER = {
   namesep                                     => { content => 'and' },
   no_bblxml_schema                            => { content => 0 },
   no_bltxml_schema                            => { content => 0 },
+  no_default_datamodel                        => { content => 0 },
   nodieonerror                                => { content => 0 },
   noinit                                      => { option => [ {value => q/\b\p{Ll}{2}\p{Pd}(?=\S)/},
                                                                {value => q/[\x{2bf}\x{2018}]/} ] },
@@ -551,7 +552,7 @@ L<https://github.com/plk/biber/issues>.
 =head1 COPYRIGHT & LICENSE
 
 Copyright 2009-2012 François Charette and Philip Kime, all rights reserved.
-Copyright 2012-2019 Philip Kime, all rights reserved.
+Copyright 2012-2020 Philip Kime, all rights reserved.
 
 This module is free software.  You can redistribute it and/or
 modify it under the terms of the Artistic License 2.0.

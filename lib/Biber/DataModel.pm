@@ -44,36 +44,70 @@ sub new {
 
   # Merge global and any user data model
   my $dm = $dms->[0];
-  if (my $udm = $dms->[1]) {
-    # Constants
-    if (my $ucs = $udm->{constants}) {
-      foreach my $uc ($ucs->{constant}->@*) {
+
+  # If requested, throw away default data model and use user-defined
+  if (Biber::Config->getoption('no_default_datamodel')) {
+    $dm = $dms->[1];
+  }
+  else { # we want to add/modify the default datamodel using the user-supplied subset
+    if (my $udm = $dms->[1]) {
+
+      # Constants
+      foreach my $uc ($udm->{constants}{constant}->@*) {
         my $uce = firstidx {fc($_->{name}) eq fc($uc->{name})} $dm->{constants}{constant}->@*;
-        if ($uce >= 0) {
+        if ($uce >= 0) { # since constants are named, we can overwrite easily
           $dm->{constants}{constant}[$uce] = $uc;
         }
         else {
           push $dm->{constants}{constant}->@*, $uc;
         }
       }
+
+      # Constraints
+      foreach my $uc ($udm->{constraints}[0]{constraint}->@*) {
+        push $dm->{constraints}[0]{constraint}->@*, $uc;
+      }
+
+      # Entryfields
+      foreach my $uef ($udm->{entryfields}->@*) {
+        if (my $et = $uef->{entrytype}) {
+          my $ef = firstidx {$_->{entrytype}[0]{content} and (fc($_->{entrytype}[0]{content}) eq fc($et->[0]{content}))} $dm->{entryfields}->@*;
+          if ($ef >= 0) {       # Push fields onto existing type
+            push $dm->{entryfields}[$ef]{field}->@*, $uef->{field}->@*;
+          }
+          else {                # Unknown type, create new array member
+            push $dm->{entryfields}->@*, $uef;
+          }
+        }
+        else {                  # general fields for all entrytypes
+          my $ef = firstidx {not exists($_->{entrytype})} $dm->{entryfields}->@*;
+          if ($ef >= 0) {
+            push $dm->{entryfields}[$ef]{field}->@*, $uef->{field}->@*;
+          }
+        }
+      }
+
+      # Entrytypes
+      foreach my $et ($udm->{entrytypes}{entrytype}->@*) {
+        push $dm->{entrytypes}{entrytype}->@*, $et;
+      }
+
+      # Fields
+      foreach my $f ($udm->{fields}{field}->@*) {
+        my $df = firstidx {fc($_->{content}) eq fc($f->{content}) } $dm->{fields}{field}->@*;
+        if ($df >= 0) {
+          $dm->{fields}{field}->[$df] = $f;
+        }
+        else {
+          push $dm->{fields}{field}->@*, $f;
+        }
+      }
+
+      # Multiscriptfields
+      foreach my $f ($udm->{multiscriptfields}{field}->@*) {
+        push $dm->{multiscriptfields}{field}->@*, $f;
+      }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   }
 
   # First, we normalise all entrytypes and fields to case-folded form for internal
@@ -1987,7 +2021,7 @@ L<https://github.com/plk/biber/issues>.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2012-2019 Philip Kime, all rights reserved.
+Copyright 2012-2020 Philip Kime, all rights reserved.
 
 This module is free software.  You can redistribute it and/or
 modify it under the terms of the Artistic License 2.0.
