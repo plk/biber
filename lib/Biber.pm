@@ -824,6 +824,9 @@ sub parse_ctrlfile {
 
   # DATAMODEL schema (always global and is an array to accomodate multiple
   # datamodels in tool mode)
+
+  # Because in tests, parse_ctrlfile() is called several times so we need to sanitise this here
+  Biber::Config->setblxoption(undef, 'datamodel', []);
   Biber::Config->addtoblxoption(undef, 'datamodel', $bcfxml->{datamodel});
 
   # SECTIONS
@@ -4903,7 +4906,7 @@ L<https://github.com/plk/biber/issues>.
 =head1 COPYRIGHT & LICENSE
 
 Copyright 2009-2012 François Charette and Philip Kime, all rights reserved.
-Copyright 2012-2019 Philip Kime, all rights reserved.
+Copyright 2012-2020 Philip Kime, all rights reserved.
 
 This module is free software.  You can redistribute it and/or
 modify it under the terms of the Artistic License 2.0.

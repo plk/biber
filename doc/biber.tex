@@ -45,6 +45,18 @@
                      shape border rotate=-90, draw=green, fill=green!20,
                      minimum size=3em, align=center]
 
+% colours for the .dot examples
+\xdefinecolor{centry}{HTML}{A0D0FF}
+\xdefinecolor{ncentry}{HTML}{DEEFFF}
+\xdefinecolor{doentry}{HTML}{FDFFD9}
+\xdefinecolor{section}{HTML}{FCE3FA}
+\xdefinecolor{set}{HTML}{E3DADC}
+\xdefinecolor{related}{HTML}{AD1741}
+\xdefinecolor{clone}{HTML}{AD1741}
+\xdefinecolor{crossref}{HTML}{7D7879}
+\xdefinecolor{xref}{HTML}{7D7879}
+\xdefinecolor{xdata}{HTML}{2CA314}
+
 \DeclareFixedFootnote{\tpb}{Binary maintained by third party. See README in
   binary download directory for this platform for support/contact
   details. Usually, the binary maintainer is also the binary build
@@ -84,6 +96,15 @@
 Please see the \verb+Changes+ file which accompanies \biber\ for the
 details on changes in each version. This section is just for important
 things like incompatible changes which users should be aware of.
+
+\minisec{2.15}
+Datamodel override via the user configuration file has been made more
+robust. User datamodel declarations in the user configuration file by
+default only override or modify the default datamodel. To remove elements
+from the default datamodel or to make major changes to the default
+datamodel, use the \biber option \opt{--no-default-datamodel} which will
+not load any default datamodel and assumes that a complete datamodel will
+be provided in the user configuration file.
 
 \minisec{2.14}
 The \file{DOT} output format is no longer available. It was not much used

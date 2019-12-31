@@ -204,25 +204,26 @@ sub set_output_entry {
   }
   $acc{$casing->('options')} = join(',', @entryoptions) if @entryoptions;
 
+  # YEAR and MONTH are legacy - convert these to DATE if possible if they are
+  # datepart fields (they are in the default datamodel) otherwise output as literal
+  # as the datamodel has been redefined on purpose to not absorb these into DATE
+  my $literalyear = 0;
+  if (my $val = $be->get_field('year') and
+      $dm->get_datatype('year') ne 'datepart' and
+      not $be->get_field('day')) {
+    $acc{$casing->('year')} = $val;
+    $literalyear = 1;
+    if (my $mval = $be->get_field('month') and $dm->get_datatype('month') ne 'datepart') {
+      $acc{$casing->('month')} = $mval;
+    }
+  }
+
   # Date fields
   foreach my $d ($dmh->{datefields}->@*) {
     $d =~ s/date$//;
     next unless $be->get_field("${d}year");
+    next if $literalyear;
     $acc{$casing->("${d}date")} = construct_datetime($be, $d);
-  }
-
-  # YEAR and MONTH are legacy - convert these to DATE if possible
-  if (my $val = $be->get_field('year')) {
-    if (looks_like_number($val)) {
-      $acc{$casing->('date')} = $val;
-      $be->del_field('year');
-    }
-  }
-  if (my $val = $be->get_field('month')) {
-    if (looks_like_number($val)) {
-      $acc{$casing->('date')} .= "-$val";
-      $be->del_field('month');
-    }
   }
 
   # If CROSSREF and XDATA have been resolved, don't output them
@@ -751,7 +752,7 @@ L<https://github.com/plk/biber/issues>.
 =head1 COPYRIGHT & LICENSE
 
 Copyright 2009-2012 François Charette and Philip Kime, all rights reserved.
-Copyright 2012-2019 Philip Kime, all rights reserved.
+Copyright 2012-2020 Philip Kime, all rights reserved.
 
 This module is free software.  You can redistribute it and/or
 modify it under the terms of the Artistic License 2.0.

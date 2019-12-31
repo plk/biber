@@ -364,6 +364,7 @@ sub _config_file_set {
                                                             qr/\Asortexclusion\z/,
                                                             qr/\Aexclusion\z/,
                                                             qr/\Asortingtemplate\z/,
+                                                            qr/\Aconstant\z/,
                                                             qr/\Asort\z/,
                                                             qr/\Alabelalpha(?:name)?template\z/,
                                                             qr/\Asortitem\z/,
@@ -1352,7 +1353,7 @@ L<https://github.com/plk/biber/issues>.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2012-2019 Philip Kime, all rights reserved.
+Copyright 2012-2020 Philip Kime, all rights reserved.
 
 This module is free software.  You can redistribute it and/or
 modify it under the terms of the Artistic License 2.0.
