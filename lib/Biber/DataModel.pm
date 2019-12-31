@@ -198,35 +198,7 @@ sub new {
       }
     }
 
-  # Get entrytypes from existing model (meaning, already processed XML model)
-  # or XML model. We need to do this in case we have two datamodel sources like
-  # a default tool mode config and a user config
-  # foreach my $et (($dm->{entrytypes}{entrytype}->@*, keys $self->{entrytypesbyname}->%*)) {
-  #   my $es;
-  #   if (ref($et) eq 'HASH') {   # from new config
-  #     $es = $et->{content};
-
-  #     # Skip output flag for certain entrytypes
-  #     if ($et->{skip_output}) {
-  #       $self->{entrytypesbyname}{$es}{skipout} = 1;
-  #     }
-  #   }
-  #   else {
-  #     $es = $et;                # from existing config
-  #   }
-
-  #   # fields for entrytypes
-  #   foreach my $ef ($dm->{entryfields}->@*) {
-  #     # Found a section describing legal fields for entrytype
-  #     if (not exists($ef->{entrytype}) or
-  #         grep {$_->{content} eq $es} $ef->{entrytype}->@*) {
-  #       foreach my $f ($ef->{field}->@*) {
-  #         $self->{entrytypesbyname}{$es}{legal_fields}{$f->{content}} = 1;
-  #       }
-  #     }
-  #   }
-
-  # constraints
+    # constraints
     foreach my $cd ($dm->{constraints}->@*) {
       # Found a section describing constraints for entrytype
       if (not exists($cd->{entrytype}) or
