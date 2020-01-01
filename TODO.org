@@ -198,7 +198,7 @@
 *** DONE \blx@bbl@msformsdef and  \blx@bbl@mslangsdef are csvs of all forms/langs used for loading langs
 *** DONE Save list of forms and langs per entry@field and make user macros
 *** TODO multiscript fields/lists/names
-**** DONE 7442 - blx@bbl@msdef@i uncommment and then all abx@field, abx@list and abx@name calls need examining
+**** DONE blx@bbl@msdef@i
 **** DONE \printfield
 **** DONE \printlist
 **** DONE \printname
@@ -217,12 +217,21 @@
 **** DONE \blx@imc@usefirstlistitem
 **** DONE \blx@imc@thename
 **** DONE \blx@imc@strname
-**** TODO \blx@imc@clearfield (must provide both form/lang or neither)
-**** TODO \blx@imc@clearlist (must provide both form/lang or neither)
-**** TODO \blx@imc@clearname (must provide both form/lang or neither)
-**** TODO \blx@imc@restorefield
-**** TODO \blx@imc@restorelist
-**** TODO \blx@imc@restorename
+**** DONE \blx@imc@clearfield (must provide both form/lang or neither)
+**** DONE \blx@imc@clearlist (must provide both form/lang or neither)
+**** DONE \blx@imc@clearname (must provide both form/lang or neither)
+**** DONE \blx@savename
+**** DONE \blx@savelist
+**** DONE \blx@savefield
+**** DONE blx@imc@savefield
+**** DONE blx@imc@savelist
+**** DONE blx@imc@savename
+**** DONE blx@imc@savefieldcs
+**** DONE blx@imc@savelistcs
+**** DONE blx@imc@savenamecs
+**** DONE \blx@imc@restorefield
+**** DONE \blx@imc@restorelist
+**** DONE \blx@imc@restorename
 **** TODO \blx@imc@iffieldsequal
 **** TODO \blx@imc@iflistssequal
 **** TODO \blx@imc@ifnamesequal
@@ -254,15 +263,6 @@
 **** TODO \blx@imc@iflistxref
 **** TODO \blx@imc@ifnameequals
 **** TODO \blx@imc@ifnamexref
-**** TODO \blx@savename
-**** TODO \blx@savelist
-**** TODO \blx@savefield
-**** TODO blx@imc@savefield
-**** TODO blx@imc@savelist
-**** TODO blx@imc@savename
-**** TODO blx@imc@savefieldcs
-**** TODO blx@imc@savelistcs
-**** TODO blx@imc@savenamecs
 *** TODO Default global mslang to main document language BCP47 tag equivalent
 *** TODO output sortlocale/mslang in .bcf as BCP-47 if possible (polyglossia 1.47+)
 ** DONE biber
