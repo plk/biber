@@ -245,9 +245,9 @@
 **** DONE \blx@iffieldxref
 **** DONE \blx@iflistxref
 **** DONE \blx@ifnamexref
-**** TODO \citefield
-**** TODO \citelist
-**** TODO \citename
+**** DONE \citefield
+**** DONE \citelist
+**** DONE \citename
 **** DONE \blx@imc@docsvfield
 **** DONE \blx@imc@forcsvfield
 **** DONE \blx@imc@iffieldint
