@@ -189,9 +189,9 @@ my $K11 = q|    \entry{K11}{book}{}
       \field{sortinit}{a}
       \strng{sortinithash}{a3dcedd53b04d1adfd5ac303ecd5e6fa}
       \field{extradatescope}{labelyear}
-      \fieldsource{labeldatesource}{}{}{}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labeldate}{}{}{}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{title}{One}
       \field{year}{1983}
       \field{dateera}{ce}
@@ -221,9 +221,9 @@ my $K12 = q|    \entry{K12}{book}{}
       \field{sortinit}{Z}
       \strng{sortinithash}{8f7b480688e809b50b6f6577b16f3db5}
       \field{extradatescope}{labelyear}
-      \fieldsource{labeldatesource}{}{}{}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labeldate}{}{}{}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{title}{Two}
       \field{year}{1983}
       \field{dateera}{ce}

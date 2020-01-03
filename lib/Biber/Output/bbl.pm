@@ -409,7 +409,7 @@ sub set_output_entry {
       $acc .= "      \\field{extradatescope}{$edscope}\n";
     }
     if ($be->field_exists('labeldatesource')) {
-      $acc .= "      \\fieldsource{labeldatesource}{" . $be->get_field('labeldatesource') .  "}{}{}\n";
+      $acc .= "      \\fieldsource{labeldate}{" . $be->get_field('labeldatesource') .  "}{}{}\n";
     }
   }
 
@@ -450,12 +450,12 @@ sub set_output_entry {
 
   # The source field for labelname
   if ($lni) {
-    $acc .= "      \\fieldsource{labelnamesource}{$lni}{$lnf}{$lnl}\n";
+    $acc .= "      \\fieldsource{labelname}{$lni}{$lnf}{$lnl}\n";
   }
 
   # The source field for labeltitle
   if (my ($lti, $ltf, $ltl) = $be->get_labeltitle_info->@*) {
-    $acc .= "      \\fieldsource{labeltitlesource}{$lti}{$ltf}{$ltl}\n";
+    $acc .= "      \\fieldsource{labeltitle}{$lti}{$ltf}{$ltl}\n";
   }
 
   if (my $ck = $be->get_field('clonesourcekey')) {

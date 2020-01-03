@@ -125,8 +125,8 @@ my $l4 = q|    \entry{L4}{book}{}
       \field{sortinit}{D}
       \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
       \field{extraalpha}{2}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{title}{Some title about sorting}
       \field{year}{1995}
     \endentry
@@ -157,8 +157,8 @@ my $l1 = q|    \entry{L1}{book}{}
       \field{sortinit}{D}
       \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
       \field{extraalpha}{1}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{title}{Algorithms For Sorting}
       \field{year}{1995}
     \endentry
@@ -189,8 +189,8 @@ my $l2 = q|    \entry{L2}{book}{}
       \field{sortinit}{D}
       \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
       \field{extraalpha}{3}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{title}{Sorting Algorithms}
       \field{year}{1995}
     \endentry
@@ -221,8 +221,8 @@ my $l3 = q|    \entry{L3}{book}{}
       \field{sortinit}{D}
       \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
       \field{extraalpha}{2}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{title}{More and More Algorithms}
       \field{year}{1995}
     \endentry
@@ -255,8 +255,8 @@ my $l5 = q|    \entry{L5}{book}{}
       \field{sortinit}{D}
       \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
       \field{extraalpha}{1}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{title}{Some other title about sorting}
       \field{year}{1995}
     \endentry

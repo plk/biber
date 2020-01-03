@@ -69,9 +69,9 @@ my $string2 = q|    \entry{Static2}{book}{skipbib=true,skipbiblist=true,skiplab=
       \strng{authordefaulten-usfullhash}{43874d80d7ce68027102819f16c47df1}
       \field{sortinit}{B}
       \strng{sortinithash}{8de16967003c7207dae369d874f1456e}
-      \fieldsource{labeldatesource}{year}{}{}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labeldate}{year}{}{}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field{annotation}{Some Blessed Note}
       \field[default][en-us]{title}{Blessed Brains}
       \field{year}{2001}
@@ -95,9 +95,9 @@ my $string3 = q|    \entry{Static3}{book}{skipbib=true,skipbiblist=true,skiplab=
       \strng{authordefaulten-usfullhash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
       \field{sortinit}{D}
       \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
-      \fieldsource{labeldatesource}{year}{}{}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labeldate}{year}{}{}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{title}{Castles and Crime}
       \field{year}{2002}
     \endentry
@@ -120,9 +120,9 @@ my $string4 = q|    \entry{Static4}{book}{skipbib=true,skipbiblist=true,skiplab=
       \strng{authordefaulten-usfullhash}{da80091c8cd89e5269bd55af1bd5d2fa}
       \field{sortinit}{C}
       \strng{sortinithash}{4c244ceae61406cdc0cc2ce1cb1ff703}
-      \fieldsource{labeldatesource}{year}{}{}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labeldate}{year}{}{}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{title}{Dungeons, Dark and Dangerous}
       \field{year}{2005}
     \endentry
@@ -147,9 +147,9 @@ my $string5 = q|    \entry{Static2}{book}{}
       \field{sortinit}{1}
       \strng{sortinithash}{50c6687d7fc80f50136d75228e3c59ba}
       \field{extradatescope}{labelyear}
-      \fieldsource{labeldatesource}{year}{}{}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labeldate}{year}{}{}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field{annotation}{Some Blessed Note}
       \field[default][en-us]{title}{Blessed Brains}
       \field{year}{2001}

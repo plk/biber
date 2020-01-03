@@ -58,9 +58,9 @@ my $k1 = q|    \entry{key1}{article}{}
       \field{sortinit}{1}
       \strng{sortinithash}{50c6687d7fc80f50136d75228e3c59ba}
       \field{extradatescope}{labelyear}
-      \fieldsource{labeldatesource}{}{}{}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labeldate}{}{}{}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{journaltitle}{Journal Title}
       \field{number}{5}
       \field{relatedtype}{reprintas}
@@ -97,9 +97,9 @@ my $k2 = q|    \entry{key2}{inbook}{}
       \field{sortinit}{2}
       \strng{sortinithash}{ed39bb39cf854d5250e95b1c1f94f4ed}
       \field{extradatescope}{labelyear}
-      \fieldsource{labeldatesource}{}{}{}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labeldate}{}{}{}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{booktitle}{Booktitle}
       \field{month}{2}
       \field[default][en-us]{relatedstring}{First}
@@ -128,9 +128,9 @@ my $kck1 = q|    \entry{c2add694bf942dc77b376592d9c862cd}{article}{skipbib=true,
       \strng{authordefaulten-usbibnamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authordefaulten-usnamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authordefaulten-usfullhash}{a517747c3d12f99244ae598910d979c5}
-      \fieldsource{labeldatesource}{}{}{}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labeldate}{}{}{}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field{clonesourcekey}{key1}
       \field[default][en-us]{journaltitle}{Journal Title}
       \field{number}{5}
@@ -164,9 +164,9 @@ my $kck2 = q|    \entry{78f825aaa0103319aaa1a30bf4fe3ada}{inbook}{skipbib=true,s
       \strng{authordefaulten-usbibnamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authordefaulten-usnamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authordefaulten-usfullhash}{a517747c3d12f99244ae598910d979c5}
-      \fieldsource{labeldatesource}{}{}{}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labeldate}{}{}{}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field{clonesourcekey}{key2}
       \field[default][en-us]{booktitle}{Booktitle}
       \field{month}{2}
@@ -201,9 +201,9 @@ my $kck3 = q|    \entry{3631578538a2d6ba5879b31a9a42f290}{inbook}{skipbib=true,s
       \strng{authordefaulten-usbibnamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authordefaulten-usnamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authordefaulten-usfullhash}{a517747c3d12f99244ae598910d979c5}
-      \fieldsource{labeldatesource}{}{}{}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labeldate}{}{}{}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field{clonesourcekey}{key3}
       \field[default][en-us]{booktitle}{Booktitle}
       \field{month}{1}
@@ -237,9 +237,9 @@ my $kck4 = q|    \entry{caf8e34be07426ae7127c1b4829983c1}{inbook}{skipbib=true,s
       \strng{authordefaulten-usbibnamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authordefaulten-usnamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authordefaulten-usfullhash}{a517747c3d12f99244ae598910d979c5}
-      \fieldsource{labeldatesource}{}{}{}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labeldate}{}{}{}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field{clonesourcekey}{key4}
       \field[default][en-us]{booktitle}{Booktitle}
       \field{season}{summer}
@@ -283,8 +283,8 @@ my $s1 = q|    \entry{8ddf878039b70767c4a5bcf4f0c4f65e}{book}{skipbib=false,skip
       \strng{authordefaulten-usbibnamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authordefaulten-usnamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authordefaulten-usfullhash}{a517747c3d12f99244ae598910d979c5}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field{clonesourcekey}{s1}
       \field[default][en-us]{title}{Title 1}
     \endentry
@@ -343,8 +343,8 @@ my $un1 = q|    \entry{kullback}{book}{}
       \field{sortinit}{5}
       \strng{sortinithash}{5dd416adbafacc8226114bc0202d5fdd}
       \field{extradatescope}{year}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field{langid}{english}
       \field{langidopts}{variant=american}
       \field[default][en-us]{title}{Information Theory and Statistics}
@@ -377,8 +377,8 @@ my $un2 = q|    \entry{kullback:related}{book}{}
       \field{sortinit}{6}
       \strng{sortinithash}{7851c86048328b027313775d8fbd2131}
       \field{extradatescope}{year}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field{annotation}{A reprint of the \texttt{kullback} entry. Note the format of the \texttt{related} and \texttt{relatedtype} fields}
       \field{langid}{english}
       \field{langidopts}{variant=american}

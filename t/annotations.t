@@ -74,8 +74,8 @@ my $ann1 = q|    \entry{ann1}{misc}{}
       \field{extraname}{1}
       \field{sortinit}{L}
       \strng{sortinithash}{dad3efd0836470093a7b4a7bb756eb8c}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{title}{The Title}
       \annotation{field}{language}{default}{}{}{0}{ann4}
       \annotation[default][en-us]{field}{title}{default}{}{}{0}{one, two}
@@ -118,8 +118,8 @@ my $ann2 = q|    \entry{ann2}{misc}{}
       \field{extraname}{2}
       \field{sortinit}{L}
       \strng{sortinithash}{dad3efd0836470093a7b4a7bb756eb8c}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{title}{The Title}
       \annotation{field}{language}{alt}{}{}{0}{annz}
       \annotation{field}{language}{default}{}{}{0}{ann4}

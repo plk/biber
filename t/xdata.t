@@ -81,8 +81,8 @@ my $xd1 = q|    \entry{xd1}{book}{}
       \field{sortinit}{E}
       \strng{sortinithash}{c554bd1a0b76ea92b9f105fe36d9c7b0}
       \field{extradatescope}{labelyear}
-      \fieldsource{labeldatesource}{}{}{}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
+      \fieldsource{labeldate}{}{}{}
+      \fieldsource{labelname}{author}{default}{en-us}
       \field[default][en-us]{note}{A Note}
       \field{year}{2007}
       \field{dateera}{ce}
@@ -114,8 +114,8 @@ my $xd2 = q|    \entry{xd2}{book}{}
       \field{sortinit}{P}
       \strng{sortinithash}{bb5b15f2db90f7aef79bb9e83defefcb}
       \field{extradatescope}{labelyear}
-      \fieldsource{labeldatesource}{}{}{}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
+      \fieldsource{labeldate}{}{}{}
+      \fieldsource{labelname}{author}{default}{en-us}
       \field[default][en-us]{abstract}{An abstract}
       \field[default][en-us]{addendum}{Москва}
       \field[default][en-us]{note}{A Note}
@@ -183,8 +183,8 @@ my $gxd1 = q|    \entry{gxd1}{book}{}
       \strng{translatordefaulten-usfullhash}{d41d8cd98f00b204e9800998ecf8427e}
       \field{sortinit}{S}
       \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{addendum}{xdata=missing}
       \field[default][en-us]{note}{xdata=gxd2-note}
       \field[default][en-us]{title}{Some title}
@@ -249,8 +249,8 @@ my $bltxgxd1 = q|    \entry{bltxgxd1}{book}{}
       \strng{translatordefaulten-usfullhash}{d41d8cd98f00b204e9800998ecf8427e}
       \field{sortinit}{B}
       \strng{sortinithash}{8de16967003c7207dae369d874f1456e}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{addendum}{xdata=missing}
       \field[default][en-us]{note}{xdata=bltxgxd2-note}
       \field[default][en-us]{title}{Some title}

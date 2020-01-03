@@ -90,9 +90,9 @@ my $l13c = q|    \entry{L13}{book}{}
       \field{sortinit}{D}
       \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
       \field{extradatescope}{labelyear}
-      \fieldsource{labeldatesource}{}{}{}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labeldate}{}{}{}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field{day}{1}
       \field{endyear}{}
       \field{month}{1}
@@ -129,9 +129,9 @@ my $l14 = q|    \entry{L14}{book}{}
       \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
       \field{extradate}{3}
       \field{extradatescope}{labelyear}
-      \fieldsource{labeldatesource}{}{}{}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labeldate}{}{}{}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field{day}{10}
       \field{endday}{12}
       \field{endmonth}{12}
@@ -170,8 +170,8 @@ my $l15 = q|    \entry{L15}{book}{}
       \field{sortinit}{D}
       \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
       \field{extradate}{4}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{title}{Title 2}
       \warn{\item Datamodel: Entry 'L15' (dateformats.bib): Missing mandatory field - one of 'date, year' must be defined}
     \endentry
@@ -204,9 +204,9 @@ my $l16 = q|    \entry{L16}{proceedings}{}
       \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
       \field{extradate}{7}
       \field{extradatescope}{labelyear}
-      \fieldsource{labeldatesource}{event}{}{}
-      \fieldsource{labelnamesource}{editor}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labeldate}{event}{}{}
+      \fieldsource{labelname}{editor}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field{eventday}{1}
       \field{eventmonth}{1}
       \field{eventyear}{1996}
@@ -243,9 +243,9 @@ my $l17 = q|    \entry{L17}{proceedings}{}
       \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
       \field{extradate}{4}
       \field{extradatescope}{labelyear}
-      \fieldsource{labeldatesource}{}{}{}
-      \fieldsource{labelnamesource}{editor}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labeldate}{}{}{}
+      \fieldsource{labelname}{editor}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field{day}{10}
       \field{endday}{12}
       \field{endmonth}{12}
@@ -301,9 +301,9 @@ my $l17c = q|    \entry{L17}{proceedings}{}
       \field{sortinit}{D}
       \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
       \field{extradatescope}{labelyear}
-      \fieldsource{labeldatesource}{orig}{}{}
-      \fieldsource{labelnamesource}{editor}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labeldate}{orig}{}{}
+      \fieldsource{labelname}{editor}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field{day}{10}
       \field{endday}{12}
       \field{endmonth}{12}
@@ -359,9 +359,9 @@ my $l17e = q|    \entry{L17}{proceedings}{}
       \field{sortinit}{D}
       \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
       \field{extradatescope}{labelyear}
-      \fieldsource{labeldatesource}{event}{}{}
-      \fieldsource{labelnamesource}{editor}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labeldate}{event}{}{}
+      \fieldsource{labelname}{editor}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field{day}{10}
       \field{endday}{12}
       \field{endmonth}{12}
@@ -478,9 +478,9 @@ my $era1 = q|    \entry{era1}{article}{}
       \field{sortinit}{S}
       \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
       \field{extradatescope}{labelyear}
-      \fieldsource{labeldatesource}{}{}{}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labeldate}{}{}{}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{journaltitle}{Journal Title}
       \field{month}{2}
       \field{origendyear}{219}
@@ -511,9 +511,9 @@ my $era2 = q|    \entry{era2}{inproceedings}{}
       \field{sortinit}{S}
       \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
       \field{extradatescope}{labelyear}
-      \fieldsource{labeldatesource}{}{}{}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labeldate}{}{}{}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{booktitle}{Book Title}
       \field{eventyear}{249}
       \field{origendyear}{44}
@@ -545,9 +545,9 @@ my $era3 = q|    \entry{era3}{inproceedings}{}
       \field{sortinit}{S}
       \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
       \field{extradatescope}{labelyear}
-      \fieldsource{labeldatesource}{}{}{}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labeldate}{}{}{}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{booktitle}{Book Title}
       \field{eventday}{2}
       \field{eventmonth}{3}
@@ -579,9 +579,9 @@ my $era4 = q|    \entry{era4}{inproceedings}{}
       \field{sortinit}{S}
       \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
       \field{extradatescope}{labelyear}
-      \fieldsource{labeldatesource}{}{}{}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labeldate}{}{}{}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{booktitle}{Book Title}
       \field{eventyear}{1565}
       \field{origendyear}{1488}
@@ -621,9 +621,9 @@ my $time1 = q|    \entry{time1}{article}{}
       \field{sortinit}{S}
       \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
       \field{extradatescope}{labelyear}
-      \fieldsource{labeldatesource}{}{}{}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labeldate}{}{}{}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field{day}{3}
       \field{hour}{15}
       \field[default][en-us]{journaltitle}{Journal Title}
@@ -671,9 +671,9 @@ my $range1 = q|    \entry{range1}{inproceedings}{}
       \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
       \field{extradate}{1}
       \field{extradatescope}{labelyear}
-      \fieldsource{labeldatesource}{}{}{}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labeldate}{}{}{}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{booktitle}{Book Title}
       \field{endyear}{}
       \field{eventendyear}{}
@@ -712,9 +712,9 @@ my $range2 = q|    \entry{range2}{inproceedings}{}
       \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
       \field{extradate}{2}
       \field{extradatescope}{labelyear}
-      \fieldsource{labeldatesource}{}{}{}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labeldate}{}{}{}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{booktitle}{Book Title}
       \field{endyear}{}
       \field{eventendyear}{1565}
@@ -752,9 +752,9 @@ my $season1 = q|    \entry{season1}{inproceedings}{}
       \field{sortinit}{S}
       \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
       \field{extradatescope}{labelyear}
-      \fieldsource{labeldatesource}{}{}{}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labeldate}{}{}{}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{booktitle}{Book Title}
       \field{eventseason}{autumn}
       \field{eventyear}{2002}
@@ -784,9 +784,9 @@ my $unspec1 = q|    \entry{unspec1}{inproceedings}{}
       \field{sortinit}{S}
       \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
       \field{extradatescope}{labelyear}
-      \fieldsource{labeldatesource}{}{}{}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labeldate}{}{}{}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{booktitle}{Book Title}
       \field{endyear}{1999}
       \field{eventendyear}{1999}
@@ -837,9 +837,9 @@ my $unspec2 = q|    \entry{unspec2}{article}{}
       \field{sortinit}{S}
       \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
       \field{extradatescope}{labelyear}
-      \fieldsource{labeldatesource}{}{}{}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labeldate}{}{}{}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field{day}{1}
       \field{endday}{31}
       \field{endmonth}{12}

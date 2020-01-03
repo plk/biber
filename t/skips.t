@@ -71,9 +71,9 @@ my $set2 = q|    \entry{set:membera}{book}{skipbib=true,skipbiblist=true,skiplab
       \strng{authordefaulten-usfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{sortinit}{D}
       \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
-      \fieldsource{labeldatesource}{}{}{}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labeldate}{}{}{}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{title}{Set Member A}
       \field{year}{2010}
       \field{dateera}{ce}
@@ -98,9 +98,9 @@ my $set3 = q|    \entry{set:memberb}{book}{skipbib=true,skipbiblist=true,skiplab
       \strng{authordefaulten-usfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{sortinit}{D}
       \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
-      \fieldsource{labeldatesource}{}{}{}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labeldate}{}{}{}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{title}{Set Member B}
       \field{year}{2010}
       \field{dateera}{ce}
@@ -124,9 +124,9 @@ my $set4 = q|    \entry{set:memberc}{book}{skipbib=true,skipbiblist=true,skiplab
       \strng{authordefaulten-usfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{sortinit}{D}
       \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
-      \fieldsource{labeldatesource}{}{}{}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labeldate}{}{}{}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{title}{Set Member C}
       \field{year}{2010}
       \field{dateera}{ce}
@@ -153,10 +153,10 @@ my $noset1 = q|    \entry{noseta}{book}{}
       \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
       \field{extradate}{2}
       \field{extradatescope}{labelyear}
-      \fieldsource{labeldatesource}{}{}{}
+      \fieldsource{labeldate}{}{}{}
       \field{extraalpha}{2}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{title}{Stand-Alone A}
       \field{year}{2010}
       \field{dateera}{ce}
@@ -183,10 +183,10 @@ my $noset2 = q|    \entry{nosetb}{book}{}
       \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
       \field{extradate}{3}
       \field{extradatescope}{labelyear}
-      \fieldsource{labeldatesource}{}{}{}
+      \fieldsource{labeldate}{}{}{}
       \field{extraalpha}{3}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{title}{Stand-Alone B}
       \field{year}{2010}
       \field{dateera}{ce}
@@ -213,10 +213,10 @@ my $noset3 = q|    \entry{nosetc}{book}{}
       \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
       \field{extradate}{4}
       \field{extradatescope}{labelyear}
-      \fieldsource{labeldatesource}{}{}{}
+      \fieldsource{labeldate}{}{}{}
       \field{extraalpha}{4}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{title}{Stand-Alone C}
       \field{year}{2010}
       \field{dateera}{ce}
@@ -245,9 +245,9 @@ my $sk4 = q|    \entry{skip4}{article}{skipbib=true,skipbiblist=true,skiplab=tru
       \strng{authordefaulten-usfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{sortinit}{D}
       \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
-      \fieldsource{labeldatesource}{year}{}{}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labeldate}{year}{}{}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{shorthand}{AWS}
       \field[default][en-us]{title}{Algorithms Which Sort}
       \field{year}{1932}

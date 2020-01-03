@@ -65,9 +65,9 @@ my $us1 = q|    \entry{us1}{book}{}
       \field{sortinit}{E}
       \strng{sortinithash}{c554bd1a0b76ea92b9f105fe36d9c7b0}
       \field{extradatescope}{labelyear}
-      \fieldsource{labeldatesource}{}{}{}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labeldate}{}{}{}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{title}{A Theory on Brontosauruses}
       \field{year}{1972}
       \field{dateera}{ce}
@@ -95,9 +95,9 @@ my $us2a = q|    \entry{us2}{book}{}
       \field{sortinit}{E}
       \strng{sortinithash}{c554bd1a0b76ea92b9f105fe36d9c7b0}
       \field{extradatescope}{labelyear}
-      \fieldsource{labeldatesource}{}{}{}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labeldate}{}{}{}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{title}{A Theory on Einiosauruses}
       \field{year}{1972}
       \field{dateera}{ce}
@@ -123,9 +123,9 @@ my $us3 = q|    \entry{us3}{book}{}
       \field{sortinit}{U}
       \strng{sortinithash}{77a6935510e008adcf5b555e7b4f0711}
       \field{extradatescope}{labelyear}
-      \fieldsource{labeldatesource}{}{}{}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labeldate}{}{}{}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{title}{Title B}
       \field{year}{2000}
       \field{dateera}{ce}
@@ -172,10 +172,10 @@ my $us4a = q|    \entry{us4}{book}{}
       \strng{sortinithash}{77a6935510e008adcf5b555e7b4f0711}
       \field{extradate}{1}
       \field{extradatescope}{labelyear}
-      \fieldsource{labeldatesource}{}{}{}
+      \fieldsource{labeldate}{}{}{}
       \field{extraalpha}{1}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{title}{Title A}
       \field{year}{2000}
       \field{dateera}{ce}
@@ -205,9 +205,9 @@ my $us2b = q|    \entry{us2}{book}{}
       \strng{sortinithash}{c554bd1a0b76ea92b9f105fe36d9c7b0}
       \field{extradate}{2}
       \field{extradatescope}{labelyear}
-      \fieldsource{labeldatesource}{}{}{}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labeldate}{}{}{}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{title}{A Theory on Einiosauruses}
       \field{year}{1972}
       \field{dateera}{ce}
@@ -254,10 +254,10 @@ my $us4b = q|    \entry{us4}{book}{}
       \strng{sortinithash}{77a6935510e008adcf5b555e7b4f0711}
       \field{extradate}{2}
       \field{extradatescope}{labelyear}
-      \fieldsource{labeldatesource}{}{}{}
+      \fieldsource{labeldate}{}{}{}
       \field{extraalpha}{1}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{title}{Title A}
       \field{year}{2000}
       \field{dateera}{ce}
@@ -283,9 +283,9 @@ my $us6 = q|    \entry{us6}{book}{}
       \field{sortinit}{R}
       \strng{sortinithash}{b9c68a358aea118dfa887b6e902414a7}
       \field{extradatescope}{labelyear}
-      \fieldsource{labeldatesource}{}{}{}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labeldate}{}{}{}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{title}{Ragged Rubles}
       \field{year}{1971}
       \field{dateera}{ce}
@@ -313,9 +313,9 @@ my $us7 = q|    \entry{us7}{misc}{}
       \field{sortinit}{R}
       \strng{sortinithash}{b9c68a358aea118dfa887b6e902414a7}
       \field{extradatescope}{labelyear}
-      \fieldsource{labeldatesource}{}{}{}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labeldate}{}{}{}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{title}{Ragged Rupees}
       \field{year}{1971}
       \field{dateera}{ce}
@@ -343,9 +343,9 @@ my $us8 = q|    \entry{us8}{book}{}
       \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
       \field{extradate}{1}
       \field{extradatescope}{labelyear}
-      \fieldsource{labeldatesource}{}{}{}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labeldate}{}{}{}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{title}{Title B}
       \field{year}{2000}
       \field{dateera}{ce}
@@ -389,10 +389,10 @@ my $us9 = q|    \entry{us9}{book}{}
       \field{sortinit}{S}
       \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
       \field{extradatescope}{labelyear}
-      \fieldsource{labeldatesource}{}{}{}
+      \fieldsource{labeldate}{}{}{}
       \field{extraalpha}{1}
-      \fieldsource{labelnamesource}{author}{default}{en-us}
-      \fieldsource{labeltitlesource}{title}{default}{en-us}
+      \fieldsource{labelname}{author}{default}{en-us}
+      \fieldsource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{title}{Title A}
       \field{year}{2000}
       \field{dateera}{ce}
