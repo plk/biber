@@ -144,8 +144,8 @@ my $ms1 = q|    \entry{ms1}{article}{}
       \field{labelalpha}{SPXeS95}
       \field{sortinit}{S}
       \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
-      \fieldsource{labelname}{author}{transliteration}{ru-latn}
-      \fieldsource{labeltitle}{title}{translation}{fr}
+      \fieldmssource{labelname}{author}{transliteration}{ru-latn}
+      \fieldmssource{labeltitle}{title}{translation}{fr}
       \field[default][en-us]{title}{Title}
       \field[translation][fr]{title}{Titre}
       \field{year}{1995}
@@ -198,7 +198,7 @@ my $ms2 = q|    \entry{ms2}{inbook}{}
       \field{labelalpha}{Cle96}
       \field{sortinit}{C}
       \strng{sortinithash}{4c244ceae61406cdc0cc2ce1cb1ff703}
-      \fieldsource{labelname}{author}{transliteration}{ru-latn}
+      \fieldmssource{labelname}{author}{transliteration}{ru-latn}
       \field[default][de-de]{booktitle}{Book Title}
       \field[translated][fr]{booktitle}{Livre Titre}
       \field[default][en-us]{title}{Title}

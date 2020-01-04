@@ -53,10 +53,10 @@ my $encode1 = q|    \entry{testŠ}{book}{}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
       \strng{sortinithash}{c554bd1a0b76ea92b9f105fe36d9c7b0}
-      \fieldsource{labeldate}{year}{}{}
+      \field{labeldatesource}{year}
       \true{singletitle}
-      \fieldsource{labelname}{author}{default}{en-us}
-      \fieldsource{labeltitle}{title}{default}{en-us}
+      \fieldmssource{labelname}{author}{default}{en-us}
+      \fieldmssource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{title}{Šome title}
       \field{year}{1999}
     \endentry
@@ -83,10 +83,10 @@ my $encode2 = q|    \entry{test1}{book}{}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
       \strng{sortinithash}{c554bd1a0b76ea92b9f105fe36d9c7b0}
-      \fieldsource{labeldate}{year}{}{}
+      \field{labeldatesource}{year}
       \true{singletitle}
-      \fieldsource{labelname}{author}{default}{en-us}
-      \fieldsource{labeltitle}{title}{default}{en-us}
+      \fieldmssource{labelname}{author}{default}{en-us}
+      \fieldmssource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{title}{Söme title}
       \field{year}{1999}
     \endentry
@@ -113,10 +113,10 @@ my $encode3 = q|    \entry{test1}{book}{}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
       \strng{sortinithash}{c554bd1a0b76ea92b9f105fe36d9c7b0}
-      \fieldsource{labeldate}{year}{}{}
+      \field{labeldatesource}{year}
       \true{singletitle}
-      \fieldsource{labelname}{author}{default}{en-us}
-      \fieldsource{labeltitle}{title}{default}{en-us}
+      \fieldmssource{labelname}{author}{default}{en-us}
+      \fieldmssource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{title}{Żome title}
       \field{year}{1999}
     \endentry
@@ -143,10 +143,10 @@ my $encode5 = q|    \entry{test}{book}{}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
       \strng{sortinithash}{c554bd1a0b76ea92b9f105fe36d9c7b0}
-      \fieldsource{labeldate}{year}{}{}
+      \field{labeldatesource}{year}
       \true{singletitle}
-      \fieldsource{labelname}{author}{default}{en-us}
-      \fieldsource{labeltitle}{title}{default}{en-us}
+      \fieldmssource{labelname}{author}{default}{en-us}
+      \fieldmssource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{title}{à titlé}
       \field{year}{1999}
     \endentry
@@ -173,10 +173,10 @@ my $encode6 = q|    \entry{test}{book}{}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
       \strng{sortinithash}{c554bd1a0b76ea92b9f105fe36d9c7b0}
-      \fieldsource{labeldate}{year}{}{}
+      \field{labeldatesource}{year}
       \true{singletitle}
-      \fieldsource{labelname}{author}{default}{en-us}
-      \fieldsource{labeltitle}{title}{default}{en-us}
+      \fieldmssource{labelname}{author}{default}{en-us}
+      \fieldmssource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{title}{↑\`{a} titl\'{e}}
       \field{year}{1999}
     \endentry
@@ -203,10 +203,10 @@ my $encode7 = q|    \entry{test}{book}{}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
       \strng{sortinithash}{c554bd1a0b76ea92b9f105fe36d9c7b0}
-      \fieldsource{labeldate}{year}{}{}
+      \field{labeldatesource}{year}
       \true{singletitle}
-      \fieldsource{labelname}{author}{default}{en-us}
-      \fieldsource{labeltitle}{title}{default}{en-us}
+      \fieldmssource{labelname}{author}{default}{en-us}
+      \fieldmssource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{title}{{$\uparrow$}\`{a} titl\'{e}}
       \field{year}{1999}
     \endentry

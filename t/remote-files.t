@@ -76,9 +76,9 @@ my $dl1 = q|    \entry{AbdelbarH98}{article}{}
       \field{sortinit}{A}
       \strng{sortinithash}{a3dcedd53b04d1adfd5ac303ecd5e6fa}
       \field{extradatescope}{labelyear}
-      \fieldsource{labeldate}{year}{}{}
-      \fieldsource{labelname}{author}{default}{en-us}
-      \fieldsource{labeltitle}{title}{default}{en-us}
+      \field{labeldatesource}{year}
+      \fieldmssource{labelname}{author}{default}{en-us}
+      \fieldmssource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{journaltitle}{Artificial Intelligence}
       \field[default][en-us]{title}{Approximating {MAP}s for belief networks is {NP}-hard and other theorems}
       \field{volume}{102}

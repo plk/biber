@@ -286,7 +286,7 @@ sub set_output_entry {
       $acc .= "      <BDS>EXTRADATE</BDS>\n";
     }
     if ($be->field_exists('labeldatesource')) {
-      $acc .= "      \\fieldsource{labeldate}{" . $be->get_field('labeldatesource') .  "}{}{}\n";
+      $acc .= "      \\field{labeldatesource}{" . $be->get_field('labeldatesource') .  "}\n";
     }
   }
 
@@ -319,12 +319,12 @@ sub set_output_entry {
 
   # The source field for labelname
   if ($lni) {
-    $acc .= "      \\fieldsource{labelname}{$lni}{$lnf}{$lnl}\n";
+    $acc .= "      \\fieldmssource{labelname}{$lni}{$lnf}{$lnl}\n";
   }
 
   # The source field for labeltitle
   if (my ($lti, $ltf, $ltl) = $be->get_labeltitle_info->@*) {
-    $acc .= "      \\fieldsource{labeltitle}{$lti}{$ltf}{$ltl}\n";
+    $acc .= "      \\fieldmssource{labeltitle}{$lti}{$ltf}{$ltl}\n";
   }
 
   foreach my $field ($dmh->{fields}->@*) {

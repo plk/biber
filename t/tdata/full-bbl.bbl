@@ -38,8 +38,8 @@
       \field{sortinit}{A}
       \strng{sortinithash}{a3dcedd53b04d1adfd5ac303ecd5e6fa}
       \true{singletitle}
-      \fieldsource{labelname}{author}{default}{en-us}
-      \fieldsource{labeltitle}{title}{default}{en-us}
+      \fieldmssource{labelname}{author}{default}{en-us}
+      \fieldmssource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{shorthand}{\emph{A}}
       \field[default][en-us]{title}{The Fullness of Times}
       \field{year}{1995}
@@ -65,8 +65,8 @@
       \field{sortinit}{A}
       \strng{sortinithash}{a3dcedd53b04d1adfd5ac303ecd5e6fa}
       \true{singletitle}
-      \fieldsource{labelname}{author}{default}{en-us}
-      \fieldsource{labeltitle}{title}{default}{en-us}
+      \fieldmssource{labelname}{author}{default}{en-us}
+      \fieldmssource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{shorthand}{\emph{A}}
       \field[default][en-us]{title}{The Fullness of Times}
       \field{year}{1995}
@@ -92,8 +92,8 @@
       \field{sortinit}{D}
       \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
       \true{singletitle}
-      \fieldsource{labelname}{author}{default}{en-us}
-      \fieldsource{labeltitle}{title}{default}{en-us}
+      \fieldmssource{labelname}{author}{default}{en-us}
+      \fieldmssource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{shorthand}{\emph{A}}
       \field[default][en-us]{title}{The Fullness of Times}
       \field{year}{1995}

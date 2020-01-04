@@ -102,9 +102,9 @@ my $l1 = q|    \entry{L1}{book}{}
       \field{sortinit}{D}
       \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
       \field{extradatescope}{labelyear}
-      \fieldsource{labeldate}{}{}{}
-      \fieldsource{labelname}{author}{default}{en-us}
-      \fieldsource{labeltitle}{title}{default}{en-us}
+      \field{labeldatesource}{}
+      \fieldmssource{labelname}{author}{default}{en-us}
+      \fieldmssource{labeltitle}{title}{default}{en-us}
       \field{day}{5}
       \field{month}{4}
       \field{origday}{30}
@@ -139,9 +139,9 @@ my $l2 = q|    \entry{L2}{book}{maxalphanames=10,maxbibnames=3,maxcitenames=3,ma
       \field{sortinit}{E}
       \strng{sortinithash}{c554bd1a0b76ea92b9f105fe36d9c7b0}
       \field{extradatescope}{labelyear}
-      \fieldsource{labeldate}{}{}{}
-      \fieldsource{labelname}{author}{default}{en-us}
-      \fieldsource{labeltitle}{title}{default}{en-us}
+      \field{labeldatesource}{}
+      \fieldmssource{labelname}{author}{default}{en-us}
+      \fieldmssource{labeltitle}{title}{default}{en-us}
       \field{day}{5}
       \field{month}{4}
       \field[default][en-us]{title}{Title 2}
@@ -171,9 +171,9 @@ my $l3 = q|    \entry{L3}{book}{blah=10}
       \field{sortinit}{B}
       \strng{sortinithash}{8de16967003c7207dae369d874f1456e}
       \field{extradatescope}{labelyear}
-      \fieldsource{labeldate}{}{}{}
-      \fieldsource{labelname}{author}{default}{en-us}
-      \fieldsource{labeltitle}{title}{default}{en-us}
+      \field{labeldatesource}{}
+      \fieldmssource{labelname}{author}{default}{en-us}
+      \fieldmssource{labeltitle}{title}{default}{en-us}
       \field{day}{5}
       \field{month}{4}
       \field[default][en-us]{title}{Title 3}
