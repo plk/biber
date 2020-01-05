@@ -235,14 +235,14 @@ my $murray1 = q|    \entry{murray}{article}{}
       \true{singletitle}
       \true{uniquework}
       \fieldmssource{labelname}{author}{default}{en-us}
-      \fieldmssource{labeltitle}{shorttitle}{default}{en-us}
+      \fieldmssource{labeltitle}{shorttitle}{}{}
       \field{annotation}{An \texttt{article} entry with \arabic{author} authors. By default, long author and editor lists are automatically truncated. This is configurable}
       \field{indextitle}{Alkanethiolate gold cluster molecules}
       \field[default][en-us]{journaltitle}{Langmuir}
       \field{langid}{english}
       \field{langidopts}{variant=american}
       \field{number}{1}
-      \field[default][en-us]{shorttitle}{Alkanethiolate gold cluster molecules}
+      \field{shorttitle}{Alkanethiolate gold cluster molecules}
       \field[default][en-us]{subtitle}{Core and monolayer properties as a function of core size}
       \field[default][en-us]{title}{Alkanethiolate gold cluster molecules with core diameters from 1.5 to 5.2~nm}
       \field{volume}{14}
@@ -352,14 +352,14 @@ my $murray2 = q|    \entry{murray}{article}{}
       \true{singletitle}
       \true{uniquework}
       \fieldmssource{labelname}{author}{default}{en-us}
-      \fieldmssource{labeltitle}{shorttitle}{default}{en-us}
+      \fieldmssource{labeltitle}{shorttitle}{}{}
       \field{annotation}{An \texttt{article} entry with \arabic{author} authors. By default, long author and editor lists are automatically truncated. This is configurable}
       \field{indextitle}{Alkanethiolate gold cluster molecules}
       \field[default][en-us]{journaltitle}{Langmuir}
       \field{langid}{english}
       \field{langidopts}{variant=american}
       \field{number}{1}
-      \field[default][en-us]{shorttitle}{Alkanethiolate gold cluster molecules}
+      \field{shorttitle}{Alkanethiolate gold cluster molecules}
       \field[default][en-us]{subtitle}{Core and monolayer properties as a function of core size}
       \field[default][en-us]{title}{Alkanethiolate gold cluster molecules with core diameters from 1.5 to 5.2~nm}
       \field{volume}{14}
@@ -436,7 +436,7 @@ my $anon1 = q|    \entry{anon1}{unpublished}{}
            family={AnonymousX},
            familyi={A\bibinitperiod}}}%
       }
-      \name[default][en-us]{shortauthor}{1}{}{%
+      \name{shortauthor}{1}{}{%
         {{un=0,uniquepart=base,hash=9873a6cc65c553faa2b21aaad626fe4b}{%
            family={XAnony},
            familyi={X\bibinitperiod}}}%
@@ -447,20 +447,20 @@ my $anon1 = q|    \entry{anon1}{unpublished}{}
       \strng{authordefaulten-usbibnamehash}{a66f357fe2fd356fe49959173522a651}
       \strng{authordefaulten-usnamehash}{a66f357fe2fd356fe49959173522a651}
       \strng{authordefaulten-usfullhash}{a66f357fe2fd356fe49959173522a651}
-      \strng{shortauthordefaulten-usbibnamehash}{9873a6cc65c553faa2b21aaad626fe4b}
-      \strng{shortauthordefaulten-usnamehash}{9873a6cc65c553faa2b21aaad626fe4b}
-      \strng{shortauthordefaulten-usfullhash}{9873a6cc65c553faa2b21aaad626fe4b}
+      \strng{shortauthorbibnamehash}{9873a6cc65c553faa2b21aaad626fe4b}
+      \strng{shortauthornamehash}{9873a6cc65c553faa2b21aaad626fe4b}
+      \strng{shortauthorfullhash}{9873a6cc65c553faa2b21aaad626fe4b}
       \field{labelalpha}{XAn35}
       \field{sortinit}{A}
       \strng{sortinithash}{a3dcedd53b04d1adfd5ac303ecd5e6fa}
       \true{singletitle}
       \true{uniquework}
-      \fieldmssource{labelname}{shortauthor}{default}{en-us}
-      \fieldmssource{labeltitle}{shorttitle}{default}{en-us}
+      \fieldmssource{labelname}{shortauthor}{}{}
+      \fieldmssource{labeltitle}{shorttitle}{}{}
       \field{langid}{english}
       \field{langidopts}{variant=american}
       \field[default][en-us]{note}{anon1}
-      \field[default][en-us]{shorttitle}{Shorttitle}
+      \field{shorttitle}{Shorttitle}
       \field[default][en-us]{title}{Title1}
       \field{year}{1835}
       \field{pages}{111\bibrangedash 118}
@@ -475,7 +475,7 @@ my $anon2 = q|    \entry{anon2}{unpublished}{}
            family={AnonymousY},
            familyi={A\bibinitperiod}}}%
       }
-      \name[default][en-us]{shortauthor}{1}{}{%
+      \name{shortauthor}{1}{}{%
         {{un=0,uniquepart=base,hash=f64c29e89ea49402b997956610b58ef6}{%
            family={YAnony},
            familyi={Y\bibinitperiod}}}%
@@ -486,20 +486,20 @@ my $anon2 = q|    \entry{anon2}{unpublished}{}
       \strng{authordefaulten-usbibnamehash}{a0bccee4041bc840e14c06e5ba7f083c}
       \strng{authordefaulten-usnamehash}{a0bccee4041bc840e14c06e5ba7f083c}
       \strng{authordefaulten-usfullhash}{a0bccee4041bc840e14c06e5ba7f083c}
-      \strng{shortauthordefaulten-usbibnamehash}{f64c29e89ea49402b997956610b58ef6}
-      \strng{shortauthordefaulten-usnamehash}{f64c29e89ea49402b997956610b58ef6}
-      \strng{shortauthordefaulten-usfullhash}{f64c29e89ea49402b997956610b58ef6}
+      \strng{shortauthorbibnamehash}{f64c29e89ea49402b997956610b58ef6}
+      \strng{shortauthornamehash}{f64c29e89ea49402b997956610b58ef6}
+      \strng{shortauthorfullhash}{f64c29e89ea49402b997956610b58ef6}
       \field{labelalpha}{YAn39}
       \field{sortinit}{A}
       \strng{sortinithash}{a3dcedd53b04d1adfd5ac303ecd5e6fa}
       \true{singletitle}
       \true{uniquework}
-      \fieldmssource{labelname}{shortauthor}{default}{en-us}
-      \fieldmssource{labeltitle}{shorttitle}{default}{en-us}
+      \fieldmssource{labelname}{shortauthor}{}{}
+      \fieldmssource{labeltitle}{shorttitle}{}{}
       \field{langid}{english}
       \field{langidopts}{variant=american}
       \field[default][en-us]{note}{anon2}
-      \field[default][en-us]{shorttitle}{Shorttitle}
+      \field{shorttitle}{Shorttitle}
       \field[default][en-us]{title}{Title2}
       \field{year}{1839}
       \field{pages}{1176\bibrangedash 1276}

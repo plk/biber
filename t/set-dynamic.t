@@ -76,7 +76,7 @@ my $string2 = q|    \entry{Dynamic1}{book}{skipbib=true,skipbiblist=true,skiplab
       \fieldmssource{labelname}{author}{default}{en-us}
       \fieldmssource{labeltitle}{title}{default}{en-us}
       \field{annotation}{Some Dynamic Note}
-      \field[default][en-us]{shorthand}{d1}
+      \field{shorthand}{d1}
       \field[default][en-us]{title}{Doing Daring Deeds}
       \field{year}{2002}
     \endentry
@@ -102,7 +102,7 @@ my $string3 = q|    \entry{Dynamic2}{book}{skipbib=true,skipbiblist=true,skiplab
       \field{labeldatesource}{year}
       \fieldmssource{labelname}{author}{default}{en-us}
       \fieldmssource{labeltitle}{title}{default}{en-us}
-      \field[default][en-us]{shorthand}{d2}
+      \field{shorthand}{d2}
       \field[default][en-us]{title}{Beautiful Birthdays}
       \field{year}{2010}
     \endentry
@@ -128,7 +128,7 @@ my $string4 = q|    \entry{Dynamic3}{book}{skipbib=true,skipbiblist=true,skiplab
       \field{labeldatesource}{year}
       \fieldmssource{labelname}{author}{default}{en-us}
       \fieldmssource{labeltitle}{title}{default}{en-us}
-      \field[default][en-us]{shorthand}{d3}
+      \field{shorthand}{d3}
       \field[default][en-us]{title}{Reckless Ravishings}
       \field{year}{2000}
     \endentry
@@ -156,7 +156,7 @@ my $string5 = q|    \entry{Dynamic3}{book}{}
       \field{labeldatesource}{year}
       \fieldmssource{labelname}{author}{default}{en-us}
       \fieldmssource{labeltitle}{title}{default}{en-us}
-      \field[default][en-us]{shorthand}{d3}
+      \field{shorthand}{d3}
       \field[default][en-us]{title}{Reckless Ravishings}
       \field{year}{2000}
     \endentry

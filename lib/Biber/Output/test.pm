@@ -258,12 +258,11 @@ sub set_output_entry {
   foreach my $n ($dmh->{namelists}->@*) {
     foreach my $alts ($be->get_alternates_for_field($n)->@*) {
       my $val = $alts->{val};
-      my $form = $alts->{form};
-      my $lang = $alts->{lang};
-
+      my $form = $dm->is_multiscript($n) ? $alts->{form} : '';
+      my $lang = $dm->is_multiscript($n) ? $alts->{lang} : '';
       $acc .= "      <BDS>${n}${form}${lang}BIBNAMEHASH</BDS>\n";
       $acc .= "      <BDS>${n}${form}${lang}NAMEHASH</BDS>\n";
-      if (my $fullhash = $be->get_field("${n}${form}${lang}fullhash")) {
+      if (my $fullhash = $be->get_field("${n}" . $alts->{form} . $alts->{lang} . "fullhash")) {
         $acc .= "      \\strng{${n}${form}${lang}fullhash}{$fullhash}\n";
       }
     }
@@ -319,12 +318,16 @@ sub set_output_entry {
 
   # The source field for labelname
   if ($lni) {
-    $acc .= "      \\fieldmssource{labelname}{$lni}{$lnf}{$lnl}\n";
+    my $fl = "{$lnf}{$lnl}";
+    $fl = "{}{}" unless $dm->is_multiscript($lni);
+    $acc .= "      \\fieldmssource{labelname}{$lni}$fl\n";
   }
 
   # The source field for labeltitle
   if (my ($lti, $ltf, $ltl) = $be->get_labeltitle_info->@*) {
-    $acc .= "      \\fieldmssource{labeltitle}{$lti}{$ltf}{$ltl}\n";
+    my $fl = "{$ltf}{$ltl}";
+    $fl = "{}{}" unless $dm->is_multiscript($lti);
+    $acc .= "      \\fieldmssource{labeltitle}{$lti}$fl\n";
   }
 
   foreach my $field ($dmh->{fields}->@*) {

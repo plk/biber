@@ -332,11 +332,10 @@ sub set_output_entry {
   foreach my $n ($dmh->{namelists}->@*) {
     foreach my $alts ($be->get_alternates_for_field($n)->@*) {
       my $val = $alts->{val};
-      my $form = $alts->{form};
-      my $lang = $alts->{lang};
-
+      my $form = $dm->is_multiscript($n) ? $alts->{form} : '';
+      my $lang = $dm->is_multiscript($n) ? $alts->{lang} : '';
       $xml->dataElement('BDS', "${n}${form}${lang}NAMEHASH");
-      if (my $fullhash = $be->get_field("${n}${form}${lang}fullhash")) {
+      if (my $fullhash = $be->get_field("${n}" . $alts->{form} . $alts->{lang} . "fullhash")) {
         $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($fullhash), name => "${n}${form}${lang}fullhash");
       }
       $xml->dataElement('BDS', "${n}${form}${lang}BIBNAMEHASH");
@@ -389,12 +388,16 @@ sub set_output_entry {
 
   # The source field for labelname
   if ($lni) {
-    $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($lni), name => 'labelnamesource', msform => $lnf, 'mslang' => $lnl);
+    my @fl = ('msform' => $lnf, 'mslang' => $lnl);
+    @fl = () unless $dm->is_multiscript($lni);
+    $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($lni), name => 'labelnamesource', @fl);
   }
 
   # The source field for labeltitle
   if (my ($lti, $ltf, $ltl) = $be->get_labeltitle_info->@*) {
-    $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($lti), name => 'labeltitlesource', 'msform' => $ltf, 'mslang' => $ltl);
+    my @fl = ('msform' => $ltf, 'mslang' => $ltl);
+    @fl = () unless $dm->is_multiscript($lti);
+    $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($lti), name => 'labeltitlesource', @fl);
   }
 
   if (my $ck = $be->get_field('clonesourcekey')) {
@@ -440,7 +443,7 @@ sub set_output_entry {
         }
 
         $xml->dataElement([$xml_prefix, 'field'],
-                          _bblxml_norm($val), name => $field, @ms);
+                          NFC($val), name => $field, @ms);
       }
     }
   }

@@ -248,7 +248,7 @@ my $sk4 = q|    \entry{skip4}{article}{skipbib=true,skipbiblist=true,skiplab=tru
       \field{labeldatesource}{year}
       \fieldmssource{labelname}{author}{default}{en-us}
       \fieldmssource{labeltitle}{title}{default}{en-us}
-      \field[default][en-us]{shorthand}{AWS}
+      \field{shorthand}{AWS}
       \field[default][en-us]{title}{Algorithms Which Sort}
       \field{year}{1932}
     \endentry

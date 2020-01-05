@@ -1768,12 +1768,6 @@
       <bcf:field>publisher</bcf:field>
       <bcf:field>relatedstring</bcf:field>
       <bcf:field>series</bcf:field>
-      <bcf:field>shortauthor</bcf:field>
-      <bcf:field>shorteditor</bcf:field>
-      <bcf:field>shorthand</bcf:field>
-      <bcf:field>shortjournal</bcf:field>
-      <bcf:field>shortseries</bcf:field>
-      <bcf:field>shorttitle</bcf:field>
       <bcf:field>sortname</bcf:field>
       <bcf:field>sortshorthand</bcf:field>
       <bcf:field>sorttitle</bcf:field>

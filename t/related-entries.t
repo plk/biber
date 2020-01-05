@@ -64,7 +64,7 @@ my $k1 = q|    \entry{key1}{article}{}
       \field[default][en-us]{journaltitle}{Journal Title}
       \field{number}{5}
       \field{relatedtype}{reprintas}
-      \field[default][en-us]{shorthand}{RK1}
+      \field{shorthand}{RK1}
       \field[default][en-us]{title}{Original Title}
       \field{volume}{12}
       \field{year}{1998}
@@ -104,7 +104,7 @@ my $k2 = q|    \entry{key2}{inbook}{}
       \field{month}{2}
       \field[default][en-us]{relatedstring}{First}
       \field{relatedtype}{reprintof}
-      \field[default][en-us]{shorthand}{RK2}
+      \field{shorthand}{RK2}
       \field[default][en-us]{title}{Reprint Title}
       \field{year}{2009}
       \true{dateuncertain}
@@ -135,7 +135,7 @@ my $kck1 = q|    \entry{c2add694bf942dc77b376592d9c862cd}{article}{skipbib=true,
       \field[default][en-us]{journaltitle}{Journal Title}
       \field{number}{5}
       \field{relatedtype}{reprintas}
-      \field[default][en-us]{shorthand}{RK1}
+      \field{shorthand}{RK1}
       \field[default][en-us]{title}{Original Title}
       \field{volume}{12}
       \field{year}{1998}
@@ -172,7 +172,7 @@ my $kck2 = q|    \entry{78f825aaa0103319aaa1a30bf4fe3ada}{inbook}{skipbib=true,s
       \field{month}{2}
       \field[default][en-us]{relatedstring}{First}
       \field{relatedtype}{reprintof}
-      \field[default][en-us]{shorthand}{RK2}
+      \field{shorthand}{RK2}
       \field[default][en-us]{title}{Reprint Title}
       \field{year}{2009}
       \true{dateuncertain}
@@ -208,7 +208,7 @@ my $kck3 = q|    \entry{3631578538a2d6ba5879b31a9a42f290}{inbook}{skipbib=true,s
       \field[default][en-us]{booktitle}{Booktitle}
       \field{month}{1}
       \field{relatedtype}{translationof}
-      \field[default][en-us]{shorthand}{RK3}
+      \field{shorthand}{RK3}
       \field[default][en-us]{title}{Reprint Title}
       \field{year}{2010}
       \true{datecirca}
@@ -243,7 +243,7 @@ my $kck4 = q|    \entry{caf8e34be07426ae7127c1b4829983c1}{inbook}{skipbib=true,s
       \field{clonesourcekey}{key4}
       \field[default][en-us]{booktitle}{Booktitle}
       \field{season}{summer}
-      \field[default][en-us]{shorthand}{RK4}
+      \field{shorthand}{RK4}
       \field[default][en-us]{title}{Orig Language Title}
       \field{year}{2011}
       \field{dateera}{ce}

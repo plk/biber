@@ -40,7 +40,7 @@
       \true{singletitle}
       \fieldmssource{labelname}{author}{default}{en-us}
       \fieldmssource{labeltitle}{title}{default}{en-us}
-      \field[default][en-us]{shorthand}{\emph{A}}
+      \field{shorthand}{\emph{A}}
       \field[default][en-us]{title}{The Fullness of Times}
       \field{year}{1995}
     \endentry
@@ -67,7 +67,7 @@
       \true{singletitle}
       \fieldmssource{labelname}{author}{default}{en-us}
       \fieldmssource{labeltitle}{title}{default}{en-us}
-      \field[default][en-us]{shorthand}{\emph{A}}
+      \field{shorthand}{\emph{A}}
       \field[default][en-us]{title}{The Fullness of Times}
       \field{year}{1995}
     \endentry
@@ -94,7 +94,7 @@
       \true{singletitle}
       \fieldmssource{labelname}{author}{default}{en-us}
       \fieldmssource{labeltitle}{title}{default}{en-us}
-      \field[default][en-us]{shorthand}{\emph{A}}
+      \field{shorthand}{\emph{A}}
       \field[default][en-us]{title}{The Fullness of Times}
       \field{year}{1995}
     \endentry
