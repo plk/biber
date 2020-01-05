@@ -51,7 +51,7 @@
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">title</bbl:field>
         <bbl:field name="indextitle">Effect of immobilization on catalytic characteristics</bbl:field>
-        <bbl:field name="journaltitle">J. Organomet. Chem.</bbl:field>
+        <bbl:field name="journaltitle">J.~Organomet. Chem.</bbl:field>
         <bbl:field name="number">13</bbl:field>
         <bbl:field name="title">Effect of immobilization on catalytic characteristics of saturated Pd-N-heterocyclic carbenes in Mizoroki-Heck reactions</bbl:field>
         <bbl:field name="volume">691</bbl:field>
@@ -82,12 +82,12 @@
         <bbl:field name="sortinithash">a3dcedd53b04d1adfd5ac303ecd5e6fa</bbl:field>
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">shorttitle</bbl:field>
-        <bbl:field name="annotation">A German article in a French journal. Apart from that, a typical article entry. Note the indextitle field</bbl:field>
+        <bbl:field name="annotation">A German article in a French journal. Apart from that, a typical \texttt{article} entry. Note the \texttt{indextitle} field</bbl:field>
         <bbl:field name="indextitle">In Honore Salvatoris</bbl:field>
         <bbl:field name="journaltitle">Revue d'Histoire Ecclésiastique</bbl:field>
         <bbl:field name="langid">german</bbl:field>
         <bbl:field name="shorttitle">In Honore Salvatoris</bbl:field>
-        <bbl:field name="title">In Honore Salvatoris -- Vom Sinn und Unsinn der Patrozinienkunde</bbl:field>
+        <bbl:field name="title">In Honore Salvatoris~-- Vom Sinn und Unsinn der Patrozinienkunde</bbl:field>
         <bbl:field name="volume">97</bbl:field>
         <bbl:field name="year">2002</bbl:field>
         <bbl:range name="pages">
@@ -139,7 +139,7 @@
         <bbl:field name="sortinithash">62eb2aa29549e4fdbd3cb154ec5711cb</bbl:field>
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">title</bbl:field>
-        <bbl:field name="journaltitle">Nucl. Phys.</bbl:field>
+        <bbl:field name="journaltitle">Nucl.~Phys.</bbl:field>
         <bbl:field name="title">Partial Symmetries of Weak Interactions</bbl:field>
         <bbl:field name="volume">22</bbl:field>
         <bbl:field name="year">1961</bbl:field>
@@ -176,13 +176,13 @@
         <bbl:field name="extraalpha">1</bbl:field>
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">shorttitle</bbl:field>
-        <bbl:field name="annotation">The second volume of a five-volume book. Note the sorttitle field. Also note the indexsorttitle field</bbl:field>
+        <bbl:field name="annotation">The second volume of a five-volume book. Note the \texttt{sorttitle} field. Also note the \texttt{indexsorttitle} field</bbl:field>
         <bbl:field name="indexsorttitle">TeX: The Program</bbl:field>
         <bbl:field name="langid">english</bbl:field>
         <bbl:field name="langidopts">variant=american</bbl:field>
         <bbl:field name="maintitle">Computers \&amp; Typesetting</bbl:field>
-        <bbl:field name="shorttitle"></bbl:field>
-        <bbl:field name="title">: The Program</bbl:field>
+        <bbl:field name="shorttitle">\TeX</bbl:field>
+        <bbl:field name="title">\TeX: The Program</bbl:field>
         <bbl:field name="volume">B</bbl:field>
         <bbl:field name="year">1986</bbl:field>
       </bbl:entry>
@@ -212,7 +212,7 @@
         <bbl:field name="extraalpha">2</bbl:field>
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">shorttitle</bbl:field>
-        <bbl:field name="annotation">The third volume of a five-volume book. Note the sorttitle and indextitle field</bbl:field>
+        <bbl:field name="annotation">The third volume of a five-volume book. Note the \texttt{sorttitle} and \texttt{indextitle} field</bbl:field>
         <bbl:field name="indextitle">METAFONTbook, The</bbl:field>
         <bbl:field name="langid">english</bbl:field>
         <bbl:field name="langidopts">variant=american</bbl:field>
@@ -240,7 +240,7 @@
         <bbl:field name="sortinithash">b9c68a358aea118dfa887b6e902414a7</bbl:field>
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">title</bbl:field>
-        <bbl:field name="annotation">An article entry with a series and a volume field. Note the format of the series. If the value of the series field is an integer, this number is printed as an ordinal and the string *series is appended automatically</bbl:field>
+        <bbl:field name="annotation">An \texttt{article} entry with a \texttt{series} and a \texttt{volume} field. Note the format of the series. If the value of the \texttt{series} field is an integer, this number is printed as an ordinal and the string \enquote*{series} is appended automatically</bbl:field>
         <bbl:field name="journaltitle">William and Mary Quarterly</bbl:field>
         <bbl:field name="langid">english</bbl:field>
         <bbl:field name="langidopts">variant=american</bbl:field>
@@ -328,7 +328,7 @@
         <bbl:field name="sortinithash">c319cff79d99c853d775f88277d4e45f</bbl:field>
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">title</bbl:field>
-        <bbl:field name="annotation">An article entry with series, volume, and number fields. Note the format of the series which is a localization key</bbl:field>
+        <bbl:field name="annotation">An \texttt{article} entry with \texttt{series}, \texttt{volume}, and \texttt{number} fields. Note the format of the \texttt{series} which is a localization key</bbl:field>
         <bbl:field name="journaltitle">American Anthropologist</bbl:field>
         <bbl:field name="number">1</bbl:field>
         <bbl:field name="series">newseries</bbl:field>
@@ -371,7 +371,7 @@
         <bbl:field name="sortinithash">1af34bd8c148ffb32de1494636b49713</bbl:field>
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">title</bbl:field>
-        <bbl:field name="journaltitle">Phys. Rev. Lett.</bbl:field>
+        <bbl:field name="journaltitle">Phys.~Rev.~Lett.</bbl:field>
         <bbl:field name="title">A Model of Leptons</bbl:field>
         <bbl:field name="volume">19</bbl:field>
         <bbl:field name="year">1967</bbl:field>
@@ -430,7 +430,7 @@
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">title</bbl:field>
         <bbl:field name="indextitle">Effect of immobilization on catalytic characteristics</bbl:field>
-        <bbl:field name="journaltitle">J. Organomet. Chem.</bbl:field>
+        <bbl:field name="journaltitle">J.~Organomet. Chem.</bbl:field>
         <bbl:field name="number">13</bbl:field>
         <bbl:field name="title">Effect of immobilization on catalytic characteristics of saturated Pd-N-heterocyclic carbenes in Mizoroki-Heck reactions</bbl:field>
         <bbl:field name="volume">691</bbl:field>
@@ -461,12 +461,12 @@
         <bbl:field name="sortinithash">a3dcedd53b04d1adfd5ac303ecd5e6fa</bbl:field>
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">shorttitle</bbl:field>
-        <bbl:field name="annotation">A German article in a French journal. Apart from that, a typical article entry. Note the indextitle field</bbl:field>
+        <bbl:field name="annotation">A German article in a French journal. Apart from that, a typical \texttt{article} entry. Note the \texttt{indextitle} field</bbl:field>
         <bbl:field name="indextitle">In Honore Salvatoris</bbl:field>
         <bbl:field name="journaltitle">Revue d'Histoire Ecclésiastique</bbl:field>
         <bbl:field name="langid">german</bbl:field>
         <bbl:field name="shorttitle">In Honore Salvatoris</bbl:field>
-        <bbl:field name="title">In Honore Salvatoris -- Vom Sinn und Unsinn der Patrozinienkunde</bbl:field>
+        <bbl:field name="title">In Honore Salvatoris~-- Vom Sinn und Unsinn der Patrozinienkunde</bbl:field>
         <bbl:field name="volume">97</bbl:field>
         <bbl:field name="year">2002</bbl:field>
         <bbl:range name="pages">
@@ -518,7 +518,7 @@
         <bbl:field name="sortinithash">62eb2aa29549e4fdbd3cb154ec5711cb</bbl:field>
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">title</bbl:field>
-        <bbl:field name="journaltitle">Nucl. Phys.</bbl:field>
+        <bbl:field name="journaltitle">Nucl.~Phys.</bbl:field>
         <bbl:field name="title">Partial Symmetries of Weak Interactions</bbl:field>
         <bbl:field name="volume">22</bbl:field>
         <bbl:field name="year">1961</bbl:field>
@@ -555,13 +555,13 @@
         <bbl:field name="extraalpha">1</bbl:field>
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">shorttitle</bbl:field>
-        <bbl:field name="annotation">The second volume of a five-volume book. Note the sorttitle field. Also note the indexsorttitle field</bbl:field>
+        <bbl:field name="annotation">The second volume of a five-volume book. Note the \texttt{sorttitle} field. Also note the \texttt{indexsorttitle} field</bbl:field>
         <bbl:field name="indexsorttitle">TeX: The Program</bbl:field>
         <bbl:field name="langid">english</bbl:field>
         <bbl:field name="langidopts">variant=american</bbl:field>
         <bbl:field name="maintitle">Computers \&amp; Typesetting</bbl:field>
-        <bbl:field name="shorttitle"></bbl:field>
-        <bbl:field name="title">: The Program</bbl:field>
+        <bbl:field name="shorttitle">\TeX</bbl:field>
+        <bbl:field name="title">\TeX: The Program</bbl:field>
         <bbl:field name="volume">B</bbl:field>
         <bbl:field name="year">1986</bbl:field>
       </bbl:entry>
@@ -591,7 +591,7 @@
         <bbl:field name="extraalpha">2</bbl:field>
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">shorttitle</bbl:field>
-        <bbl:field name="annotation">The third volume of a five-volume book. Note the sorttitle and indextitle field</bbl:field>
+        <bbl:field name="annotation">The third volume of a five-volume book. Note the \texttt{sorttitle} and \texttt{indextitle} field</bbl:field>
         <bbl:field name="indextitle">METAFONTbook, The</bbl:field>
         <bbl:field name="langid">english</bbl:field>
         <bbl:field name="langidopts">variant=american</bbl:field>
@@ -619,7 +619,7 @@
         <bbl:field name="sortinithash">b9c68a358aea118dfa887b6e902414a7</bbl:field>
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">title</bbl:field>
-        <bbl:field name="annotation">An article entry with a series and a volume field. Note the format of the series. If the value of the series field is an integer, this number is printed as an ordinal and the string *series is appended automatically</bbl:field>
+        <bbl:field name="annotation">An \texttt{article} entry with a \texttt{series} and a \texttt{volume} field. Note the format of the series. If the value of the \texttt{series} field is an integer, this number is printed as an ordinal and the string \enquote*{series} is appended automatically</bbl:field>
         <bbl:field name="journaltitle">William and Mary Quarterly</bbl:field>
         <bbl:field name="langid">english</bbl:field>
         <bbl:field name="langidopts">variant=american</bbl:field>
@@ -707,7 +707,7 @@
         <bbl:field name="sortinithash">c319cff79d99c853d775f88277d4e45f</bbl:field>
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">title</bbl:field>
-        <bbl:field name="annotation">An article entry with series, volume, and number fields. Note the format of the series which is a localization key</bbl:field>
+        <bbl:field name="annotation">An \texttt{article} entry with \texttt{series}, \texttt{volume}, and \texttt{number} fields. Note the format of the \texttt{series} which is a localization key</bbl:field>
         <bbl:field name="journaltitle">American Anthropologist</bbl:field>
         <bbl:field name="number">1</bbl:field>
         <bbl:field name="series">newseries</bbl:field>
@@ -750,7 +750,7 @@
         <bbl:field name="sortinithash">1af34bd8c148ffb32de1494636b49713</bbl:field>
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">title</bbl:field>
-        <bbl:field name="journaltitle">Phys. Rev. Lett.</bbl:field>
+        <bbl:field name="journaltitle">Phys.~Rev.~Lett.</bbl:field>
         <bbl:field name="title">A Model of Leptons</bbl:field>
         <bbl:field name="volume">19</bbl:field>
         <bbl:field name="year">1967</bbl:field>

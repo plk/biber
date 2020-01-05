@@ -395,7 +395,7 @@ sub set_output_entry {
       }
 
       $xml->dataElement([$xml_prefix, 'field'],
-                        _bblxml_norm($val), name => $field);
+                        NFC($val), name => $field);
     }
   }
 
