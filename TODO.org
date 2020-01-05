@@ -258,16 +258,16 @@
 **** DONE \blx@imc@iffieldplusstringbibstring
 **** DONE \blx@imc@iflistequals
 **** DONE \blx@imc@iffieldxref
-
 **** DONE \blx@imc@iflistxref
 **** DONE \blx@imc@ifnamexref
 **** DONE \DeprecateField
 **** DONE \DeprecateList
 **** DONE \DeprecateName
-**** TODO \blx@bbl@titles
-**** TODO \DeprecateFieldWithReplacement
-**** TODO \DeprecateListWithReplacement
-**** TODO \DeprecateNameWithReplacement
+**** DONE \blx@bbl@titles
+**** DONE \DeprecateFieldWithReplacement
+**** DONE \DeprecateListWithReplacement
+**** DONE \DeprecateNameWithReplacement
+**** TODO Add namepart alternates to name and list formats
 *** TODO Default global mslang to main document language BCP47 tag equivalent
 *** TODO output sortlocale/mslang in .bcf as BCP-47 if possible (polyglossia 1.47+)
 ** DONE biber
