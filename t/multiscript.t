@@ -50,30 +50,30 @@ my $out = $biber->get_output_obj;
 
 eq_or_diff($bibentries->entry('ms1')->get_field('title'), 'Title', 'multiscript - 1');
 eq_or_diff($bibentries->entry('ms1')->get_field('title', 'translation', 'fr'), 'Titre', 'multiscript - 2');
-eq_or_diff($bibentries->entry('ms1')->get_field('author', 'transliteration', 'ru-latn')->nth_mslang(2), 'ru-latn', 'multiscript - 3');
+ok(is_undef($bibentries->entry('ms1')->get_field('author', 'transliteration', 'ru-latn')->nth_mslang(2)), 'multiscript - 3');
 eq_or_diff($bibentries->entry('ms1')->get_field('author', 'transliteration', 'ru-latn')->nth_mslang(3), 'zh-latn', 'multiscript - 4');
-eq_or_diff($bibentries->entry('ms1')->get_field('author', 'transliteration', 'ru-grek')->nth_mslang(2), 'ru-grek', 'multiscript - 5');
+ok(is_undef($bibentries->entry('ms1')->get_field('author', 'transliteration', 'ru-grek')->nth_mslang(2)), 'multiscript - 5');
 eq_or_diff($bibentries->entry('ms1')->get_field('author', 'transliteration', 'ru-grek')->nth_mslang(3), 'zh-grek', 'multiscript - 6');
 eq_or_diff($bibentries->entry('ms1')->get_field('author')->nth_mslang(2), 'ru-cyrl', 'multiscript - 7');
 eq_or_diff($bibentries->entry('ms1')->get_field('author')->nth_mslang(3), 'zh-hant', 'multiscript - 8');
-eq_or_diff($bibentries->entry('ms1')->get_field('author')->nth_mslang(1), 'en-us', 'multiscript - 9');
+ok(is_undef($bibentries->entry('ms1')->get_field('author')->nth_mslang(1)), 'multiscript - 9');
 eq_or_diff($bibentries->entry('ms1')->get_field('author', 'transliteration', 'ru-latn')->nth_mslang(1), 'en-us', 'multiscript - 10');
 eq_or_diff($bibentries->entry('ms1')->get_field('author', 'transliteration', 'ru-grek')->nth_mslang(1), 'en-us', 'multiscript - 11');
-eq_or_diff($bibentries->entry('ms1')->get_field('location')->nth_mslang(1), 'en-us', 'multiscript - 12');
+ok(is_undef($bibentries->entry('ms1')->get_field('location')->nth_mslang(1)), 'multiscript - 12');
 eq_or_diff($bibentries->entry('ms1')->get_field('location')->nth_mslang(2), 'de', 'multiscript - 13');
-eq_or_diff($bibentries->entry('ms1')->get_field('location', 'translation', 'fr')->nth_mslang(1), 'fr', 'multiscript - 14');
+ok(is_undef($bibentries->entry('ms1')->get_field('location', 'translation', 'fr')->nth_mslang(1)), 'multiscript - 14');
 eq_or_diff($bibentries->entry('ms1')->get_field('location', 'translation', 'fr')->nth_mslang(2), 'de', 'multiscript - 15');
 
 # biblatex source
 eq_or_diff($bibentries->entry('bltx1')->get_field('author')->nth_mslang(1), 'ru-cyrl', 'multiscript - 16');
-eq_or_diff($bibentries->entry('bltx1')->get_field('author')->nth_mslang(2), 'en-us', 'multiscript - 17');
-eq_or_diff($bibentries->entry('bltx1')->get_field('author', 'transliteration', 'ru-Grek')->nth_mslang(1), 'ru-grek', 'multiscript - 18');
+ok(is_undef($bibentries->entry('bltx1')->get_field('author')->nth_mslang(2)), 'multiscript - 17');
+ok(is_undef($bibentries->entry('bltx1')->get_field('author', 'transliteration', 'ru-Grek')->nth_mslang(1)), 'multiscript - 18');
 eq_or_diff($bibentries->entry('bltx1')->get_field('author', 'transliteration', 'ru-grek')->nth_mslang(2), 'en-us', 'multiscript - 19');
 
 # BBL output tests
 my $ms1 = q|    \entry{ms1}{article}{}
       \name[default][en-us]{author}{3}{}{%
-        {{mslang=en-us,hash=c221fa2d0fd5443df81b6bc63acf958a}{%
+        {{hash=c221fa2d0fd5443df81b6bc63acf958a}{%
            family={Smith},
            familyi={S\bibinitperiod},
            given={Bill},
@@ -93,7 +93,7 @@ my $ms1 = q|    \entry{ms1}{article}{}
            familyi={S\bibinitperiod},
            given={Bill},
            giveni={B\bibinitperiod}}}%
-        {{mslang=ru-grek,hash=23836992c4d5c0bdf6f16c3d9feacbce}{%
+        {{hash=23836992c4d5c0bdf6f16c3d9feacbce}{%
            family={Πούσκιν},
            familyi={Π\bibinitperiod},
            given={Ἀλεξάντρ},
@@ -110,7 +110,7 @@ my $ms1 = q|    \entry{ms1}{article}{}
            familyi={S\bibinitperiod},
            given={Bill},
            giveni={B\bibinitperiod}}}%
-        {{mslang=ru-latn,hash=0c7edadf6ef1ef60f583b09b35993f86}{%
+        {{hash=0c7edadf6ef1ef60f583b09b35993f86}{%
            family={Pushkin},
            familyi={P\bibinitperiod},
            given={Aleksandr},

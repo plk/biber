@@ -1292,9 +1292,9 @@ sub resolve_multiscript {
             $val->set_nth_mslang($i, $self->langtags->parse($a)->as_string);
             Biber::Annotation->del_annotation($citekey, $field, 'langtags');
           }
-          else {
-            $val->set_nth_mslang($i, $self->langtags->parse($lang)->as_string);
-          }
+          # else {
+          #   $val->set_nth_mslang($i, $self->langtags->parse($lang)->as_string);
+          # }
         }
       }
     }
