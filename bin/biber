@@ -237,7 +237,11 @@ if (my $of = $opts->{output_format}) {
     say STDERR "Biber: Unknown output format '$of', must be one of 'bbl', 'bibtex', 'biblatexml'";
     exit EXIT_ERROR;
   }
+  if ($opts->{output_format} eq 'bblxml') {
+    say STDERR "Biber: Deprecated output format 'bblxml' - this will be removed in a future version";
+  }
 }
+
 # Auto-detect input-format from extension if not given
 if (exists($opts->{tool}) and
     not exists($opts->{input_format})) {
