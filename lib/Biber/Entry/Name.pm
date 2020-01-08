@@ -356,6 +356,51 @@ sub name_to_bbl {
   return $namestring;
 }
 
+=head2 name_to_bblnameparts
+
+    Return bbl data for multiscript name parts only
+
+=cut
+
+sub name_to_bblnameparts {
+  my ($self, $namelist, $form, $lang, $namepos) = @_;
+  my $dm = Biber::Config->get_dm;
+  my $namestrings;
+
+  # Override lang
+  if (my $langtag = $namelist->nth_mslang($namepos)) {
+    $lang = $langtag;
+  }
+
+  foreach my $np ($dm->get_constant_value('nameparts')) {# list type so returns list
+    my $npc;
+    my $npci;
+    if ($npc = $self->get_namepart($np)) {
+
+      if ($self->was_stripped($np)) {
+        $npc = Biber::Utils::add_outer($npc);
+      }
+      else {
+        # Don't insert name seps in protected names
+        $npc = Biber::Utils::join_name($npc);
+      }
+
+      $npci = join('\bibinitperiod\bibinitdelim ', @{$self->get_namepart_initial($np)}) . '\bibinitperiod';
+      $npci =~ s/\p{Pd}/\\bibinithyphendelim /gxms;
+    }
+    # Some of the subs above can result in these being undef so make sure there is an empty
+    # string instead of undef so that interpolation below doesn't produce warnings
+    $npc //= '';
+    $npci //= '';
+
+    if ($npc) {
+      push $namestrings->@*, ("          $np$form$lang={$npc}", "          ${np}${form}${lang}i={$npci}");
+    }
+  }
+
+  return $namestrings;
+}
+
 =head2 name_to_bblxml
 
     Return bblxml data for a name

@@ -278,6 +278,7 @@ sub set_output_entry {
 
   # Output name fields
   foreach my $namefield ($dmh->{namelists}->@*) {
+    my %msparts;
     foreach my $alts ($be->get_alternates_for_field($namefield)->@*) {
       my $nf = $alts->{val};
       my $form = $alts->{form};
@@ -337,13 +338,26 @@ sub set_output_entry {
       $acc .= "      \\name${ms}{$namefield}{$total}{$nfv}{%\n";
       for (my $i = 1; $i <= $total; $i++) {
         $acc .= $nf->names->[$i-1]->name_to_bbl($nf, $un, $i);
+        push $msparts{$i}->@*, $nf->names->[$i-1]->name_to_bblnameparts($nf, $form, $lang, $i)->@*;
       }
+      $acc .= "      }\n";
+    }
+
+    # Output name list alternate explicit nameparts
+    # This is technically just existing information packaged in a way
+    # easily consumable by biblatex. It would be possible but complex and
+    # messy to get this information from other .bbl information in biblatex
+    # and so we make it explicit here
+    foreach my $i (sort keys %msparts) {
+      $acc .= "      \\namepartms{$namefield}{$i}{%\n";
+      $acc .= join(",\n", uniq $msparts{$i}->@*) . "\n";
       $acc .= "      }\n";
     }
   }
 
   # Output list fields
   foreach my $listfield ($dmh->{lists}->@*) {
+    my %msparts;
     foreach my $alts ($be->get_alternates_for_field($listfield)->@*) {
       my $lf = $alts->{val};
       my $form = $alts->{form};
@@ -360,11 +374,29 @@ sub set_output_entry {
         $acc .= "      \\true{more$listfield}\n";
         $lf->del_last_item;
       }
+
       my $total = $lf->count;
       $acc .= "      \\list${ms}{$listfield}{$total}{%\n";
-      foreach my $f ($lf->get_items->@*) {
+      for (my $i = 0; $i < $total; $i++) {
+        my $f = $lf->get_items->[$i];
         $acc .= "        {$f}%\n";
+
+        # Override lang if there is a relevant list annotation
+        $lang = Biber::Annotation->get_annotation('item', $key, $listfield, $form, $lang, 'langtags', $i+1) // $lang;
+
+        push $msparts{$i+1}->@*, "        $form$lang={$f}";
       }
+      $acc .= "      }\n";
+    }
+
+    # Output list alternate explicit items
+    # This is technically just existing information packaged in a way
+    # easily consumable by biblatex. It would be possible but complex and
+    # messy to get this information from other .bbl information in biblatex
+    # and so we make it explicit here
+    foreach my $i (sort keys %msparts) {
+      $acc .= "      \\listitemms{$listfield}{$i}{%\n";
+      $acc .= join(",\n", uniq $msparts{$i}->@*) . "\n";
       $acc .= "      }\n";
     }
   }

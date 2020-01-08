@@ -207,7 +207,7 @@ my $ms2 = q|    \entry{ms2}{inbook}{}
     \endentry
 |;
 
-# print $out->get_output_entry('ms1', $main);
+ print $out->get_output_entry('ms1', $main);
 
 eq_or_diff($out->get_output_entry('ms1', $main), $ms1, 'BBL 1');
 eq_or_diff($out->get_output_entry('ms2', $main), $ms2, 'BBL 2');
