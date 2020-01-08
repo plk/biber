@@ -273,9 +273,6 @@
 ** DONE biber
 *** TODO cleardata/resetdata - fieldsources, annotations and msnameparts
 *** TODO grouping around nested \dos
-*** TODO listpartms?
-*** TODO bblxml
-*** TODO tests
 *** DONE form= and lang= in maps
 **** DONE fix error in multiscript test when _fr is changed to _es
 **** DONE Put in map in multiscript.bcf to change _es to _fr

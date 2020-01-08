@@ -54,7 +54,6 @@ GetOptions(
            'msstrict',
            'named_annotation_marker|named-annotation-marker=s',
            'namesep=s',
-           'no_bblxml_schema|no-bblxml-schema',
            'no_bltxml_schema|no-bltxml-schema',
            'noconf',
            'no_default_datamodel|no-default-datamodel',
@@ -113,7 +112,6 @@ GetOptions(
            'trace|T',
            'u',                   # alias for input_encoding=UTF-8
            'U',                   # alias for output_encoding=UTF-8
-           'validate_bblxml|validate-bblxml',
            'validate_bltxml|validate-bltxml',
            'validate_config|validate-config',
            'validate_control|validate-control',
@@ -235,8 +233,8 @@ if (exists($opts->{output_resolve})) {
 
 # Check the output_format option
 if (my $of = $opts->{output_format}) {
-  unless ($opts->{output_format} =~ /\A(?:bbl|bibtex|biblatexml|bblxml)\z/xms) {
-    say STDERR "Biber: Unknown output format '$of', must be one of 'bbl', 'bibtex', 'biblatexml', 'bblxml'";
+  unless ($opts->{output_format} =~ /\A(?:bbl|bibtex|biblatexml)\z/xms) {
+    say STDERR "Biber: Unknown output format '$of', must be one of 'bbl', 'bibtex', 'biblatexml'";
     exit EXIT_ERROR;
   }
 }
@@ -330,9 +328,6 @@ else {
     }
     elsif (Biber::Config->getoption('output_format') eq 'bbl') { # bbl output
       $outfile = $bcf =~ s/bcf$/bbl/r;
-    }
-    elsif (Biber::Config->getoption('output_format') eq 'bblxml') { # bblxml output
-      $outfile = $bcf =~ s/bcf$/bblxml/r;
     }
     else {
       say "output_format option '" . Biber::Config->getoption('output_format') . "' only makes sense in tool mode (--tool)";
@@ -597,10 +592,6 @@ named annotation. The default is C<:>.
 Use F<sep> as the separator for BibTeX data source name fields. Defaults to BibTeX's usual
 'and'.
 
-=item B<--no-bblxml-schema>
-
-When writing bblxml output, don't generate an RNG XML schema from the data model.
-
 =item B<--no-bltxml-schema>
 
 When reading or writing biblatexml data sources, don't generate an RNG XML schema from the data
@@ -722,16 +713,10 @@ filename only). F<file> can be absolute if B<--output_directory> is not
 set. F<file> can be '-' to output directly to STDOUT. The legacy option
 B<--outfile> is supported as an alias.
 
-=item B<--output-format=bibtex|biblatexml|bbl|bblxml>
+=item B<--output-format=bibtex|biblatexml|bbl>
 
 Biber output format. Default if not specified is of course, F<bbl>.
-F<bblxml> is an XML version of the F<bbl> format which you could transform
-using XSLT. By default, when outputting F<bblxml>, a RelaxNG XML schema is
-generated from the active data modeal and saved with a F<rng> extension
-along with the output file name (unless the B<--no-bblxml-schema> option is
-specified). You may validate the F<bblxml> using the schema with the
-B<--validate-bblxml> option. The legacy option B<--outformat> is supported
-as an alias.
+The legacy option B<--outformat> is supported as an alias.
 
 =item B<--output-listsep=[sep]>
 
@@ -889,13 +874,6 @@ Alias for B<--input-encoding=UTF-8>
 =item B<-U>
 
 Alias for B<--output-encoding=UTF-8>
-
-=item B<--validate-bblxml>
-
-Schema validate bblXML output against a schema auto-generated from the BibLaTeX
-datamodel. The schema will be auto-generated with the name of the F<.bbl> file with a F<.rng>
-extension. The generated schema can be kept and used with standard XML editors to validate the
-output during XSL development.
 
 =item B<--validate-bltxml>
 

@@ -57,7 +57,6 @@ t/extratitle.t
 t/extratitleyear.t
 t/extradate.t
 t/full-bbl.t
-t/full-bblxml.t
 t/full-bibtex.t
 t/labelalpha.t
 t/labelalphaname.t
@@ -131,8 +130,6 @@ t/tdata/extratitleyear.bcf
 t/tdata/extratitleyear.bib
 t/tdata/extradate.bcf
 t/tdata/extradate.bib
-t/tdata/full-bblxml.bblxml
-t/tdata/full-bblxml.bcf
 t/tdata/full-bibtex_biber.bib
 t/tdata/full-bibtex.bcf
 t/tdata/full-bbl.bbl

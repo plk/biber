@@ -90,7 +90,6 @@ our %DM_DATATYPES = (
 # Mapping of data source and output types to extensions
 our %DS_EXTENSIONS = (
                       bbl        => 'bbl',
-                      bblxml     => 'bblxml',
                       bibtex     => 'bib',
                       biblatexml => 'bltxml'
                       );
@@ -130,7 +129,6 @@ our $CONFIG_DEFAULT_BIBER = {
   msstrict                                    => { content => 0 },
   named_annotation_marker                     => { content => q/:/ },
   namesep                                     => { content => 'and' },
-  no_bblxml_schema                            => { content => 0 },
   no_bltxml_schema                            => { content => 0 },
   no_default_datamodel                        => { content => 0 },
   nodieonerror                                => { content => 0 },
@@ -174,7 +172,6 @@ our $CONFIG_DEFAULT_BIBER = {
   tool_noremove_missing_dependants            => { content => 0 },
   trace                                       => { content => 0 },
   nouri_encode                                => { content => 0 },
-  validate_bblxml                             => { content => 0 },
   validate_bltxml                             => { content => 0 },
   validate_config                             => { content => 0 },
   validate_control                            => { content => 0 },

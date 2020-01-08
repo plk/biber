@@ -365,7 +365,7 @@ sub name_to_bbl {
 sub name_to_bblnameparts {
   my ($self, $namelist, $form, $lang, $namepos) = @_;
   my $dm = Biber::Config->get_dm;
-  my $namestrings;
+  my $namestrings = [];
 
   # Override lang
   if (my $langtag = $namelist->nth_mslang($namepos)) {
@@ -399,84 +399,6 @@ sub name_to_bblnameparts {
   }
 
   return $namestrings;
-}
-
-=head2 name_to_bblxml
-
-    Return bblxml data for a name
-
-=cut
-
-sub name_to_bblxml {
-  my ($self, $xml, $xml_prefix, $namelist, $un, $namepos) = @_;
-  my $dm = Biber::Config->get_dm;
-  my %pno; # per-name options
-  my %names;
-  my $nid = $self->{id};
-
-  foreach my $np ($dm->get_constant_value('nameparts')) {# list type so returns list
-    my $npc;
-    my $npci;
-
-    if ($npc = $self->get_namepart($np)) {
-      $npci = join('. ', @{$self->get_namepart_initial($np)});
-    }
-    # Some of the subs above can result in these being undef so make sure there is an empty
-    # string instead of undef so that interpolation below doesn't produce warnings
-    $npc //= '';
-    $npci //= '';
-    if ($npc) {
-      $names{$np} = [$npc, $npci];
-      if ($un ne 'false') {
-        push $names{$np}->@*, "[BDS]UNP-${np}-${nid}[/BDS]";
-      }
-    }
-  }
-
-  # Generate uniquename if uniquename is requested
-  if ($un ne 'false') {
-    $pno{un} = "[BDS]UNS-${nid}[/BDS]";
-    $pno{uniquepart} = "[BDS]UNP-${nid}[/BDS]";
-  }
-
-  # Add item mslang information from annotations. We retain the annotation too.
-  # This is a convenience so that mslang information for individual names is more easily
-  # available in name formats
-  if (my $langtag = $namelist->nth_mslang($namepos)) {
-    $pno{mslang} = $langtag;
-  }
-
-  # Add per-name options
-  foreach my $no (keys $CONFIG_SCOPEOPT_BIBLATEX{NAME}->%*) {
-    if (defined($self->${\"get_$no"})) {
-      my $nov = $self->${\"get_$no"};
-
-      if ($CONFIG_BIBLATEX_OPTIONS{NAME}{$no}{OUTPUT}) {
-        $pno{$no} = Biber::Utils::map_boolean($no, $nov, 'tostring');
-      }
-    }
-  }
-
-  # Add the name hash to the options
-  $pno{hash} = "[BDS]${nid}-PERNAMEHASH[/BDS]";
-
-  $xml->startTag([$xml_prefix, 'name'], map {$_ => $pno{$_}} sort keys %pno);
-  foreach my $key (sort keys %names) {
-    my $value = $names{$key};
-    my %un;
-    if ($un ne 'false') {
-      %un = (un => $value->[2]);
-    }
-    $xml->startTag([$xml_prefix, 'namepart'],
-                   type => $key,
-                   %un,
-                   initials => NFC(Biber::Utils::normalise_string_bblxml($value->[1])));
-    $xml->characters(NFC(Biber::Utils::normalise_string_bblxml($value->[0])));
-    $xml->endTag();# namepart
-  }
-  $xml->endTag();# names
-
-  return;
 }
 
 =head2 name_to_bibtex

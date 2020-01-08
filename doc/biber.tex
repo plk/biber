@@ -695,8 +695,7 @@ which is described in section \ref{ref:map}.
 
 \biber\ is able to output formats other than \file{.bbl} files for \biblatex\
 to consume. It is also able to output other formats such as the
-experimental \verb+biblatexml+ XML format, \bibtex\ \file{.bib} files and
-an XML version of the \file{.bbl} format with extension \file{.bblxml}.
+experimental \verb+biblatexml+ XML format and \bibtex\ \file{.bib} files.
 \file{.bib} output is possible in tool mode, when you are converting an
 entire datasource file independently of any particular document (see
 section \ref{ref:tool}). It is also useful when you want, instead of a
@@ -715,19 +714,6 @@ citation order, formatted according to the various \opt{ouput-*} options.
 You could of course also perform more processing like source mapping
 (see section \ref{ref:map}), reencoding (see section \ref{ref:enc}) etc. using more
 command line options or a config file.
-
-The \file{.bblxml} format for output is an XML version of the \file{.bbl}.
-It cannot be read by \biblatex\ but contains the same information as in the
-\file{.bbl} and may be useful if you want to transform a document
-bibliography into some other format since XML is a well-supported
-transformation format (using, for example, XSLT). By default, when choosing
-\file{.bblxml} output with the option \opt{--output-format=bblxml}, a
-RelaxNG XML schema is also generated (unless the \opt{--no-bblxml-schema}
-is used). This schema is derived from the active datamodel in the document
-(passed in the \file{.bcf} from \biblatex) and is placed in the same
-directory as the \file{.bblxml} output file. The extension of the schema is
-\file{.rng}. The option \opt{--validate-bblxml} may be used to validate the
-\file{.bblxml} against the schema.
 
 \subsubsection{The \texttt{sourcemap} option}\label{ref:map}
 
@@ -2555,24 +2541,24 @@ manual.
 \begin{tabular}{lllll}
 \toprule
 & \multicolumn{4}{c}{\emph{Output format}}\\
-\emph{Option} & bibtex & biblatexml & bbl & bblxml\\
+\emph{Option} & bibtex & biblatexml & bbl \\
 \midrule
-output-align & \checkmark & - & - & -\\
-output-annotation-marker & \checkmark & - & - & -\\
-output-named-annotation-marker & \checkmark & - & - & -\\
-output-indent & \checkmark & \checkmark & - & -\\
-output-field-order & \checkmark & - & - & -\\
-output-fieldcase & \checkmark & - & - & -\\
-output-listsep & \checkmark & - & - & -\\
-output-macro-fields & \checkmark & - & - & -\\
-output-namesep & \checkmark & - & - & -\\
-output-resolve-xdata & \checkmark & \checkmark & - & -\\
-output-resolve-crossrefs & \checkmark & \checkmark & - & -\\
-output-resolve-sets & \checkmark & \checkmark & - & -\\
-output-xdatamarker & \checkmark & - & - & -\\
-output-xdatasep & \checkmark & \checkmark & - & -\\
-output-xname & \checkmark & - & - & -\\
-output-xnamesep & \checkmark & - & - & -\\
+output-align & \checkmark & - & -\\
+output-annotation-marker & \checkmark & - & -\\
+output-named-annotation-marker & \checkmark & - & -\\
+output-indent & \checkmark & \checkmark & -\\
+output-field-order & \checkmark & - & -\\
+output-fieldcase & \checkmark & - & -\\
+output-listsep & \checkmark & - & -\\
+output-macro-fields & \checkmark & - & -\\
+output-namesep & \checkmark & - & -\\
+output-resolve-xdata & \checkmark & \checkmark & -\\
+output-resolve-crossrefs & \checkmark & \checkmark & -\\
+output-resolve-sets & \checkmark & \checkmark & -\\
+output-xdatamarker & \checkmark & - & -\\
+output-xdatasep & \checkmark & \checkmark & -\\
+output-xname & \checkmark & - & -\\
+output-xnamesep & \checkmark & - & -\\
 \bottomrule
 \end{tabular}
 \end{center}
