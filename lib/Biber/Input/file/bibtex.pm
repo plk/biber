@@ -1515,7 +1515,7 @@ sub cache_data {
       foreach my $id (split(/$S/, $ids)) {
 
         # Skip aliases which are this very key (deep recursion ...)
-        if (fc($id) eq fc($key)) {
+        if ($id eq $key) {
           biber_warn("BAD RECURSION! Entry alias '$id' is identical to the entry key, skipping ...");
           next;
         }
