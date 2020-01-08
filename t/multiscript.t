@@ -121,6 +121,42 @@ my $ms1 = q|    \entry{ms1}{article}{}
            given={Bing},
            giveni={B\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Smith},
+          familydefaulten-usi={S\bibinitperiod},
+          givendefaulten-us={Bill},
+          givendefaulten-usi={B\bibinitperiod},
+          familytransliterationen-us={Smith},
+          familytransliterationen-usi={S\bibinitperiod},
+          giventransliterationen-us={Bill},
+          giventransliterationen-usi={B\bibinitperiod}
+      }
+      \namepartms{author}{2}{%
+          familydefaultru-cyrl={Пушкин},
+          familydefaultru-cyrli={П\bibinitperiod},
+          givendefaultru-cyrl={Александр},
+          givendefaultru-cyrli={А\bibinitperiod},
+          familytransliterationru-grek={Πούσκιν},
+          familytransliterationru-greki={Π\bibinitperiod},
+          giventransliterationru-grek={Ἀλεξάντρ},
+          giventransliterationru-greki={Ἀ\bibinitperiod},
+          familytransliterationru-latn={Pushkin},
+          familytransliterationru-latni={P\bibinitperiod},
+          giventransliterationru-latn={Aleksandr},
+          giventransliterationru-latni={A\bibinitperiod}
+      }
+      \namepartms{author}{3}{%
+          familydefaultzh-hant={徐冰},
+          familydefaultzh-hanti={徐\bibinitperiod},
+          familytransliterationzh-grek={Ξού},
+          familytransliterationzh-greki={Ξ\bibinitperiod},
+          giventransliterationzh-grek={Μπίνγκ},
+          giventransliterationzh-greki={Μ\bibinitperiod},
+          familytransliterationzh-latn={Xu},
+          familytransliterationzh-latni={X\bibinitperiod},
+          giventransliterationzh-latn={Bing},
+          giventransliterationzh-latni={B\bibinitperiod}
+      }
       \list[default][en-us]{location}{2}{%
         {locationa}%
         {Standortb}%
@@ -128,6 +164,14 @@ my $ms1 = q|    \entry{ms1}{article}{}
       \list[translation][fr]{location}{2}{%
         {emplacementa}%
         {Standortb}%
+      }
+      \listitemms{location}{1}{%
+        defaulten-us={locationa},
+        translationfr={emplacementa}
+      }
+      \listitemms{location}{2}{%
+        defaultde={Standortb},
+        translationde={Standortb}
       }
       \strng{namehash}{6506017dedcafd386988f8f975fedd0d}
       \strng{fullhash}{6506017dedcafd386988f8f975fedd0d}
@@ -176,12 +220,28 @@ my $ms2 = q|    \entry{ms2}{inbook}{}
            given={Clive},
            giveni={C\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Treacle},
+          familydefaulten-usi={T\bibinitperiod},
+          givendefaulten-us={Alan},
+          givendefaulten-usi={A\bibinitperiod},
+          familytransliterationru-latn={Clever},
+          familytransliterationru-latni={C\bibinitperiod},
+          giventransliterationru-latn={Clive},
+          giventransliterationru-latni={C\bibinitperiod}
+      }
       \name[default][de-de]{editor}{1}{}{%
         {{hash=da4e9104ade84cb0fcd815add03dd1fd}{%
            family={Gimble},
            familyi={G\bibinitperiod},
            given={Billy},
            giveni={B\bibinitperiod}}}%
+      }
+      \namepartms{editor}{1}{%
+          familydefaultde-de={Gimble},
+          familydefaultde-dei={G\bibinitperiod},
+          givendefaultde-de={Billy},
+          givendefaultde-dei={B\bibinitperiod}
       }
       \strng{namehash}{cb8bc4824dfe756730d5837418bf5b53}
       \strng{fullhash}{cb8bc4824dfe756730d5837418bf5b53}
@@ -207,7 +267,7 @@ my $ms2 = q|    \entry{ms2}{inbook}{}
     \endentry
 |;
 
- print $out->get_output_entry('ms1', $main);
+# print $out->get_output_entry('ms1', $main);
 
 eq_or_diff($out->get_output_entry('ms1', $main), $ms1, 'BBL 1');
 eq_or_diff($out->get_output_entry('ms2', $main), $ms2, 'BBL 2');

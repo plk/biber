@@ -77,8 +77,23 @@ my $l13c = q|    \entry{L13}{book}{}
            given={Albert},
            giveni={A\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Doe},
+          familydefaulten-usi={D\bibinitperiod},
+          givendefaulten-us={John},
+          givendefaulten-usi={J\bibinitperiod}
+      }
+      \namepartms{author}{2}{%
+          familydefaulten-us={Abrahams},
+          familydefaulten-usi={A\bibinitperiod},
+          givendefaulten-us={Albert},
+          givendefaulten-usi={A\bibinitperiod}
+      }
       \list[default][en-us]{publisher}{1}{%
         {Oxford}%
+      }
+      \listitemms{publisher}{1}{%
+        defaulten-us={Oxford}
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
@@ -115,8 +130,23 @@ my $l14 = q|    \entry{L14}{book}{}
            given={Albert},
            giveni={A\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Doe},
+          familydefaulten-usi={D\bibinitperiod},
+          givendefaulten-us={John},
+          givendefaulten-usi={J\bibinitperiod}
+      }
+      \namepartms{author}{2}{%
+          familydefaulten-us={Abrahams},
+          familydefaulten-usi={A\bibinitperiod},
+          givendefaulten-us={Albert},
+          givendefaulten-usi={A\bibinitperiod}
+      }
       \list[default][en-us]{publisher}{1}{%
         {Oxford}%
+      }
+      \listitemms{publisher}{1}{%
+        defaulten-us={Oxford}
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
@@ -157,8 +187,23 @@ my $l15 = q|    \entry{L15}{book}{}
            given={Albert},
            giveni={A\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Doe},
+          familydefaulten-usi={D\bibinitperiod},
+          givendefaulten-us={John},
+          givendefaulten-usi={J\bibinitperiod}
+      }
+      \namepartms{author}{2}{%
+          familydefaulten-us={Abrahams},
+          familydefaulten-usi={A\bibinitperiod},
+          givendefaulten-us={Albert},
+          givendefaulten-usi={A\bibinitperiod}
+      }
       \list[default][en-us]{publisher}{1}{%
         {Oxford}%
+      }
+      \listitemms{publisher}{1}{%
+        defaulten-us={Oxford}
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
@@ -190,8 +235,23 @@ my $l16 = q|    \entry{L16}{proceedings}{}
            given={Albert},
            giveni={A\bibinitperiod}}}%
       }
+      \namepartms{editor}{1}{%
+          familydefaulten-us={Doe},
+          familydefaulten-usi={D\bibinitperiod},
+          givendefaulten-us={John},
+          givendefaulten-usi={J\bibinitperiod}
+      }
+      \namepartms{editor}{2}{%
+          familydefaulten-us={Abrahams},
+          familydefaulten-usi={A\bibinitperiod},
+          givendefaulten-us={Albert},
+          givendefaulten-usi={A\bibinitperiod}
+      }
       \list[default][en-us]{publisher}{1}{%
         {Oxford}%
+      }
+      \listitemms{publisher}{1}{%
+        defaulten-us={Oxford}
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
@@ -229,8 +289,23 @@ my $l17 = q|    \entry{L17}{proceedings}{}
            given={Albert},
            giveni={A\bibinitperiod}}}%
       }
+      \namepartms{editor}{1}{%
+          familydefaulten-us={Doe},
+          familydefaulten-usi={D\bibinitperiod},
+          givendefaulten-us={John},
+          givendefaulten-usi={J\bibinitperiod}
+      }
+      \namepartms{editor}{2}{%
+          familydefaulten-us={Abrahams},
+          familydefaulten-usi={A\bibinitperiod},
+          givendefaulten-us={Albert},
+          givendefaulten-usi={A\bibinitperiod}
+      }
       \list[default][en-us]{publisher}{1}{%
         {Oxford}%
+      }
+      \listitemms{publisher}{1}{%
+        defaulten-us={Oxford}
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
@@ -288,8 +363,23 @@ my $l17c = q|    \entry{L17}{proceedings}{}
            given={Albert},
            giveni={A\bibinitperiod}}}%
       }
+      \namepartms{editor}{1}{%
+          familydefaulten-us={Doe},
+          familydefaulten-usi={D\bibinitperiod},
+          givendefaulten-us={John},
+          givendefaulten-usi={J\bibinitperiod}
+      }
+      \namepartms{editor}{2}{%
+          familydefaulten-us={Abrahams},
+          familydefaulten-usi={A\bibinitperiod},
+          givendefaulten-us={Albert},
+          givendefaulten-usi={A\bibinitperiod}
+      }
       \list[default][en-us]{publisher}{1}{%
         {Oxford}%
+      }
+      \listitemms{publisher}{1}{%
+        defaulten-us={Oxford}
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
@@ -346,8 +436,23 @@ my $l17e = q|    \entry{L17}{proceedings}{}
            given={Albert},
            giveni={A\bibinitperiod}}}%
       }
+      \namepartms{editor}{1}{%
+          familydefaulten-us={Doe},
+          familydefaulten-usi={D\bibinitperiod},
+          givendefaulten-us={John},
+          givendefaulten-usi={J\bibinitperiod}
+      }
+      \namepartms{editor}{2}{%
+          familydefaulten-us={Abrahams},
+          familydefaulten-usi={A\bibinitperiod},
+          givendefaulten-us={Albert},
+          givendefaulten-usi={A\bibinitperiod}
+      }
       \list[default][en-us]{publisher}{1}{%
         {Oxford}%
+      }
+      \listitemms{publisher}{1}{%
+        defaulten-us={Oxford}
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
@@ -464,9 +569,15 @@ my $era1 = q|    \entry{era1}{article}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
            family={Smith},
-           familyi={S\\bibinitperiod},
+           familyi={S\bibinitperiod},
            given={Alan},
-           giveni={A\\bibinitperiod}}}%
+           giveni={A\bibinitperiod}}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Smith},
+          familydefaulten-usi={S\bibinitperiod},
+          givendefaulten-us={Alan},
+          givendefaulten-usi={A\bibinitperiod}
       }
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
@@ -497,9 +608,15 @@ my $era2 = q|    \entry{era2}{inproceedings}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
            family={Smith},
-           familyi={S\\bibinitperiod},
+           familyi={S\bibinitperiod},
            given={Alan},
-           giveni={A\\bibinitperiod}}}%
+           giveni={A\bibinitperiod}}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Smith},
+          familydefaulten-usi={S\bibinitperiod},
+          givendefaulten-us={Alan},
+          givendefaulten-usi={A\bibinitperiod}
       }
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
@@ -531,9 +648,15 @@ my $era3 = q|    \entry{era3}{inproceedings}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
            family={Smith},
-           familyi={S\\bibinitperiod},
+           familyi={S\bibinitperiod},
            given={Alan},
-           giveni={A\\bibinitperiod}}}%
+           giveni={A\bibinitperiod}}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Smith},
+          familydefaulten-usi={S\bibinitperiod},
+          givendefaulten-us={Alan},
+          givendefaulten-usi={A\bibinitperiod}
       }
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
@@ -565,9 +688,15 @@ my $era4 = q|    \entry{era4}{inproceedings}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
            family={Smith},
-           familyi={S\\bibinitperiod},
+           familyi={S\bibinitperiod},
            given={Alan},
-           giveni={A\\bibinitperiod}}}%
+           giveni={A\bibinitperiod}}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Smith},
+          familydefaulten-usi={S\bibinitperiod},
+          givendefaulten-us={Alan},
+          givendefaulten-usi={A\bibinitperiod}
       }
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
@@ -607,9 +736,15 @@ my $time1 = q|    \entry{time1}{article}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
            family={Smith},
-           familyi={S\\bibinitperiod},
+           familyi={S\bibinitperiod},
            given={Alan},
-           giveni={A\\bibinitperiod}}}%
+           giveni={A\bibinitperiod}}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Smith},
+          familydefaulten-usi={S\bibinitperiod},
+          givendefaulten-us={Alan},
+          givendefaulten-usi={A\bibinitperiod}
       }
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
@@ -656,9 +791,15 @@ my $range1 = q|    \entry{range1}{inproceedings}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
            family={Smith},
-           familyi={S\\bibinitperiod},
+           familyi={S\bibinitperiod},
            given={Alan},
-           giveni={A\\bibinitperiod}}}%
+           giveni={A\bibinitperiod}}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Smith},
+          familydefaulten-usi={S\bibinitperiod},
+          givendefaulten-us={Alan},
+          givendefaulten-usi={A\bibinitperiod}
       }
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
@@ -697,9 +838,15 @@ my $range2 = q|    \entry{range2}{inproceedings}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
            family={Smith},
-           familyi={S\\bibinitperiod},
+           familyi={S\bibinitperiod},
            given={Alan},
-           giveni={A\\bibinitperiod}}}%
+           giveni={A\bibinitperiod}}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Smith},
+          familydefaulten-usi={S\bibinitperiod},
+          givendefaulten-us={Alan},
+          givendefaulten-usi={A\bibinitperiod}
       }
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
@@ -738,9 +885,15 @@ my $season1 = q|    \entry{season1}{inproceedings}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
            family={Smith},
-           familyi={S\\bibinitperiod},
+           familyi={S\bibinitperiod},
            given={Alan},
-           giveni={A\\bibinitperiod}}}%
+           giveni={A\bibinitperiod}}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Smith},
+          familydefaulten-usi={S\bibinitperiod},
+          givendefaulten-us={Alan},
+          givendefaulten-usi={A\bibinitperiod}
       }
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
@@ -770,9 +923,15 @@ my $unspec1 = q|    \entry{unspec1}{inproceedings}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
            family={Smith},
-           familyi={S\\bibinitperiod},
+           familyi={S\bibinitperiod},
            given={Alan},
-           giveni={A\\bibinitperiod}}}%
+           giveni={A\bibinitperiod}}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Smith},
+          familydefaulten-usi={S\bibinitperiod},
+          givendefaulten-us={Alan},
+          givendefaulten-usi={A\bibinitperiod}
       }
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
@@ -815,7 +974,7 @@ my $unspec1 = q|    \entry{unspec1}{inproceedings}{}
       \field{urldateunspecified}{dayinmonth}
       \field{urlenddateera}{ce}
       \field{urldateera}{ce}
-    \\endentry
+    \endentry
 |;
 
 
@@ -823,9 +982,15 @@ my $unspec2 = q|    \entry{unspec2}{article}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
            family={Smith},
-           familyi={S\\bibinitperiod},
+           familyi={S\bibinitperiod},
            given={Alan},
-           giveni={A\\bibinitperiod}}}%
+           giveni={A\bibinitperiod}}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Smith},
+          familydefaulten-usi={S\bibinitperiod},
+          givendefaulten-us={Alan},
+          givendefaulten-usi={A\bibinitperiod}
       }
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}

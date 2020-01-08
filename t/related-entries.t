@@ -48,6 +48,10 @@ my $k1 = q|    \entry{key1}{article}{}
            family={Author},
            familyi={A\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Author},
+          familydefaulten-usi={A\bibinitperiod}
+      }
       \strng{namehash}{a517747c3d12f99244ae598910d979c5}
       \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
       \strng{bibnamehash}{a517747c3d12f99244ae598910d979c5}
@@ -81,11 +85,21 @@ my $k2 = q|    \entry{key2}{inbook}{}
            family={Author},
            familyi={A\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Author},
+          familydefaulten-usi={A\bibinitperiod}
+      }
       \list[default][en-us]{location}{1}{%
         {Location}%
       }
+      \listitemms{location}{1}{%
+        defaulten-us={Location}
+      }
       \list[default][en-us]{publisher}{1}{%
         {Publisher}%
+      }
+      \listitemms{publisher}{1}{%
+        defaulten-us={Publisher}
       }
       \strng{namehash}{a517747c3d12f99244ae598910d979c5}
       \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
@@ -122,6 +136,10 @@ my $kck1 = q|    \entry{c2add694bf942dc77b376592d9c862cd}{article}{skipbib=true,
            family={Author},
            familyi={A\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Author},
+          familydefaulten-usi={A\bibinitperiod}
+      }
       \strng{namehash}{a517747c3d12f99244ae598910d979c5}
       \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
       \strng{bibnamehash}{a517747c3d12f99244ae598910d979c5}
@@ -152,11 +170,21 @@ my $kck2 = q|    \entry{78f825aaa0103319aaa1a30bf4fe3ada}{inbook}{skipbib=true,s
            family={Author},
            familyi={A\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Author},
+          familydefaulten-usi={A\bibinitperiod}
+      }
       \list[default][en-us]{location}{1}{%
         {Location}%
       }
+      \listitemms{location}{1}{%
+        defaulten-us={Location}
+      }
       \list[default][en-us]{publisher}{1}{%
         {Publisher}%
+      }
+      \listitemms{publisher}{1}{%
+        defaulten-us={Publisher}
       }
       \strng{namehash}{a517747c3d12f99244ae598910d979c5}
       \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
@@ -189,11 +217,21 @@ my $kck3 = q|    \entry{3631578538a2d6ba5879b31a9a42f290}{inbook}{skipbib=true,s
            family={Author},
            familyi={A\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Author},
+          familydefaulten-usi={A\bibinitperiod}
+      }
       \list[default][en-us]{location}{1}{%
         {Location}%
       }
+      \listitemms{location}{1}{%
+        defaulten-us={Location}
+      }
       \list[default][en-us]{publisher}{1}{%
         {Publisher2}%
+      }
+      \listitemms{publisher}{1}{%
+        defaulten-us={Publisher2}
       }
       \strng{namehash}{a517747c3d12f99244ae598910d979c5}
       \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
@@ -225,11 +263,21 @@ my $kck4 = q|    \entry{caf8e34be07426ae7127c1b4829983c1}{inbook}{skipbib=true,s
            family={Author},
            familyi={A\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Author},
+          familydefaulten-usi={A\bibinitperiod}
+      }
       \list[default][en-us]{location}{1}{%
         {Location}%
       }
+      \listitemms{location}{1}{%
+        defaulten-us={Location}
+      }
       \list[default][en-us]{publisher}{1}{%
         {Publisher2}%
+      }
+      \listitemms{publisher}{1}{%
+        defaulten-us={Publisher2}
       }
       \strng{namehash}{a517747c3d12f99244ae598910d979c5}
       \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
@@ -275,7 +323,11 @@ my $s1 = q|    \entry{8ddf878039b70767c4a5bcf4f0c4f65e}{book}{skipbib=false,skip
       \name[default][en-us]{author}{1}{}{%
         {{hash=a517747c3d12f99244ae598910d979c5}{%
            family={Author},
-           familyi={A\\bibinitperiod}}}%
+           familyi={A\bibinitperiod}}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Author},
+          familydefaulten-usi={A\bibinitperiod}
       }
       \strng{namehash}{a517747c3d12f99244ae598910d979c5}
       \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
@@ -327,11 +379,23 @@ my $un1 = q|    \entry{kullback}{book}{}
            giveni={S\bibinitperiod},
            givenun=0}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Kullback},
+          familydefaulten-usi={K\bibinitperiod},
+          givendefaulten-us={Solomon},
+          givendefaulten-usi={S\bibinitperiod}
+      }
       \list[default][en-us]{location}{1}{%
         {New York}%
       }
+      \listitemms{location}{1}{%
+        defaulten-us={New York}
+      }
       \list[default][en-us]{publisher}{1}{%
         {John Wiley \& Sons}%
+      }
+      \listitemms{publisher}{1}{%
+        defaulten-us={John Wiley \& Sons}
       }
       \strng{namehash}{34c5bbf9876c37127c3abe4e7d7a7198}
       \strng{fullhash}{34c5bbf9876c37127c3abe4e7d7a7198}
@@ -349,7 +413,7 @@ my $un1 = q|    \entry{kullback}{book}{}
       \field{langidopts}{variant=american}
       \field[default][en-us]{title}{Information Theory and Statistics}
       \field{year}{1959}
-    \\endentry
+    \endentry
 |;
 
 my $un2 = q|    \entry{kullback:related}{book}{}
@@ -361,11 +425,23 @@ my $un2 = q|    \entry{kullback:related}{book}{}
            giveni={S\bibinitperiod},
            givenun=0}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Kullback},
+          familydefaulten-usi={K\bibinitperiod},
+          givendefaulten-us={Solomon},
+          givendefaulten-usi={S\bibinitperiod}
+      }
       \list[default][en-us]{location}{1}{%
         {New York}%
       }
+      \listitemms{location}{1}{%
+        defaulten-us={New York}
+      }
       \list[default][en-us]{publisher}{1}{%
         {Dover Publications}%
+      }
+      \listitemms{publisher}{1}{%
+        defaulten-us={Dover Publications}
       }
       \strng{namehash}{34c5bbf9876c37127c3abe4e7d7a7198}
       \strng{fullhash}{34c5bbf9876c37127c3abe4e7d7a7198}

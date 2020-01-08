@@ -89,6 +89,22 @@ my $u1 = q|    \entry{u1}{misc}{}
            family={DDD},
            familyi={D\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={AAA},
+          familydefaulten-usi={A\bibinitperiod}
+      }
+      \namepartms{author}{2}{%
+          familydefaulten-us={BBB},
+          familydefaulten-usi={B\bibinitperiod}
+      }
+      \namepartms{author}{3}{%
+          familydefaulten-us={CCC},
+          familydefaulten-usi={C\bibinitperiod}
+      }
+      \namepartms{author}{4}{%
+          familydefaulten-us={DDD},
+          familydefaulten-usi={D\bibinitperiod}
+      }
       \strng{namehash}{b78abdc838d79b6576f2ed0021642766}
       \strng{fullhash}{b78abdc838d79b6576f2ed0021642766}
       \strng{bibnamehash}{b78abdc838d79b6576f2ed0021642766}
@@ -223,6 +239,90 @@ my $murray1 = q|    \entry{murray}{article}{}
            giveni={R\bibinitperiod\bibinitdelim W\bibinitperiod},
            givenun=0}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Hostetler},
+          familydefaulten-usi={H\bibinitperiod},
+          givendefaulten-us={Michael\bibnamedelima J.},
+          givendefaulten-usi={M\bibinitperiod\bibinitdelim J\bibinitperiod}
+      }
+      \namepartms{author}{10}{%
+          familydefaulten-us={Wignall},
+          familydefaulten-usi={W\bibinitperiod},
+          givendefaulten-us={George\bibnamedelima D.},
+          givendefaulten-usi={G\bibinitperiod\bibinitdelim D\bibinitperiod}
+      }
+      \namepartms{author}{11}{%
+          familydefaulten-us={Glish},
+          familydefaulten-usi={G\bibinitperiod},
+          givendefaulten-us={Gary\bibnamedelima L.},
+          givendefaulten-usi={G\bibinitperiod\bibinitdelim L\bibinitperiod}
+      }
+      \namepartms{author}{12}{%
+          familydefaulten-us={Porter},
+          familydefaulten-usi={P\bibinitperiod},
+          givendefaulten-us={Marc\bibnamedelima D.},
+          givendefaulten-usi={M\bibinitperiod\bibinitdelim D\bibinitperiod}
+      }
+      \namepartms{author}{13}{%
+          familydefaulten-us={Evans},
+          familydefaulten-usi={E\bibinitperiod},
+          givendefaulten-us={Neal\bibnamedelima D.},
+          givendefaulten-usi={N\bibinitperiod\bibinitdelim D\bibinitperiod}
+      }
+      \namepartms{author}{14}{%
+          familydefaulten-us={Murray},
+          familydefaulten-usi={M\bibinitperiod},
+          givendefaulten-us={Royce\bibnamedelima W.},
+          givendefaulten-usi={R\bibinitperiod\bibinitdelim W\bibinitperiod}
+      }
+      \namepartms{author}{2}{%
+          familydefaulten-us={Wingate},
+          familydefaulten-usi={W\bibinitperiod},
+          givendefaulten-us={Julia\bibnamedelima E.},
+          givendefaulten-usi={J\bibinitperiod\bibinitdelim E\bibinitperiod}
+      }
+      \namepartms{author}{3}{%
+          familydefaulten-us={Zhong},
+          familydefaulten-usi={Z\bibinitperiod},
+          givendefaulten-us={Chuan-Jian},
+          givendefaulten-usi={C\bibinithyphendelim J\bibinitperiod}
+      }
+      \namepartms{author}{4}{%
+          familydefaulten-us={Harris},
+          familydefaulten-usi={H\bibinitperiod},
+          givendefaulten-us={Jay\bibnamedelima E.},
+          givendefaulten-usi={J\bibinitperiod\bibinitdelim E\bibinitperiod}
+      }
+      \namepartms{author}{5}{%
+          familydefaulten-us={Vachet},
+          familydefaulten-usi={V\bibinitperiod},
+          givendefaulten-us={Richard\bibnamedelima W.},
+          givendefaulten-usi={R\bibinitperiod\bibinitdelim W\bibinitperiod}
+      }
+      \namepartms{author}{6}{%
+          familydefaulten-us={Clark},
+          familydefaulten-usi={C\bibinitperiod},
+          givendefaulten-us={Michael\bibnamedelima R.},
+          givendefaulten-usi={M\bibinitperiod\bibinitdelim R\bibinitperiod}
+      }
+      \namepartms{author}{7}{%
+          familydefaulten-us={Londono},
+          familydefaulten-usi={L\bibinitperiod},
+          givendefaulten-us={J.\bibnamedelimi David},
+          givendefaulten-usi={J\bibinitperiod\bibinitdelim D\bibinitperiod}
+      }
+      \namepartms{author}{8}{%
+          familydefaulten-us={Green},
+          familydefaulten-usi={G\bibinitperiod},
+          givendefaulten-us={Stephen\bibnamedelima J.},
+          givendefaulten-usi={S\bibinitperiod\bibinitdelim J\bibinitperiod}
+      }
+      \namepartms{author}{9}{%
+          familydefaulten-us={Stokes},
+          familydefaulten-usi={S\bibinitperiod},
+          givendefaulten-us={Jennifer\bibnamedelima J.},
+          givendefaulten-usi={J\bibinitperiod\bibinitdelim J\bibinitperiod}
+      }
       \strng{namehash}{0c2086c92b65b24b0fb04b9462cf6c00}
       \strng{fullhash}{1572cc3fd324f560e5e71d041a6bd764}
       \strng{bibnamehash}{132c55db0f03fae26126bc20d94cd834}
@@ -340,6 +440,90 @@ my $murray2 = q|    \entry{murray}{article}{}
            giveni={R\bibinitperiod\bibinitdelim W\bibinitperiod},
            givenun=0}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Hostetler},
+          familydefaulten-usi={H\bibinitperiod},
+          givendefaulten-us={Michael\bibnamedelima J.},
+          givendefaulten-usi={M\bibinitperiod\bibinitdelim J\bibinitperiod}
+      }
+      \namepartms{author}{10}{%
+          familydefaulten-us={Wignall},
+          familydefaulten-usi={W\bibinitperiod},
+          givendefaulten-us={George\bibnamedelima D.},
+          givendefaulten-usi={G\bibinitperiod\bibinitdelim D\bibinitperiod}
+      }
+      \namepartms{author}{11}{%
+          familydefaulten-us={Glish},
+          familydefaulten-usi={G\bibinitperiod},
+          givendefaulten-us={Gary\bibnamedelima L.},
+          givendefaulten-usi={G\bibinitperiod\bibinitdelim L\bibinitperiod}
+      }
+      \namepartms{author}{12}{%
+          familydefaulten-us={Porter},
+          familydefaulten-usi={P\bibinitperiod},
+          givendefaulten-us={Marc\bibnamedelima D.},
+          givendefaulten-usi={M\bibinitperiod\bibinitdelim D\bibinitperiod}
+      }
+      \namepartms{author}{13}{%
+          familydefaulten-us={Evans},
+          familydefaulten-usi={E\bibinitperiod},
+          givendefaulten-us={Neal\bibnamedelima D.},
+          givendefaulten-usi={N\bibinitperiod\bibinitdelim D\bibinitperiod}
+      }
+      \namepartms{author}{14}{%
+          familydefaulten-us={Murray},
+          familydefaulten-usi={M\bibinitperiod},
+          givendefaulten-us={Royce\bibnamedelima W.},
+          givendefaulten-usi={R\bibinitperiod\bibinitdelim W\bibinitperiod}
+      }
+      \namepartms{author}{2}{%
+          familydefaulten-us={Wingate},
+          familydefaulten-usi={W\bibinitperiod},
+          givendefaulten-us={Julia\bibnamedelima E.},
+          givendefaulten-usi={J\bibinitperiod\bibinitdelim E\bibinitperiod}
+      }
+      \namepartms{author}{3}{%
+          familydefaulten-us={Zhong},
+          familydefaulten-usi={Z\bibinitperiod},
+          givendefaulten-us={Chuan-Jian},
+          givendefaulten-usi={C\bibinithyphendelim J\bibinitperiod}
+      }
+      \namepartms{author}{4}{%
+          familydefaulten-us={Harris},
+          familydefaulten-usi={H\bibinitperiod},
+          givendefaulten-us={Jay\bibnamedelima E.},
+          givendefaulten-usi={J\bibinitperiod\bibinitdelim E\bibinitperiod}
+      }
+      \namepartms{author}{5}{%
+          familydefaulten-us={Vachet},
+          familydefaulten-usi={V\bibinitperiod},
+          givendefaulten-us={Richard\bibnamedelima W.},
+          givendefaulten-usi={R\bibinitperiod\bibinitdelim W\bibinitperiod}
+      }
+      \namepartms{author}{6}{%
+          familydefaulten-us={Clark},
+          familydefaulten-usi={C\bibinitperiod},
+          givendefaulten-us={Michael\bibnamedelima R.},
+          givendefaulten-usi={M\bibinitperiod\bibinitdelim R\bibinitperiod}
+      }
+      \namepartms{author}{7}{%
+          familydefaulten-us={Londono},
+          familydefaulten-usi={L\bibinitperiod},
+          givendefaulten-us={J.\bibnamedelimi David},
+          givendefaulten-usi={J\bibinitperiod\bibinitdelim D\bibinitperiod}
+      }
+      \namepartms{author}{8}{%
+          familydefaulten-us={Green},
+          familydefaulten-usi={G\bibinitperiod},
+          givendefaulten-us={Stephen\bibnamedelima J.},
+          givendefaulten-usi={S\bibinitperiod\bibinitdelim J\bibinitperiod}
+      }
+      \namepartms{author}{9}{%
+          familydefaulten-us={Stokes},
+          familydefaulten-usi={S\bibinitperiod},
+          givendefaulten-us={Jennifer\bibnamedelima J.},
+          givendefaulten-usi={J\bibinitperiod\bibinitdelim J\bibinitperiod}
+      }
       \strng{namehash}{0c2086c92b65b24b0fb04b9462cf6c00}
       \strng{fullhash}{1572cc3fd324f560e5e71d041a6bd764}
       \strng{bibnamehash}{132c55db0f03fae26126bc20d94cd834}
@@ -380,6 +564,12 @@ my $t1 = q+    \entry{t1}{misc}{}
            giveni={B\bibinitperiod},
            givenun=0}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Brown},
+          familydefaulten-usi={B\bibinitperiod},
+          givendefaulten-us={Bill},
+          givendefaulten-usi={B\bibinitperiod}
+      }
       \strng{namehash}{858fcf9483ec29b7707a7dda2dde7a6f}
       \strng{fullhash}{858fcf9483ec29b7707a7dda2dde7a6f}
       \strng{bibnamehash}{858fcf9483ec29b7707a7dda2dde7a6f}
@@ -393,7 +583,7 @@ my $t1 = q+    \entry{t1}{misc}{}
       \true{uniquework}
       \fieldmssource{labelname}{author}{default}{en-us}
       \fieldmssource{labeltitle}{title}{default}{en-us}
-      \field[default][en-us]{title}{10\\% of [100] and 90% of $Normal_2$ | \\& # things {$^3$}}
+      \field[default][en-us]{title}{10\% of [100] and 90% of $Normal_2$ | \& # things {$^3$}}
       \field{year}{1992}
       \field{pages}{100\bibrangedash}
       \range{pages}{-1}
@@ -410,6 +600,12 @@ my $t2 = q|    \entry{t2}{misc}{}
            giveni={B\bibinitperiod},
            givenun=0}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Brown},
+          familydefaulten-usi={B\bibinitperiod},
+          givendefaulten-us={Bill},
+          givendefaulten-usi={B\bibinitperiod}
+      }
       \strng{namehash}{858fcf9483ec29b7707a7dda2dde7a6f}
       \strng{fullhash}{858fcf9483ec29b7707a7dda2dde7a6f}
       \strng{bibnamehash}{858fcf9483ec29b7707a7dda2dde7a6f}
@@ -423,7 +619,7 @@ my $t2 = q|    \entry{t2}{misc}{}
       \true{uniquework}
       \fieldmssource{labelname}{author}{default}{en-us}
       \fieldmssource{labeltitle}{title}{default}{en-us}
-      \field[default][en-us]{title}{Signs of W$\\frac{o}{a}$nder}
+      \field[default][en-us]{title}{Signs of W$\frac{o}{a}$nder}
       \field{year}{1994}
       \field{pages}{100\bibrangedash 108}
       \range{pages}{9}
@@ -436,10 +632,18 @@ my $anon1 = q|    \entry{anon1}{unpublished}{}
            family={AnonymousX},
            familyi={A\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={AnonymousX},
+          familydefaulten-usi={A\bibinitperiod}
+      }
       \name{shortauthor}{1}{}{%
         {{un=0,uniquepart=base,hash=9873a6cc65c553faa2b21aaad626fe4b}{%
            family={XAnony},
            familyi={X\bibinitperiod}}}%
+      }
+      \namepartms{shortauthor}{1}{%
+          familydefaulten-us={XAnony},
+          familydefaulten-usi={X\bibinitperiod}
       }
       \strng{namehash}{9873a6cc65c553faa2b21aaad626fe4b}
       \strng{fullhash}{a66f357fe2fd356fe49959173522a651}
@@ -475,10 +679,18 @@ my $anon2 = q|    \entry{anon2}{unpublished}{}
            family={AnonymousY},
            familyi={A\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={AnonymousY},
+          familydefaulten-usi={A\bibinitperiod}
+      }
       \name{shortauthor}{1}{}{%
         {{un=0,uniquepart=base,hash=f64c29e89ea49402b997956610b58ef6}{%
            family={YAnony},
            familyi={Y\bibinitperiod}}}%
+      }
+      \namepartms{shortauthor}{1}{%
+          familydefaulten-us={YAnony},
+          familydefaulten-usi={Y\bibinitperiod}
       }
       \strng{namehash}{f64c29e89ea49402b997956610b58ef6}
       \strng{fullhash}{a0bccee4041bc840e14c06e5ba7f083c}
@@ -517,6 +729,12 @@ my $url1 = q|    \entry{url1}{misc}{}
            giveni={A\bibinitperiod},
            givenun=0}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Alias},
+          familydefaulten-usi={A\bibinitperiod},
+          givendefaulten-us={Alan},
+          givendefaulten-usi={A\bibinitperiod}
+      }
       \strng{namehash}{b2106a3dda6c5a4879a0cab37e9cca55}
       \strng{fullhash}{b2106a3dda6c5a4879a0cab37e9cca55}
       \strng{bibnamehash}{b2106a3dda6c5a4879a0cab37e9cca55}
@@ -549,6 +767,12 @@ my $list1 = q|    \entry{list1}{book}{}
       \list[default][en-us]{location}{2}{%
         {ÁAA}%
         {BBB}%
+      }
+      \listitemms{location}{1}{%
+        defaulten-us={ÁAA}
+      }
+      \listitemms{location}{2}{%
+        defaulten-us={BBB}
       }
       \field{sortinit}{}
       \strng{sortinithash}{495dc9894017a8b12cafa9c619d10c0c}
@@ -701,6 +925,12 @@ my $isbn1 = q|    \entry{isbn1}{misc}{}
            giveni={F\bibinitperiod},
            givenun=0}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Flummox},
+          familydefaulten-usi={F\bibinitperiod},
+          givendefaulten-us={Fred},
+          givendefaulten-usi={F\bibinitperiod}
+      }
       \strng{namehash}{f6595ccb9db5f634e7bb242a3f78e5f9}
       \strng{fullhash}{f6595ccb9db5f634e7bb242a3f78e5f9}
       \strng{bibnamehash}{f6595ccb9db5f634e7bb242a3f78e5f9}
@@ -725,6 +955,12 @@ my $isbn2 = q|    \entry{isbn2}{misc}{}
            given={Fred},
            giveni={F\bibinitperiod},
            givenun=0}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Flummox},
+          familydefaulten-usi={F\bibinitperiod},
+          givendefaulten-us={Fred},
+          givendefaulten-usi={F\bibinitperiod}
       }
       \strng{namehash}{f6595ccb9db5f634e7bb242a3f78e5f9}
       \strng{fullhash}{f6595ccb9db5f634e7bb242a3f78e5f9}
@@ -769,6 +1005,16 @@ my $clone1 = q|    \entry{snk1}{book}{}
            suffixi={J\bibinitperiod},
            suffixun=0}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Doe},
+          familydefaulten-usi={D\bibinitperiod},
+          givendefaulten-us={John},
+          givendefaulten-usi={J\bibinitperiod},
+          prefixdefaulten-us={von},
+          prefixdefaulten-usi={v\bibinitperiod},
+          suffixdefaulten-us={Jr},
+          suffixdefaulten-usi={J\bibinitperiod}
+      }
       \strng{namehash}{83330b0520b5d4ea57529a23b404d43d}
       \strng{fullhash}{83330b0520b5d4ea57529a23b404d43d}
       \strng{bibnamehash}{83330b0520b5d4ea57529a23b404d43d}
@@ -797,6 +1043,16 @@ my $clone2 = q|    \entry{clone-snk1}{book}{}
            suffix={Jr},
            suffixi={J\bibinitperiod},
            suffixun=0}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Doe},
+          familydefaulten-usi={D\bibinitperiod},
+          givendefaulten-us={John},
+          givendefaulten-usi={J\bibinitperiod},
+          prefixdefaulten-us={von},
+          prefixdefaulten-usi={v\bibinitperiod},
+          suffixdefaulten-us={Jr},
+          suffixdefaulten-usi={J\bibinitperiod}
       }
       \strng{namehash}{83330b0520b5d4ea57529a23b404d43d}
       \strng{fullhash}{83330b0520b5d4ea57529a23b404d43d}
@@ -831,6 +1087,20 @@ my $ent1 = q|    \entry{ent1}{book}{}
            prefix={de},
            prefixi={d\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Smith},
+          familydefaulten-usi={S\bibinitperiod},
+          givendefaulten-us={Simon},
+          givendefaulten-usi={S\bibinitperiod}
+      }
+      \namepartms{author}{2}{%
+          familydefaulten-us={Brown},
+          familydefaulten-usi={B\bibinitperiod},
+          givendefaulten-us={Brian},
+          givendefaulten-usi={B\bibinitperiod},
+          prefixdefaulten-us={de},
+          prefixdefaulten-usi={d\bibinitperiod}
+      }
       \strng{namehash}{b2536a425d549b46de5f21c4d468050a}
       \strng{fullhash}{b2536a425d549b46de5f21c4d468050a}
       \strng{bibnamehash}{b2536a425d549b46de5f21c4d468050a}
@@ -849,10 +1119,16 @@ my $verb1 = q|    \entry{verb1}{book}{}
       \name[default][en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=cac5a25f503e71f5ef28f474e14007b6}{%
            family={Allright},
-           familyi={A\\bibinitperiod},
+           familyi={A\bibinitperiod},
            given={Arthur},
-           giveni={A\\bibinitperiod},
+           giveni={A\bibinitperiod},
            givenun=0}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Allright},
+          familydefaulten-usi={A\bibinitperiod},
+          givendefaulten-us={Arthur},
+          givendefaulten-usi={A\bibinitperiod}
       }
       \strng{namehash}{cac5a25f503e71f5ef28f474e14007b6}
       \strng{fullhash}{cac5a25f503e71f5ef28f474e14007b6}

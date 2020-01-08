@@ -90,8 +90,17 @@ my $l1 = q|    \entry{L1}{book}{}
            giveni={J\bibinitperiod},
            givenun=0}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Doe},
+          familydefaulten-usi={D\bibinitperiod},
+          givendefaulten-us={John},
+          givendefaulten-usi={J\bibinitperiod}
+      }
       \list[default][en-us]{publisher}{1}{%
         {Oxford}%
+      }
+      \listitemms{publisher}{1}{%
+        defaulten-us={Oxford}
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
@@ -127,8 +136,17 @@ my $l2 = q|    \entry{L2}{book}{maxalphanames=10,maxbibnames=3,maxcitenames=3,ma
            giveni={E\bibinitperiod},
            givenun=0}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Edwards},
+          familydefaulten-usi={E\bibinitperiod},
+          givendefaulten-us={Ellison},
+          givendefaulten-usi={E\bibinitperiod}
+      }
       \list[default][en-us]{publisher}{1}{%
         {Oxford}%
+      }
+      \listitemms{publisher}{1}{%
+        defaulten-us={Oxford}
       }
       \strng{namehash}{19eec87c959944d6d9c72434a42856ba}
       \strng{fullhash}{19eec87c959944d6d9c72434a42856ba}
@@ -159,8 +177,17 @@ my $l3 = q|    \entry{L3}{book}{blah=10}
            giveni={B\bibinitperiod},
            givenun=0}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Bluntford},
+          familydefaulten-usi={B\bibinitperiod},
+          givendefaulten-us={Bunty},
+          givendefaulten-usi={B\bibinitperiod}
+      }
       \list[default][en-us]{publisher}{1}{%
         {Oxford}%
+      }
+      \listitemms{publisher}{1}{%
+        defaulten-us={Oxford}
       }
       \strng{namehash}{490250da1f3b92580d97563dc96c6c84}
       \strng{fullhash}{490250da1f3b92580d97563dc96c6c84}

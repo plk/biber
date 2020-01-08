@@ -44,6 +44,7 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 # relying on here for tests
 
 # Biber options
+Biber::Config->setoption('bcf', 'xdata.bcf');
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 Biber::Config->setoption('nodieonerror', 1); # because there is a cyclic xdata check
 Biber::Config->setoption('no_bltxml_schema', 1);
@@ -64,12 +65,27 @@ my $xd1 = q|    \entry{xd1}{book}{}
            given={Edward},
            giveni={E\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Ellington},
+          familydefaulten-usi={E\bibinitperiod},
+          givendefaulten-us={Edward},
+          givendefaulten-usi={E\bibinitperiod}
+      }
       \list[default][en-us]{location}{2}{%
         {New York}%
         {London}%
       }
+      \listitemms{location}{1}{%
+        defaulten-us={New York}
+      }
+      \listitemms{location}{2}{%
+        defaulten-us={London}
+      }
       \list[default][en-us]{publisher}{1}{%
         {Macmillan}%
+      }
+      \listitemms{publisher}{1}{%
+        defaulten-us={Macmillan}
       }
       \strng{namehash}{51db4bfd331cba22959ce2d224c517cd}
       \strng{fullhash}{51db4bfd331cba22959ce2d224c517cd}
@@ -98,12 +114,27 @@ my $xd2 = q|    \entry{xd2}{book}{}
            given={Peter},
            giveni={P\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Pillington},
+          familydefaulten-usi={P\bibinitperiod},
+          givendefaulten-us={Peter},
+          givendefaulten-usi={P\bibinitperiod}
+      }
       \list[default][en-us]{location}{2}{%
         {New York}%
         {London}%
       }
+      \listitemms{location}{1}{%
+        defaulten-us={New York}
+      }
+      \listitemms{location}{2}{%
+        defaulten-us={London}
+      }
       \list[default][en-us]{publisher}{1}{%
         {Routledge}%
+      }
+      \listitemms{publisher}{1}{%
+        defaulten-us={Routledge}
       }
       \strng{namehash}{68539e0ce4922cc4957c6cabf35e6fc8}
       \strng{fullhash}{68539e0ce4922cc4957c6cabf35e6fc8}
@@ -138,6 +169,18 @@ my $gxd1 = q|    \entry{gxd1}{book}{}
            given={Brian},
            giveni={B\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Smith},
+          familydefaulten-usi={S\bibinitperiod},
+          givendefaulten-us={Simon},
+          givendefaulten-usi={S\bibinitperiod}
+      }
+      \namepartms{author}{2}{%
+          familydefaulten-us={Bloom},
+          familydefaulten-usi={B\bibinitperiod},
+          givendefaulten-us={Brian},
+          givendefaulten-usi={B\bibinitperiod}
+      }
       \name[default][en-us]{editor}{1}{}{%
         {{hash=6238b302317c6baeba56035f2c4998c9}{%
            family={Frill},
@@ -145,26 +188,53 @@ my $gxd1 = q|    \entry{gxd1}{book}{}
            given={Frank},
            giveni={F\bibinitperiod}}}%
       }
+      \namepartms{editor}{1}{%
+          familydefaulten-us={Frill},
+          familydefaulten-usi={F\bibinitperiod},
+          givendefaulten-us={Frank},
+          givendefaulten-usi={F\bibinitperiod}
+      }
       \name[default][en-us]{namea}{1}{}{%
         {{hash=d41d8cd98f00b204e9800998ecf8427e}{%
 }}%
+      }
+      \namepartms{namea}{1}{%
+
       }
       \name[default][en-us]{translator}{1}{}{%
         {{hash=d41d8cd98f00b204e9800998ecf8427e}{%
 }}%
       }
+      \namepartms{translator}{1}{%
+
+      }
       \list[default][en-us]{lista}{1}{%
         {xdata=gxd3-location-5}%
+      }
+      \listitemms{lista}{1}{%
+        defaulten-us={xdata=gxd3-location-5}
       }
       \list[default][en-us]{location}{2}{%
         {A}%
         {B}%
       }
+      \listitemms{location}{1}{%
+        defaulten-us={A}
+      }
+      \listitemms{location}{2}{%
+        defaulten-us={B}
+      }
       \list[default][en-us]{organization}{1}{%
         {xdata=gxd2-author-3}%
       }
+      \listitemms{organization}{1}{%
+        defaulten-us={xdata=gxd2-author-3}
+      }
       \list[default][en-us]{publisher}{1}{%
         {xdata=gxd2}%
+      }
+      \listitemms{publisher}{1}{%
+        defaulten-us={xdata=gxd2}
       }
       \strng{namehash}{167d3a67f6ee19fe4d131fc34dcd9ede}
       \strng{fullhash}{167d3a67f6ee19fe4d131fc34dcd9ede}
@@ -189,7 +259,7 @@ my $gxd1 = q|    \entry{gxd1}{book}{}
       \field[default][en-us]{note}{xdata=gxd2-note}
       \field[default][en-us]{title}{Some title}
       \warn{\item Entry 'gxd1' has XDATA reference from field 'publisher/default/en-us' that contains no source field (section 0)}
-      \warn{\\item Entry 'gxd1' has XDATA reference from field 'addendum/default/en-us' that contains no source field (section 0)}
+      \warn{\item Entry 'gxd1' has XDATA reference from field 'addendum/default/en-us' that contains no source field (section 0)}
       \warn{\item Field 'note/default/en-us' in entry 'gxd1' references XDATA field 'note/default/en-us' in entry 'gxd2' and this field does not exist, not resolving (section 0)}
       \warn{\item Field 'translator/default/en-us' in entry 'gxd1' references field 'author/default/en-us' position 3 in entry 'gxd2' and this position does not exist, not resolving (section 0)}
       \warn{\item Field 'lista/default/en-us' in entry 'gxd1' references field 'location/default/en-us' position 5 in entry 'gxd3' and this position does not exist, not resolving (section 0)}
@@ -211,6 +281,18 @@ my $bltxgxd1 = q|    \entry{bltxgxd1}{book}{}
            given={Clue},
            giveni={C\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Brian},
+          familydefaulten-usi={B\bibinitperiod},
+          givendefaulten-us={Bell},
+          givendefaulten-usi={B\bibinitperiod}
+      }
+      \namepartms{author}{2}{%
+          familydefaulten-us={Clive},
+          familydefaulten-usi={C\bibinitperiod},
+          givendefaulten-us={Clue},
+          givendefaulten-usi={C\bibinitperiod}
+      }
       \name[default][en-us]{editor}{1}{}{%
         {{hash=c8eb0270ad4e434f36dca28e219e81a8}{%
            family={Lee},
@@ -218,22 +300,46 @@ my $bltxgxd1 = q|    \entry{bltxgxd1}{book}{}
            given={Lay},
            giveni={L\bibinitperiod}}}%
       }
+      \namepartms{editor}{1}{%
+          familydefaulten-us={Lee},
+          familydefaulten-usi={L\bibinitperiod},
+          givendefaulten-us={Lay},
+          givendefaulten-usi={L\bibinitperiod}
+      }
       \name[default][en-us]{translator}{1}{}{%
         {{hash=d41d8cd98f00b204e9800998ecf8427e}{%
 }}%
       }
+      \namepartms{translator}{1}{%
+
+      }
       \list[default][en-us]{lista}{1}{%
         {xdata=bltxgxd3-location-5}%
+      }
+      \listitemms{lista}{1}{%
+        defaulten-us={xdata=bltxgxd3-location-5}
       }
       \list[default][en-us]{location}{2}{%
         {A}%
         {B}%
       }
+      \listitemms{location}{1}{%
+        defaulten-us={A}
+      }
+      \listitemms{location}{2}{%
+        defaulten-us={B}
+      }
       \list[default][en-us]{organization}{1}{%
         {xdata=bltxgxd2-author-3}%
       }
+      \listitemms{organization}{1}{%
+        defaulten-us={xdata=bltxgxd2-author-3}
+      }
       \list[default][en-us]{publisher}{1}{%
         {xdata=bltxgxd2}%
+      }
+      \listitemms{publisher}{1}{%
+        defaulten-us={xdata=bltxgxd2}
       }
       \strng{namehash}{f3cbd0df6512c5a3653f60e9e9849c69}
       \strng{fullhash}{f3cbd0df6512c5a3653f60e9e9849c69}

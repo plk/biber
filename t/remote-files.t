@@ -67,6 +67,18 @@ my $dl1 = q|    \entry{AbdelbarH98}{article}{}
            giveni={S\bibinitperiod},
            givenun=0}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Abdelbar},
+          familydefaulten-usi={A\bibinitperiod},
+          givendefaulten-us={A.M.},
+          givendefaulten-usi={A\bibinitperiod}
+      }
+      \namepartms{author}{2}{%
+          familydefaulten-us={Hedetniemi},
+          familydefaulten-usi={H\bibinitperiod},
+          givendefaulten-us={S.M.},
+          givendefaulten-usi={S\bibinitperiod}
+      }
       \strng{namehash}{bb887c5d0458bfb1f3f7e6afc8d1def4}
       \strng{fullhash}{bb887c5d0458bfb1f3f7e6afc8d1def4}
       \strng{bibnamehash}{bb887c5d0458bfb1f3f7e6afc8d1def4}

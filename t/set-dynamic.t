@@ -64,6 +64,12 @@ my $string2 = q|    \entry{Dynamic1}{book}{skipbib=true,skipbiblist=true,skiplab
            given={Derek},
            giveni={D\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Dynamism},
+          familydefaulten-usi={D\bibinitperiod},
+          givendefaulten-us={Derek},
+          givendefaulten-usi={D\bibinitperiod}
+      }
       \strng{namehash}{252caa7921a061ca92087a1a52f15b78}
       \strng{fullhash}{252caa7921a061ca92087a1a52f15b78}
       \strng{bibnamehash}{252caa7921a061ca92087a1a52f15b78}
@@ -91,6 +97,12 @@ my $string3 = q|    \entry{Dynamic2}{book}{skipbib=true,skipbiblist=true,skiplab
            given={Brian},
            giveni={B\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Bunting},
+          familydefaulten-usi={B\bibinitperiod},
+          givendefaulten-us={Brian},
+          givendefaulten-usi={B\bibinitperiod}
+      }
       \strng{namehash}{894a5fe6de820f5dcce84a65581667f4}
       \strng{fullhash}{894a5fe6de820f5dcce84a65581667f4}
       \strng{bibnamehash}{894a5fe6de820f5dcce84a65581667f4}
@@ -116,6 +128,12 @@ my $string4 = q|    \entry{Dynamic3}{book}{skipbib=true,skipbiblist=true,skiplab
            familyi={R\bibinitperiod},
            given={Roger},
            giveni={R\bibinitperiod}}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Regardless},
+          familydefaulten-usi={R\bibinitperiod},
+          givendefaulten-us={Roger},
+          givendefaulten-usi={R\bibinitperiod}
       }
       \strng{namehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \strng{fullhash}{fc3cc97631ceaecdde2aee6cc60ab42b}
@@ -143,6 +161,12 @@ my $string5 = q|    \entry{Dynamic3}{book}{}
            familyi={R\bibinitperiod},
            given={Roger},
            giveni={R\bibinitperiod}}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Regardless},
+          familydefaulten-usi={R\bibinitperiod},
+          givendefaulten-us={Roger},
+          givendefaulten-usi={R\bibinitperiod}
       }
       \strng{namehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \strng{fullhash}{fc3cc97631ceaecdde2aee6cc60ab42b}

@@ -223,6 +223,7 @@ sub set_output_entry {
 
   # Output name fields
   foreach my $n ($dmh->{namelists}->@*) {
+    my %msparts;
     next if $dm->field_is_skipout($n);
     foreach my $alts ($be->get_alternates_for_field($n)->@*) {
       my $nf = $alts->{val};
@@ -271,18 +272,31 @@ sub set_output_entry {
 
       # Now the names
       for (my $i = 1; $i <= $total; $i++) {
-        my $n = $nf->names->[$i-1];
+        my $name = $nf->names->[$i-1];
 
         # Per-name uniquename if this is labelname
         if ($lni eq $n) {
-          if (defined($n->get_uniquename)) {
-            $un = $n->get_uniquename;
+          if (defined($name->get_uniquename)) {
+            $un = $name->get_uniquename;
           }
         }
 
-        $n->name_to_bblxml($xml, $xml_prefix, $nf, $un, $i);
+        $name->name_to_bblxml($xml, $xml_prefix, $nf, $un, $i);
+        push $msparts{$i}->@*, [$nf, $name, $form, $lang, $i];
       }
       $xml->endTag();           # names
+
+    }
+
+    # Output name list alternate explicit nameparts
+    # This is technically just existing information packaged in a way
+    # easily consumable by biblatex. It would be possible but complex and
+    # messy to get this information from other .bbl information in biblatex
+    # and so we make it explicit here
+    foreach my $i (sort keys %msparts) {
+      $xml->startTag([$xml_prefix, 'namepartms'], name => $n, position => $i);
+      $msparts{$i}->[0][1]->name_to_bblxmlnameparts($xml, $xml_prefix, $msparts{$i});
+      $xml->endTag();           # namepartms
     }
   }
 

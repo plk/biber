@@ -187,6 +187,12 @@ my $l1 = q|    \entry{L1}{book}{}
            given={Alfred},
            giveni={A\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Adler},
+          familydefaulten-usi={A\bibinitperiod},
+          givendefaulten-us={Alfred},
+          givendefaulten-usi={A\bibinitperiod}
+      }
       \strng{namehash}{72287a68c1714cb1b9f4ab9e03a88b96}
       \strng{fullhash}{72287a68c1714cb1b9f4ab9e03a88b96}
       \strng{bibnamehash}{72287a68c1714cb1b9f4ab9e03a88b96}
@@ -206,6 +212,12 @@ my $l2 = q|    \entry{L2}{book}{}
            familyi={B\bibinitperiod},
            given={Bertie\bibnamedelima B.},
            giveni={B\bibinitperiod\bibinitdelim B\bibinitperiod}}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Bull},
+          familydefaulten-usi={B\bibinitperiod},
+          givendefaulten-us={Bertie\bibnamedelima B.},
+          givendefaulten-usi={B\bibinitperiod\bibinitdelim B\bibinitperiod}
       }
       \strng{namehash}{2098d59d0f19a2e003ee06c1aa750d57}
       \strng{fullhash}{2098d59d0f19a2e003ee06c1aa750d57}
@@ -227,6 +239,12 @@ my $l3 = q|    \entry{L3}{book}{}
            given={C.\bibnamedelimi Z.},
            giveni={C\bibinitperiod\bibinitdelim Z\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Crop},
+          familydefaulten-usi={C\bibinitperiod},
+          givendefaulten-us={C.\bibnamedelimi Z.},
+          givendefaulten-usi={C\bibinitperiod\bibinitdelim Z\bibinitperiod}
+      }
       \strng{namehash}{c8b06fe88bde128b25eb0b3b1cc5837c}
       \strng{fullhash}{c8b06fe88bde128b25eb0b3b1cc5837c}
       \strng{bibnamehash}{c8b06fe88bde128b25eb0b3b1cc5837c}
@@ -247,6 +265,12 @@ my $l4 = q|    \entry{L4}{book}{}
            given={Derek\bibnamedelima D},
            giveni={D\bibinitperiod\bibinitdelim D\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Decket},
+          familydefaulten-usi={D\bibinitperiod},
+          givendefaulten-us={Derek\bibnamedelima D},
+          givendefaulten-usi={D\bibinitperiod\bibinitdelim D\bibinitperiod}
+      }
       \strng{namehash}{5ec958b850c0c2de7de7c42c84b9c419}
       \strng{fullhash}{5ec958b850c0c2de7de7c42c84b9c419}
       \strng{bibnamehash}{5ec958b850c0c2de7de7c42c84b9c419}
@@ -263,11 +287,19 @@ my $l5 = q|    \entry{L5}{book}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=c6b9d281cc1ff3f35570f76f463d4244}{%
            family={Eel},
-           familyi={E\\bibinitperiod},
+           familyi={E\bibinitperiod},
            given={Egbert},
-           giveni={E\\bibinitperiod},
+           giveni={E\bibinitperiod},
            prefix={von},
-           prefixi={v\\bibinitperiod}}}%
+           prefixi={v\bibinitperiod}}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Eel},
+          familydefaulten-usi={E\bibinitperiod},
+          givendefaulten-us={Egbert},
+          givendefaulten-usi={E\bibinitperiod},
+          prefixdefaulten-us={von},
+          prefixdefaulten-usi={v\bibinitperiod}
       }
       \strng{namehash}{c6b9d281cc1ff3f35570f76f463d4244}
       \strng{fullhash}{c6b9d281cc1ff3f35570f76f463d4244}
@@ -285,11 +317,19 @@ my $l6 = q|    \entry{L6}{book}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=5fd24d3d1608a310ec205a6b201a5495}{%
            family={Frome},
-           familyi={F\\bibinitperiod},
+           familyi={F\bibinitperiod},
            given={Francis},
-           giveni={F\\bibinitperiod},
-           prefix={van\\bibnamedelimb der\\bibnamedelima valt},
-           prefixi={v\\bibinitperiod\\bibinitdelim d\\bibinitperiod\\bibinitdelim v\\bibinitperiod}}}%
+           giveni={F\bibinitperiod},
+           prefix={van\bibnamedelimb der\bibnamedelima valt},
+           prefixi={v\bibinitperiod\bibinitdelim d\bibinitperiod\bibinitdelim v\bibinitperiod}}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Frome},
+          familydefaulten-usi={F\bibinitperiod},
+          givendefaulten-us={Francis},
+          givendefaulten-usi={F\bibinitperiod},
+          prefixdefaulten-us={van\bibnamedelimb der\bibnamedelima valt},
+          prefixdefaulten-usi={v\bibinitperiod\bibinitdelim d\bibinitperiod\bibinitdelim v\bibinitperiod}
       }
       \strng{namehash}{5fd24d3d1608a310ec205a6b201a5495}
       \strng{fullhash}{5fd24d3d1608a310ec205a6b201a5495}
@@ -307,11 +347,19 @@ my $l7 = q|    \entry{L7}{book}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=98edb0b90251df22b74328d9227eceb7}{%
            family={Gloom},
-           familyi={G\\bibinitperiod},
-           given={Gregory\\bibnamedelima R.},
-           giveni={G\\bibinitperiod\\bibinitdelim R\\bibinitperiod},
+           familyi={G\bibinitperiod},
+           given={Gregory\bibnamedelima R.},
+           giveni={G\bibinitperiod\bibinitdelim R\bibinitperiod},
            prefix={van},
-           prefixi={v\\bibinitperiod}}}%
+           prefixi={v\bibinitperiod}}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Gloom},
+          familydefaulten-usi={G\bibinitperiod},
+          givendefaulten-us={Gregory\bibnamedelima R.},
+          givendefaulten-usi={G\bibinitperiod\bibinitdelim R\bibinitperiod},
+          prefixdefaulten-us={van},
+          prefixdefaulten-usi={v\bibinitperiod}
       }
       \strng{namehash}{98edb0b90251df22b74328d9227eceb7}
       \strng{fullhash}{98edb0b90251df22b74328d9227eceb7}
@@ -329,11 +377,19 @@ my $l8 = q|    \entry{L8}{book}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=1211dc8dbbc191cbcab4da3c3c1fc48a}{%
            family={Henkel},
-           familyi={H\\bibinitperiod},
-           given={Henry\\bibnamedelima F.},
-           giveni={H\\bibinitperiod\\bibinitdelim F\\bibinitperiod},
+           familyi={H\bibinitperiod},
+           given={Henry\bibnamedelima F.},
+           giveni={H\bibinitperiod\bibinitdelim F\bibinitperiod},
            prefix={van},
-           prefixi={v\\bibinitperiod}}}%
+           prefixi={v\bibinitperiod}}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Henkel},
+          familydefaulten-usi={H\bibinitperiod},
+          givendefaulten-us={Henry\bibnamedelima F.},
+          givendefaulten-usi={H\bibinitperiod\bibinitdelim F\bibinitperiod},
+          prefixdefaulten-us={van},
+          prefixdefaulten-usi={v\bibinitperiod}
       }
       \strng{namehash}{1211dc8dbbc191cbcab4da3c3c1fc48a}
       \strng{fullhash}{1211dc8dbbc191cbcab4da3c3c1fc48a}
@@ -355,6 +411,12 @@ my $l9 = q|    \entry{L9}{book}{}
            given={Ian},
            giveni={I\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={{Iliad Ipswich}},
+          familydefaulten-usi={I\bibinitperiod},
+          givendefaulten-us={Ian},
+          givendefaulten-usi={I\bibinitperiod}
+      }
       \strng{namehash}{bae61a889ab149a6deafe45333204cf0}
       \strng{fullhash}{bae61a889ab149a6deafe45333204cf0}
       \strng{bibnamehash}{bae61a889ab149a6deafe45333204cf0}
@@ -372,11 +434,19 @@ my $l10 = q|    \entry{L10}{book}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=37b4325752e394ddfb2fc810f6c88e27}{%
            family={Jolly},
-           familyi={J\\bibinitperiod},
+           familyi={J\bibinitperiod},
            given={James},
-           giveni={J\\bibinitperiod},
+           giveni={J\bibinitperiod},
            suffix={III},
-           suffixi={I\\bibinitperiod}}}%
+           suffixi={I\bibinitperiod}}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Jolly},
+          familydefaulten-usi={J\bibinitperiod},
+          givendefaulten-us={James},
+          givendefaulten-usi={J\bibinitperiod},
+          suffixdefaulten-us={III},
+          suffixdefaulten-usi={I\bibinitperiod}
       }
       \strng{namehash}{37b4325752e394ddfb2fc810f6c88e27}
       \strng{fullhash}{37b4325752e394ddfb2fc810f6c88e27}
@@ -395,11 +465,19 @@ my $l10a = q|    \entry{L10a}{book}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=7bf2c9d8b89a1930ee91bfddcaf20c9c}{%
            family={Pimentel},
-           familyi={P\\bibinitperiod},
-           given={Joseph\\bibnamedelima J.},
-           giveni={J\\bibinitperiod\\bibinitdelim J\\bibinitperiod},
+           familyi={P\bibinitperiod},
+           given={Joseph\bibnamedelima J.},
+           giveni={J\bibinitperiod\bibinitdelim J\bibinitperiod},
            suffix={Jr.},
-           suffixi={J\\bibinitperiod}}}%
+           suffixi={J\bibinitperiod}}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Pimentel},
+          familydefaulten-usi={P\bibinitperiod},
+          givendefaulten-us={Joseph\bibnamedelima J.},
+          givendefaulten-usi={J\bibinitperiod\bibinitdelim J\bibinitperiod},
+          suffixdefaulten-us={Jr.},
+          suffixdefaulten-usi={J\bibinitperiod}
       }
       \strng{namehash}{7bf2c9d8b89a1930ee91bfddcaf20c9c}
       \strng{fullhash}{7bf2c9d8b89a1930ee91bfddcaf20c9c}
@@ -418,13 +496,23 @@ my $l11 = q|    \entry{L11}{book}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=9f48d231be68c9435fab4faca55a5caf}{%
            family={Kluster},
-           familyi={K\\bibinitperiod},
+           familyi={K\bibinitperiod},
            given={Kevin},
-           giveni={K\\bibinitperiod},
+           giveni={K\bibinitperiod},
            prefix={van},
-           prefixi={v\\bibinitperiod},
+           prefixi={v\bibinitperiod},
            suffix={Jr.},
-           suffixi={J\\bibinitperiod}}}%
+           suffixi={J\bibinitperiod}}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Kluster},
+          familydefaulten-usi={K\bibinitperiod},
+          givendefaulten-us={Kevin},
+          givendefaulten-usi={K\bibinitperiod},
+          prefixdefaulten-us={van},
+          prefixdefaulten-usi={v\bibinitperiod},
+          suffixdefaulten-us={Jr.},
+          suffixdefaulten-usi={J\bibinitperiod}
       }
       \strng{namehash}{9f48d231be68c9435fab4faca55a5caf}
       \strng{fullhash}{9f48d231be68c9435fab4faca55a5caf}
@@ -441,12 +529,20 @@ my $l11 = q|    \entry{L11}{book}{}
 my $l12 = q|    \entry{L12}{book}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=d7ca88c13a8f7ce1c23e920010a31f83}{%
-           family={Vallée\\bibnamedelima Poussin},
-           familyi={V\\bibinitperiod\\bibinitdelim P\\bibinitperiod},
-           given={Charles\\bibnamedelimb Louis\\bibnamedelimb Xavier\\bibnamedelima Joseph},
-           giveni={C\\bibinitperiod\\bibinitdelim L\\bibinitperiod\\bibinitdelim X\\bibinitperiod\\bibinitdelim J\\bibinitperiod},
-           prefix={de\\bibnamedelima la},
-           prefixi={d\\bibinitperiod\\bibinitdelim l\\bibinitperiod}}}%
+           family={Vallée\bibnamedelima Poussin},
+           familyi={V\bibinitperiod\bibinitdelim P\bibinitperiod},
+           given={Charles\bibnamedelimb Louis\bibnamedelimb Xavier\bibnamedelima Joseph},
+           giveni={C\bibinitperiod\bibinitdelim L\bibinitperiod\bibinitdelim X\bibinitperiod\bibinitdelim J\bibinitperiod},
+           prefix={de\bibnamedelima la},
+           prefixi={d\bibinitperiod\bibinitdelim l\bibinitperiod}}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Vallée\bibnamedelima Poussin},
+          familydefaulten-usi={V\bibinitperiod\bibinitdelim P\bibinitperiod},
+          givendefaulten-us={Charles\bibnamedelimb Louis\bibnamedelimb Xavier\bibnamedelima Joseph},
+          givendefaulten-usi={C\bibinitperiod\bibinitdelim L\bibinitperiod\bibinitdelim X\bibinitperiod\bibinitdelim J\bibinitperiod},
+          prefixdefaulten-us={de\bibnamedelima la},
+          prefixdefaulten-usi={d\bibinitperiod\bibinitdelim l\bibinitperiod}
       }
       \strng{namehash}{d7ca88c13a8f7ce1c23e920010a31f83}
       \strng{fullhash}{d7ca88c13a8f7ce1c23e920010a31f83}
@@ -469,6 +565,12 @@ my $l13 = q|    \entry{L13}{book}{}
            given={R.\bibnamedelimi J.},
            giveni={R\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Van\bibnamedelimb de\bibnamedelima Graaff},
+          familydefaulten-usi={V\bibinitperiod\bibinitdelim d\bibinitperiod\bibinitdelim G\bibinitperiod},
+          givendefaulten-us={R.\bibnamedelimi J.},
+          givendefaulten-usi={R\bibinitperiod\bibinitdelim J\bibinitperiod}
+      }
       \strng{namehash}{227ac48bb788a658cfaa4eefc71ff0cc}
       \strng{fullhash}{227ac48bb788a658cfaa4eefc71ff0cc}
       \strng{bibnamehash}{227ac48bb788a658cfaa4eefc71ff0cc}
@@ -489,6 +591,12 @@ my $l14 = q|    \entry{L14}{book}{}
            given={Oliver},
            giveni={O\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={St\bibnamedelima John-Mollusc},
+          familydefaulten-usi={S\bibinitperiod\bibinitdelim J\bibinithyphendelim M\bibinitperiod},
+          givendefaulten-us={Oliver},
+          givendefaulten-usi={O\bibinitperiod}
+      }
       \strng{namehash}{779475052c17ed56dc3be900d0dfdf87}
       \strng{fullhash}{779475052c17ed56dc3be900d0dfdf87}
       \strng{bibnamehash}{779475052c17ed56dc3be900d0dfdf87}
@@ -505,11 +613,19 @@ my $l15 = q|    \entry{L15}{book}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=783c636e853e47a854ae034ebe9dde62}{%
            family={Gompel},
-           familyi={G\\bibinitperiod},
-           given={Roger\\bibnamedelima P.{\\,}G.},
-           giveni={R\\bibinitperiod\\bibinitdelim P\\bibinitperiod},
+           familyi={G\bibinitperiod},
+           given={Roger\bibnamedelima P.{\,}G.},
+           giveni={R\bibinitperiod\bibinitdelim P\bibinitperiod},
            prefix={van},
-           prefixi={v\\bibinitperiod}}}%
+           prefixi={v\bibinitperiod}}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Gompel},
+          familydefaulten-usi={G\bibinitperiod},
+          givendefaulten-us={Roger\bibnamedelima P.{\,}G.},
+          givendefaulten-usi={R\bibinitperiod\bibinitdelim P\bibinitperiod},
+          prefixdefaulten-us={van},
+          prefixdefaulten-usi={v\bibinitperiod}
       }
       \strng{namehash}{783c636e853e47a854ae034ebe9dde62}
       \strng{fullhash}{783c636e853e47a854ae034ebe9dde62}
@@ -528,11 +644,19 @@ my $l16 = q|    \entry{L16}{book}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=783c636e853e47a854ae034ebe9dde62}{%
            family={Gompel},
-           familyi={G\\bibinitperiod},
-           given={Roger\\bibnamedelima {P.\\,G.}},
-           giveni={R\\bibinitperiod\\bibinitdelim P\\bibinitperiod},
+           familyi={G\bibinitperiod},
+           given={Roger\bibnamedelima {P.\,G.}},
+           giveni={R\bibinitperiod\bibinitdelim P\bibinitperiod},
            prefix={van},
-           prefixi={v\\bibinitperiod}}}%
+           prefixi={v\bibinitperiod}}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Gompel},
+          familydefaulten-usi={G\bibinitperiod},
+          givendefaulten-us={Roger\bibnamedelima {P.\,G.}},
+          givendefaulten-usi={R\bibinitperiod\bibinitdelim P\bibinitperiod},
+          prefixdefaulten-us={van},
+          prefixdefaulten-usi={v\bibinitperiod}
       }
       \strng{namehash}{783c636e853e47a854ae034ebe9dde62}
       \strng{fullhash}{783c636e853e47a854ae034ebe9dde62}
@@ -555,6 +679,12 @@ my $l17 = q|    \entry{L17}{book}{}
            given={Bill\bibnamedelima H.{\,}P.},
            giveni={B\bibinitperiod\bibinitdelim H\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Lovecraft},
+          familydefaulten-usi={L\bibinitperiod},
+          givendefaulten-us={Bill\bibnamedelima H.{\,}P.},
+          givendefaulten-usi={B\bibinitperiod\bibinitdelim H\bibinitperiod}
+      }
       \strng{namehash}{b51f667a3384d92ea5458ba80716bff7}
       \strng{fullhash}{b51f667a3384d92ea5458ba80716bff7}
       \strng{bibnamehash}{b51f667a3384d92ea5458ba80716bff7}
@@ -575,6 +705,12 @@ my $l18 = q|    \entry{L18}{book}{}
            familyi={L\bibinitperiod},
            given={Bill\bibnamedelima {H.\,P.}},
            giveni={B\bibinitperiod\bibinitdelim H\bibinitperiod}}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Lovecraft},
+          familydefaulten-usi={L\bibinitperiod},
+          givendefaulten-us={Bill\bibnamedelima {H.\,P.}},
+          givendefaulten-usi={B\bibinitperiod\bibinitdelim H\bibinitperiod}
       }
       \strng{namehash}{b51f667a3384d92ea5458ba80716bff7}
       \strng{fullhash}{b51f667a3384d92ea5458ba80716bff7}
@@ -597,6 +733,12 @@ my $l19 = q|    \entry{L19}{book}{}
            given={Klaus-Peter},
            giveni={K\bibinithyphendelim P\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Mustermann},
+          familydefaulten-usi={M\bibinitperiod},
+          givendefaulten-us={Klaus-Peter},
+          givendefaulten-usi={K\bibinithyphendelim P\bibinitperiod}
+      }
       \strng{namehash}{83caa52f21f97e572dd3267bdf62978a}
       \strng{fullhash}{83caa52f21f97e572dd3267bdf62978a}
       \strng{bibnamehash}{83caa52f21f97e572dd3267bdf62978a}
@@ -616,6 +758,12 @@ my $l19a = q|    \entry{L19a}{book}{}
            familyi={L\bibinitperiod},
            given={Ho-Pun},
            giveni={H\bibinithyphendelim P\bibinitperiod}}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Lam},
+          familydefaulten-usi={L\bibinitperiod},
+          givendefaulten-us={Ho-Pun},
+          givendefaulten-usi={H\bibinithyphendelim P\bibinitperiod}
       }
       \strng{namehash}{0963f6904ccfeaac2770c5882a587001}
       \strng{fullhash}{0963f6904ccfeaac2770c5882a587001}
@@ -638,6 +786,12 @@ my $l20 = q|    \entry{L20}{book}{}
            given={{John Henry}},
            giveni={J\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Ford},
+          familydefaulten-usi={F\bibinitperiod},
+          givendefaulten-us={{John Henry}},
+          givendefaulten-usi={J\bibinitperiod}
+      }
       \strng{namehash}{5f26c2f3b33095d5b005714893f4d698}
       \strng{fullhash}{5f26c2f3b33095d5b005714893f4d698}
       \strng{bibnamehash}{5f26c2f3b33095d5b005714893f4d698}
@@ -657,6 +811,12 @@ my $l21 = q|    \entry{L21}{book}{}
            familyi={S\bibinitperiod},
            given={\v{S}omeone},
            giveni={\v{S}\bibinitperiod}}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Smith},
+          familydefaulten-usi={S\bibinitperiod},
+          givendefaulten-us={\v{S}omeone},
+          givendefaulten-usi={\v{S}\bibinitperiod}
       }
       \strng{namehash}{4389a3c0dc7da74487b50808ba9436ad}
       \strng{fullhash}{4389a3c0dc7da74487b50808ba9436ad}
@@ -678,6 +838,12 @@ my $l22u = q|    \entry{L22}{book}{}
            familyi={Š\bibinitperiod},
            given={Someone},
            giveni={S\bibinitperiod}}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Šmith},
+          familydefaulten-usi={Š\bibinitperiod},
+          givendefaulten-us={Someone},
+          givendefaulten-usi={S\bibinitperiod}
       }
       \strng{namehash}{e58b861545799d0eaf883402a882126e}
       \strng{fullhash}{e58b861545799d0eaf883402a882126e}
@@ -701,6 +867,12 @@ my $l22 = q|    \entry{L22}{book}{}
            given={Someone},
            giveni={S\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={\v{S}mith},
+          familydefaulten-usi={\v{S}\bibinitperiod},
+          givendefaulten-us={Someone},
+          givendefaulten-usi={S\bibinitperiod}
+      }
       \strng{namehash}{e58b861545799d0eaf883402a882126e}
       \strng{fullhash}{e58b861545799d0eaf883402a882126e}
       \strng{bibnamehash}{e58b861545799d0eaf883402a882126e}
@@ -723,6 +895,12 @@ my $l23 = q|    \entry{L23}{book}{}
            given={Šomeone},
            giveni={Š\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Smith},
+          familydefaulten-usi={S\bibinitperiod},
+          givendefaulten-us={Šomeone},
+          givendefaulten-usi={Š\bibinitperiod}
+      }
       \strng{namehash}{4389a3c0dc7da74487b50808ba9436ad}
       \strng{fullhash}{4389a3c0dc7da74487b50808ba9436ad}
       \strng{bibnamehash}{4389a3c0dc7da74487b50808ba9436ad}
@@ -744,6 +922,12 @@ my $l24 = q|    \entry{L24}{book}{}
            given={Someone},
            giveni={S\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Šmith},
+          familydefaulten-usi={Š\bibinitperiod},
+          givendefaulten-us={Someone},
+          givendefaulten-usi={S\bibinitperiod}
+      }
       \strng{namehash}{e58b861545799d0eaf883402a882126e}
       \strng{fullhash}{e58b861545799d0eaf883402a882126e}
       \strng{bibnamehash}{e58b861545799d0eaf883402a882126e}
@@ -763,6 +947,10 @@ my $l25 = q|    \entry{L25}{book}{}
            family={{American Psychological Association, Task Force on the Sexualization of Girls}},
            familyi={A\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={{American Psychological Association, Task Force on the Sexualization of Girls}},
+          familydefaulten-usi={A\bibinitperiod}
+      }
       \strng{namehash}{d7cd2c5ea0848abc3e90609558b84a45}
       \strng{fullhash}{d7cd2c5ea0848abc3e90609558b84a45}
       \strng{bibnamehash}{d7cd2c5ea0848abc3e90609558b84a45}
@@ -780,6 +968,10 @@ my $l26 = q|    \entry{L26}{book}{}
         {{hash=8eee1dbafdbd0a4b73157e60f18b4784}{%
            family={{Sci-Art Publishers}},
            familyi={S\bibinitperiod}}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={{Sci-Art Publishers}},
+          familydefaulten-usi={S\bibinitperiod}
       }
       \strng{namehash}{8eee1dbafdbd0a4b73157e60f18b4784}
       \strng{fullhash}{8eee1dbafdbd0a4b73157e60f18b4784}
@@ -799,6 +991,10 @@ my $l29 = q|    \entry{L29}{book}{}
            family={{U.S. Department of Health and Human Services, National Institute of Mental Health, National Heart, Lung and Blood Institute}},
            familyi={U\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={{U.S. Department of Health and Human Services, National Institute of Mental Health, National Heart, Lung and Blood Institute}},
+          familydefaulten-usi={U\bibinitperiod}
+      }
       \strng{namehash}{27ad192a3a715aa89152b2a4ee392e8c}
       \strng{fullhash}{27ad192a3a715aa89152b2a4ee392e8c}
       \strng{bibnamehash}{27ad192a3a715aa89152b2a4ee392e8c}
@@ -815,23 +1011,41 @@ my $l31 = q|    \entry{L31}{book}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=29c3ff92fff79d09a8b44d2f775de0b1}{%
            family={\~{Z}elly},
-           familyi={\~{Z}\\bibinitperiod},
+           familyi={\~{Z}\bibinitperiod},
            given={Arthur},
            giveni={A\bibinitperiod}}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={\~{Z}elly},
+          familydefaulten-usi={\~{Z}\bibinitperiod},
+          givendefaulten-us={Arthur},
+          givendefaulten-usi={A\bibinitperiod}
       }
       \name[default][en-us]{editor}{1}{}{%
         {{hash=29c3ff92fff79d09a8b44d2f775de0b1}{%
            family={\~{Z}elly},
-           familyi={\~{Z}\\bibinitperiod},
+           familyi={\~{Z}\bibinitperiod},
            given={Arthur},
            giveni={A\bibinitperiod}}}%
+      }
+      \namepartms{editor}{1}{%
+          familydefaulten-us={\~{Z}elly},
+          familydefaulten-usi={\~{Z}\bibinitperiod},
+          givendefaulten-us={Arthur},
+          givendefaulten-usi={A\bibinitperiod}
       }
       \name[default][en-us]{translator}{1}{}{%
         {{hash=29c3ff92fff79d09a8b44d2f775de0b1}{%
            family={{\~{Z}}elly},
-           familyi={\~{Z}\\bibinitperiod},
+           familyi={\~{Z}\bibinitperiod},
            given={Arthur},
            giveni={A\bibinitperiod}}}%
+      }
+      \namepartms{translator}{1}{%
+          familydefaulten-us={{\~{Z}}elly},
+          familydefaulten-usi={\~{Z}\bibinitperiod},
+          givendefaulten-us={Arthur},
+          givendefaulten-usi={A\bibinitperiod}
       }
       \strng{namehash}{29c3ff92fff79d09a8b44d2f775de0b1}
       \strng{fullhash}{29c3ff92fff79d09a8b44d2f775de0b1}

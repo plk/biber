@@ -47,23 +47,47 @@ my $ann1 = q|    \entry{ann1}{misc}{}
       \name[default][en-us]{author}{3}{}{%
         {{hash=89a9e5097e11e595700540379c9b3a6b}{%
            family={Last1},
-           familyi={L\\bibinitperiod},
+           familyi={L\bibinitperiod},
            given={First1},
-           giveni={F\\bibinitperiod}}}%
+           giveni={F\bibinitperiod}}}%
         {{hash=7475b6b7b3c24a2ac6bd4d146cdc74dc}{%
            family={Last2},
-           familyi={L\\bibinitperiod},
+           familyi={L\bibinitperiod},
            given={First2},
-           giveni={F\\bibinitperiod}}}%
+           giveni={F\bibinitperiod}}}%
         {{hash=fd3dffa06a5d1f89c512841df1ccf4d0}{%
            family={Last3},
-           familyi={L\\bibinitperiod},
+           familyi={L\bibinitperiod},
            given={First3},
-           giveni={F\\bibinitperiod}}}%
+           giveni={F\bibinitperiod}}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Last1},
+          familydefaulten-usi={L\bibinitperiod},
+          givendefaulten-us={First1},
+          givendefaulten-usi={F\bibinitperiod}
+      }
+      \namepartms{author}{2}{%
+          familydefaulten-us={Last2},
+          familydefaulten-usi={L\bibinitperiod},
+          givendefaulten-us={First2},
+          givendefaulten-usi={F\bibinitperiod}
+      }
+      \namepartms{author}{3}{%
+          familydefaulten-us={Last3},
+          familydefaulten-usi={L\bibinitperiod},
+          givendefaulten-us={First3},
+          givendefaulten-usi={F\bibinitperiod}
       }
       \list{language}{2}{%
         {english}%
         {french}%
+      }
+      \listitemms{language}{1}{%
+        defaulten-us={english}
+      }
+      \listitemms{language}{2}{%
+        defaulten-us={french}
       }
       \strng{namehash}{90ae96c82de92e36949bc64254bbde0c}
       \strng{fullhash}{90ae96c82de92e36949bc64254bbde0c}
@@ -105,9 +129,33 @@ my $ann2 = q|    \entry{ann2}{misc}{}
            given={First3},
            giveni={F\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Last1},
+          familydefaulten-usi={L\bibinitperiod},
+          givendefaulten-us={First1},
+          givendefaulten-usi={F\bibinitperiod}
+      }
+      \namepartms{author}{2}{%
+          familydefaulten-us={Last2},
+          familydefaulten-usi={L\bibinitperiod},
+          givendefaulten-us={First2},
+          givendefaulten-usi={F\bibinitperiod}
+      }
+      \namepartms{author}{3}{%
+          familydefaulten-us={Last3},
+          familydefaulten-usi={L\bibinitperiod},
+          givendefaulten-us={First3},
+          givendefaulten-usi={F\bibinitperiod}
+      }
       \list{language}{2}{%
         {english}%
         {french}%
+      }
+      \listitemms{language}{1}{%
+        defaulten-us={english}
+      }
+      \listitemms{language}{2}{%
+        defaulten-us={french}
       }
       \strng{namehash}{90ae96c82de92e36949bc64254bbde0c}
       \strng{fullhash}{90ae96c82de92e36949bc64254bbde0c}

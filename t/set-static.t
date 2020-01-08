@@ -61,6 +61,12 @@ my $string2 = q|    \entry{Static2}{book}{skipbib=true,skipbiblist=true,skiplab=
            given={Brian},
            giveni={B\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Bumble},
+          familydefaulten-usi={B\bibinitperiod},
+          givendefaulten-us={Brian},
+          givendefaulten-usi={B\bibinitperiod}
+      }
       \strng{namehash}{43874d80d7ce68027102819f16c47df1}
       \strng{fullhash}{43874d80d7ce68027102819f16c47df1}
       \strng{bibnamehash}{43874d80d7ce68027102819f16c47df1}
@@ -87,6 +93,12 @@ my $string3 = q|    \entry{Static3}{book}{skipbib=true,skipbiblist=true,skiplab=
            given={Derek},
            giveni={D\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Dingle},
+          familydefaulten-usi={D\bibinitperiod},
+          givendefaulten-us={Derek},
+          givendefaulten-usi={D\bibinitperiod}
+      }
       \strng{namehash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
       \strng{fullhash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
       \strng{bibnamehash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
@@ -111,6 +123,12 @@ my $string4 = q|    \entry{Static4}{book}{skipbib=true,skipbiblist=true,skiplab=
            familyi={C\bibinitperiod},
            given={Clive},
            giveni={C\bibinitperiod}}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Crenellation},
+          familydefaulten-usi={C\bibinitperiod},
+          givendefaulten-us={Clive},
+          givendefaulten-usi={C\bibinitperiod}
       }
       \strng{namehash}{da80091c8cd89e5269bd55af1bd5d2fa}
       \strng{fullhash}{da80091c8cd89e5269bd55af1bd5d2fa}
@@ -137,6 +155,12 @@ my $string5 = q|    \entry{Static2}{book}{}
            familyi={B\bibinitperiod},
            given={Brian},
            giveni={B\bibinitperiod}}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Bumble},
+          familydefaulten-usi={B\bibinitperiod},
+          givendefaulten-us={Brian},
+          givendefaulten-usi={B\bibinitperiod}
       }
       \strng{namehash}{43874d80d7ce68027102819f16c47df1}
       \strng{fullhash}{43874d80d7ce68027102819f16c47df1}

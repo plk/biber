@@ -55,6 +55,12 @@ my $us1 = q|    \entry{us1}{book}{}
            giveni={A\bibinitperiod},
            givenun=0}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Elk},
+          familydefaulten-usi={E\bibinitperiod},
+          givendefaulten-us={Anne},
+          givendefaulten-usi={A\bibinitperiod}
+      }
       \strng{namehash}{6a9b0705c275273262103333472cc656}
       \strng{fullhash}{6a9b0705c275273262103333472cc656}
       \strng{bibnamehash}{6a9b0705c275273262103333472cc656}
@@ -85,6 +91,12 @@ my $us2a = q|    \entry{us2}{book}{}
            giveni={A\bibinitperiod},
            givenun=0}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Elk},
+          familydefaulten-usi={E\bibinitperiod},
+          givendefaulten-us={Anne},
+          givendefaulten-usi={A\bibinitperiod}
+      }
       \strng{namehash}{40a337fc8d6319ae5a7b50f6324781ec}
       \strng{fullhash}{40a337fc8d6319ae5a7b50f6324781ec}
       \strng{bibnamehash}{40a337fc8d6319ae5a7b50f6324781ec}
@@ -112,6 +124,12 @@ my $us3 = q|    \entry{us3}{book}{}
            given={Anne},
            giveni={A\bibinitperiod},
            givenun=0}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Uthor},
+          familydefaulten-usi={U\bibinitperiod},
+          givendefaulten-us={Anne},
+          givendefaulten-usi={A\bibinitperiod}
       }
       \strng{namehash}{e06f6e5a8c1d5204dea326aa5f4f8d17}
       \strng{fullhash}{e06f6e5a8c1d5204dea326aa5f4f8d17}
@@ -160,6 +178,30 @@ my $us4a = q|    \entry{us4}{book}{}
            giveni={J\bibinitperiod},
            givenun=0}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Uthor},
+          familydefaulten-usi={U\bibinitperiod},
+          givendefaulten-us={Anne},
+          givendefaulten-usi={A\bibinitperiod}
+      }
+      \namepartms{author}{2}{%
+          familydefaulten-us={Ditor},
+          familydefaulten-usi={D\bibinitperiod},
+          givendefaulten-us={Editha},
+          givendefaulten-usi={E\bibinitperiod}
+      }
+      \namepartms{author}{3}{%
+          familydefaulten-us={Writer},
+          familydefaulten-usi={W\bibinitperiod},
+          givendefaulten-us={William},
+          givendefaulten-usi={W\bibinitperiod}
+      }
+      \namepartms{author}{4}{%
+          familydefaulten-us={Doe},
+          familydefaulten-usi={D\bibinitperiod},
+          givendefaulten-us={Jane},
+          givendefaulten-usi={J\bibinitperiod}
+      }
       \strng{namehash}{f3c0538e23d09e1678b81f4ba4253fcc}
       \strng{fullhash}{fe131471bcc6dda25dc02e0dd6a7c488}
       \strng{bibnamehash}{f3c0538e23d09e1678b81f4ba4253fcc}
@@ -192,6 +234,12 @@ my $us2b = q|    \entry{us2}{book}{}
            given={Anne},
            giveni={A\bibinitperiod},
            givenun=0}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Elk},
+          familydefaulten-usi={E\bibinitperiod},
+          givendefaulten-us={Anne},
+          givendefaulten-usi={A\bibinitperiod}
       }
       \strng{namehash}{6a9b0705c275273262103333472cc656}
       \strng{fullhash}{40a337fc8d6319ae5a7b50f6324781ec}
@@ -242,6 +290,30 @@ my $us4b = q|    \entry{us4}{book}{}
            giveni={J\bibinitperiod},
            givenun=0}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Uthor},
+          familydefaulten-usi={U\bibinitperiod},
+          givendefaulten-us={Anne},
+          givendefaulten-usi={A\bibinitperiod}
+      }
+      \namepartms{author}{2}{%
+          familydefaulten-us={Ditor},
+          familydefaulten-usi={D\bibinitperiod},
+          givendefaulten-us={Editha},
+          givendefaulten-usi={E\bibinitperiod}
+      }
+      \namepartms{author}{3}{%
+          familydefaulten-us={Writer},
+          familydefaulten-usi={W\bibinitperiod},
+          givendefaulten-us={William},
+          givendefaulten-usi={W\bibinitperiod}
+      }
+      \namepartms{author}{4}{%
+          familydefaulten-us={Doe},
+          familydefaulten-usi={D\bibinitperiod},
+          givendefaulten-us={Jane},
+          givendefaulten-usi={J\bibinitperiod}
+      }
       \strng{namehash}{e06f6e5a8c1d5204dea326aa5f4f8d17}
       \strng{fullhash}{fe131471bcc6dda25dc02e0dd6a7c488}
       \strng{bibnamehash}{e06f6e5a8c1d5204dea326aa5f4f8d17}
@@ -273,6 +345,12 @@ my $us6 = q|    \entry{us6}{book}{}
            giveni={R\bibinitperiod},
            givenun=0}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Red},
+          familydefaulten-usi={R\bibinitperiod},
+          givendefaulten-us={Roger},
+          givendefaulten-usi={R\bibinitperiod}
+      }
       \strng{namehash}{cbe9a5912d961199801c3fcd32356ecf}
       \strng{fullhash}{cbe9a5912d961199801c3fcd32356ecf}
       \strng{bibnamehash}{cbe9a5912d961199801c3fcd32356ecf}
@@ -303,6 +381,12 @@ my $us7 = q|    \entry{us7}{misc}{}
            giveni={R\bibinitperiod},
            givenun=0}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Red},
+          familydefaulten-usi={R\bibinitperiod},
+          givendefaulten-us={Roger},
+          givendefaulten-usi={R\bibinitperiod}
+      }
       \strng{namehash}{d70785a70cdf36c7b5dc7b136207ada9}
       \strng{fullhash}{d70785a70cdf36c7b5dc7b136207ada9}
       \strng{bibnamehash}{d70785a70cdf36c7b5dc7b136207ada9}
@@ -330,6 +414,12 @@ my $us8 = q|    \entry{us8}{book}{}
            given={Simon},
            giveni={S\bibinitperiod},
            givenun=0}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Sly},
+          familydefaulten-usi={S\bibinitperiod},
+          givendefaulten-us={Simon},
+          givendefaulten-usi={S\bibinitperiod}
       }
       \strng{namehash}{a280925c093d27fe81e88f11d8f0e537}
       \strng{fullhash}{a280925c093d27fe81e88f11d8f0e537}
@@ -378,6 +468,30 @@ my $us9 = q|    \entry{us9}{book}{}
            given={Jake},
            giveni={J\bibinitperiod},
            givenun=0}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Sly},
+          familydefaulten-usi={S\bibinitperiod},
+          givendefaulten-us={Simon},
+          givendefaulten-usi={S\bibinitperiod}
+      }
+      \namepartms{author}{2}{%
+          familydefaulten-us={Tremble},
+          familydefaulten-usi={T\bibinitperiod},
+          givendefaulten-us={Terrence},
+          givendefaulten-usi={T\bibinitperiod}
+      }
+      \namepartms{author}{3}{%
+          familydefaulten-us={Miserable},
+          familydefaulten-usi={M\bibinitperiod},
+          givendefaulten-us={Mark},
+          givendefaulten-usi={M\bibinitperiod}
+      }
+      \namepartms{author}{4}{%
+          familydefaulten-us={Jolly},
+          familydefaulten-usi={J\bibinitperiod},
+          givendefaulten-us={Jake},
+          givendefaulten-usi={J\bibinitperiod}
       }
       \strng{namehash}{86a4e119adbea22d40084fa1337729be}
       \strng{fullhash}{afe15ce8d7d22d0bbc042705c4b5fdf6}

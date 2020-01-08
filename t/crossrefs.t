@@ -63,6 +63,12 @@ my $cr1 = q|    \entry{cr1}{inbook}{}
            given={Graham},
            giveni={G\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Gullam},
+          familydefaulten-usi={G\bibinitperiod},
+          givendefaulten-us={Graham},
+          givendefaulten-usi={G\bibinitperiod}
+      }
       \name[default][en-us]{editor}{1}{}{%
         {{hash=c129df5593fdaa7475548811bfbb227d}{%
            family={Erbriss},
@@ -70,8 +76,17 @@ my $cr1 = q|    \entry{cr1}{inbook}{}
            given={Edgar},
            giveni={E\bibinitperiod}}}%
       }
+      \namepartms{editor}{1}{%
+          familydefaulten-us={Erbriss},
+          familydefaulten-usi={E\bibinitperiod},
+          givendefaulten-us={Edgar},
+          givendefaulten-usi={E\bibinitperiod}
+      }
       \list[default][en-us]{publisher}{1}{%
         {Grimble}%
+      }
+      \listitemms{publisher}{1}{%
+        defaulten-us={Grimble}
       }
       \strng{namehash}{121b6dc164b5b619c81c670fbd823f12}
       \strng{fullhash}{121b6dc164b5b619c81c670fbd823f12}
@@ -109,6 +124,12 @@ my $cr2 = q|    \entry{cr2}{inbook}{}
            given={Frederick},
            giveni={F\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Fumble},
+          familydefaulten-usi={F\bibinitperiod},
+          givendefaulten-us={Frederick},
+          givendefaulten-usi={F\bibinitperiod}
+      }
       \name[default][en-us]{editor}{1}{}{%
         {{hash=c129df5593fdaa7475548811bfbb227d}{%
            family={Erbriss},
@@ -116,11 +137,23 @@ my $cr2 = q|    \entry{cr2}{inbook}{}
            given={Edgar},
            giveni={E\bibinitperiod}}}%
       }
+      \namepartms{editor}{1}{%
+          familydefaulten-us={Erbriss},
+          familydefaulten-usi={E\bibinitperiod},
+          givendefaulten-us={Edgar},
+          givendefaulten-usi={E\bibinitperiod}
+      }
       \list[default][en-us]{institution}{1}{%
         {Institution}%
       }
+      \listitemms{institution}{1}{%
+        defaulten-us={Institution}
+      }
       \list[default][en-us]{publisher}{1}{%
         {Grimble}%
+      }
+      \listitemms{publisher}{1}{%
+        defaulten-us={Grimble}
       }
       \strng{namehash}{2d51a96bc0a6804995b3a9ff350c3384}
       \strng{fullhash}{2d51a96bc0a6804995b3a9ff350c3384}
@@ -159,8 +192,17 @@ my $cr_m = q|    \entry{cr_m}{book}{}
            given={Edgar},
            giveni={E\bibinitperiod}}}%
       }
+      \namepartms{editor}{1}{%
+          familydefaulten-us={Erbriss},
+          familydefaulten-usi={E\bibinitperiod},
+          givendefaulten-us={Edgar},
+          givendefaulten-usi={E\bibinitperiod}
+      }
       \list[default][en-us]{publisher}{1}{%
         {Grimble}%
+      }
+      \listitemms{publisher}{1}{%
+        defaulten-us={Grimble}
       }
       \strng{editordefaulten-usbibnamehash}{c129df5593fdaa7475548811bfbb227d}
       \strng{editordefaulten-usnamehash}{c129df5593fdaa7475548811bfbb227d}
@@ -184,6 +226,12 @@ my $cr3 = q|    \entry{cr3}{inbook}{}
            given={Arthur},
            giveni={A\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Aptitude},
+          familydefaulten-usi={A\bibinitperiod},
+          givendefaulten-us={Arthur},
+          givendefaulten-usi={A\bibinitperiod}
+      }
       \name[default][en-us]{editor}{1}{}{%
         {{hash=a1f5c22413396d599ec766725b226735}{%
            family={Monkley},
@@ -191,8 +239,17 @@ my $cr3 = q|    \entry{cr3}{inbook}{}
            given={Mark},
            giveni={M\bibinitperiod}}}%
       }
+      \namepartms{editor}{1}{%
+          familydefaulten-us={Monkley},
+          familydefaulten-usi={M\bibinitperiod},
+          givendefaulten-us={Mark},
+          givendefaulten-usi={M\bibinitperiod}
+      }
       \list[default][en-us]{publisher}{1}{%
         {Rancour}%
+      }
+      \listitemms{publisher}{1}{%
+        defaulten-us={Rancour}
       }
       \strng{namehash}{2baf676a220704f6914223aefccaaa88}
       \strng{fullhash}{2baf676a220704f6914223aefccaaa88}
@@ -229,6 +286,12 @@ my $cr4 = q|    \entry{cr4}{inbook}{}
            given={Morris},
            giveni={M\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Mumble},
+          familydefaulten-usi={M\bibinitperiod},
+          givendefaulten-us={Morris},
+          givendefaulten-usi={M\bibinitperiod}
+      }
       \name[default][en-us]{editor}{1}{}{%
         {{hash=6ea89bd4958743a20b70fe17647d6af5}{%
            family={Jermain},
@@ -236,8 +299,17 @@ my $cr4 = q|    \entry{cr4}{inbook}{}
            given={Jeremy},
            giveni={J\bibinitperiod}}}%
       }
+      \namepartms{editor}{1}{%
+          familydefaulten-us={Jermain},
+          familydefaulten-usi={J\bibinitperiod},
+          givendefaulten-us={Jeremy},
+          givendefaulten-usi={J\bibinitperiod}
+      }
       \list[default][en-us]{publisher}{1}{%
         {Pillsbury}%
+      }
+      \listitemms{publisher}{1}{%
+        defaulten-us={Pillsbury}
       }
       \strng{namehash}{50ef7fd3a1be33bccc5de2768b013836}
       \strng{fullhash}{50ef7fd3a1be33bccc5de2768b013836}
@@ -273,8 +345,17 @@ my $crt = q|    \entry{crt}{book}{}
            given={Mark},
            giveni={M\bibinitperiod}}}%
       }
+      \namepartms{editor}{1}{%
+          familydefaulten-us={Monkley},
+          familydefaulten-usi={M\bibinitperiod},
+          givendefaulten-us={Mark},
+          givendefaulten-usi={M\bibinitperiod}
+      }
       \list[default][en-us]{publisher}{1}{%
         {Rancour}%
+      }
+      \listitemms{publisher}{1}{%
+        defaulten-us={Rancour}
       }
       \strng{editordefaulten-usbibnamehash}{a1f5c22413396d599ec766725b226735}
       \strng{editordefaulten-usnamehash}{a1f5c22413396d599ec766725b226735}
@@ -297,13 +378,26 @@ my $cr6 = q|    \entry{cr6}{inproceedings}{}
            given={Firstname},
            giveni={F\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Author},
+          familydefaulten-usi={A\bibinitperiod},
+          givendefaulten-us={Firstname},
+          givendefaulten-usi={F\bibinitperiod}
+      }
       \name[default][en-us]{editor}{1}{}{%
         {{hash=344a7f427fb765610ef96eb7bce95257}{%
            family={Editor},
            familyi={E\bibinitperiod}}}%
       }
+      \namepartms{editor}{1}{%
+          familydefaulten-us={Editor},
+          familydefaulten-usi={E\bibinitperiod}
+      }
       \list[default][en-us]{location}{1}{%
         {Address}%
+      }
+      \listitemms{location}{1}{%
+        defaulten-us={Address}
       }
       \strng{namehash}{8ab39ee68c55046dc1f05d657fcefed9}
       \strng{fullhash}{8ab39ee68c55046dc1f05d657fcefed9}
@@ -348,6 +442,12 @@ my $cr7 = q|    \entry{cr7}{inbook}{}
            given={Firstname},
            giveni={F\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Author},
+          familydefaulten-usi={A\bibinitperiod},
+          givendefaulten-us={Firstname},
+          givendefaulten-usi={F\bibinitperiod}
+      }
       \name[default][en-us]{bookauthor}{1}{}{%
         {{hash=91a1dd4aeed3c4ec29ca74c4e778be5f}{%
            family={Bookauthor},
@@ -355,8 +455,17 @@ my $cr7 = q|    \entry{cr7}{inbook}{}
            given={Brian},
            giveni={B\bibinitperiod}}}%
       }
+      \namepartms{bookauthor}{1}{%
+          familydefaulten-us={Bookauthor},
+          familydefaulten-usi={B\bibinitperiod},
+          givendefaulten-us={Brian},
+          givendefaulten-usi={B\bibinitperiod}
+      }
       \list[default][en-us]{publisher}{1}{%
         {Publisher of proceeding}%
+      }
+      \listitemms{publisher}{1}{%
+        defaulten-us={Publisher of proceeding}
       }
       \strng{namehash}{8ab39ee68c55046dc1f05d657fcefed9}
       \strng{fullhash}{8ab39ee68c55046dc1f05d657fcefed9}
@@ -396,6 +505,12 @@ my $cr8 = q|    \entry{cr8}{incollection}{}
            given={Firstname},
            giveni={F\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Smith},
+          familydefaulten-usi={S\bibinitperiod},
+          givendefaulten-us={Firstname},
+          givendefaulten-usi={F\bibinitperiod}
+      }
       \strng{namehash}{3d449e56eb3ca1ae80dc99a18d689795}
       \strng{fullhash}{3d449e56eb3ca1ae80dc99a18d689795}
       \strng{bibnamehash}{3d449e56eb3ca1ae80dc99a18d689795}
@@ -427,6 +542,12 @@ my $xr1 = q|    \entry{xr1}{inbook}{}
            given={Zoe},
            giveni={Z\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Zentrum},
+          familydefaulten-usi={Z\bibinitperiod},
+          givendefaulten-us={Zoe},
+          givendefaulten-usi={Z\bibinitperiod}
+      }
       \strng{namehash}{e0ecc4fc668ee499d1afba44e1ac064d}
       \strng{fullhash}{e0ecc4fc668ee499d1afba44e1ac064d}
       \strng{bibnamehash}{e0ecc4fc668ee499d1afba44e1ac064d}
@@ -455,6 +576,12 @@ my $xr2 = q|    \entry{xr2}{inbook}{}
            familyi={I\bibinitperiod},
            given={Ian},
            giveni={I\bibinitperiod}}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Instant},
+          familydefaulten-usi={I\bibinitperiod},
+          givendefaulten-us={Ian},
+          givendefaulten-usi={I\bibinitperiod}
       }
       \strng{namehash}{6afa09374ecfd6b394ce714d2d9709c7}
       \strng{fullhash}{6afa09374ecfd6b394ce714d2d9709c7}
@@ -487,8 +614,17 @@ my $xrm = q|    \entry{xrm}{book}{}
            given={Peter},
            giveni={P\bibinitperiod}}}%
       }
+      \namepartms{editor}{1}{%
+          familydefaulten-us={Prendergast},
+          familydefaulten-usi={P\bibinitperiod},
+          givendefaulten-us={Peter},
+          givendefaulten-usi={P\bibinitperiod}
+      }
       \list[default][en-us]{publisher}{1}{%
         {Mainstream}%
+      }
+      \listitemms{publisher}{1}{%
+        defaulten-us={Mainstream}
       }
       \strng{editordefaulten-usbibnamehash}{809950f9b59ae207092b909a19dcb27b}
       \strng{editordefaulten-usnamehash}{809950f9b59ae207092b909a19dcb27b}
@@ -511,6 +647,12 @@ my $xr3 = q|    \entry{xr3}{inbook}{}
            familyi={N\bibinitperiod},
            given={Norman},
            giveni={N\bibinitperiod}}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Normal},
+          familydefaulten-usi={N\bibinitperiod},
+          givendefaulten-us={Norman},
+          givendefaulten-usi={N\bibinitperiod}
       }
       \strng{namehash}{9788055665b9bb4b37c776c3f6b74f16}
       \strng{fullhash}{9788055665b9bb4b37c776c3f6b74f16}
@@ -542,8 +684,17 @@ my $xrt = q|    \entry{xrt}{book}{}
            given={Lucy},
            giveni={L\bibinitperiod}}}%
       }
+      \namepartms{editor}{1}{%
+          familydefaulten-us={Lunders},
+          familydefaulten-usi={L\bibinitperiod},
+          givendefaulten-us={Lucy},
+          givendefaulten-usi={L\bibinitperiod}
+      }
       \list[default][en-us]{publisher}{1}{%
         {Middling}%
+      }
+      \listitemms{publisher}{1}{%
+        defaulten-us={Middling}
       }
       \strng{editordefaulten-usbibnamehash}{bf7d6b02f3e073913e5bfe5059508dd5}
       \strng{editordefaulten-usnamehash}{bf7d6b02f3e073913e5bfe5059508dd5}
@@ -566,6 +717,12 @@ my $xr4 = q|    \entry{xr4}{inbook}{}
            familyi={M\bibinitperiod},
            given={Megan},
            giveni={M\bibinitperiod}}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Mistrel},
+          familydefaulten-usi={M\bibinitperiod},
+          givendefaulten-us={Megan},
+          givendefaulten-usi={M\bibinitperiod}
       }
       \strng{namehash}{7804ffef086c0c4686c235807f5cb502}
       \strng{fullhash}{7804ffef086c0c4686c235807f5cb502}
@@ -595,6 +752,12 @@ my $mxr = q|    \entry{mxr}{inbook}{}
            given={Megan},
            giveni={M\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Mistrel},
+          familydefaulten-usi={M\bibinitperiod},
+          givendefaulten-us={Megan},
+          givendefaulten-usi={M\bibinitperiod}
+      }
       \strng{namehash}{7804ffef086c0c4686c235807f5cb502}
       \strng{fullhash}{7804ffef086c0c4686c235807f5cb502}
       \strng{bibnamehash}{7804ffef086c0c4686c235807f5cb502}
@@ -619,6 +782,12 @@ my $mcr = q|    \entry{mcr}{inbook}{}
            familyi={M\bibinitperiod},
            given={Megan},
            giveni={M\bibinitperiod}}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Mistrel},
+          familydefaulten-usi={M\bibinitperiod},
+          givendefaulten-us={Megan},
+          givendefaulten-usi={M\bibinitperiod}
       }
       \strng{namehash}{7804ffef086c0c4686c235807f5cb502}
       \strng{fullhash}{7804ffef086c0c4686c235807f5cb502}
@@ -645,12 +814,24 @@ my $ccr1 = q|    \entry{ccr2}{book}{}
            given={Vince},
            giveni={V\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Various},
+          familydefaulten-usi={V\bibinitperiod},
+          givendefaulten-us={Vince},
+          givendefaulten-usi={V\bibinitperiod}
+      }
       \name[default][en-us]{editor}{1}{}{%
         {{hash=cfee758a1c82df2e26af1985e061bb0a}{%
            family={Editor},
            familyi={E\bibinitperiod},
            given={Edward},
            giveni={E\bibinitperiod}}}%
+      }
+      \namepartms{editor}{1}{%
+          familydefaulten-us={Editor},
+          familydefaulten-usi={E\bibinitperiod},
+          givendefaulten-us={Edward},
+          givendefaulten-usi={E\bibinitperiod}
       }
       \strng{namehash}{6268941b408d3263bddb208a54899ea9}
       \strng{fullhash}{6268941b408d3263bddb208a54899ea9}
@@ -683,12 +864,24 @@ my $ccr2 = q|    \entry{ccr3}{inbook}{}
            given={Vince},
            giveni={V\bibinitperiod}}}%
       }
+      \namepartms{bookauthor}{1}{%
+          familydefaulten-us={Various},
+          familydefaulten-usi={V\bibinitperiod},
+          givendefaulten-us={Vince},
+          givendefaulten-usi={V\bibinitperiod}
+      }
       \name[default][en-us]{editor}{1}{}{%
         {{hash=cfee758a1c82df2e26af1985e061bb0a}{%
            family={Editor},
            familyi={E\bibinitperiod},
            given={Edward},
            giveni={E\bibinitperiod}}}%
+      }
+      \namepartms{editor}{1}{%
+          familydefaulten-us={Editor},
+          familydefaulten-usi={E\bibinitperiod},
+          givendefaulten-us={Edward},
+          givendefaulten-usi={E\bibinitperiod}
       }
       \strng{bookauthordefaulten-usbibnamehash}{6268941b408d3263bddb208a54899ea9}
       \strng{bookauthordefaulten-usnamehash}{6268941b408d3263bddb208a54899ea9}
@@ -745,12 +938,24 @@ my $xc2 = q|    \entry{xc2}{inbook}{}
            given={Xavier},
            giveni={X\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Crust},
+          familydefaulten-usi={C\bibinitperiod},
+          givendefaulten-us={Xavier},
+          givendefaulten-usi={X\bibinitperiod}
+      }
       \name[default][en-us]{bookauthor}{1}{}{%
         {{hash=1a0f7d518cccdad859a74412ef956474}{%
            family={Crust},
            familyi={C\bibinitperiod},
            given={Xavier},
            giveni={X\bibinitperiod}}}%
+      }
+      \namepartms{bookauthor}{1}{%
+          familydefaulten-us={Crust},
+          familydefaulten-usi={C\bibinitperiod},
+          givendefaulten-us={Xavier},
+          givendefaulten-usi={X\bibinitperiod}
       }
       \strng{namehash}{1a0f7d518cccdad859a74412ef956474}
       \strng{fullhash}{1a0f7d518cccdad859a74412ef956474}
@@ -798,6 +1003,12 @@ my $sup1 = q|    \entry{sup1}{mvbook}{}
            given={Alan},
            giveni={A\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Smith},
+          familydefaulten-usi={S\bibinitperiod},
+          givendefaulten-us={Alan},
+          givendefaulten-usi={A\bibinitperiod}
+      }
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{bibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
@@ -822,6 +1033,12 @@ my $sup2 = q|    \entry{sup2}{book}{}
            familyi={S\bibinitperiod},
            given={Alan},
            giveni={A\bibinitperiod}}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Smith},
+          familydefaulten-usi={S\bibinitperiod},
+          givendefaulten-us={Alan},
+          givendefaulten-usi={A\bibinitperiod}
       }
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}

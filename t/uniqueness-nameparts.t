@@ -73,6 +73,14 @@ my $un1 = q|    \entry{un1}{article}{}
            middlei={S\bibinitperiod},
            middleun=1}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Smith},
+          familydefaulten-usi={S\bibinitperiod},
+          givendefaulten-us={John},
+          givendefaulten-usi={J\bibinitperiod},
+          middledefaulten-us={Simon},
+          middledefaulten-usi={S\bibinitperiod}
+      }
       \strng{namehash}{329d8f9192ea3349d700160c9ddb505d}
       \strng{fullhash}{329d8f9192ea3349d700160c9ddb505d}
       \strng{bibnamehash}{329d8f9192ea3349d700160c9ddb505d}
@@ -97,6 +105,14 @@ my $un2 = q|    \entry{un2}{article}{}
            middle={Alan},
            middlei={A\bibinitperiod},
            middleun=2}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Smith},
+          familydefaulten-usi={S\bibinitperiod},
+          givendefaulten-us={John},
+          givendefaulten-usi={J\bibinitperiod},
+          middledefaulten-us={Alan},
+          middledefaulten-usi={A\bibinitperiod}
       }
       \strng{namehash}{7551114aede4ef69e4b3683039801706}
       \strng{fullhash}{7551114aede4ef69e4b3683039801706}
@@ -123,6 +139,14 @@ my $un3 = q|    \entry{un3}{article}{}
            middlei={A\bibinitperiod},
            middleun=2}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Smith},
+          familydefaulten-usi={S\bibinitperiod},
+          givendefaulten-us={John},
+          givendefaulten-usi={J\bibinitperiod},
+          middledefaulten-us={Arthur},
+          middledefaulten-usi={A\bibinitperiod}
+      }
       \strng{namehash}{401aebda288799a7c757526242d8c9fc}
       \strng{fullhash}{401aebda288799a7c757526242d8c9fc}
       \strng{bibnamehash}{401aebda288799a7c757526242d8c9fc}
@@ -147,6 +171,14 @@ my $un4 = q|    \entry{un4}{article}{}
            middle={Simon},
            middlei={S\bibinitperiod},
            middleun=0}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Smith},
+          familydefaulten-usi={S\bibinitperiod},
+          givendefaulten-us={Alan},
+          givendefaulten-usi={A\bibinitperiod},
+          middledefaulten-us={Simon},
+          middledefaulten-usi={S\bibinitperiod}
       }
       \strng{namehash}{f6038a264619efefd49c7daac56424ca}
       \strng{fullhash}{f6038a264619efefd49c7daac56424ca}
@@ -173,6 +205,14 @@ my $un1a = q|    \entry{un1}{article}{}
            middlei={S\bibinitperiod},
            middleun=1}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Smith},
+          familydefaulten-usi={S\bibinitperiod},
+          givendefaulten-us={John},
+          givendefaulten-usi={J\bibinitperiod},
+          middledefaulten-us={Simon},
+          middledefaulten-usi={S\bibinitperiod}
+      }
       \strng{namehash}{329d8f9192ea3349d700160c9ddb505d}
       \strng{fullhash}{329d8f9192ea3349d700160c9ddb505d}
       \strng{bibnamehash}{329d8f9192ea3349d700160c9ddb505d}
@@ -197,6 +237,14 @@ my $un2a = q|    \entry{un2}{article}{}
            middle={Alan},
            middlei={A\bibinitperiod},
            middleun=2}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Smith},
+          familydefaulten-usi={S\bibinitperiod},
+          givendefaulten-us={John},
+          givendefaulten-usi={J\bibinitperiod},
+          middledefaulten-us={Alan},
+          middledefaulten-usi={A\bibinitperiod}
       }
       \strng{namehash}{7551114aede4ef69e4b3683039801706}
       \strng{fullhash}{7551114aede4ef69e4b3683039801706}
@@ -223,6 +271,14 @@ my $un3a = q|    \entry{un3}{article}{}
            middlei={A\bibinitperiod},
            middleun=2}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Smith},
+          familydefaulten-usi={S\bibinitperiod},
+          givendefaulten-us={John},
+          givendefaulten-usi={J\bibinitperiod},
+          middledefaulten-us={Arthur},
+          middledefaulten-usi={A\bibinitperiod}
+      }
       \strng{namehash}{401aebda288799a7c757526242d8c9fc}
       \strng{fullhash}{401aebda288799a7c757526242d8c9fc}
       \strng{bibnamehash}{401aebda288799a7c757526242d8c9fc}
@@ -248,6 +304,14 @@ my $un4a = q|    \entry{un4}{article}{}
            middle={Simon},
            middlei={S\bibinitperiod},
            middleun=0}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Smith},
+          familydefaulten-usi={S\bibinitperiod},
+          givendefaulten-us={Alan},
+          givendefaulten-usi={A\bibinitperiod},
+          middledefaulten-us={Simon},
+          middledefaulten-usi={S\bibinitperiod}
       }
       \strng{namehash}{f6038a264619efefd49c7daac56424ca}
       \strng{fullhash}{f6038a264619efefd49c7daac56424ca}
@@ -276,6 +340,14 @@ my $un1b = q|    \entry{un1}{article}{}
            middlei={S\bibinitperiod},
            middleun=0}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Smith},
+          familydefaulten-usi={S\bibinitperiod},
+          givendefaulten-us={John},
+          givendefaulten-usi={J\bibinitperiod},
+          middledefaulten-us={Simon},
+          middledefaulten-usi={S\bibinitperiod}
+      }
       \strng{namehash}{329d8f9192ea3349d700160c9ddb505d}
       \strng{fullhash}{329d8f9192ea3349d700160c9ddb505d}
       \strng{bibnamehash}{329d8f9192ea3349d700160c9ddb505d}
@@ -303,6 +375,14 @@ my $un2b = q|    \entry{un2}{article}{}
            middlei={A\bibinitperiod},
            middleun=2}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Smith},
+          familydefaulten-usi={S\bibinitperiod},
+          givendefaulten-us={John},
+          givendefaulten-usi={J\bibinitperiod},
+          middledefaulten-us={Alan},
+          middledefaulten-usi={A\bibinitperiod}
+      }
       \strng{namehash}{7551114aede4ef69e4b3683039801706}
       \strng{fullhash}{7551114aede4ef69e4b3683039801706}
       \strng{bibnamehash}{7551114aede4ef69e4b3683039801706}
@@ -327,6 +407,14 @@ my $un3b = q|    \entry{un3}{article}{}
            middle={Arthur},
            middlei={A\bibinitperiod},
            middleun=2}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Smith},
+          familydefaulten-usi={S\bibinitperiod},
+          givendefaulten-us={John},
+          givendefaulten-usi={J\bibinitperiod},
+          middledefaulten-us={Arthur},
+          middledefaulten-usi={A\bibinitperiod}
       }
       \strng{namehash}{401aebda288799a7c757526242d8c9fc}
       \strng{fullhash}{401aebda288799a7c757526242d8c9fc}
@@ -354,6 +442,14 @@ my $un4b = q|    \entry{un4}{article}{}
            middle={Simon},
            middlei={S\bibinitperiod},
            middleun=0}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Smith},
+          familydefaulten-usi={S\bibinitperiod},
+          givendefaulten-us={Alan},
+          givendefaulten-usi={A\bibinitperiod},
+          middledefaulten-us={Simon},
+          middledefaulten-usi={S\bibinitperiod}
       }
       \strng{namehash}{f6038a264619efefd49c7daac56424ca}
       \strng{fullhash}{f6038a264619efefd49c7daac56424ca}
@@ -384,6 +480,14 @@ my $un5 = q|    \entry{un5}{article}{uniquenametemplatename=test3}
            middlei={S\bibinitperiod},
            middleun=0}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Smith},
+          familydefaulten-usi={S\bibinitperiod},
+          givendefaulten-us={Arthur},
+          givendefaulten-usi={A\bibinitperiod},
+          middledefaulten-us={Simon},
+          middledefaulten-usi={S\bibinitperiod}
+      }
       \strng{namehash}{74fba0d07ca65976bbff1034f9bb22e6}
       \strng{fullhash}{74fba0d07ca65976bbff1034f9bb22e6}
       \strng{bibnamehash}{74fba0d07ca65976bbff1034f9bb22e6}
@@ -413,6 +517,14 @@ my $un6 = q|    \entry{un6}{article}{}
            middlei={S\bibinitperiod},
            middleun=0}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Smith},
+          familydefaulten-usi={S\bibinitperiod},
+          givendefaulten-us={Arthur},
+          givendefaulten-usi={A\bibinitperiod},
+          middledefaulten-us={Smythe},
+          middledefaulten-usi={S\bibinitperiod}
+      }
       \strng{namehash}{8100e7d06d05938e91bf8863f5c20e33}
       \strng{fullhash}{8100e7d06d05938e91bf8863f5c20e33}
       \strng{bibnamehash}{8100e7d06d05938e91bf8863f5c20e33}
@@ -425,7 +537,7 @@ my $un6 = q|    \entry{un6}{article}{}
       \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
       \field{extradate}{3}
       \fieldmssource{labelname}{author}{default}{en-us}
-    \\endentry
+    \endentry
 |;
 
 # because there is nothing to disambiguate the base at all
@@ -441,6 +553,14 @@ my $un7 = q|    \entry{un7}{article}{}
            middle={Smedley},
            middlei={S\bibinitperiod},
            middleun=0}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Smith},
+          familydefaulten-usi={S\bibinitperiod},
+          givendefaulten-us={Arthur},
+          givendefaulten-usi={A\bibinitperiod},
+          middledefaulten-us={Smedley},
+          middledefaulten-usi={S\bibinitperiod}
       }
       \strng{namehash}{c21736158273b6f2f368818459734e04}
       \strng{fullhash}{c21736158273b6f2f368818459734e04}

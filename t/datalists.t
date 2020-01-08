@@ -174,11 +174,23 @@ my $K11 = q|    \entry{K11}{book}{}
            given={Xavier},
            giveni={X\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Xanax},
+          familydefaulten-usi={X\bibinitperiod},
+          givendefaulten-us={Xavier},
+          givendefaulten-usi={X\bibinitperiod}
+      }
       \list[default][en-us]{location}{1}{%
         {Moscow}%
       }
+      \listitemms{location}{1}{%
+        defaulten-us={Moscow}
+      }
       \list[default][en-us]{publisher}{1}{%
         {Publisher}%
+      }
+      \listitemms{publisher}{1}{%
+        defaulten-us={Publisher}
       }
       \strng{namehash}{4edc280a0ef229f9c061e3b121b17482}
       \strng{fullhash}{4edc280a0ef229f9c061e3b121b17482}
@@ -206,11 +218,23 @@ my $K12 = q|    \entry{K12}{book}{}
            given={Arthur},
            giveni={A\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Allen},
+          familydefaulten-usi={A\bibinitperiod},
+          givendefaulten-us={Arthur},
+          givendefaulten-usi={A\bibinitperiod}
+      }
       \list[default][en-us]{location}{1}{%
         {Moscow}%
       }
+      \listitemms{location}{1}{%
+        defaulten-us={Moscow}
+      }
       \list[default][en-us]{publisher}{1}{%
         {Publisher}%
+      }
+      \listitemms{publisher}{1}{%
+        defaulten-us={Publisher}
       }
       \strng{namehash}{a846a485fc9cbb59b0ebeedd6ac637e4}
       \strng{fullhash}{a846a485fc9cbb59b0ebeedd6ac637e4}

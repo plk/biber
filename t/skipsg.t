@@ -53,8 +53,23 @@ my $S1 = q|    \entry{S1}{book}{skipbib=false,skipbiblist=false,skiplab=false}
            given={Albert},
            giveni={A\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Doe},
+          familydefaulten-usi={D\bibinitperiod},
+          givendefaulten-us={John},
+          givendefaulten-usi={J\bibinitperiod}
+      }
+      \namepartms{author}{2}{%
+          familydefaulten-us={Abrahams},
+          familydefaulten-usi={A\bibinitperiod},
+          givendefaulten-us={Albert},
+          givendefaulten-usi={A\bibinitperiod}
+      }
       \list[default][en-us]{publisher}{1}{%
         {Oxford}%
+      }
+      \listitemms{publisher}{1}{%
+        defaulten-us={Oxford}
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
@@ -90,8 +105,23 @@ my $S2 = q|    \entry{S2}{book}{skipbib=false,skiplab=false}
            given={Albert},
            giveni={A\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Doe},
+          familydefaulten-usi={D\bibinitperiod},
+          givendefaulten-us={John},
+          givendefaulten-usi={J\bibinitperiod}
+      }
+      \namepartms{author}{2}{%
+          familydefaulten-us={Abrahams},
+          familydefaulten-usi={A\bibinitperiod},
+          givendefaulten-us={Albert},
+          givendefaulten-usi={A\bibinitperiod}
+      }
       \list[default][en-us]{publisher}{1}{%
         {Oxford}%
+      }
+      \listitemms{publisher}{1}{%
+        defaulten-us={Oxford}
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
@@ -127,8 +157,23 @@ my $S3 = q|    \entry{S3}{book}{}
            given={Albert},
            giveni={A\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Doe},
+          familydefaulten-usi={D\bibinitperiod},
+          givendefaulten-us={John},
+          givendefaulten-usi={J\bibinitperiod}
+      }
+      \namepartms{author}{2}{%
+          familydefaulten-us={Abrahams},
+          familydefaulten-usi={A\bibinitperiod},
+          givendefaulten-us={Albert},
+          givendefaulten-usi={A\bibinitperiod}
+      }
       \list[default][en-us]{publisher}{1}{%
         {Oxford}%
+      }
+      \listitemms{publisher}{1}{%
+        defaulten-us={Oxford}
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}

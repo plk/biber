@@ -108,11 +108,23 @@ my $l4 = q|    \entry{L4}{book}{}
            given={John},
            giveni={J\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Doe},
+          familydefaulten-usi={D\bibinitperiod},
+          givendefaulten-us={John},
+          givendefaulten-usi={J\bibinitperiod}
+      }
       \list[default][en-us]{location}{1}{%
         {Cambridge}%
       }
+      \listitemms{location}{1}{%
+        defaulten-us={Cambridge}
+      }
       \list[default][en-us]{publisher}{1}{%
         {Another press}%
+      }
+      \listitemms{publisher}{1}{%
+        defaulten-us={Another press}
       }
       \strng{namehash}{6eb389989020e8246fee90ac93fcecbe}
       \strng{fullhash}{6eb389989020e8246fee90ac93fcecbe}
@@ -140,11 +152,23 @@ my $l1 = q|    \entry{L1}{book}{}
            given={John},
            giveni={J\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Doe},
+          familydefaulten-usi={D\bibinitperiod},
+          givendefaulten-us={John},
+          givendefaulten-usi={J\bibinitperiod}
+      }
       \list[default][en-us]{location}{1}{%
         {Cambridge}%
       }
+      \listitemms{location}{1}{%
+        defaulten-us={Cambridge}
+      }
       \list[default][en-us]{publisher}{1}{%
         {A press}%
+      }
+      \listitemms{publisher}{1}{%
+        defaulten-us={A press}
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
@@ -172,11 +196,23 @@ my $l2 = q|    \entry{L2}{book}{}
            given={John},
            giveni={J\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Doe},
+          familydefaulten-usi={D\bibinitperiod},
+          givendefaulten-us={John},
+          givendefaulten-usi={J\bibinitperiod}
+      }
       \list[default][en-us]{location}{1}{%
         {Cambridge}%
       }
+      \listitemms{location}{1}{%
+        defaulten-us={Cambridge}
+      }
       \list[default][en-us]{publisher}{1}{%
         {A press}%
+      }
+      \listitemms{publisher}{1}{%
+        defaulten-us={A press}
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
@@ -204,11 +240,23 @@ my $l3 = q|    \entry{L3}{book}{}
            given={John},
            giveni={J\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Doe},
+          familydefaulten-usi={D\bibinitperiod},
+          givendefaulten-us={John},
+          givendefaulten-usi={J\bibinitperiod}
+      }
       \list[default][en-us]{location}{1}{%
         {Cambridge}%
       }
+      \listitemms{location}{1}{%
+        defaulten-us={Cambridge}
+      }
       \list[default][en-us]{publisher}{1}{%
         {A press}%
+      }
+      \listitemms{publisher}{1}{%
+        defaulten-us={A press}
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
@@ -238,11 +286,23 @@ my $l5 = q|    \entry{L5}{book}{}
            given={John},
            giveni={J\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Doe},
+          familydefaulten-usi={D\bibinitperiod},
+          givendefaulten-us={John},
+          givendefaulten-usi={J\bibinitperiod}
+      }
       \list[default][en-us]{location}{1}{%
         {Cambridge}%
       }
+      \listitemms{location}{1}{%
+        defaulten-us={Cambridge}
+      }
       \list[default][en-us]{publisher}{1}{%
         {Another press}%
+      }
+      \listitemms{publisher}{1}{%
+        defaulten-us={Another press}
       }
       \strng{namehash}{6eb389989020e8246fee90ac93fcecbe}
       \strng{fullhash}{6eb389989020e8246fee90ac93fcecbe}

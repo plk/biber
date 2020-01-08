@@ -56,46 +56,89 @@ my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
       \name[default][en-us]{author}{3}{useprefix=true}{%
         {{hash=bdef740dab20c2b52a3b6e0563c42bdb}{%
            family={Булгаков},
-           familyi={Б\\bibinitperiod},
-           given={Павел\\bibnamedelima Георгиевич},
-           giveni={П\\bibinitperiod\\bibinitdelim Г\\bibinitperiod},
+           familyi={Б\bibinitperiod},
+           given={Павел\bibnamedelima Георгиевич},
+           giveni={П\bibinitperiod\bibinitdelim Г\bibinitperiod},
            prefix={von},
-           prefixi={v\\bibinitperiod}}}%
+           prefixi={v\bibinitperiod}}}%
         {{useprefix=false,hash=485f1e5d5e81a43fe067b440706c4979}{%
            family={РРозенфельд},
-           familyi={Р\\bibinitperiod},
-           given={Борис-ZZ\\bibnamedelima Aбрамович},
-           giveni={Б\\bibinithyphendelim Z\\bibinitperiod\\bibinitdelim A\\bibinitperiod},
+           familyi={Р\bibinitperiod},
+           given={Борис-ZZ\bibnamedelima Aбрамович},
+           giveni={Б\bibinithyphendelim Z\bibinitperiod\bibinitdelim A\bibinitperiod},
            prefix={von},
-           prefixi={v\\bibinitperiod}}}%
+           prefixi={v\bibinitperiod}}}%
         {{hash=39dcc744aabf73006cb446d70a1beea2}{%
            family={Aхмедов},
-           familyi={A\\bibinitperiod},
-           given={Ашраф\\bibnamedelima Ахмедович},
-           giveni={A\\bibinitperiod\\bibinitdelim А\\bibinitperiod}}}%
+           familyi={A\bibinitperiod},
+           given={Ашраф\bibnamedelima Ахмедович},
+           giveni={A\bibinitperiod\bibinitdelim А\bibinitperiod}}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Булгаков},
+          familydefaulten-usi={Б\bibinitperiod},
+          givendefaulten-us={Павел\bibnamedelima Георгиевич},
+          givendefaulten-usi={П\bibinitperiod\bibinitdelim Г\bibinitperiod},
+          prefixdefaulten-us={von},
+          prefixdefaulten-usi={v\bibinitperiod}
+      }
+      \namepartms{author}{2}{%
+          familydefaulten-us={РРозенфельд},
+          familydefaulten-usi={Р\bibinitperiod},
+          givendefaulten-us={Борис-ZZ\bibnamedelima Aбрамович},
+          givendefaulten-usi={Б\bibinithyphendelim Z\bibinitperiod\bibinitdelim A\bibinitperiod},
+          prefixdefaulten-us={von},
+          prefixdefaulten-usi={v\bibinitperiod}
+      }
+      \namepartms{author}{3}{%
+          familydefaulten-us={Aхмедов},
+          familydefaulten-usi={A\bibinitperiod},
+          givendefaulten-us={Ашраф\bibnamedelima Ахмедович},
+          givendefaulten-usi={A\bibinitperiod\bibinitdelim А\bibinitperiod}
       }
       \name[default][en-us]{foreword}{1}{}{%
         {{hash=a7a73749ea467229221b7e9cbf870988}{%
            family={Brown},
-           familyi={B\\bibinitperiod},
-           given={John\\bibnamedelimb },
-           giveni={J\\bibinitperiod}}}%
+           familyi={B\bibinitperiod},
+           given={John\bibnamedelimb },
+           giveni={J\bibinitperiod}}}%
+      }
+      \namepartms{foreword}{1}{%
+          familydefaulten-us={Brown},
+          familydefaulten-usi={B\bibinitperiod},
+          givendefaulten-us={John\bibnamedelimb },
+          givendefaulten-usi={J\bibinitperiod}
       }
       \name[default][en-us]{translator}{1}{}{%
         {{hash=b44eba830fe9817fbe8e53c82f1cbe04}{%
            family={Smith},
-           familyi={S\\bibinitperiod},
+           familyi={S\bibinitperiod},
            given={Paul},
-           giveni={P\\bibinitperiod}}}%
+           giveni={P\bibinitperiod}}}%
+      }
+      \namepartms{translator}{1}{%
+          familydefaulten-us={Smith},
+          familydefaulten-usi={S\bibinitperiod},
+          givendefaulten-us={Paul},
+          givendefaulten-usi={P\bibinitperiod}
       }
       \list{language}{1}{%
         {russian}%
       }
+      \listitemms{language}{1}{%
+        defaulten-us={russian}
+      }
       \list[default][en-us]{location}{1}{%
         {Москва}%
       }
+      \listitemms{location}{1}{%
+        defaulten-us={Москва}
+      }
       \list[default][en-us]{publisher}{1}{%
         {Наука}%
+      }
+      \listitemms{publisher}{1}{%
+        defaulten-us={Наука}
       }
       \strng{namehash}{3400c73d7bf3e361d36350deb4832ad7}
       \strng{fullhash}{3400c73d7bf3e361d36350deb4832ad7}

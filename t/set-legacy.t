@@ -58,6 +58,12 @@ my $string2 = q|    \entry{Elias1955a}{article}{skipbib=true,skipbiblist=true,sk
            given={P.},
            giveni={P\bibinitperiod}}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Elias},
+          familydefaulten-usi={E\bibinitperiod},
+          givendefaulten-us={P.},
+          givendefaulten-usi={P\bibinitperiod}
+      }
       \strng{namehash}{68f587f427e068e26043d54745351d58}
       \strng{fullhash}{68f587f427e068e26043d54745351d58}
       \strng{bibnamehash}{68f587f427e068e26043d54745351d58}
@@ -91,6 +97,12 @@ my $string3 = q|    \entry{Elias1955b}{article}{skipbib=true,skipbiblist=true,sk
            familyi={E\bibinitperiod},
            given={P.},
            giveni={P\bibinitperiod}}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Elias},
+          familydefaulten-usi={E\bibinitperiod},
+          givendefaulten-us={P.},
+          givendefaulten-usi={P\bibinitperiod}
       }
       \strng{namehash}{68f587f427e068e26043d54745351d58}
       \strng{fullhash}{68f587f427e068e26043d54745351d58}
