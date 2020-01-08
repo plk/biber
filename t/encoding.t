@@ -10,7 +10,7 @@ unified_diff;
 
 use Biber;
 use Biber::Utils;
-use Biber::Output::test;
+use Biber::Output::bbl;
 use Encode;
 use Log::Log4perl;
 use Unicode::Normalize;
@@ -32,7 +32,28 @@ Log::Log4perl->init(\$l4pconf);
 
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 
-my $encode1 = q|    \entry{testŠ}{book}{}
+my $encode1 = q|% $ biblatex auxiliary file $
+% $ biblatex bbl format version 4.0 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{nty/global//global/global}
+    \entry{testŠ}{book}{}
       \name[default][en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=06a47edae2e847800cfd78323a0e6be8}{%
            family={Encalcer},
@@ -41,8 +62,17 @@ my $encode1 = q|    \entry{testŠ}{book}{}
            giveni={E\bibinitperiod},
            givenun=0}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Encalcer},
+          familydefaulten-usi={E\bibinitperiod},
+          givendefaulten-us={Edward},
+          givendefaulten-usi={E\bibinitperiod}
+      }
       \list[default][en-us]{publisher}{1}{%
         {A press}%
+      }
+      \listitemms{publisher}{1}{%
+        defaulten-us={A press}
       }
       \strng{namehash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
@@ -53,6 +83,7 @@ my $encode1 = q|    \entry{testŠ}{book}{}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
       \strng{sortinithash}{c554bd1a0b76ea92b9f105fe36d9c7b0}
+      \field{extradatescope}{labelyear}
       \field{labeldatesource}{year}
       \true{singletitle}
       \fieldmssource{labelname}{author}{default}{en-us}
@@ -60,9 +91,38 @@ my $encode1 = q|    \entry{testŠ}{book}{}
       \field[default][en-us]{title}{Šome title}
       \field{year}{1999}
     \endentry
+  \enddatalist
+\endrefsection
+\msmaplang{en-us}{english}
+\msforms{default}
+\mslangs{en-us}
+
+\endinput
+
 |;
 
-my $encode2 = q|    \entry{test1}{book}{}
+my $encode2 = q|% $ biblatex auxiliary file $
+% $ biblatex bbl format version 4.0 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{nty/global//global/global}
+    \entry{test1}{book}{}
       \name[default][en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=06a47edae2e847800cfd78323a0e6be8}{%
            family={Encalcer},
@@ -71,8 +131,17 @@ my $encode2 = q|    \entry{test1}{book}{}
            giveni={E\bibinitperiod},
            givenun=0}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Encalcer},
+          familydefaulten-usi={E\bibinitperiod},
+          givendefaulten-us={Edward},
+          givendefaulten-usi={E\bibinitperiod}
+      }
       \list[default][en-us]{publisher}{1}{%
         {A press}%
+      }
+      \listitemms{publisher}{1}{%
+        defaulten-us={A press}
       }
       \strng{namehash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
@@ -83,6 +152,7 @@ my $encode2 = q|    \entry{test1}{book}{}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
       \strng{sortinithash}{c554bd1a0b76ea92b9f105fe36d9c7b0}
+      \field{extradatescope}{labelyear}
       \field{labeldatesource}{year}
       \true{singletitle}
       \fieldmssource{labelname}{author}{default}{en-us}
@@ -90,9 +160,38 @@ my $encode2 = q|    \entry{test1}{book}{}
       \field[default][en-us]{title}{Söme title}
       \field{year}{1999}
     \endentry
+  \enddatalist
+\endrefsection
+\msmaplang{en-us}{english}
+\msforms{default}
+\mslangs{en-us}
+
+\endinput
+
 |;
 
-my $encode3 = q|    \entry{test1}{book}{}
+my $encode3 = q|% $ biblatex auxiliary file $
+% $ biblatex bbl format version 4.0 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{nty/global//global/global}
+    \entry{test1}{book}{}
       \name[default][en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=06a47edae2e847800cfd78323a0e6be8}{%
            family={Encalcer},
@@ -101,8 +200,17 @@ my $encode3 = q|    \entry{test1}{book}{}
            giveni={E\bibinitperiod},
            givenun=0}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Encalcer},
+          familydefaulten-usi={E\bibinitperiod},
+          givendefaulten-us={Edward},
+          givendefaulten-usi={E\bibinitperiod}
+      }
       \list[default][en-us]{publisher}{1}{%
         {A press}%
+      }
+      \listitemms{publisher}{1}{%
+        defaulten-us={A press}
       }
       \strng{namehash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
@@ -113,6 +221,7 @@ my $encode3 = q|    \entry{test1}{book}{}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
       \strng{sortinithash}{c554bd1a0b76ea92b9f105fe36d9c7b0}
+      \field{extradatescope}{labelyear}
       \field{labeldatesource}{year}
       \true{singletitle}
       \fieldmssource{labelname}{author}{default}{en-us}
@@ -120,9 +229,38 @@ my $encode3 = q|    \entry{test1}{book}{}
       \field[default][en-us]{title}{Żome title}
       \field{year}{1999}
     \endentry
+  \enddatalist
+\endrefsection
+\msmaplang{en-us}{english}
+\msforms{default}
+\mslangs{en-us}
+
+\endinput
+
 |;
 
-my $encode5 = q|    \entry{test}{book}{}
+my $encode5 = q|% $ biblatex auxiliary file $
+% $ biblatex bbl format version 4.0 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{nty/global//global/global}
+    \entry{test}{book}{}
       \name[default][en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=06a47edae2e847800cfd78323a0e6be8}{%
            family={Encalcer},
@@ -131,8 +269,17 @@ my $encode5 = q|    \entry{test}{book}{}
            giveni={E\bibinitperiod},
            givenun=0}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Encalcer},
+          familydefaulten-usi={E\bibinitperiod},
+          givendefaulten-us={Edward},
+          givendefaulten-usi={E\bibinitperiod}
+      }
       \list[default][en-us]{publisher}{1}{%
         {A press}%
+      }
+      \listitemms{publisher}{1}{%
+        defaulten-us={A press}
       }
       \strng{namehash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
@@ -143,6 +290,7 @@ my $encode5 = q|    \entry{test}{book}{}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
       \strng{sortinithash}{c554bd1a0b76ea92b9f105fe36d9c7b0}
+      \field{extradatescope}{labelyear}
       \field{labeldatesource}{year}
       \true{singletitle}
       \fieldmssource{labelname}{author}{default}{en-us}
@@ -150,9 +298,38 @@ my $encode5 = q|    \entry{test}{book}{}
       \field[default][en-us]{title}{à titlé}
       \field{year}{1999}
     \endentry
+  \enddatalist
+\endrefsection
+\msmaplang{en-us}{english}
+\msforms{default}
+\mslangs{en-us}
+
+\endinput
+
 |;
 
-my $encode6 = q|    \entry{test}{book}{}
+my $encode6 = q|% $ biblatex auxiliary file $
+% $ biblatex bbl format version 4.0 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{nty/global//global/global}
+    \entry{test}{book}{}
       \name[default][en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=06a47edae2e847800cfd78323a0e6be8}{%
            family={Encalcer},
@@ -161,8 +338,17 @@ my $encode6 = q|    \entry{test}{book}{}
            giveni={E\bibinitperiod},
            givenun=0}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Encalcer},
+          familydefaulten-usi={E\bibinitperiod},
+          givendefaulten-us={Edward},
+          givendefaulten-usi={E\bibinitperiod}
+      }
       \list[default][en-us]{publisher}{1}{%
         {A press}%
+      }
+      \listitemms{publisher}{1}{%
+        defaulten-us={A press}
       }
       \strng{namehash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
@@ -173,6 +359,7 @@ my $encode6 = q|    \entry{test}{book}{}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
       \strng{sortinithash}{c554bd1a0b76ea92b9f105fe36d9c7b0}
+      \field{extradatescope}{labelyear}
       \field{labeldatesource}{year}
       \true{singletitle}
       \fieldmssource{labelname}{author}{default}{en-us}
@@ -180,9 +367,38 @@ my $encode6 = q|    \entry{test}{book}{}
       \field[default][en-us]{title}{↑\`{a} titl\'{e}}
       \field{year}{1999}
     \endentry
+  \enddatalist
+\endrefsection
+\msmaplang{en-us}{english}
+\msforms{default}
+\mslangs{en-us}
+
+\endinput
+
 |;
 
-my $encode7 = q|    \entry{test}{book}{}
+my $encode7 = q|% $ biblatex auxiliary file $
+% $ biblatex bbl format version 4.0 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{nty/global//global/global}
+    \entry{test}{book}{}
       \name[default][en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=06a47edae2e847800cfd78323a0e6be8}{%
            family={Encalcer},
@@ -191,8 +407,17 @@ my $encode7 = q|    \entry{test}{book}{}
            giveni={E\bibinitperiod},
            givenun=0}}%
       }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Encalcer},
+          familydefaulten-usi={E\bibinitperiod},
+          givendefaulten-us={Edward},
+          givendefaulten-usi={E\bibinitperiod}
+      }
       \list[default][en-us]{publisher}{1}{%
         {A press}%
+      }
+      \listitemms{publisher}{1}{%
+        defaulten-us={A press}
       }
       \strng{namehash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
@@ -203,6 +428,7 @@ my $encode7 = q|    \entry{test}{book}{}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
       \strng{sortinithash}{c554bd1a0b76ea92b9f105fe36d9c7b0}
+      \field{extradatescope}{labelyear}
       \field{labeldatesource}{year}
       \true{singletitle}
       \fieldmssource{labelname}{author}{default}{en-us}
@@ -210,6 +436,14 @@ my $encode7 = q|    \entry{test}{book}{}
       \field[default][en-us]{title}{{$\uparrow$}\`{a} titl\'{e}}
       \field{year}{1999}
     \endentry
+  \enddatalist
+\endrefsection
+\msmaplang{en-us}{english}
+\msforms{default}
+\mslangs{en-us}
+
+\endinput
+
 |;
 
 
@@ -230,7 +464,7 @@ sub change_ds_encoding {
 
 # Latin9 .bib -> UTF-8 .bbl
 $biber->parse_ctrlfile('encoding1.bcf');
-$biber->set_output_obj(Biber::Output::test->new());
+$biber->set_output_obj(Biber::Output::bbl->new());
 
 # Biber options
 change_ds_encoding('encoding1.bib', 'latin9');
@@ -247,7 +481,7 @@ eq_or_diff($outvar, encode(Biber::Config->getoption('output_encoding'), $encode1
 
 # UTF-8 .bib -> UTF-8 .bbl
 $biber->parse_ctrlfile('encoding2.bcf');
-$biber->set_output_obj(Biber::Output::test->new());
+$biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 change_ds_encoding('encoding2.bib', 'UTF-8');
 Biber::Config->setoption('output_encoding', 'UTF-8');
@@ -262,7 +496,7 @@ eq_or_diff($outvar, encode(Biber::Config->getoption('output_encoding'), $encode1
 
 # UTF-8 .bib -> latin1 .bbl
 $biber->parse_ctrlfile('encoding5.bcf');
-$biber->set_output_obj(Biber::Output::test->new());
+$biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 change_ds_encoding('encoding2.bib', 'UTF-8');
 Biber::Config->setoption('output_encoding', 'latin1');
@@ -277,7 +511,7 @@ eq_or_diff($outvar, encode(Biber::Config->getoption('output_encoding'), $encode5
 
 # UTF-8 .bib -> UTF-8 with --output_safechars
 $biber->parse_ctrlfile('encoding6.bcf');
-$biber->set_output_obj(Biber::Output::test->new());
+$biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 change_ds_encoding('encoding6.bib', 'UTF-8');
 Biber::Config->setoption('output_encoding', 'UTF-8');
@@ -293,7 +527,7 @@ eq_or_diff($outvar, encode(Biber::Config->getoption('output_encoding'), $encode6
 
 # UTF-8 .bib -> UTF-8 with --output_safechars and --bblcharsset=full
 $biber->parse_ctrlfile('encoding6.bcf');
-$biber->set_output_obj(Biber::Output::test->new());
+$biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 change_ds_encoding('encoding6.bib', 'UTF-8');
 Biber::Config->setoption('output_encoding', 'UTF-8');
@@ -310,7 +544,7 @@ eq_or_diff($outvar, encode(Biber::Config->getoption('output_encoding'), $encode7
 
 # UTF-8 .bib -> Latin9 .bbl
 $biber->parse_ctrlfile('encoding2.bcf');
-$biber->set_output_obj(Biber::Output::test->new());
+$biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 Biber::Config->setoption('output_safechars', 0);
 change_ds_encoding('encoding2.bib', 'UTF-8');
@@ -326,7 +560,7 @@ eq_or_diff($outvar, encode(Biber::Config->getoption('output_encoding'), $encode1
 
 # latin1 .bib -> cp1252 .bbl
 $biber->parse_ctrlfile('encoding3.bcf');
-$biber->set_output_obj(Biber::Output::test->new());
+$biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 change_ds_encoding('encoding3.bib', 'latin1');
 Biber::Config->setoption('output_encoding', 'cp1252');
@@ -341,7 +575,7 @@ eq_or_diff($outvar, encode(Biber::Config->getoption('output_encoding'), $encode2
 
 # latin2 .bib -> latin3 .bbl
 $biber->parse_ctrlfile('encoding4.bcf');
-$biber->set_output_obj(Biber::Output::test->new());
+$biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 change_ds_encoding('encoding4.bib', 'latin2');
 Biber::Config->setoption('output_encoding', 'latin3');
@@ -356,7 +590,7 @@ eq_or_diff($outvar, encode(Biber::Config->getoption('output_encoding'), $encode3
 
 # latin2 .bib -> latin1 .bbl - should fail
 $biber->parse_ctrlfile('encoding4.bcf');
-$biber->set_output_obj(Biber::Output::test->new());
+$biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 change_ds_encoding('encoding4.bib', 'latin2');
 Biber::Config->setoption('output_encoding', 'latin1');
@@ -376,7 +610,7 @@ isnt($outvar, encode(Biber::Config->getoption('output_encoding'), $encode3), 'la
 # Custom encoding alias
 # latin1 .bib -> applemacce (MacRoman) .bbl
 $biber->parse_ctrlfile('encoding3.bcf');
-$biber->set_output_obj(Biber::Output::test->new());
+$biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 change_ds_encoding('encoding3.bib', 'latin1');
 Biber::Config->setoption('output_encoding', 'applemacce');
