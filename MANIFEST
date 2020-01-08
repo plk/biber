@@ -31,7 +31,6 @@ lib/Biber/Output/biblatexml.pm
 lib/Biber/Output/bibtex.pm
 lib/Biber/Output/bbl.pm
 lib/Biber/Output/dot.pm
-lib/Biber/Output/test.pm
 lib/Biber.pm
 lib/Biber/Section.pm
 lib/Biber/Sections.pm
