@@ -719,9 +719,11 @@ sub parse_ctrlfile {
 
   # UNIQUENAME TEMPLATE
   my $unts;
+  my $checkbase = 0;
   foreach my $unt ($bcfxml->{uniquenametemplate}->@*) {
     my $untval = [];
     foreach my $np (sort {$a->{order} <=> $b->{order}} $unt->{namepart}->@*) {
+      $checkbase = 1 if $np->{base};
       push $untval->@*, {namepart        => $np->{content},
                          use             => $np->{use},
                          disambiguation  => $np->{disambiguation},
@@ -729,6 +731,10 @@ sub parse_ctrlfile {
     }
     $unts->{$unt->{name}} = $untval;
   }
+
+  # Check to make sure we have a base to disambiguate from. If not, we can get infinite loops
+  # in the disambiguation code
+  biber_error("The uniquenametemplate must contain at least one 'base' part otherwise name disambiguation is impossible") unless $checkbase;
 
   Biber::Config->setblxoption(undef, 'uniquenametemplate', $unts);
 
