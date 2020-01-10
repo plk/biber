@@ -42,6 +42,12 @@ sub set_annotation {
   elsif ($scope eq 'item') {
     $ANN->{item}{$key}{$field}{$form}{$lang}{$name}{$count}{value} = $value;
     $ANN->{item}{$key}{$field}{$form}{$lang}{$name}{$count}{literal} = $literal; # Record if this annotation is a literal
+
+    # langtags is a special multiscript annotation only occurring in item annotations
+    if ($name eq 'langtags') {
+      Biber::Config->add_lang($value);
+    }
+
   }
   elsif ($scope eq 'part') {
     $ANN->{part}{$key}{$field}{$form}{$lang}{$name}{$count}{$part}{value} = $value;

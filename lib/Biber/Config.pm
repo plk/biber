@@ -12,7 +12,7 @@ use Encode;
 use File::Slurper;
 use File::Spec;
 use Carp;
-use List::AllUtils qw(first max);
+use List::AllUtils qw(first max uniq);
 use Log::Log4perl qw( :no_extra_logdie_message ); # To keep PAR::Packer happy, explicitly load these
 use Log::Log4perl::Appender::Screen;
 use Log::Log4perl::Appender::File;
@@ -775,7 +775,7 @@ sub get_forms {
 
 sub get_langs {
   shift;
-  return join(',', keys $CONFIG->{state}{langs}->%*);
+  return join(',', uniq sort map {lc $_} keys $CONFIG->{state}{langs}->%*);
 }
 
 

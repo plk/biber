@@ -1120,13 +1120,6 @@ sub _literal {
     return $value;
   }
 
-  # Rationalise any bcp47 style langids into babel/polyglossia names
-  # biblatex will convert these back again when loading .lbx files
-  # We need this until babel/polyglossia support proper bcp47 language/locales
-  elsif ($field eq 'langid' and my $map = $LOCALE_MAP_R{lc($value)}) {
-    return fc($map);
-  }
-
   return $value;
 }
 

@@ -267,11 +267,13 @@
 **** DONE \DeprecateFieldWithReplacement
 **** DONE \DeprecateListWithReplacement
 **** DONE \DeprecateNameWithReplacement
-**** TODO Add namepart alternates to name and list formats
+**** DONE Add namepart alternates to name and list formats
 *** TODO Default global mslang to main document language BCP47 tag equivalent
 *** TODO output sortlocale/mslang in .bcf as BCP-47 if possible (polyglossia 1.47+)
-** DONE biber
 *** TODO lang switch for overrides (not working for shorthands for bblend macros still)
+
+** DONE biber
+*** TODO remove LOCALE_MAP_R in biber, move to biblatex and provide override for BCP47->babel until comprehensive package for this (or babel/polyglossia support BCP47). Remove msmaplangs output in biber and reading in biblatex, replace use of this in biblatex with new interface, change doc which uses BCP47 in langid
 *** DONE cleardata/resetdata - fieldsources, annotations and msnameparts
 *** DONE grouping around nested \dos
 *** DONE form= and lang= in maps

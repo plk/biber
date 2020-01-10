@@ -93,7 +93,6 @@ my $encode1 = q|% $ biblatex auxiliary file $
     \endentry
   \enddatalist
 \endrefsection
-\msmaplang{en-us}{english}
 \msforms{default}
 \mslangs{en-us}
 
@@ -162,7 +161,6 @@ my $encode2 = q|% $ biblatex auxiliary file $
     \endentry
   \enddatalist
 \endrefsection
-\msmaplang{en-us}{english}
 \msforms{default}
 \mslangs{en-us}
 
@@ -231,7 +229,6 @@ my $encode3 = q|% $ biblatex auxiliary file $
     \endentry
   \enddatalist
 \endrefsection
-\msmaplang{en-us}{english}
 \msforms{default}
 \mslangs{en-us}
 
@@ -300,7 +297,6 @@ my $encode5 = q|% $ biblatex auxiliary file $
     \endentry
   \enddatalist
 \endrefsection
-\msmaplang{en-us}{english}
 \msforms{default}
 \mslangs{en-us}
 
@@ -369,7 +365,6 @@ my $encode6 = q|% $ biblatex auxiliary file $
     \endentry
   \enddatalist
 \endrefsection
-\msmaplang{en-us}{english}
 \msforms{default}
 \mslangs{en-us}
 
@@ -438,7 +433,6 @@ my $encode7 = q|% $ biblatex auxiliary file $
     \endentry
   \enddatalist
 \endrefsection
-\msmaplang{en-us}{english}
 \msforms{default}
 \mslangs{en-us}
 

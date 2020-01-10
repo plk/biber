@@ -6,7 +6,7 @@ no warnings 'utf8';
 use Text::Diff::Config;
 $Text::Diff::Config::Output_Unicode = 1;
 
-use Test::More tests => 22;
+use Test::More tests => 23;
 use Test::Differences;
 unified_diff;
 
@@ -230,7 +230,7 @@ my $ms2 = q|    \entry{ms2}{inbook}{}
           giventransliterationru-latn={Clive},
           giventransliterationru-latni={C\bibinitperiod}
       }
-      \name[default][de-de]{editor}{1}{}{%
+      \name[default][de]{editor}{1}{}{%
         {{hash=da4e9104ade84cb0fcd815add03dd1fd}{%
            family={Gimble},
            familyi={G\bibinitperiod},
@@ -238,10 +238,10 @@ my $ms2 = q|    \entry{ms2}{inbook}{}
            giveni={B\bibinitperiod}}}%
       }
       \namepartms{editor}{1}{%
-          familydefaultde-de={Gimble},
-          familydefaultde-dei={G\bibinitperiod},
-          givendefaultde-de={Billy},
-          givendefaultde-dei={B\bibinitperiod}
+          familydefaultde={Gimble},
+          familydefaultdei={G\bibinitperiod},
+          givendefaultde={Billy},
+          givendefaultdei={B\bibinitperiod}
       }
       \strng{namehash}{cb8bc4824dfe756730d5837418bf5b53}
       \strng{fullhash}{cb8bc4824dfe756730d5837418bf5b53}
@@ -252,14 +252,14 @@ my $ms2 = q|    \entry{ms2}{inbook}{}
       \strng{authortransliterationru-latnbibnamehash}{cb8bc4824dfe756730d5837418bf5b53}
       \strng{authortransliterationru-latnnamehash}{cb8bc4824dfe756730d5837418bf5b53}
       \strng{authortransliterationru-latnfullhash}{cb8bc4824dfe756730d5837418bf5b53}
-      \strng{editordefaultde-debibnamehash}{da4e9104ade84cb0fcd815add03dd1fd}
-      \strng{editordefaultde-denamehash}{da4e9104ade84cb0fcd815add03dd1fd}
-      \strng{editordefaultde-defullhash}{da4e9104ade84cb0fcd815add03dd1fd}
+      \strng{editordefaultdebibnamehash}{da4e9104ade84cb0fcd815add03dd1fd}
+      \strng{editordefaultdenamehash}{da4e9104ade84cb0fcd815add03dd1fd}
+      \strng{editordefaultdefullhash}{da4e9104ade84cb0fcd815add03dd1fd}
       \field{labelalpha}{Cle96}
       \field{sortinit}{C}
       \strng{sortinithash}{4c244ceae61406cdc0cc2ce1cb1ff703}
       \fieldmssource{labelname}{author}{transliteration}{ru-latn}
-      \field[default][de-de]{booktitle}{Book Title}
+      \field[default][de]{booktitle}{Book Title}
       \field[translated][fr]{booktitle}{Livre Titre}
       \field[default][en-us]{title}{Title}
       \field{year}{1996}
@@ -272,3 +272,4 @@ my $ms2 = q|    \entry{ms2}{inbook}{}
 eq_or_diff($out->get_output_entry('ms1', $main), $ms1, 'BBL 1');
 eq_or_diff($out->get_output_entry('ms2', $main), $ms2, 'BBL 2');
 is_deeply($main->get_keys, ['ms2', 'ms1', 'bltx1'], 'sorting - 1');
+eq_or_diff(Biber::Config->get_langs(), 'de,en-us,fr,ru-cyrl,ru-grek,ru-latn,zh-grek,zh-hant,zh-latn', 'mslangs 1');
