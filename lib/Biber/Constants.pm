@@ -30,7 +30,6 @@ our @EXPORT = qw{
                   %DATAFIELD_SETS
                   %DM_DATATYPES
                   %LOCALE_MAP
-                  %LOCALE_MAP_R
                   %REMOTE_MAP
                   %DS_EXTENSIONS
                   %UNIQUENAME_CONTEXTS

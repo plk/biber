@@ -182,7 +182,7 @@
 *** DONE Inheritance is of all alternates
 *** DONE msstrict and LANGID->mslang
 *** DONE where to put name:langswitchon/off in custom name formats (after name:delim, see .def)
-*** TODO Add to general docs
+*** DONE Add to general docs
 **** TODO general citation/print*/if*
 *** TODO Default global mslang to main document language BCP47 tag equivalent
 
