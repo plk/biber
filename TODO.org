@@ -271,7 +271,7 @@
 **** DONE \DeprecateListWithReplacement
 **** DONE \DeprecateNameWithReplacement
 **** DONE Add namepart alternates to name and list formats
-*** TODO Default global mslang to main document language BCP47 tag equivalent
+*** DONE Default global mslang to main document language BCP47 tag equivalent
 *** TODO output sortlocale/mslang in .bcf as BCP-47 if possible (polyglossia 1.47+)
 *** TODO lang switch for overrides (not working for shorthands for bblend macros still)
 
