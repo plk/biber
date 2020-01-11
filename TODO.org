@@ -172,9 +172,6 @@
 *** DONE \ifmsentryfield
 *** DONE \currentmsform \currentmslang only defined for MS fields
 *** DONE langtags annotation overrides entry/field language
-*** TODO Add to general docs
-**** TODO general citation/print*/if*
-*** TODO Default global mslang to main document language BCP47 tag equivalent
 *** DONE \DeclareDatamodelMultiscriptEntryfields and \ResetDatamodelMultiscriptEntryfields
 *** DONE multiscriptforms constant
 *** DONE 'langtags' special annotation name.
@@ -184,6 +181,11 @@
 *** DONE \field in \DeclareLabelalphaTemplate to say that non-name list fields apply the template to each list member
 *** DONE Inheritance is of all alternates
 *** DONE msstrict and LANGID->mslang
+*** DONE where to put name:langswitchon/off in custom name formats (after name:delim, see .def)
+*** TODO Add to general docs
+**** TODO general citation/print*/if*
+*** TODO Default global mslang to main document language BCP47 tag equivalent
+
 ** TODO biblatex
 *** DONE Datamodel
 **** DONE Add valid multiscript fields to datamodel
@@ -197,7 +199,8 @@
 *** DONE Xsource fields need to be \fieldsource and have two optional args. #1source calls audit
 *** DONE \blx@bbl@msformsdef and  \blx@bbl@mslangsdef are csvs of all forms/langs used for loading langs
 *** DONE Save list of forms and langs per entry@field and make user macros
-*** TODO multiscript fields/lists/names
+*** DONE plain lists per-item - move switching like names to formats
+*** DONE multiscript fields/lists/names
 **** DONE blx@bbl@msdef@i
 **** DONE \printfield
 **** DONE \printlist
@@ -273,7 +276,7 @@
 *** TODO lang switch for overrides (not working for shorthands for bblend macros still)
 
 ** DONE biber
-*** TODO remove LOCALE_MAP_R in biber, move to biblatex and provide override for BCP47->babel until comprehensive package for this (or babel/polyglossia support BCP47). Remove msmaplangs output in biber and reading in biblatex, replace use of this in biblatex with new interface, change doc which uses BCP47 in langid
+*** DONE remove LOCALE_MAP_R in biber, move to biblatex and provide override for BCP47->babel until comprehensive package for this (or babel/polyglossia support BCP47). Remove msmaplangs output in biber and reading in biblatex, replace use of this in biblatex with new interface, change doc which uses BCP47 in langid
 *** DONE cleardata/resetdata - fieldsources, annotations and msnameparts
 *** DONE grouping around nested \dos
 *** DONE form= and lang= in maps
