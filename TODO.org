@@ -184,7 +184,7 @@
 *** DONE where to put name:langswitchon/off in custom name formats (after name:delim, see .def)
 *** DONE Add to general docs
 **** TODO general citation/print*/if*
-*** TODO Default global mslang to main document language BCP47 tag equivalent
+*** DONE Default global mslang to main document language BCP47 tag equivalent
 
 ** TODO biblatex
 *** DONE Datamodel
@@ -272,7 +272,7 @@
 **** DONE \DeprecateNameWithReplacement
 **** DONE Add namepart alternates to name and list formats
 *** DONE Default global mslang to main document language BCP47 tag equivalent
-*** TODO output sortlocale/mslang in .bcf as BCP-47 if possible (polyglossia 1.47+)
+*** TODO output sortlocale in .bcf as BCP-47 if possible (polyglossia 1.47+)
 *** TODO lang switch for overrides (not working for shorthands for bblend macros still)
 
 ** DONE biber
