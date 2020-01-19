@@ -963,8 +963,8 @@ sub check_data_constraints {
       foreach my $f ($c->{fields}->@*) {
         foreach my $alts ($be->get_alternates_for_field($f)->@*) {
           my $fv = $alts->{val};
-          my $form = $alts->{form};
-          my $lang = $alts->{lang};
+          my $form = $alts->{form} // '';
+          my $lang = $alts->{lang} // '';
 
           unless (imatch($fv, $patt)) {
             push @warnings, "Datamodel: Entry '$key' ($ds): Invalid value (pattern match fails) for field '$f/$form/$lang'";

@@ -55,12 +55,15 @@ sub new {
   my ($class, $key) = @_;
   my $self;
   if ($key) {
-    $self->{derivedfields}{citekey} = Biber::Entry::FieldValue->new($key, $key);
+    $self->{derivedfields}{citekey} = $key;
     $self = bless $self, $class;
   }
   else {
     $self = bless {}, $class;
   }
+  $self->{dm} = Biber::Config->get_dm;
+  $self->{dmh} = Biber::Config->get_dm_helpers;
+
   return $self;
 }
 
@@ -75,7 +78,6 @@ sub relclone {
   my $citekey = $self->get_field('citekey');
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
-  my $dmh = Biber::Config->get_dm_helpers;
   if (my $relkeys = $self->get_field('related')) {
     if ($logger->is_debug()) {# performance tune
       $logger->debug("Found RELATED field in '$citekey' with contents " . join(',', $relkeys->get_items->@*));
@@ -155,7 +157,7 @@ sub relclone {
     # We have to add the citekeys as we need these clones in the .bbl
     # but the dataonly will cause biblatex not to print them in the bib
     $section->add_citekeys(@clonekeys);
-    $self->{datafields}{related} = Biber::Entry::FieldValue->new($citekey, Biber::Entry::List->new([ @clonekeys ]));
+    $self->{datafields}{related} = Biber::Entry::List->new([ @clonekeys ]);
   }
 }
 
@@ -168,8 +170,6 @@ sub relclone {
 
 sub clone {
   my ($self, $newkey) = @_;
-  my $dmh = Biber::Config->get_dm_helpers;
-
   my $new = Biber::Entry->new($newkey);
 
   while (my ($k, $v) = each(%{$self->{datafields}})) {
@@ -177,7 +177,7 @@ sub clone {
   }
 
   # clone derived date fields
-  foreach my $df ($dmh->{datefields}->@*) {
+  foreach my $df ($self->{dmh}->{datefields}->@*) {
     $df =~ s/date$//;
     foreach my $dsf ('dateunspecified', 'datesplit', 'datejulian',
                      'enddatejulian', 'dateapproximate', 'enddateapproximate',
@@ -198,7 +198,7 @@ sub clone {
 
   # Record the key of the source of the clone in the clone. Useful for loop detection etc.
   # in biblatex
-  $new->{derivedfields}{clonesourcekey} = Biber::Entry::FieldValue->new($newkey, $self->get_field('citekey'));
+  $new->{derivedfields}{clonesourcekey} = $self->get_field('citekey');
 
   return $new;
 }
@@ -250,7 +250,7 @@ sub add_xdata_ref {
         biber_warn("Entry '$entry_key' has XDATA reference from field '$reffield/$refform/$reflang' that contains no source field (section $secnum)", $self);
         return 0;
       }
-      my ($xdf, $xdfo, $xdl) = mssplit($xf, $self->{derivedfields}{citekey}->get_value);
+      my ($xdf, $xdfo, $xdl) = mssplit($xf, $self->{derivedfields}{citekey});
       push $self->{xdatarefs}->@*, {# field pointing to XDATA
                                     reffield => $reffield,
                                     # form for field pointing to XDATA
@@ -297,7 +297,7 @@ sub get_xdata_refs {
 sub get_xdata_ref {
   my ($self, $field, $form, $lang, $pos) = @_;
   $form = $form // 'default';
-  $lang = $lang // Biber::Config->get_mslang($self->{derivedfields}{citekey}->get_value);
+  $lang = $lang // Biber::Config->get_mslang($self->{derivedfields}{citekey});
 
   foreach my $xdatum ($self->{xdatarefs}->@*) {
     if ($xdatum->{reffield} eq $field and
@@ -326,7 +326,7 @@ sub get_xdata_ref {
 sub is_xdata_resolved {
   my ($self, $field, $form, $lang, $pos) = @_;
   $form = $form // 'default';
-  $lang = $lang // Biber::Config->get_mslang($self->{derivedfields}{citekey}->get_value);
+  $lang = $lang // Biber::Config->get_mslang($self->{derivedfields}{citekey});
 
   foreach my $xdatum ($self->{xdatarefs}->@*) {
     if ($xdatum->{reffield} eq $field and
@@ -356,7 +356,7 @@ sub is_xdata_resolved {
 sub set_labelname_info {
   my ($self, $field, $form, $lang) = @_;
   $form = fc($form // 'default');
-  $lang = fc($lang // Biber::Config->get_mslang());
+  $lang = fc($lang // Biber::Config->get_mslang($self->{derivedfields}{citekey}));
   $self->{labelnameinfo} = [$field, $form, $lang];
   return;
 }
@@ -383,7 +383,7 @@ sub get_labelname_info {
 sub set_labelnamefh_info {
   my ($self, $field, $form, $lang) = @_;
   $form = fc($form // 'default');
-  $lang = fc($lang // Biber::Config->get_mslang());
+  $lang = fc($lang // Biber::Config->get_mslang($self->{derivedfields}{citekey}));
   $self->{labelnamefhinfo} = [$field, $form, $lang];
   return;
 }
@@ -410,7 +410,7 @@ sub get_labelnamefh_info {
 sub set_labeltitle_info {
   my ($self, $field, $form, $lang) = @_;
   $form = fc($form // 'default');
-  $lang = fc($lang // Biber::Config->get_mslang());
+  $lang = fc($lang // Biber::Config->get_mslang($self->{derivedfields}{citekey}));
   $self->{labeltitleinfo} = [$field, $form, $lang];
   return;
 }
@@ -464,21 +464,21 @@ sub get_labeldate_info {
 sub set_field {
   my ($self, $field, $val, $form, $lang) = @_;
   no autovivification;
-  $lang = fc($lang) if $lang;
 
-  # citekey is required to be set by normal calls to this sub and so it should be set first
-  # and caught here. This is really only a problem for dynamic sets.
-  if ($field eq 'citekey') {
-    $self->{derivedfields}{citekey} = Biber::Entry::FieldValue->new($val, $val);
-    return;
-  }
+  if ($self->{dm}->is_multiscript($field)) {
+    $lang = fc($lang) if $lang;
 
-  if (defined($self->{derivedfields}{$field})) {
-    $self->{derivedfields}{$field}->set_value($val, $form, $lang);
+    if (defined($self->{derivedfields}{$field})) {
+      $self->{derivedfields}{$field}->set_value($val, $form, $lang);
+    }
+    else {
+      $self->{derivedfields}{$field} = Biber::Entry::FieldValue->new($self->{derivedfields}{citekey}, $val, $form, $lang);
+    }
   }
   else {
-    $self->{derivedfields}{$field} = Biber::Entry::FieldValue->new($self->{derivedfields}{citekey}->get_value, $val, $form, $lang);
+    $self->{derivedfields}{$field} = $val;
   }
+
   return;
 }
 
@@ -491,14 +491,21 @@ sub set_field {
 sub set_datafield {
   my ($self, $field, $val, $form, $lang) = @_;
   no autovivification;
-  $lang = fc($lang) if $lang;
 
-  if (defined($self->{datafields}{$field})) {
-    $self->{datafields}{$field}->set_value($val, $form, $lang);
+  if ($self->{dm}->is_multiscript($field)) {
+    $lang = fc($lang) if $lang;
+
+    if (defined($self->{datafields}{$field})) {
+      $self->{datafields}{$field}->set_value($val, $form, $lang);
+    }
+    else {
+      $self->{datafields}{$field} = Biber::Entry::FieldValue->new($self->{derivedfields}{citekey}, $val, $form, $lang);
+    }
   }
   else {
-    $self->{datafields}{$field} = Biber::Entry::FieldValue->new($self->{derivedfields}{citekey}->get_value, $val, $form, $lang);
+    $self->{datafields}{$field} = $val;
   }
+
   return;
 }
 
@@ -511,11 +518,22 @@ sub set_datafield {
 
 sub get_alternates_for_field {
   my ($self, $field) = @_;
-  if (defined($self->{datafields}{$field})) {
-    return $self->{datafields}{$field}->get_alternates;
+
+  if ($self->{dm}->is_multiscript($field)) {
+    if (defined($self->{datafields}{$field})) {
+      return $self->{datafields}{$field}->get_alternates;
+    }
+    elsif (defined($self->{derivedfields}{$field})) {
+      return $self->{derivedfields}{$field}->get_alternates;
+    }
   }
-  elsif (defined($self->{derivedfields}{$field})) {
-    return $self->{derivedfields}{$field}->get_alternates;
+  else {
+    if (defined($self->{datafields}{$field})) {
+      return [{val => $self->{datafields}{$field}}];
+    }
+    elsif (defined($self->{derivedfields}{$field})) {
+      return [{val => $self->{derivedfields}{$field}}];
+    }
   }
   return [];
 }
@@ -523,7 +541,6 @@ sub get_alternates_for_field {
 =head2 get_field
 
     Get a field for a Biber::Entry object
-    Uses // as fields can be null (end dates etc).
 
 =cut
 
@@ -531,17 +548,34 @@ sub get_field {
   my ($self, $field, $form, $lang) = @_;
   return undef unless $field;
   no autovivification;
-  $lang = fc($lang) if $lang;
 
-  my $v;
-  if (defined($self->{datafields}{$field})) {
-    $v = $self->{datafields}{$field}->get_value($form, $lang);
-  }
-  elsif (defined($self->{derivedfields}{$field})) {
-    $v = $self->{derivedfields}{$field}->get_value($form, $lang);
-  }
+  if ($self->{dm}->is_multiscript($field)) {
+    $lang = fc($lang) if $lang;
 
-  return $v;
+    # Override lang if langid overrode global mslang
+    if ($lang) {
+      $lang = fc($lang);
+    }
+    else {
+      if ($self->field_exists('langid')) {
+        $lang = Biber::Config->get_mslang($self->{derivedfields}{citekey});
+      }
+    }
+
+    my $v;
+    if (defined($self->{datafields}{$field})) {
+      $v = $self->{datafields}{$field}->get_value($form, $lang);
+    }
+    elsif (defined($self->{derivedfields}{$field})) {
+      $v = $self->{derivedfields}{$field}->get_value($form, $lang);
+    }
+    return $v;
+  }
+  else {
+    return $self->{datafields}{$field} if defined($self->{datafields}{$field});
+    return $self->{derivedfields}{$field} if defined($self->{derivedfields}{$field});
+  }
+  return undef;
 }
 
 =head2 get_datafield
@@ -554,13 +588,18 @@ sub get_datafield {
   my ($self, $field, $form, $lang) = @_;
   return undef unless $field;
   no autovivification;
-  $lang = fc($lang) if $lang;
 
-  my $v;
-  if (defined($self->{datafields}{$field})) {
-    $v = $self->{datafields}{$field}->get_value($form, $lang);
+  if ($self->{dm}->is_multiscript($field)) {
+    $lang = fc($lang) if $lang;
+
+    my $v;
+    if (defined($self->{datafields}{$field})) {
+      return  $self->{datafields}{$field}->get_value($form, $lang);
+    }
   }
-  return $v;
+  else {
+    return  $self->{datafields}{$field};
+  }
 }
 
 =head2 get_fieldraw
@@ -611,10 +650,17 @@ sub del_datafield {
 sub field_exists {
   my ($self, $field, $form, $lang) = @_;
   no autovivification;
-  $lang = fc($lang) if $lang;
-  my $f = $self->{datafields}{$field} || $self->{derivedfields}{$field};
-  return 0 unless $f;
-  return defined($f->get_value($form, $lang))? 1 : 0;
+
+  if ($self->{dm}->is_multiscript($field)) {
+    my $f = $self->{datafields}{$field} || $self->{derivedfields}{$field};
+    return 0 unless $f;
+    $lang = fc($lang) if $lang;
+    return defined($f->get_value($form, $lang)) ? 1 : 0;
+  }
+  else {
+    my $f = $self->{datafields}{$field} // $self->{derivedfields}{$field};
+    return defined($f) ? 1 : 0;
+  }
 }
 
 =head2 date_fields_exist
@@ -723,8 +769,7 @@ sub count_fields {
 sub has_keyword {
   no autovivification;
   my ($self, $keyword) = @_;
-  my $keywords = $self->{datafields}{keywords};
-  if (defined($keywords) and my $kws = $keywords->get_value) {
+  if (my $kws = $self->{datafields}{keywords}) {
     return (first {$_ eq $keyword} $kws->get_items->@*) ? 1 : 0;
   }
   else {
@@ -777,14 +822,13 @@ sub get_warnings {
 
 sub set_inherit_from {
   my ($self, $parent) = @_;
-  my $dmh = Biber::Config->get_dm_helpers;
 
   # Data source fields
   foreach my $field ($parent->datafields) {
     foreach my $alts ($parent->get_alternates_for_field($field)->@*) {
       my $val = $alts->{val};
-      my $form = $alts->{form};
-      my $lang = $alts->{lang};
+      my $form = $alts->{form} // '';
+      my $lang = $alts->{lang} // '';
 
       next if $self->field_exists($field, $form, $lang); # Don't overwrite existing fields
 
@@ -800,7 +844,7 @@ sub set_inherit_from {
 
   # Datesplit is a special non datafield and needs to be inherited for any
   # validation checks which may occur later
-  foreach my $df ($dmh->{datefields}->@*) {
+  foreach my $df ($self->{dmh}->{datefields}->@*) {
     $df =~ s/date$//;
     if (my $ds = $parent->get_field("${df}datesplit")) {
       $self->set_field("${df}datesplit", $ds);
@@ -883,8 +927,8 @@ sub resolve_xdata {
             foreach my $field ($xdataentry->datafields()) { # set fields
               foreach my $alts ($xdataentry->get_alternates_for_field($field)->@*) {
                 my $val = $alts->{val};
-                my $form = $alts->{form};
-                my $lang = $alts->{lang};
+                my $form = $alts->{form} // '';
+                my $lang = $alts->{lang} // '';
 
                 next if $field eq 'ids'; # Never inherit aliases
                 $self->set_datafield($field, $xdataentry->get_field($field, $form, $lang), $form, $lang);
@@ -976,7 +1020,6 @@ sub resolve_xdata {
 
 sub inherit_from {
   my ($self, $parent) = @_;
-  my $dmh = Biber::Config->get_dm_helpers;
 
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
@@ -1035,8 +1078,8 @@ sub inherit_from {
           }
           foreach my $alts ($parent->get_alternates_for_field($field->{source})->@*) {
             my $val = $alts->{val};
-            my $form = $alts->{form};
-            my $lang = $alts->{lang};
+            my $form = $alts->{form} // '';
+            my $lang = $alts->{lang} // '';
 
             $processed{$field->{source}} = 1;
             # localise defaults according to field, if specified
@@ -1085,7 +1128,7 @@ sub inherit_from {
     # as these also need skipping if have skipped the *date field from which they were derived
     # WITH override: Remove all related dateparts so that there is no conflict with inherited
     foreach my $field (@fields) {
-      if (first {$_ eq $field} $dmh->{dateparts}->@*) {
+      if (first {$_ eq $field} $self->{dmh}->{dateparts}->@*) {
         if ($self->date_fields_exist($field)) {
           if ($override_target eq 'true') {
             $self->delete_date_fields($field); # clear out all date field parts in target
@@ -1101,7 +1144,7 @@ sub inherit_from {
     @fields = @filtered_fields;
 
     # copy derived date fields as these are technically data
-    foreach my $datefield ($dmh->{datefields}->@*) {
+    foreach my $datefield ($self->{dmh}->{datefields}->@*) {
       my $df = $datefield =~ s/date$//r;
       # Ignore derived date special fields from date fields which we have skipped
       # because they already exist in the child.
@@ -1129,8 +1172,8 @@ sub inherit_from {
 
       foreach my $alts ($parent->get_alternates_for_field($field)->@*) {
         my $val = $alts->{val};
-        my $form = $alts->{form};
-        my $lang = $alts->{lang};
+        my $form = $alts->{form} // '';
+        my $lang = $alts->{lang} // '';
 
         # Set the field if it doesn't exist or override is requested
         if (not $self->field_exists($field, $form, $lang) or $override_target eq 'true') {
@@ -1149,7 +1192,7 @@ sub inherit_from {
   }
   # Datesplit is a special non datafield and needs to be inherited for any
   # validation checks which may occur later
-  foreach my $df ($dmh->{datefields}->@*) {
+  foreach my $df ($self->{dmh}->{datefields}->@*) {
     $df =~ s/date$//;
     if (my $ds = $parent->get_field("${df}datesplit")) {
       $self->set_field("${df}datesplit", $ds);

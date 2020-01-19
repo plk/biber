@@ -83,12 +83,6 @@ my $ann1 = q|    \entry{ann1}{misc}{}
         {english}%
         {french}%
       }
-      \listitemms{language}{1}{%
-        defaulten-us={english}
-      }
-      \listitemms{language}{2}{%
-        defaulten-us={french}
-      }
       \strng{namehash}{90ae96c82de92e36949bc64254bbde0c}
       \strng{fullhash}{90ae96c82de92e36949bc64254bbde0c}
       \strng{bibnamehash}{90ae96c82de92e36949bc64254bbde0c}
@@ -150,12 +144,6 @@ my $ann2 = q|    \entry{ann2}{misc}{}
       \list{language}{2}{%
         {english}%
         {french}%
-      }
-      \listitemms{language}{1}{%
-        defaulten-us={english}
-      }
-      \listitemms{language}{2}{%
-        defaulten-us={french}
       }
       \strng{namehash}{90ae96c82de92e36949bc64254bbde0c}
       \strng{fullhash}{90ae96c82de92e36949bc64254bbde0c}

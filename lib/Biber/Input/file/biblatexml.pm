@@ -382,6 +382,7 @@ sub create_entry {
             my $newentry = XML::LibXML::Element->new("$NS:entry");
             $newentry->setAttribute('id', NFC($newkey));
             $newentry->setAttribute('entrytype', NFC($newentrytype));
+            $newentry->setNamespace( $BIBLATEXML_NAMESPACE_URI, $NS, 1 );
 
             # found a new entry key, remove it from the list of keys we want since we
             # have "found" it by creating it
@@ -568,11 +569,11 @@ sub create_entry {
           }
 
           my $sf = $step->{map_field_source};
-          my $sff = $step->{map_field_source_form};
-          my $sfl = $step->{map_field_source_lang};
+          my $sff = $step->{map_field_source_form} // '';
+          my $sfl = $step->{map_field_source_lang} // '';
           my $tf = $step->{map_field_target};
-          my $tff = $step->{map_field_target_form};
-          my $tfl = $step->{map_field_target_lang};
+          my $tff = $step->{map_field_target_form} // '';
+          my $tfl = $step->{map_field_target_lang} // '';
 
           # Field map
           if ($xp_fieldsource_s = _getpath(maploopreplace($sf, $maploop), $sff, $sfl)) {
@@ -805,14 +806,12 @@ sub create_entry {
   foreach my $e ($entry, values %newentries) {
     next unless $e;             # newentry might be undef
 
-    # In strict mode, langid is important as it is a local override for
+    # langid is important as it is a local override for
     # mslang which is used in every field get/set and so we need to use it
     # to set an entry scope option first, if it exists
-    if (Biber::Config->getoption('msstrict')) {
-      if (my $lid = $e->findnodes("./$NS:langid")->get_node(1)) {
-        $lid = $lid->textContent();
-        Biber::Config->set_mslang($key, fc($LOCALE_MAP{$lid}//$lid));
-      }
+    if (my $lid = $e->findnodes("./$NS:langid")->get_node(1)) {
+      $lid = $lid->textContent();
+      Biber::Config->set_mslang($key, fc($LOCALE_MAP{$lid}//$lid));
     }
 
     my $k = $e->getAttribute('id');

@@ -1898,17 +1898,17 @@ sub instantiate_entry {
     # per-namelist bibnamehash and namehash
     foreach my $n ($dmh->{namelists}->@*) {
       foreach my $alts ($be->get_alternates_for_field($n)->@*) {
-        my $form = $dm->is_multiscript($n) ? $alts->{form} : '';
-        my $lang = $dm->is_multiscript($n) ? $alts->{lang} : '';
+        my $form = $alts->{form} // '';
+        my $lang = $alts->{lang} // '';
 
         # per-namelist bibnamehash
-        if (my $e = $self->get_entryfield($key, "${n}" . $alts->{form} . $alts->{lang} . "bibnamehash")) {
+        if (my $e = $self->get_entryfield($key, "${n}${form}${lang}bibnamehash")) {
           my $str = "\\strng{${n}${form}${lang}bibnamehash}{$e}";
           $entry_string =~ s|<BDS>${n}${form}${lang}BIBNAMEHASH</BDS>|$str|gxms;
         }
 
         # per-namelist namehash
-        if (my $e = $self->get_entryfield($key, "${n}" . $alts->{form} . $alts->{lang} . "namehash")) {
+        if (my $e = $self->get_entryfield($key, "${n}${form}${lang}namehash")) {
           my $str = "\\strng{${n}${form}${lang}namehash}{$e}";
           $entry_string =~ s|<BDS>${n}${form}${lang}NAMEHASH</BDS>|$str|gxms;
 

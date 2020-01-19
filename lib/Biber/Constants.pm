@@ -125,7 +125,6 @@ our $CONFIG_DEFAULT_BIBER = {
   minxrefs                                    => { content => 2 },
   mslang                                      => { content => 'en-us' },
   mssep                                       => { content => '_' },
-  msstrict                                    => { content => 0 },
   named_annotation_marker                     => { content => q/:/ },
   namesep                                     => { content => 'and' },
   no_bltxml_schema                            => { content => 0 },

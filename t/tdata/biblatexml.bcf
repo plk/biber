@@ -1792,7 +1792,6 @@
       <bcf:field>namec</bcf:field>
       <bcf:field>note</bcf:field>
       <bcf:field>organization</bcf:field>
-      <bcf:field>origlanguage</bcf:field>
       <bcf:field>origlocation</bcf:field>
       <bcf:field>origpublisher</bcf:field>
       <bcf:field>origtitle</bcf:field>

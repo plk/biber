@@ -11,7 +11,6 @@ use List::Util qw( first );
 no autovivification;
 my $logger = Log::Log4perl::get_logger('main');
 
-
 =encoding utf-8
 
 =head1 NAME
@@ -21,6 +20,7 @@ Biber::Entry::FieldValue
 =head2 new
 
     Initialise a Biber::Entry::FieldValue object
+    Used to store alternates of multiscript fields
 
 =cut
 
@@ -46,6 +46,20 @@ sub get_value {
   return $self->{alternates}{$form}{$lang};
 }
 
+=head2 set_value
+
+  Set a field value for a particular form/lang
+
+=cut
+
+sub set_value {
+  my ($self, $value, $form, $lang) = @_;
+  $form = fc($form // 'default');
+  $lang = fc($lang // Biber::Config->get_mslang($self->{key}));
+  $self->{alternates}{$form}{$lang} = $value;
+  return;
+}
+
 =head2 get_alternates
 
   Retrieve (sorted) alternates for a particular field
@@ -64,19 +78,6 @@ sub get_alternates {
 }
 
 
-=head2 set_value
-
-  Set a field value for a particular form/lang
-
-=cut
-
-sub set_value {
-  my ($self, $value, $form, $lang) = @_;
-  $form = fc($form // 'default');
-  $lang = fc($lang // Biber::Config->get_mslang($self->{key}));
-  $self->{alternates}{$form}{$lang} = $value;
-  return;
-}
 
 1;
 

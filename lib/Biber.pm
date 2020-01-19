@@ -1,3 +1,4 @@
+
 package Biber;
 use v5.24;
 use strict;
@@ -2410,6 +2411,7 @@ sub process_labelname {
     my $ln = $h_ln->{content};
     my $form = $h_ln->{form};
     my $lang = $h_ln->{lang};
+
     if ( $ln =~ /\Ashort(\X+)\z/xms ) {
       $lnameopt = $1;
     }
@@ -2502,7 +2504,7 @@ sub process_labeldate {
         # resolve dates
         $datetype = $ld =~ s/date\z//xmsr;
         if ($dm->field_is_datatype('date', $ld) and
-            $be->get_field("${datetype}datesplit")) { # real EDTF dates
+            $be->get_field("${datetype}datesplit")) { # real ISO8601 dates
           $ldy    = $datetype . 'year';
           $ldey   = $datetype . 'endyear';
           $ldm    = $datetype . 'month';
@@ -2512,7 +2514,7 @@ sub process_labeldate {
           $ldsec  = $datetype . 'second';
           $ldtz   = $datetype . 'timezone';
         }
-        else { # non-EDTF split date field so make a pseudo-year
+        else { # non-ISO8601 split date field so make a pseudo-year
           $ldy = $ld;
           $pseudodate = 1;
         }
@@ -2636,6 +2638,7 @@ sub process_labeltitle {
     my $ltn = $h_ltn->{content};
     my $form = $h_ltn->{form};
     my $lang = $h_ltn->{lang};
+
     if (my $lt = $be->get_field($ltn, $form, $lang)) {
       $be->set_labeltitle_info($ltn, $form, $lang);
       last;
@@ -2674,8 +2677,8 @@ sub process_fullhash {
   foreach my $n ($dmh->{namelistsall}->@*) {
     foreach my $alts ($be->get_alternates_for_field($n)->@*) {
       my $nv = $alts->{val};
-      my $form = $alts->{form};
-      my $lang = $alts->{lang};
+      my $form = $alts->{form} // '';
+      my $lang = $alts->{lang} // '';
 
       $be->set_field("${n}${form}${lang}fullhash", $self->_getfullhash($citekey, $nv));
     }
@@ -2711,8 +2714,8 @@ sub process_namehash {
   foreach my $n ($dmh->{namelistsall}->@*) {
     foreach my $alts ($be->get_alternates_for_field($n)->@*) {
       my $nv = $alts->{val};
-      my $form = $alts->{form};
-      my $lang = $alts->{lang};
+      my $form = $alts->{form} // '';
+      my $lang = $alts->{lang} // '';
 
       $dlist->set_entryfield($citekey, "${n}${form}${lang}namehash", $self->_getnamehash($citekey, $nv, $dlist));
       $dlist->set_entryfield($citekey, "${n}${form}${lang}bibnamehash", $self->_getnamehash($citekey, $nv, $dlist, 1));
@@ -2778,8 +2781,8 @@ sub process_visible_names {
     foreach my $n ($dmh->{namelistsall}->@*) {
       foreach my $alts ($be->get_alternates_for_field($n)->@*) {
         my $nl = $alts->{val};
-        my $form = $alts->{form};
-        my $lang = $alts->{lang};
+        my $form = $alts->{form} // '';
+        my $lang = $alts->{lang} // '';
 
         my $count = $nl->count;
         my $visible_names_cite;

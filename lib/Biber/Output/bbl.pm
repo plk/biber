@@ -274,8 +274,8 @@ sub set_output_entry {
     my %msparts;
     foreach my $alts ($be->get_alternates_for_field($namefield)->@*) {
       my $nf = $alts->{val};
-      my $form = $alts->{form};
-      my $lang = $alts->{lang};
+      my $form = $alts->{form} // '';
+      my $lang = $alts->{lang} // '';
       my $nlid = $nf->get_id;
 
       # Internally, no distinction is made between multiscript and
@@ -341,10 +341,12 @@ sub set_output_entry {
     # easily consumable by biblatex. It would be possible but complex and
     # messy to get this information from other .bbl information in biblatex
     # and so we make it explicit here
-    foreach my $i (sort keys %msparts) {
-      $acc .= "      \\namepartms{$namefield}{$i}{%\n";
-      $acc .= join(",\n", uniq $msparts{$i}->@*) . "\n";
-      $acc .= "      }\n";
+    if ($dm->is_multiscript($namefield)) {
+      foreach my $i (sort keys %msparts) {
+        $acc .= "      \\namepartms{$namefield}{$i}{%\n";
+        $acc .= join(",\n", uniq $msparts{$i}->@*) . "\n";
+        $acc .= "      }\n";
+      }
     }
   }
 
@@ -353,8 +355,8 @@ sub set_output_entry {
     my %msparts;
     foreach my $alts ($be->get_alternates_for_field($listfield)->@*) {
       my $lf = $alts->{val};
-      my $form = $alts->{form};
-      my $lang = $alts->{lang};
+      my $form = $alts->{form} // '';
+      my $lang = $alts->{lang} // '';
 
       # Internally, no distinction is made between multiscript and
       # non-multiscript fields but it is on output
@@ -387,10 +389,12 @@ sub set_output_entry {
     # easily consumable by biblatex. It would be possible but complex and
     # messy to get this information from other .bbl information in biblatex
     # and so we make it explicit here
-    foreach my $i (sort keys %msparts) {
-      $acc .= "      \\listitemms{$listfield}{$i}{%\n";
-      $acc .= join(",\n", uniq $msparts{$i}->@*) . "\n";
-      $acc .= "      }\n";
+    if ($dm->is_multiscript($listfield)) {
+      foreach my $i (sort keys %msparts) {
+        $acc .= "      \\listitemms{$listfield}{$i}{%\n";
+        $acc .= join(",\n", uniq $msparts{$i}->@*) . "\n";
+        $acc .= "      }\n";
+      }
     }
   }
 
@@ -404,11 +408,11 @@ sub set_output_entry {
   foreach my $n ($dmh->{namelists}->@*) {
     foreach my $alts ($be->get_alternates_for_field($n)->@*) {
       my $val = $alts->{val};
-      my $form = $dm->is_multiscript($n) ? $alts->{form} : '';
-      my $lang = $dm->is_multiscript($n) ? $alts->{lang} : '';
+      my $form = $alts->{form} // '';
+      my $lang = $alts->{lang} // '';
       $acc .= "      <BDS>${n}${form}${lang}BIBNAMEHASH</BDS>\n";
       $acc .= "      <BDS>${n}${form}${lang}NAMEHASH</BDS>\n";
-      if (my $fullhash = $be->get_field("${n}" . $alts->{form} . $alts->{lang} . "fullhash")) {
+      if (my $fullhash = $be->get_field("${n}${form}${lang}fullhash")) {
         $acc .= "      \\strng{${n}${form}${lang}fullhash}{$fullhash}\n";
       }
     }
@@ -458,11 +462,11 @@ sub set_output_entry {
     $acc .= "      <BDS>EXTRAALPHA</BDS>\n";
   }
 
-  if (defined($be->get_field('crossrefsource'))) {
+  if ($be->get_field('crossrefsource')) {
     $acc .= "      \\true{crossrefsource}\n";
   }
 
-  if (defined($be->get_field('xrefsource'))) {
+  if ($be->get_field('xrefsource')) {
     $acc .= "      \\true{xrefsource}\n";
   }
 
@@ -493,8 +497,8 @@ sub set_output_entry {
   foreach my $field ($dmh->{fields}->@*) {
     foreach my $alts ($be->get_alternates_for_field($field)->@*) {
       my $val = $alts->{val};
-      my $form = $alts->{form};
-      my $lang = $alts->{lang};
+      my $form = $alts->{form} // '';
+      my $lang = $alts->{lang} // '';
 
       # Internally, no distinction is made between multiscript and
       # non-multiscript fields but it is on output
@@ -585,11 +589,10 @@ sub set_output_entry {
     # keywords is by default field/xsv/keyword but it is in fact
     # output with its own special macro below
     next if $field eq 'keywords';
-
     foreach my $alts ($be->get_alternates_for_field($field)->@*) {
       my $f = $alts->{val};
-      my $form = $alts->{form};
-      my $lang = $alts->{lang};
+      my $form = $alts->{form} // '';
+      my $lang = $alts->{lang} // '';
 
       # Internally, no distinction is made between multiscript and
       # non-multiscript fields but it is on output
@@ -597,7 +600,6 @@ sub set_output_entry {
       if ($dm->is_multiscript($field)) {
         $ms = "[$form][$lang]";
       }
-
       $acc .= _printfield($be, $field, join(',', $f->get_items->@*), $ms);
     }
   }

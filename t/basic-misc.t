@@ -641,10 +641,6 @@ my $anon1 = q|    \entry{anon1}{unpublished}{}
            family={XAnony},
            familyi={X\bibinitperiod}}}%
       }
-      \namepartms{shortauthor}{1}{%
-          familydefaulten-us={XAnony},
-          familydefaulten-usi={X\bibinitperiod}
-      }
       \strng{namehash}{9873a6cc65c553faa2b21aaad626fe4b}
       \strng{fullhash}{a66f357fe2fd356fe49959173522a651}
       \strng{bibnamehash}{9873a6cc65c553faa2b21aaad626fe4b}
@@ -687,10 +683,6 @@ my $anon2 = q|    \entry{anon2}{unpublished}{}
         {{un=0,uniquepart=base,hash=f64c29e89ea49402b997956610b58ef6}{%
            family={YAnony},
            familyi={Y\bibinitperiod}}}%
-      }
-      \namepartms{shortauthor}{1}{%
-          familydefaulten-us={YAnony},
-          familydefaulten-usi={Y\bibinitperiod}
       }
       \strng{namehash}{f64c29e89ea49402b997956610b58ef6}
       \strng{fullhash}{a0bccee4041bc840e14c06e5ba7f083c}

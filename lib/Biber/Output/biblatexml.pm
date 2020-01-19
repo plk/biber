@@ -158,18 +158,17 @@ sub set_output_entry {
   foreach my $namefield ($dm->get_fields_of_type('list', 'name')->@*) {
 
     # Name loop
-    foreach my $as ($be->get_alternates_for_field($namefield)->@*) {
+    foreach my $alts ($be->get_alternates_for_field($namefield)->@*) {
+      my $nf = $alts->{val};
+      my $form  = $alts->{form} // '';
+      my $lang  = $alts->{lang} // '';
 
-      my $form  = $as->{form};
-      my $lang  = $as->{lang};
-      my $nf = $as->{val};
-
-      $form = ($form eq 'default') ? '' : $form;
-      $lang = ($lang eq Biber::Config->get_mslang($key)) ? '' : $lang;
+      $form = ($form eq 'default' or not $form) ? '' : $form;
+      $lang = ($lang eq Biber::Config->get_mslang($key) or not $lang) ? '' : $lang;
 
       # XDATA is special
       if (not Biber::Config->getoption('output_resolve_xdata') or
-         not $be->is_xdata_resolved($namefield, $as->{form}, $as->{lang})) {
+         not $be->is_xdata_resolved($namefield, $form, $lang)) {
         if (my $xdata = $nf->get_xdata) {
           $xml->emptyTag([$xml_prefix, 'names'], 'xdata' => NFC(xdatarefout($xdata, 1)));
           next;
@@ -205,7 +204,7 @@ sub set_output_entry {
 
         # XDATA is special
         if (not Biber::Config->getoption('output_resolve_xdata') or
-           not $be->is_xdata_resolved($namefield, $as->{form}, $as->{lang}, $i+1)) {
+           not $be->is_xdata_resolved($namefield, $form, $lang, $i+1)) {
           if (my $xdata = $n->get_xdata) {
             $xml->emptyTag([$xml_prefix, 'name'], 'xdata' => NFC(xdatarefout($xdata, 1)));
             next;
@@ -224,18 +223,17 @@ sub set_output_entry {
     next if $dm->field_is_datatype('name', $listfield); # name is a special list
 
     # List loop
-    foreach my $as ($be->get_alternates_for_field($listfield)->@*) {
+    foreach my $alts ($be->get_alternates_for_field($listfield)->@*) {
+      my $lf = $alts->{val};
+      my $form  = $alts->{form} // '';
+      my $lang  = $alts->{lang} // '';
 
-      my $form  = $as->{form};
-      my $lang  = $as->{lang};
-      my $lf = $as->{val};
-
-      $form = ($form eq 'default') ? '' : $form;
-      $lang = ($lang eq Biber::Config->get_mslang($key)) ? '' : $lang;
+      $form = ($form eq 'default' or not $form) ? '' : $form;
+      $lang = ($lang eq Biber::Config->get_mslang($key) or not $lang) ? '' : $lang;
 
       # XDATA is special
       if (not Biber::Config->getoption('output_resolve_xdata') or
-          not $be->is_xdata_resolved($listfield, $as->{form}, $as->{lang})) {
+          not $be->is_xdata_resolved($listfield, $form, $lang)) {
         if (my $val = xdatarefcheck($lf, 1)) {
           $xml->emptyTag([$xml_prefix, $listfield], 'xdata' => NFC($val));
           next;
@@ -264,7 +262,7 @@ sub set_output_entry {
 
         # XDATA is special
         if (not Biber::Config->getoption('output_resolve_xdata') or
-            not $be->is_xdata_resolved($listfield, $as->{form}, $as->{lang}, $i+1)) {
+            not $be->is_xdata_resolved($listfield, $form, $lang, $i+1)) {
           if (my $val = xdatarefcheck($f, 1)) {
             $xml->emptyTag([$xml_prefix, 'item'], 'xdata' => NFC($val));
             next;
@@ -287,18 +285,17 @@ sub set_output_entry {
                                                    'integer',
                                                    'verbatim',
                                                    'uri'])->@*) {
-    foreach my $as ($be->get_alternates_for_field($field)->@*) {
+    foreach my $alts ($be->get_alternates_for_field($field)->@*) {
+      my $val = $alts->{val};
+      my $form  = $alts->{form} // '';
+      my $lang  = $alts->{lang} // '';
 
-      my $form  = $as->{form};
-      my $lang  = $as->{lang};
-      my $val = $as->{val};
-
-      $form = ($form eq 'default') ? '' : $form;
-      $lang = ($lang eq Biber::Config->get_mslang($key)) ? '' : $lang;
+      $form = ($form eq 'default' or not $form) ? '' : $form;
+      $lang = ($lang eq Biber::Config->get_mslang($key) or not $lang) ? '' : $lang;
 
       # XDATA is special
       if (not Biber::Config->getoption('output_resolve_xdata') or
-          not $be->is_xdata_resolved($field, $as->{form}, $as->{lang})) {
+          not $be->is_xdata_resolved($field, $form, $lang)) {
 
         if (my $xval = xdatarefcheck($val, 1)) {
           $xml->emptyTag([$xml_prefix, $field], 'xdata' => NFC($xval));
@@ -308,7 +305,7 @@ sub set_output_entry {
 
       if (length($val) or      # length() catches '0' values, which we want
           ($dm->field_is_nullok($field) and
-           $be->field_exists($field, $as->{form}, $as->{lang}))) {
+           $be->field_exists($field, $form, $lang))) {
         next if $dm->get_fieldformat($field) eq 'xsv';
         next if $field eq 'crossref'; # this is handled above
         my @attrs;
@@ -324,14 +321,13 @@ sub set_output_entry {
 
   # xsv fields
   foreach my $xsvf ($dm->get_fields_of_type('field', 'xsv')->@*) {
-    foreach my $as ($be->get_alternates_for_field($xsvf)->@*) {
+    foreach my $alts ($be->get_alternates_for_field($xsvf)->@*) {
+      my $f = $alts->{val};
+      my $form  = $alts->{form} // '';
+      my $lang  = $alts->{lang} // '';
 
-      my $form  = $as->{form};
-      my $lang  = $as->{lang};
-      my $f = $as->{val};
-
-      $form = ($form eq 'default') ? '' : $form;
-      $lang = ($lang eq Biber::Config->get_mslang($key)) ? '' : $lang;
+      $form = ($form eq 'default' or not $form) ? '' : $form;
+      $lang = ($lang eq Biber::Config->get_mslang($key) or not $lang) ? '' : $lang;
 
       next if $xsvf eq 'ids'; # IDS is special
       next if $xsvf eq 'xdata'; # XDATA is special

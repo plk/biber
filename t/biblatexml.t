@@ -125,9 +125,6 @@ my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
       \list{language}{1}{%
         {russian}%
       }
-      \listitemms{language}{1}{%
-        defaulten-us={russian}
-      }
       \list[default][en-us]{location}{1}{%
         {Москва}%
       }

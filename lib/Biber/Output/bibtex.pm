@@ -120,14 +120,13 @@ sub set_output_entry {
   }
 
   foreach my $namefield ($dmh->{namelists}->@*) {
-    foreach my $as ($be->get_alternates_for_field($namefield)->@*) {
+    foreach my $alts ($be->get_alternates_for_field($namefield)->@*) {
+      my $names = $alts->{val};
+      my $form  = $alts->{form} // '';
+      my $lang  = $alts->{lang} // '';
 
-      my $form  = $as->{form};
-      my $lang  = $as->{lang};
-      my $names = $as->{val};
-
-      $form = ($form eq 'default') ? '' : "$omssep$form";
-      $lang = ($lang eq Biber::Config->get_mslang($key)) ? '' : "$omssep$lang";
+      $form = ($form eq 'default' or not $form) ? '' : "$omssep$form";
+      $lang = ($lang eq Biber::Config->get_mslang($key) or not $lang) ? '' : "$omssep$lang";
 
       # XDATA is special
       unless (Biber::Config->getoption('output_resolve_xdata')) { # already resolved
@@ -175,14 +174,13 @@ sub set_output_entry {
 
   # List fields and verbatim list fields
   foreach my $listfield ($dmh->{lists}->@*, $dmh->{vlists}->@*) {
-    foreach my $as ($be->get_alternates_for_field($listfield)->@*) {
+    foreach my $alts ($be->get_alternates_for_field($listfield)->@*) {
+      my $list = $alts->{val};
+      my $form  = $alts->{form} // '';
+      my $lang  = $alts->{lang} // '';
 
-      my $form  = $as->{form};
-      my $lang  = $as->{lang};
-      my $list = $as->{val};
-
-      $form = ($form eq 'default') ? '' : "$omssep$form";
-      $lang = ($lang eq Biber::Config->get_mslang($key)) ? '' : "$omssep$lang";
+      $form = ($form eq 'default' or not $form) ? '' : "$omssep$form";
+      $lang = ($lang eq Biber::Config->get_mslang($key) or not $lang) ? '' : "$omssep$lang";
 
       my $listsep = Biber::Config->getoption('output_listsep');
       my @plainlist;
@@ -240,13 +238,14 @@ sub set_output_entry {
 
   # Standard fields
   foreach my $field ($dmh->{fields}->@*) {
-    foreach my $as ($be->get_alternates_for_field($field)->@*) {
-      my $form  = $as->{form};
-      my $lang  = $as->{lang};
-      my $val   = $as->{val};
+    foreach my $alts ($be->get_alternates_for_field($field)->@*) {
+      my $val   = $alts->{val};
+      my $form  = $alts->{form} // '';
+      my $lang  = $alts->{lang} // '';
 
-      $form = ($form eq 'default') ? '' : "$omssep$form";
-      $lang = ($lang eq Biber::Config->get_mslang($key)) ? '' : "$omssep$lang";
+
+      $form = ($form eq 'default' or not $form) ? '' : "$omssep$form";
+      $lang = ($lang eq Biber::Config->get_mslang($key) or not $lang) ? '' : "$omssep$lang";
 
       unless (Biber::Config->getoption('output_resolve_xdata')) {
         my $xd = xdatarefcheck($val);
@@ -261,14 +260,13 @@ sub set_output_entry {
     # keywords is by default field/xsv/keyword but it is in fact
     # output with its own special macro below
     next if $field eq 'keywords';
-    foreach my $as ($be->get_alternates_for_field($field)->@*) {
+    foreach my $alts ($be->get_alternates_for_field($field)->@*) {
+      my $f   = $alts->{val};
+      my $form  = $alts->{form} // '';
+      my $lang  = $alts->{lang} // '';
 
-      my $form  = $as->{form};
-      my $lang  = $as->{lang};
-      my $f   = $as->{val};
-
-      $form = ($form eq 'default') ? '' : "$omssep$form";
-      $lang = ($lang eq Biber::Config->get_mslang($key)) ? '' : "$omssep$lang";
+      $form = ($form eq 'default' or not $form) ? '' : "$omssep$form";
+      $lang = ($lang eq Biber::Config->get_mslang($key) or not $lang) ? '' : "$omssep$lang";
 
       my $fl = join(',', $f->get_items->@*);
       unless (Biber::Config->getoption('output_resolve_xdata')) {
