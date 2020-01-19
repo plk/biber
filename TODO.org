@@ -158,6 +158,7 @@
 *** DONE granular xdata doesn't work for dates
 *** DONE granular xdata at field level and below must be between same field and datatypes
 * TODO Multiscript
+** TODO default mslang for field selection is global->refcontext->entry, what about field items?
 ** TODO LANGIDOPTS and how they interact with LANGID->mslang
 ** TODO Documentation
 *** DONE \fieldmsforms{fieldname} \fieldmslangs{fieldname} (only in formats)
@@ -277,6 +278,7 @@
 *** TODO lang switch for overrides (not working for shorthands for bblend macros still)
 
 ** DONE biber
+*** TODO inserted related fields should inherit the parent default mslang and if different mslang to parent, insert a langtags annotation for switching.
 *** DONE remove LOCALE_MAP_R in biber, move to biblatex and provide override for BCP47->babel until comprehensive package for this (or babel/polyglossia support BCP47). Remove msmaplangs output in biber and reading in biblatex, replace use of this in biblatex with new interface, change doc which uses BCP47 in langid
 *** DONE cleardata/resetdata - fieldsources, annotations and msnameparts
 *** DONE grouping around nested \dos

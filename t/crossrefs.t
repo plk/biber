@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 37;
+use Test::More tests => 38;
 use Test::Differences;
 unified_diff;
 
@@ -1058,6 +1058,41 @@ my $sup2 = q|    \entry{sup2}{book}{}
     \endentry
 |;
 
+my $lid2 = q|    \entry{lid2}{incollection}{}
+      \name[default][en-us]{author}{1}{}{%
+        {{hash=efc1032346cdbd27a2678c6a4b6e12d8}{%
+           family={Jones},
+           familyi={J\bibinitperiod},
+           given={John},
+           giveni={J\bibinitperiod}}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Jones},
+          familydefaulten-usi={J\bibinitperiod},
+          givendefaulten-us={John},
+          givendefaulten-usi={J\bibinitperiod}
+      }
+      \strng{namehash}{efc1032346cdbd27a2678c6a4b6e12d8}
+      \strng{fullhash}{efc1032346cdbd27a2678c6a4b6e12d8}
+      \strng{bibnamehash}{efc1032346cdbd27a2678c6a4b6e12d8}
+      \strng{authordefaulten-usbibnamehash}{efc1032346cdbd27a2678c6a4b6e12d8}
+      \strng{authordefaulten-usnamehash}{efc1032346cdbd27a2678c6a4b6e12d8}
+      \strng{authordefaulten-usfullhash}{efc1032346cdbd27a2678c6a4b6e12d8}
+      \field{sortinit}{J}
+      \strng{sortinithash}{c45040a764d616897e7f5b30174d7b92}
+      \true{singletitle}
+      \true{uniquetitle}
+      \true{uniquework}
+      \fieldmssource{labelname}{author}{default}{en-us}
+      \fieldmssource{labeltitle}{title}{default}{en-us}
+      \field[default][en-us]{booktitle}{Book title}
+      \strng{crossref}{lid1}
+      \field{langid}{english}
+      \field[default][en-us]{title}{Paper title}
+      \annotation[default][en-us]{field}{booktitle}{langtags}{}{}{1}{de}
+    \endentry
+|;
+
 eq_or_diff($out->get_output_entry('cr1', $main), $cr1, 'crossref test 1');
 eq_or_diff($out->get_output_entry('cr2', $main), $cr2, 'crossref test 2');
 eq_or_diff($out->get_output_entry('cr_m', $main), $cr_m, 'crossref test 3');
@@ -1096,3 +1131,4 @@ eq_or_diff($out->get_output_entry('b1', $main), $b1, 'Blocking bad date inherita
 eq_or_diff($out->get_output_entry('sup1', $main), $sup1, 'Suppressing singletitle tracking - 1');
 eq_or_diff($out->get_output_entry('sup2', $main), $sup2, 'Suppressing singletitle tracking - 2');
 eq_or_diff($section0->has_citekey('al2'), 0, 'mincrossref via alias');
+eq_or_diff($out->get_output_entry('lid2', $main), $lid2, 'langid and annotations - 1');

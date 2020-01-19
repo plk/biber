@@ -1026,6 +1026,7 @@ sub inherit_from {
 
   my $target_key = $self->get_field('citekey'); # target/child key
   my $source_key = $parent->get_field('citekey'); # source/parent key
+  my $dm = Biber::Config->get_dm;
 
   # record the inheritance between these entries to prevent loops and repeats.
   Biber::Config->set_inheritance('crossref', $source_key, $target_key);
@@ -1099,7 +1100,18 @@ sub inherit_from {
                                "' from entry '$source_key'");
               }
 
-              $self->set_datafield($field->{target}, $parent->get_field($field->{source}, $form, $lang), $form, $lang);
+              # Force inherited fields to be langid of entry if it exists and override
+              # with annotation
+              my $tlang = $lang;
+              my $llid = $LOCALE_MAP{$self->get_field('langid')} if $self->get_field('langid');
+              if ($dm->is_multiscript($field->{target}) and
+                  $llid and
+                  $llid ne fc($lang)) {
+                $tlang = $llid;
+                Biber::Annotation->set_annotation('field', $target_key, $field->{target}, $form, $tlang, 'langtags', $lang, 1);
+              }
+
+              $self->set_datafield($field->{target}, $parent->get_field($field->{source}, $form, $lang), $form, $tlang);
 
               # Ignore uniqueness information tracking for this inheritance?
               my $ignore = $inherit->{ignore} || $dignore;
@@ -1181,7 +1193,18 @@ sub inherit_from {
             $logger->debug("Entry '$target_key' is inheriting field '$field/$form/$lang' from entry '$source_key'");
           }
 
-          $self->set_datafield($field, $parent->get_field($field, $form, $lang), $form, $lang);
+          # Force inherited fields to be langid of entry if it exists and override
+          # with annotation
+          my $tlang = $lang;
+          my $llid = $LOCALE_MAP{$self->get_field('langid')} if $self->get_field('langid');
+          if ($dm->is_multiscript($field) and
+              $llid and
+              $llid ne fc($lang)) {
+            $tlang = $llid;
+            Biber::Annotation->set_annotation('field', $target_key, $field, $form, $tlang, 'langtags', $lang, 1);
+          }
+
+          $self->set_datafield($field, $parent->get_field($field, $form, $lang), $form, $tlang);
 
           # Ignore uniqueness information tracking for this inheritance?
           Biber::Config->add_uniq_ignore($target_key, $field, $dignore);

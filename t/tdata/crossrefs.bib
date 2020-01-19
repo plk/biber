@@ -329,3 +329,17 @@
   DATE      = {1911},
   CROSSREF  = {circ1}
 }
+
+% Testing langid and annotation overrides
+@COLLECTION{lid1,
+  LANGID    = {german},
+  EDITOR    = {John Smith},
+  TITLE     = {Book title}
+}
+
+@INCOLLECTION{lid2,
+  LANGID    = {english},
+  AUTHOR    = {John Jones},
+  TITLE     = {Paper title},
+  CROSSREF  = {lid1}
+}

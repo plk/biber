@@ -1908,6 +1908,8 @@
     <bcf:citekey order="29">sup2</bcf:citekey>
     <bcf:citekey order="30">sup3</bcf:citekey>
     <bcf:citekey order="31">al1</bcf:citekey>
+    <bcf:citekey order="32">lid1</bcf:citekey>
+    <bcf:citekey order="33">lid2</bcf:citekey>
   </bcf:section>
   <!-- SECTION 1 -->
   <bcf:bibdata section="1">
