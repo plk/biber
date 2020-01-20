@@ -1290,14 +1290,14 @@ sub resolve_multiscript {
       $logger->debug("Resolving multiscript list overrides in '$citekey'");
     }
     my $be = $bibentries->entry($citekey);
-    foreach my $f (Biber::Annotation->fields_with_named_annotation($citekey, 'langtags')->@*) {
+    foreach my $f (Biber::Annotation->fields_with_named_annotation($citekey, 'mslang')->@*) {
       my ($field, $form, $lang) = ($f->[0], $f->[1], $f->[2]);
       if ($dm->is_multiscript($field) and $dm->field_is_fieldtype('list', $field)) {
         my $val = $be->get_field($field, $form, $lang);
         for (my $i=1;$i<=$val->count;$i++) {
-          if (my $a = Biber::Annotation->get_annotation('item', $citekey, $field, $form, $lang, 'langtags', $i)) {
+          if (my $a = Biber::Annotation->get_annotation('item', $citekey, $field, $form, $lang, 'mslang', $i)) {
             $val->set_nth_mslang($i, $self->langtags->parse($a)->as_string);
-            Biber::Annotation->del_annotation($citekey, $field, 'langtags');
+            Biber::Annotation->del_annotation($citekey, $field, 'mslang');
           }
         }
       }

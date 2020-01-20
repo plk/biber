@@ -194,14 +194,14 @@ my $ms1 = q|    \entry{ms1}{article}{}
       \field[translation][fr]{title}{Titre}
       \field{year}{1995}
       \field{dateera}{ce}
-      \annotation[default][en-us]{item}{author}{langtags}{2}{}{1}{ru-cyrl}
-      \annotation[default][en-us]{item}{author}{langtags}{3}{}{1}{zh-hant}
-      \annotation[transliteration][ru-grek]{item}{author}{langtags}{1}{}{1}{en-us}
-      \annotation[transliteration][ru-grek]{item}{author}{langtags}{3}{}{1}{zh-grek}
-      \annotation[transliteration][ru-latn]{item}{author}{langtags}{1}{}{1}{en-us}
-      \annotation[transliteration][ru-latn]{item}{author}{langtags}{3}{}{1}{zh-latn}
-      \annotation[default][en-us]{item}{location}{langtags}{2}{}{1}{de}
-      \annotation[translation][fr]{item}{location}{langtags}{2}{}{1}{de}
+      \annotation[default][en-us]{item}{author}{mslang}{2}{}{1}{ru-cyrl}
+      \annotation[default][en-us]{item}{author}{mslang}{3}{}{1}{zh-hant}
+      \annotation[transliteration][ru-grek]{item}{author}{mslang}{1}{}{1}{en-us}
+      \annotation[transliteration][ru-grek]{item}{author}{mslang}{3}{}{1}{zh-grek}
+      \annotation[transliteration][ru-latn]{item}{author}{mslang}{1}{}{1}{en-us}
+      \annotation[transliteration][ru-latn]{item}{author}{mslang}{3}{}{1}{zh-latn}
+      \annotation[default][en-us]{item}{location}{mslang}{2}{}{1}{de}
+      \annotation[translation][fr]{item}{location}{mslang}{2}{}{1}{de}
     \endentry
 |;
 

@@ -1089,7 +1089,7 @@ my $lid2 = q|    \entry{lid2}{incollection}{}
       \strng{crossref}{lid1}
       \field{langid}{english}
       \field[default][en-us]{title}{Paper title}
-      \annotation[default][en-us]{field}{booktitle}{langtags}{}{}{1}{de}
+      \annotation[default][en-us]{field}{booktitle}{mslang}{}{}{1}{de}
     \endentry
 |;
 

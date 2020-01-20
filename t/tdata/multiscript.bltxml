@@ -27,7 +27,7 @@
     </bltx:names>
     <bltx:title>Мухаммад ибн муса ал-Хорезми. Около 783 – около 850</bltx:title>
     <bltx:location>Москва and London</bltx:location>
-    <bltx:annotation field="author" name="langtags" item="1">ru-Cyrl</bltx:annotation>
-    <bltx:annotation field="author" msform="transliteration" mslang="ru-Grek" name="langtags" item="2">en-US</bltx:annotation>
+    <bltx:annotation field="author" name="mslang" item="1">ru-Cyrl</bltx:annotation>
+    <bltx:annotation field="author" msform="transliteration" mslang="ru-Grek" name="mslang" item="2">en-US</bltx:annotation>
   </bltx:entry>
 </bltx:entries>

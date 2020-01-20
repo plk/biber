@@ -43,8 +43,8 @@ sub set_annotation {
     $ANN->{item}{$key}{$field}{$form}{$lang}{$name}{$count}{value} = $value;
     $ANN->{item}{$key}{$field}{$form}{$lang}{$name}{$count}{literal} = $literal; # Record if this annotation is a literal
 
-    # langtags is a special multiscript annotation only occurring in item annotations
-    if ($name eq 'langtags') {
+    # mslang is a special multiscript annotation only occurring in item annotations
+    if ($name eq 'mslang') {
       Biber::Config->add_lang($value);
     }
 

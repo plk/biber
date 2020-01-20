@@ -377,7 +377,7 @@ sub set_output_entry {
         $acc .= "        {$f}%\n";
 
         # Override lang if there is a relevant list annotation
-        $lang = Biber::Annotation->get_annotation('item', $key, $listfield, $form, $lang, 'langtags', $i+1) // $lang;
+        $lang = Biber::Annotation->get_annotation('item', $key, $listfield, $form, $lang, 'mslang', $i+1) // $lang;
 
         push $msparts{$i+1}->@*, "        $form$lang={$f}";
       }
@@ -676,7 +676,7 @@ sub set_output_entry {
       foreach my $lang (Biber::Annotation->get_annotation_langs($key, $f, $form)) {
         foreach my $n (Biber::Annotation->get_annotations('field', $key, $f, $form, $lang)) {
           my $v = Biber::Annotation->get_annotation('field', $key, $f, $form, $lang, $n);
-          $v = lc($v) if $n eq 'langtags'; # normalise langtags
+          $v = lc($v) if $n eq 'mslang'; # normalise mslang
           my $l = Biber::Annotation->is_literal_annotation('field', $key, $f, $form, $lang, $n);
           my $ms = '';
           if ($dm->is_multiscript($f)) {
@@ -694,7 +694,7 @@ sub set_output_entry {
         foreach my $n (Biber::Annotation->get_annotations('item', $key, $f, $form, $lang)) {
           foreach my $c (Biber::Annotation->get_annotated_items('item', $key, $f, $n, $form, $lang)) {
             my $v = Biber::Annotation->get_annotation('item', $key, $f, $form, $lang, $n, $c);
-            $v = lc($v) if $n eq 'langtags'; # normalise langtags
+            $v = lc($v) if $n eq 'mslang'; # normalise mslang
             my $l = Biber::Annotation->is_literal_annotation('item', $key, $f, $form, $lang, $n, $c);
             my $ms = '';
             if ($dm->is_multiscript($f)) {
@@ -714,7 +714,7 @@ sub set_output_entry {
           foreach my $c (Biber::Annotation->get_annotated_items('part', $key, $f, $n, $form, $lang)) {
             foreach my $p (Biber::Annotation->get_annotated_parts('part', $key, $f, $n, $c, $form, $lang)) {
               my $v = Biber::Annotation->get_annotation('part', $key, $f, $form, $lang, $n, $c, $p);
-              $v = lc($v) if $n eq 'langtags'; # normalise langtags
+              $v = lc($v) if $n eq 'mslang'; # normalise mslang
               my $l = Biber::Annotation->is_literal_annotation('part', $key, $f, $form, $lang, $n, $c, $p);
               my $ms = '';
               if ($dm->is_multiscript($f)) {

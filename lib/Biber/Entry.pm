@@ -1108,7 +1108,7 @@ sub inherit_from {
                   $llid and
                   $llid ne fc($lang)) {
                 $tlang = $llid;
-                Biber::Annotation->set_annotation('field', $target_key, $field->{target}, $form, $tlang, 'langtags', $lang, 1);
+                Biber::Annotation->set_annotation('field', $target_key, $field->{target}, $form, $tlang, 'mslang', $lang, 1);
               }
 
               $self->set_datafield($field->{target}, $parent->get_field($field->{source}, $form, $lang), $form, $tlang);
@@ -1201,7 +1201,7 @@ sub inherit_from {
               $llid and
               $llid ne fc($lang)) {
             $tlang = $llid;
-            Biber::Annotation->set_annotation('field', $target_key, $field, $form, $tlang, 'langtags', $lang, 1);
+            Biber::Annotation->set_annotation('field', $target_key, $field, $form, $tlang, 'mslang', $lang, 1);
           }
 
           $self->set_datafield($field, $parent->get_field($field, $form, $lang), $form, $tlang);
