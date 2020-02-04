@@ -160,7 +160,7 @@
 * TODO Multiscript
 ** TODO default mslang for field selection is global->refcontext->entry, what about field items?
 ** TODO LANGIDOPTS and how they interact with LANGID->mslang
-** TODO Documentation
+** DONE Documentation
 *** DONE \fieldmsforms{fieldname} \fieldmslangs{fieldname} (only in formats)
 *** DONE \currentmsforms and  \curentmslangs (only in formats)
 *** DONE Annotation macros + MS args
@@ -274,9 +274,10 @@
 **** DONE Add namepart alternates to name and list formats
 *** DONE Default global mslang to main document language BCP47 tag equivalent
 *** DONE blx@TE@hook definitions for modified macros
-*** TODO output sortlocale in .bcf as BCP-47 if possible (polyglossia 1.47+)
+*** TODO output sortlocale in .bcf as BCP-47 when possible (polyglossia 1.47+/babel?)
 *** TODO lang switch for overrides (not working for shorthands for bblend macros still)
 
+*** TODO \blx@msselect{japanese}{transcription}{ja-hira}, \blx@msselect{japanese}{transliteration}{ja-lat}, add {default}{langtag} from \mslangs, keep mslang from langid in getdata, put in pre-filter to xparse defaults to check these from \ms???{\maplang{\blx@mslang}}{}{} to set actual \blx@msform and \blx@mslang
 ** DONE biber
 *** TODO inserted related fields should inherit the parent default mslang and if different mslang to parent, insert a langtags annotation for switching.
 *** DONE remove LOCALE_MAP_R in biber, move to biblatex and provide override for BCP47->babel until comprehensive package for this (or babel/polyglossia support BCP47). Remove msmaplangs output in biber and reading in biblatex, replace use of this in biblatex with new interface, change doc which uses BCP47 in langid
@@ -324,3 +325,6 @@
 *** DONE xsl for sorting/labelalpha templates
 *** DONE elide form/lang on output when default? No.
 *** DONE fix all test outputs
+
+        
+  

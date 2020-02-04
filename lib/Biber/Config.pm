@@ -87,6 +87,9 @@ $CONFIG->{state}{forms} = {};
 # Multiscript langs seen
 $CONFIG->{state}{langs} = {};
 
+# Multiscript entry langids seen
+$CONFIG->{state}{entrylangs} = {};
+
 =head2 _init
 
     Reset internal hashes to defaults.
@@ -756,6 +759,19 @@ sub add_lang {
   return;
 }
 
+=head2 add_entrylang
+
+    Adds to the list of seen multiscript entry langids
+
+=cut
+
+sub add_entrylang {
+  shift;
+  my $lang = shift;
+  $CONFIG->{state}{entrylangs}{$lang} = 1;
+  return;
+}
+
 =head2 get_forms
 
     Gets the list of seen multiscript forms as CSV
@@ -765,6 +781,17 @@ sub add_lang {
 sub get_forms {
   shift;
   return join(',', keys $CONFIG->{state}{forms}->%*);
+}
+
+=head2 get_entrylangs
+
+    Gets the list of seen multiscript entry langids as CSV
+
+=cut
+
+sub get_entrylangs {
+  shift;
+  return join(',', uniq sort map {lc $_} keys $CONFIG->{state}{entrylangs}->%*);
 }
 
 =head2 get_langs

@@ -949,6 +949,7 @@ sub _create_entry {
   # entry scope option first, if it exists
   if (my $lid = $e->get(encode('UTF-8', NFC('langid')))) {
     Biber::Config->set_mslang($k, fc($LOCALE_MAP{$lid}//$lid));
+    Biber::Config->add_entrylang(fc($LOCALE_MAP{$lid}//$lid));
   }
 
   my $bibentry = Biber::Entry->new($k);

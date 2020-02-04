@@ -94,9 +94,12 @@ sub create_output_misc {
   }
   my $forms = Biber::Config->get_forms;
   my $langs = Biber::Config->get_langs;
+  Biber::Config->add_entrylang(Biber::Config->getoption('mslang'));
+  my $elangs = Biber::Config->get_entrylangs;
 
   $self->{output_data}{TAIL} .= <<~END;
     \\msforms{$forms}
+    \\msentrylangs{$elangs}
     \\mslangs{$langs}
 
     \\endinput

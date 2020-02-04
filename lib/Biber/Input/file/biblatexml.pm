@@ -812,6 +812,7 @@ sub create_entry {
     if (my $lid = $e->findnodes("./$NS:langid")->get_node(1)) {
       $lid = $lid->textContent();
       Biber::Config->set_mslang($key, fc($LOCALE_MAP{$lid}//$lid));
+      Biber::Config->add_entrylang(fc($LOCALE_MAP{$lid}//$lid));
     }
 
     my $k = $e->getAttribute('id');
