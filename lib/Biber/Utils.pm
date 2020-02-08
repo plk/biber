@@ -1633,7 +1633,7 @@ sub gen_initials {
     }
     else {
       # remove any leading braces from latex decoding or protection
-      $str =~ s/^\{//;
+      $str =~ s/^\{+//;
       my $chr = Unicode::GCString->new($str)->substr(0, 1)->as_string;
       # Keep diacritics with their following characters
       if ($chr =~ m/^\p{Dia}/) {
