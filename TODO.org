@@ -277,10 +277,10 @@
 *** TODO output sortlocale in .bcf as BCP-47 when possible (polyglossia 1.47+/babel?)
 *** TODO lang switch for overrides (not working for shorthands for bblend macros still)
 
-*** TODO \blx@msselect{ja-jp}{transcription}{ja-hira}, \blx@msselect{ja-jp}{transliteration}{ja-lat}, add \blx@msselect{langtag}{default}{langtag} from \msentrylangs, keep mslang from langid in getdata, put in pre-filter to xparse defaults to check these from \ms???{\maplang{\blx@mslang}}{}{} to set actual \blx@msform and \blx@mslang
+*** TODO port \ifselectmsentryfield to lists/names. Does it need a general replacement everywhere?
 *** TODO User interface to \blx@msselect and doc
 ** DONE biber
-*** TODO inserted related fields should inherit the parent default mslang and if different mslang to parent, insert a langtags annotation for switching.
+*** DONE inserted related fields should inherit the parent default mslang and if different mslang to parent, insert a langtags annotation for switching.
 *** DONE remove LOCALE_MAP_R in biber, move to biblatex and provide override for BCP47->babel until comprehensive package for this (or babel/polyglossia support BCP47). Remove msmaplangs output in biber and reading in biblatex, replace use of this in biblatex with new interface, change doc which uses BCP47 in langid
 *** DONE cleardata/resetdata - fieldsources, annotations and msnameparts
 *** DONE grouping around nested \dos
