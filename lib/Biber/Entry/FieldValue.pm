@@ -77,8 +77,6 @@ sub get_alternates {
   return $alternates;
 }
 
-
-
 1;
 
 __END__

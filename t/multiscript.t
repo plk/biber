@@ -39,7 +39,6 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 
 # Biber options
 Biber::Config->setoption('bcf', 'multiscript.bcf');
-Biber::Config->setoption('msstrict', 1);
 
 # Now generate the information
 $biber->prepare;
@@ -105,21 +104,24 @@ my $ms1 = q|    \entry{ms1}{article}{}
            giveni={Μ\bibinitperiod}}}%
       }
       \name[transliteration][ru-latn]{author}{3}{}{%
-        {{mslang=en-us,hash=c221fa2d0fd5443df81b6bc63acf958a}{%
+        {{un=0,uniquepart=base,mslang=en-us,hash=c221fa2d0fd5443df81b6bc63acf958a}{%
            family={Smith},
            familyi={S\bibinitperiod},
            given={Bill},
-           giveni={B\bibinitperiod}}}%
-        {{hash=0c7edadf6ef1ef60f583b09b35993f86}{%
+           giveni={B\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=0c7edadf6ef1ef60f583b09b35993f86}{%
            family={Pushkin},
            familyi={P\bibinitperiod},
            given={Aleksandr},
-           giveni={A\bibinitperiod}}}%
-        {{mslang=zh-latn,hash=743dd6cdaa6639320289d219d351d7b7}{%
+           giveni={A\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,mslang=zh-latn,hash=743dd6cdaa6639320289d219d351d7b7}{%
            family={Xu},
            familyi={X\bibinitperiod},
            given={Bing},
-           giveni={B\bibinitperiod}}}%
+           giveni={B\bibinitperiod},
+           givenun=0}}%
       }
       \namepartms{author}{1}{%
           familydefaulten-us={Smith},
@@ -214,11 +216,12 @@ my $ms2 = q|    \entry{ms2}{inbook}{}
            giveni={A\bibinitperiod}}}%
       }
       \name[transliteration][ru-latn]{author}{1}{}{%
-        {{hash=cb8bc4824dfe756730d5837418bf5b53}{%
+        {{un=0,uniquepart=base,hash=cb8bc4824dfe756730d5837418bf5b53}{%
            family={Clever},
            familyi={C\bibinitperiod},
            given={Clive},
-           giveni={C\bibinitperiod}}}%
+           giveni={C\bibinitperiod},
+           givenun=0}}%
       }
       \namepartms{author}{1}{%
           familydefaulten-us={Treacle},
