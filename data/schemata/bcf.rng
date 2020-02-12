@@ -32,6 +32,7 @@
         <ref name="debug"/>
         <ref name="mincrossrefs"/>
         <ref name="minxrefs"/>
+        <ref name="mslang"/>
         <ref name="sortcase"/>
         <ref name="sortupper"/>
       </element>
@@ -1910,6 +1911,19 @@
       </element>
       <element name="bcf:value">
         <data type="integer"/>
+      </element>
+    </element>
+  </define>
+  <define name="mslang">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>mslang</value>
+      </element>
+      <element name="bcf:value">
+        <text/>
       </element>
     </element>
   </define>

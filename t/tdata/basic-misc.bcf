@@ -25,6 +25,10 @@
       <bcf:value>2</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
+      <bcf:key>mslang</bcf:key>
+      <bcf:value>en-us</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
       <bcf:key>sortcase</bcf:key>
       <bcf:value>0</bcf:value>
     </bcf:option>

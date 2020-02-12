@@ -17,6 +17,7 @@ start =
       debug,
       mincrossrefs,
       minxrefs,
+      mslang,
       sortcase,
       sortupper
     },
@@ -791,6 +792,12 @@ minxrefs =
     attribute type { "singlevalued" },
     element bcf:key { "minxrefs" },
     element bcf:value { xsd:integer }
+  }
+mslang =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "mslang" },
+    element bcf:value { text }
   }
 debug =
   element bcf:option {
