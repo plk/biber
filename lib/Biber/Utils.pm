@@ -278,14 +278,14 @@ sub file_exist_check {
   if ($^O =~ /Win/) {
     require Win32;
     my $f = Win32::GetANSIPathName($filename);
-    return $f if -e $f;
+    return $f if -e "$f";
   }
   else {
-    if (-e NFC($filename)) {
-      return NFC($filename);
+    if (-e NFC("$filename")) {
+      return NFC("$filename");
     }
-    if (-e NFD($filename)) {
-      return NFD($filename);
+    if (-e NFD("$filename")) {
+      return NFD("$filename");
     }
   }
 
