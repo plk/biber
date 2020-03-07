@@ -86,7 +86,8 @@ sub glob_data_file {
     File::DosGlob->import('glob');
   }
 
-  push @sources, glob($source =~ s/\s/\\ /r); # quote spaces
+  #push @sources, glob($source =~ s/\s/\\ /r); # quote spaces
+  push @sources, glob("$source");
 
   $logger->info("Globbed data source '$source' to " . join(',', @sources));
   return @sources;
