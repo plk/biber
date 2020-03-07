@@ -4441,9 +4441,9 @@ sub fetch_data {
     }
     foreach my $gds (glob_data_file($datasource->{name})) {
       push $ds->@*, { type     => $datasource->{type},
-                  name     => $gds,
-                  datatype => $datasource->{datatype},
-                  encoding => $datasource->{encoding}};
+                      name     => $gds,
+                      datatype => $datasource->{datatype},
+                      encoding => $datasource->{encoding}};
     }
   }
   $section->set_datasources($ds);
