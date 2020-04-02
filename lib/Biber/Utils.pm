@@ -77,6 +77,7 @@ sub glob_data_file {
   if ($source =~ m/\A(?:http|ftp)(s?):\/\//xms) {
     $logger->info("Data source '$source' is remote, no globbing to do");
     push @sources, $source;
+    return @sources;
   }
 
   # Use Windows style globbing on Windows
@@ -86,7 +87,7 @@ sub glob_data_file {
     File::DosGlob->import('glob');
   }
 
-  push @sources, glob qq("$source");
+  push @sources, map {biber_decode_utf8($_)} glob NFC(qq("$source"));
 
   $logger->info("Globbed data source '$source' to '" . join(',', @sources) . "'");
   return @sources;
