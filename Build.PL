@@ -62,6 +62,7 @@ my $builder = $class->new(
                  'Unicode::Normalize' => '1.26',
                  'Unicode::LineBreak' => '2019.001',
                  'Unicode::GCString' => 0,
+                 'Encode::Locale' => 0,
                  'Encode::EUCJPASCII' => 0,
                  'Encode::JIS2K' => 0,
                  'Encode::HanExtra' => 0,
