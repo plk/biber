@@ -18,7 +18,6 @@ use IPC::Run3; # This works with PAR::Packer and Windows. IPC::Run doesn't
 use Biber::Constants;
 use Biber::LaTeX::Recode;
 use Biber::Entry::Name;
-use Encode::Locale;
 use Data::Uniqid qw ( suniqid );
 use Regexp::Common qw( balanced );
 use List::AllUtils qw( first );
@@ -88,7 +87,7 @@ sub glob_data_file {
     File::DosGlob->import('glob');
   }
 
-  push @sources, map {biber_decode_utf8($_)} glob encode(locale_fs => NFC(qq("$source")));
+  push @sources, map {biber_decode_utf8($_)} glob NFC(qq("$source"));
 
   $logger->info("Globbed data source '$source' to '" . join(',', @sources) . "'");
   return @sources;
