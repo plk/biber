@@ -124,7 +124,10 @@ sub extract_entries {
   }
 
   # Check for files with no macros - they also confuse btparse
-  my $tbuf = File::Slurper::read_text($filename, $encoding);
+  my $tbuf;
+  unless (eval {$tbuf = File::Slurper::read_text($filename, $encoding)}) {
+    biber_error("Data file '$filename' cannot be read in encoding '$encoding': $@");
+  }
   unless ($tbuf =~ m/\@/) {
     biber_warn("Data source '$filename' contains no BibTeX entries/macros, ignoring");
     return @rkeys;
