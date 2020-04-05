@@ -67,26 +67,29 @@ sub reset_state {
 
 =head2 incr_seenpa
 
-    Increment the count of occurrences of a primary author family name
+    Increment the count of occurrences of a primary author base name
+    if it has a different non-base part. How many variants of the basename
+    are there in the dlist?
 
 =cut
 
 sub incr_seenpa {
-  my ($self, $identifier) = @_;
-  $self->{state}{seenpa}{$identifier}++;
+  my ($self, $base, $hash) = @_;
+  $self->{state}{seenpa}{$base}{$hash} = 1; # increment the number of base variants
   return;
 }
 
 
 =head2 get_seenpa
 
-    Get the count of occurrences of a primary author family name
+    Get the count of unique (i.e. with different hash) occurrences of a primary
+    author base name
 
 =cut
 
 sub get_seenpa {
-  my ($self, $identifier) = @_;
-  return $self->{state}{seenpa}{$identifier};
+  my ($self, $base) = @_;
+  return scalar keys %{$self->{state}{seenpa}{$base}};
 }
 
 =head2 reset_entryfields

@@ -1932,14 +1932,15 @@ sub process_entries_post {
     # generate information for tracking singletitle, uniquetitle, uniquebaretitle and uniquework
     $self->process_workuniqueness($citekey, $dlist);
 
-    # generate information for tracking uniqueprimaryauthor
-    $self ->process_uniqueprimaryauthor($citekey, $dlist);
-
     # generate namehash
     $self->process_namehash($citekey, $dlist);
 
     # generate per-name hashes
     $self->process_pername_hashes($citekey, $dlist);
+
+    # generate information for tracking uniqueprimaryauthor
+    $self ->process_uniqueprimaryauthor($citekey, $dlist);
+
   }
 
   if ($logger->is_debug()) {# performance tune
@@ -2007,18 +2008,17 @@ sub process_uniqueprimaryauthor {
 
       my $nds = $namedis->{$nl->get_id}{$nl->nth_name(1)->get_id}{namedisschema};
       my $nss = $namedis->{$nl->get_id}{$nl->nth_name(1)->get_id}{namestrings};
-      my $paf;
+      my $pabase;
 
       for (my $i=0;$i<=$nds->$#*;$i++) {
         my $se = $nds->[$i];
         if ($se->[0] eq 'base') {
-          $paf = $nss->[$i];
-          last;
+          $pabase = $nss->[$i];
         }
       }
 
-      $dlist->set_entryfield($citekey, 'seenprimaryauthor', $paf);
-      $dlist->incr_seenpa($paf);
+      $dlist->set_entryfield($citekey, 'seenprimaryauthor', $pabase);
+      $dlist->incr_seenpa($pabase, $nl->nth_name(1)->get_hash);
     }
   }
 }
@@ -2704,7 +2704,9 @@ sub process_pername_hashes {
   foreach my $pn ($dmh->{namelistsall}->@*) {
     next unless my $nl = $be->get_field($pn);
     foreach my $n ($nl->names->@*) {
-      $dlist->set_namehash($nl->get_id, $n->get_id, $self->_genpnhash($citekey, $n));
+      my $pnhash = $self->_genpnhash($citekey, $n);
+      $n->set_hash($pnhash);
+      $dlist->set_namehash($nl->get_id, $n->get_id, $pnhash);
     }
   }
   return;

@@ -667,6 +667,7 @@ my $l21 = q|    \entry{L21}{book}{}
       \field{extraname}{1}
       \field{sortinit}{S}
       \field{sortinithash}{c319cff79d99c853d775f88277d4e45f}
+      \true{uniqueprimaryauthor}
       \field{labelnamesource}{author}
     \endentry
 |;
@@ -710,6 +711,7 @@ my $l22 = q|    \entry{L22}{book}{}
       \field{extraname}{1}
       \field{sortinit}{\v{S}}
       \field{sortinithash}{c319cff79d99c853d775f88277d4e45f}
+      \true{uniqueprimaryauthor}
       \field{labelnamesource}{author}
     \endentry
 |;
