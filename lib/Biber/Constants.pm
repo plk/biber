@@ -130,6 +130,7 @@ our $CONFIG_DEFAULT_BIBER = {
   no_bltxml_schema                            => { content => 0 },
   no_default_datamodel                        => { content => 0 },
   nodieonerror                                => { content => 0 },
+  noglob                                      => { content => 0 },
   noinit                                      => { option => [ {value => q/\b\p{Ll}{2}\p{Pd}(?=\S)/},
                                                                {value => q/[\x{2bf}\x{2018}]/} ] },
   nolabel                                     => { option => [ {value => q/[\p{Pc}\p{Ps}\p{Pe}\p{Pi}\p{Pf}\p{Po}\p{S}\p{C}]+/} ] },
