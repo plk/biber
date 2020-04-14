@@ -57,6 +57,7 @@ GetOptions(
            'noconf',
            'no_default_datamodel|no-default-datamodel',
            'nodieonerror',
+           'noglob',
            'nolog',
            'nostdmacros',
            'onlylog',
@@ -630,6 +631,11 @@ datamodel in the user config file.
 Don't exit on errors, just log and continue as far as possible.
 This can be useful if the error is something from, for example, the underlying
 BibTeX parsing C library which can complain about parsing errors which can be ignored.
+
+=item B<--noglob>
+
+Do not try to glob (expand according to pattern) any data source filenames
+and treat them as a single, literal file name.
 
 =item B<--nolog>
 

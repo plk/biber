@@ -1,9 +1,10 @@
 Revision history for Biber
 
 2.15   (2020-)
+       * Added '--noglob' option to disable data source filename globbing
        * DEPRECATION WARNING - The BBLXML output format will be removed in
-       version 4. It is rarely used and complicates test suite maintenance
-       considerably.
+         version 4. It is rarely used and complicates test suite maintenance
+         considerably.
 2.14   (2019-12)
        * XDATA now supports granular references so that specific
          fields/items in a list field may be used and inserted into
