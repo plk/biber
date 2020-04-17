@@ -1444,6 +1444,10 @@ sub preprocess_sets {
     # from all other entries in process_sets()
     if ($be->get_field('entrytype') eq 'set') {
       my $entrysetkeys = $be->get_field('entryset');
+      unless ($entrykeys) {
+        biber_warn("Set entry '$citekey' has no entryset field, ignoring", $be);
+        next;
+      }
       foreach my $member ($entrysetkeys->@*) {
         $section->set_set_pc($citekey, $member);
         $section->set_set_cp($member, $citekey);
