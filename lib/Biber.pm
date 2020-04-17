@@ -1444,7 +1444,7 @@ sub preprocess_sets {
     # from all other entries in process_sets()
     if ($be->get_field('entrytype') eq 'set') {
       my $entrysetkeys = $be->get_field('entryset');
-      unless ($entrykeys) {
+      unless ($entrysetkeys) {
         biber_warn("Set entry '$citekey' has no entryset field, ignoring", $be);
         next;
       }
