@@ -3793,7 +3793,7 @@ sub generate_contextdata {
         @es = $keys->@[sort {$a <=> $b} @sorted_setkeys];
       }
       else {
-        @es = $be->get_field('entryset')->@*;
+        @es = $be->get_field('entryset')->@* if $be->get_field('entryset');
       }
       $dlist->set_entryfield($key, 'entryset', \@es);
     }
