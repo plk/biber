@@ -1466,6 +1466,10 @@ sub preprocess_sets {
     # from all other entries in process_sets()
     if ($be->get_field('entrytype') eq 'set') {
       my $entrysetkeys = $be->get_field('entryset');
+      unless ($entrysetkeys->count) {
+        biber_warn("Set entry '$citekey' has no entryset field, ignoring", $be);
+        next;
+      }
       foreach my $member ($entrysetkeys->get_items->@*) {
         $section->set_set_pc($citekey, $member);
         $section->set_set_cp($member, $citekey);
@@ -3833,7 +3837,7 @@ sub generate_contextdata {
         @es = $keys->@[sort {$a <=> $b} @sorted_setkeys];
       }
       else {
-        @es = $be->get_field('entryset')->get_items->@*;
+        @es = $be->get_field('entryset')->get_items->@* if $be->get_field('entryset')->count;
       }
       $dlist->set_entryfield($key, 'entryset', Biber::Entry::List->new([@es]));
     }
