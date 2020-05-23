@@ -60,6 +60,7 @@ CALL pp ^
   --module=File::Find::Rule ^
   --module=Text::CSV_XS ^
   --module=DateTime ^
+  --module=Win32::Unicode ^
   --link=C:\WINDOWS\system32\libbtparse.dll ^
   --link=C:\strawberry\c\bin\libxslt-1_.dll ^
   --link=C:\strawberry\c\bin\libexslt-0_.dll ^
@@ -69,7 +70,6 @@ CALL pp ^
   --link=C:\strawberry\c\bin\libssl-1_1_.dll ^
   --link=C:\strawberry\c\bin\libcrypto-1_1_.dll ^
   --link=C:\strawberry\c\bin\liblzma-5_.dll ^
-  --link=C:\strawberry\perl\site\lib\auto\Win32\Unicode\Unicode.xs.dll ^
   --addfile="../../data/biber-tool.conf;lib/Biber/biber-tool.conf" ^
   --addfile="../../data/schemata/config.rnc;lib/Biber/config.rnc" ^
   --addfile="../../data/schemata/config.rng;lib/Biber/config.rng" ^
