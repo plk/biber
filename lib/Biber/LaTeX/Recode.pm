@@ -112,7 +112,7 @@ sub init_sets {
   }
 
   # Read driver config file
-  my $xml = File::Slurper::read_text($mapdata);
+  my $xml = Biber::Utils::slurp_switch($mapdata)->$*;
   my $doc = XML::LibXML->load_xml(string => $xml);
   my $xpc = XML::LibXML::XPathContext->new($doc);
 

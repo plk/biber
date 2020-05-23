@@ -123,7 +123,7 @@ sub extract_entries {
 
   # Check for files with no macros - they also confuse btparse
   my $tbuf;
-  unless (eval {$tbuf = File::Slurper::read_text($filename, $encoding)}) {
+  unless (eval {$tbuf = slurp_switch($filename, $encoding)->$*}) {
     biber_error("Data file '$filename' cannot be read in encoding '$encoding': $@");
   }
   unless ($tbuf =~ m/\@/) {
@@ -1612,7 +1612,7 @@ sub preprocess_file {
     $benc = 'UTF-8';
   }
   my $buf;
-  unless (eval{$buf = NFD(File::Slurper::read_text($filename, $benc))}) {# Unicode NFD boundary
+  unless (eval{$buf = NFD(slurp_switch($filename, $benc)->$*)}) {# Unicode NFD boundary
     biber_error("Data file '$filename' cannot be read in encoding '$benc': $@");
   }
 

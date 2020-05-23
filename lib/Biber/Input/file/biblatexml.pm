@@ -118,7 +118,7 @@ sub extract_entries {
   $logger->info("Found BibLaTeXML data file '$filename'");
 
   # Set up XML parser and namespace
-  my $xml = File::Slurper::read_text($filename);
+  my $xml = slurp_switch($filename)->$*;
   $xml = NFD($xml);# Unicode NFD boundary
   my $bltxml = XML::LibXML->load_xml(string => $xml);
   my $xpc = XML::LibXML::XPathContext->new($bltxml);

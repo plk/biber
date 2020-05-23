@@ -43,20 +43,21 @@ All functions are exported by default.
 
 =cut
 
-our @EXPORT = qw{ glob_data_file locate_data_file makenamesid makenameid stringify_hash
-  normalise_string normalise_string_hash normalise_string_underscore
-  normalise_string_sort normalise_string_label reduce_array remove_outer
-  has_outer add_outer ucinit strip_nosort strip_noinit is_def is_undef
-  is_def_and_notnull is_def_and_null is_undef_or_null is_notnull is_null
-  normalise_utf8 inits join_name latex_recode_output filter_entry_options
-  biber_error biber_warn ireplace imatch validate_biber_xml
-  process_entry_options escape_label unescape_label
-  biber_decode_utf8 out parse_date_start parse_date_end parse_date_range locale2bcp47
-  bcp472locale rangelen match_indices process_comment map_boolean
-  parse_range parse_range_alt maploopreplace get_transliterator
-  call_transliterator normalise_string_bblxml gen_initials join_name_parts
-  split_xsv date_monthday tzformat expand_option_input strip_annotation
-  appendstrict_check merge_entry_options process_backendin xdatarefout xdatarefcheck};
+our @EXPORT = qw{ slurp_switch glob_data_file locate_data_file makenamesid
+  makenameid stringify_hash normalise_string normalise_string_hash
+  normalise_string_underscore normalise_string_sort normalise_string_label
+  reduce_array remove_outer has_outer add_outer ucinit strip_nosort
+  strip_noinit is_def is_undef is_def_and_notnull is_def_and_null
+  is_undef_or_null is_notnull is_null normalise_utf8 inits join_name
+  latex_recode_output filter_entry_options biber_error biber_warn ireplace
+  imatch validate_biber_xml process_entry_options escape_label
+  unescape_label biber_decode_utf8 out parse_date_start parse_date_end
+  parse_date_range locale2bcp47 bcp472locale rangelen match_indices
+  process_comment map_boolean parse_range parse_range_alt maploopreplace
+  get_transliterator call_transliterator normalise_string_bblxml
+  gen_initials join_name_parts split_xsv date_monthday tzformat
+  expand_option_input strip_annotation appendstrict_check
+  merge_entry_options process_backendin xdatarefout xdatarefcheck};
 
 =head1 FUNCTIONS
 
@@ -83,14 +84,43 @@ sub glob_data_file {
   # Use Windows style globbing on Windows
   if ($^O =~ /Win/) {
     $logger->debug("Enabling Windows-style globbing");
+    require Win32;
     require File::DosGlob;
     File::DosGlob->import('glob');
+    # Windows requires filenames as bytes due to appalling UTF8 handling
+    $source = encode('cp' . Win32::GetACP(), $source);
+    push @sources, glob qq("$source");
   }
-
-  push @sources, map {biber_decode_utf8($_)} glob NFC(qq("$source"));
+  else {
+    push @sources, map {biber_decode_utf8($_)} glob NFC(qq("$source"));
+  }
 
   $logger->info("Globbed data source '$source' to '" . join(',', @sources) . "'");
   return @sources;
+}
+
+=head2 slurp_switch
+
+  Use different encoding/slurp interfaces for Windows due to its
+  horrible legacy codepage system
+
+=cut
+
+sub slurp_switch {
+  my ($filename, $encoding) = @_;
+  my $slurp;
+  $encoding //= 'UTF-8';
+  if ($^O =~ /Win/) {
+    $logger->debug("Enabling Windows-compat filesystem encoding reader");
+    require Win32::Unicode::File;
+    my $fh = Win32::Unicode::File->new('<', $filename);
+    $fh->binmode(":encoding($encoding)");
+    $slurp = $fh->slurp;
+  }
+  else {
+    $slurp = File::Slurper::read_text($filename, $encoding);
+  }
+  return \$slurp;
 }
 
 =head2 locate_data_file
