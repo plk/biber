@@ -4400,17 +4400,9 @@ sub fetch_data {
     unless ($datasource->{type} eq 'file') {
       push $ds->@*, $datasource;
     }
-    unless (Biber::Config->getoption('noglob')) {
-      foreach my $gds (glob_data_file($datasource->{name})) {
-        push $ds->@*, { type     => $datasource->{type},
-                        name     => $gds,
-                        datatype => $datasource->{datatype},
-                        encoding => $datasource->{encoding}};
-      }
-    }
-    else {
+    foreach my $gds (glob_data_file($datasource->{name})) {
       push $ds->@*, { type     => $datasource->{type},
-                      name     => $datasource->{name},
+                      name     => $gds,
                       datatype => $datasource->{datatype},
                       encoding => $datasource->{encoding}};
     }

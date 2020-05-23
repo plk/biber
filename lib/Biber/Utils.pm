@@ -73,6 +73,15 @@ sub glob_data_file {
   my $source = shift;
   my @sources;
 
+  if (Biber::Config->getoption('noglob')) {
+    if ($^O =~ /Win/) {
+      require Win32;
+      $source = encode('cp' . Win32::GetACP(), $source);
+    }
+    push @sources, $source;
+    return @sources;
+  }
+
   $logger->info("Globbing data source '$source'");
 
   if ($source =~ m/\A(?:http|ftp)(s?):\/\//xms) {
