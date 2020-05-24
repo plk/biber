@@ -342,7 +342,7 @@ sub file_exist_check {
     require Win32::Unicode::File;
     #my $f = Win32::GetANSIPathName($filename);
     $logger->info("HERE: $filename");
-    $logger->info("HERE: YES") if statW($filename);
+    $logger->info("HERE: YES") if Win32::Unicode::File::statW($filename);
     return $filename if Win32::Unicode::File::statW($filename);
   }
   else {
