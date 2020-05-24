@@ -340,11 +340,10 @@ sub file_exist_check {
   my $filename = shift;
   if ($^O =~ /Win/) {
     require Win32::Unicode::File;
-    use utf8;
     #my $f = Win32::GetANSIPathName($filename);
     $logger->info("HERE: $filename");
     $logger->info("HERE: YES") if Win32::Unicode::File::statW($filename);
-    $logger->info("HERE: YES1") if Win32::Unicode::File::statW('grüße.bib');
+    use utf8;$logger->info("HERE: YES1:grüße.bib") if Win32::Unicode::File::statW('grüße.bib');
     return $filename if Win32::Unicode::File::statW($filename);
   }
   else {
