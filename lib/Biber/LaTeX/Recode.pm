@@ -285,10 +285,11 @@ sub latex_decode {
       $logger->trace("String in latex_decode() before brace elimination now -> '$text'");
     }
 
-    # Now remove braces around single letters (which the replace above
-    # can result in). Things like '{á}' can break kerning. We can't do this in
-    # the RE above as we can't determine if the braces are wrapping a phrase because this
-    # match is on an entire field string. So we can't in one step tell the difference between:
+    # Now remove braces around single letters (which the replace above can
+    # result in). Things like '{á}' can break kerning/brace protection. We
+    # can't do this in the RE above as we can't determine if the braces are
+    # wrapping a phrase because this match is on an entire field string. So
+    # we can't in one step tell the difference between:
     #
     # author = {Andr\'e}
     # and
@@ -305,10 +306,11 @@ sub latex_decode {
     # http://www.drregex.com/2019/02/variable-length-lookbehinds-actually.html
     # Perl 5.30 has limited (<255 chars) VLB but it doesn't work here as it can't be determined
     # that it's <255 chars by the parser
-    $text =~ s/(?!(?=(?'a'[\s\S]*))(?'b'\\\pL+(?:\{[^{]+\})*(?=\k'a'\z)|(?<=(?=x^|(?&b))[\s\S])))\{(\X)\}/$3/g;
+    $text =~ s/(?!(?=(?'a'[\s\S]*))(?'b'\\\pL+(?:\{[^{]+\})*(?=\k'a'\z)|(?<=(?=x^|(?&b))[\s\S])))[{\x{1f}](\X)[}\x{1e}]/$3/g;
 
-    # Put brace markers back after doing the brace elimination as we only want to eliminate
-    # braces introduced as part of decoding, not explicit braces in the data
+    # Put back any brace markers left after doing the brace elimination as
+    # we only want to eliminate braces introduced as part of decoding, not
+    # explicit braces in the data
     $text =~ s/\x{1f}/{/g;
     $text =~ s/\x{1e}/}/g;
 
