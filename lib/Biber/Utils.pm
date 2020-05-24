@@ -340,8 +340,8 @@ sub file_exist_check {
   my $filename = shift;
   if ($^O =~ /Win/) {
     require Win32::Unicode::File;
-    #my $f = Win32::GetANSIPathName($filename);
-    $logger->info("HERE: $filename");
+    my $f = Win32::GetANSIPathName($filename);
+    $logger->info("HERE: $filename:$f");
     $logger->info("HERE: YES") if Win32::Unicode::File::statW(NFC(encode_utf8($filename)));
     return $filename if Win32::Unicode::File::statW($filename);
   }
