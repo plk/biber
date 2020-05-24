@@ -1600,6 +1600,12 @@ sub preprocess_file {
   # Put the utf8 encoded file into the global biber tempdir
   # We have to do this in case we can't write to the location of the
   # .bib file
+  if ($^O =~ /Win/) {
+    require Win32;
+    $logger->info("HERE: $filename");
+    $logger->info("HERE: " . Win32::GetANSIPathName($filename));
+  }
+
   my $td = $Biber::MASTER->biber_tempdir;
   (undef, undef, my $fn) = File::Spec->splitpath($filename);
   my $ufilename = File::Spec->catfile($td->dirname, "${fn}_$$.utf8");
@@ -1651,7 +1657,7 @@ sub parse_decode {
   my $lbuf;
 
   my $bib = Text::BibTeX::File->new();
-  $bib->open($ufilename, {binmode => 'utf-8', normalization => 'NFD'}) or biber_error("YCannot create Text::BibTeX::File object from $ufilename: $!");
+  $bib->open($ufilename, {binmode => 'utf-8', normalization => 'NFD'}) or biber_error("Cannot create Text::BibTeX::File object from $ufilename: $!");
 
   $logger->info("LaTeX decoding ...");
 
