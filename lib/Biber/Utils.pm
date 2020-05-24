@@ -74,35 +74,27 @@ sub glob_data_file {
   my @sources;
 
   if (Biber::Config->getoption('noglob')) {
-    # if ($^O =~ /Win/) {
-    #   require Win32;
-    #   $source = encode('cp' . Win32::GetACP(), $source);
-    # }
+    push @sources, $source;
+    return @sources;
+  }
+
+  if ($source =~ m/\A(?:http|ftp)(s?):\/\//xms) {
     push @sources, $source;
     return @sources;
   }
 
   $logger->info("Globbing data source '$source'");
 
-  if ($source =~ m/\A(?:http|ftp)(s?):\/\//xms) {
-    $logger->info("Data source '$source' is remote, no globbing to do");
-    push @sources, $source;
-    return @sources;
-  }
-
-  # Use Windows style globbing on Windows
   if ($^O =~ /Win/) {
     $logger->debug("Enabling Windows-style globbing");
     require Win32;
     require File::DosGlob;
     File::DosGlob->import('glob');
     # Windows requires filenames as bytes due to appalling UTF8 handling
-    $source = encode('cp' . Win32::GetACP(), $source);
-    push @sources, map {biber_decode_utf8($_)} glob NFC(qq("$source"));
+    #$source = encode('cp' . Win32::GetACP(), $source);
   }
-  else {
-    push @sources, map {biber_decode_utf8($_)} glob NFC(qq("$source"));
-  }
+
+  push @sources, map {biber_decode_utf8($_)} glob NFC(qq("$source"));
 
   $logger->info("Globbed data source '$source' to '" . join(',', @sources) . "'");
   return @sources;
