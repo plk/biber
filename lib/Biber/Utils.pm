@@ -74,10 +74,10 @@ sub glob_data_file {
   my @sources;
 
   if (Biber::Config->getoption('noglob')) {
-    if ($^O =~ /Win/) {
-      require Win32;
-      $source = encode('cp' . Win32::GetACP(), $source);
-    }
+    # if ($^O =~ /Win/) {
+    #   require Win32;
+    #   $source = encode('cp' . Win32::GetACP(), $source);
+    # }
     push @sources, $source;
     return @sources;
   }
@@ -340,8 +340,8 @@ sub file_exist_check {
   my $filename = shift;
   if ($^O =~ /Win/) {
     require Win32::Unicode::File;
-    my $f = Win32::GetANSIPathName($filename);
-    $logger->info("HERE: $filename:$f");
+    #my $f = Win32::GetANSIPathName($filename);
+    $logger->info("HERE: $filename");
     $logger->info("HERE: YES") if Win32::Unicode::File::statW(NFC(encode_utf8($filename)));
     return $filename if Win32::Unicode::File::statW($filename);
   }
