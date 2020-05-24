@@ -5,6 +5,7 @@ use warnings;
 use sigtrap qw(handler TBSIG SEGV);
 
 use Carp;
+use Digest::MD5 qw( md5_hex );
 use Text::BibTeX qw(:nameparts :joinmethods :metatypes);
 use Text::BibTeX::Name;
 use Text::BibTeX::NameFormat;
@@ -1467,17 +1468,6 @@ sub cache_data {
   # Convert/decode file
   my $pfilename = preprocess_file($filename, $encoding);
 
-  # For windows, force the filename to the system codepage as Text::BibTeX::File
-  # can't take filehandles and so we can't pass a proper windows wide filehandle to
-  # deal with UTF8. So, normalise to system codepage for the temp .bib file
-  if ($^O =~ /Win/) {
-    require Win32;
-    require Win32::Unicode::File;
-    my $winfilename = encode('cp' . Win32::GetACP(), $pfilename);
-    Win32::Unicode::File::copyW($pfilename, $winfilename);
-    $pfilename = $winfilename;
-  }
-
   my $bib = Text::BibTeX::File->new();
   $bib->open($pfilename, {binmode => 'utf-8', normalization => 'NFD'}) or biber_error("Cannot create Text::BibTeX::File object from $pfilename: $!");
 
@@ -1613,7 +1603,9 @@ sub preprocess_file {
   # .bib file
   my $td = $Biber::MASTER->biber_tempdir;
   (undef, undef, my $fn) = File::Spec->splitpath($filename);
+  my $fnh = md5_hex(encode_utf8(NFC($fn)));
   my $ufilename = File::Spec->catfile($td->dirname, "${fn}_$$.utf8");
+  $logger->info("File '$fn' is converted to UTF8 as '$ufilename'");
 
   # We read the file in the bib encoding and then output to UTF-8, even if it was already UTF-8,
   # just in case there was a BOM so we can delete it as it makes T::B complain
@@ -1660,17 +1652,6 @@ sub parse_decode {
   my $ufilename = shift;
   my $dmh = Biber::Config->get_dm_helpers;
   my $lbuf;
-
-  # For windows, force the filename to the system codepage as Text::BibTeX::File
-  # can't take filehandles and so we can't pass a proper windows wide filehandle to
-  # deal with UTF8. So, normalise to system codepage for the temp .bib file
-  if ($^O =~ /Win/) {
-    require Win32;
-    require Win32::Unicode::File;
-    my $winfilename = encode('cp' . Win32::GetACP(), $ufilename);
-    Win32::Unicode::File::copyW($ufilename, $winfilename);
-    $ufilename = $winfilename;
-  }
 
   my $bib = Text::BibTeX::File->new();
   $bib->open($ufilename, {binmode => 'utf-8', normalization => 'NFD'}) or biber_error("Cannot create Text::BibTeX::File object from $ufilename: $!");
