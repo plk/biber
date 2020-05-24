@@ -1621,7 +1621,7 @@ sub preprocess_file {
   }
   my $buf;
   unless (eval{$buf = NFD(slurp_switchr($filename, $benc)->$*)}) {# Unicode NFD boundary
-    biber_error("Data file '$filename' cannot be read in encoding '$benc': $@");
+    biber_error("HEREData file '$filename' cannot be read in encoding '$benc': $@");
   }
 
   # strip UTF-8 BOM if it exists - this just makes T::B complain about junk characters
