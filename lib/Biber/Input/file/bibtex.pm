@@ -1602,8 +1602,7 @@ sub preprocess_file {
   # .bib file
   if ($^O =~ /Win/) {
     require Win32;
-    $logger->info("HERE: $filename");
-    $logger->info("HERE: " . Win32::GetANSIPathName($filename));
+    $filename = encode('cp' . Win32::GetACP(), $filename);
   }
 
   my $td = $Biber::MASTER->biber_tempdir;
