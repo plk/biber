@@ -1603,6 +1603,10 @@ sub preprocess_file {
   # .bib file
   my $td = $Biber::MASTER->biber_tempdir;
   (undef, undef, my $fn) = File::Spec->splitpath($filename);
+
+  # The filename that Text::BibTeX actually opens cannot be UTF-8 on Windows as there is no
+  # way to do this with the correct Win32::Unicode:File calls and so we normalise to a hash
+  # of the name so that it will work cross-platform.
   my $fnh = md5_hex(encode_utf8(NFC($fn)));
   my $ufilename = File::Spec->catfile($td->dirname, "${fnh}_$$.utf8");
   $logger->debug("File '$fn' is converted to UTF8 as '$ufilename'");
