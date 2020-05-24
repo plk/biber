@@ -1605,7 +1605,7 @@ sub preprocess_file {
   (undef, undef, my $fn) = File::Spec->splitpath($filename);
   my $fnh = md5_hex(encode_utf8(NFC($fn)));
   my $ufilename = File::Spec->catfile($td->dirname, "${fnh}_$$.utf8");
-  $logger->info("File '$fn' is converted to UTF8 as '$ufilename'");
+  $logger->debug("File '$fn' is converted to UTF8 as '$ufilename'");
 
   # We read the file in the bib encoding and then output to UTF-8, even if it was already UTF-8,
   # just in case there was a BOM so we can delete it as it makes T::B complain
