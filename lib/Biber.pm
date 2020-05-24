@@ -848,7 +848,8 @@ sub parse_ctrlfile {
         push $bibdatasources{$data->{section}[0]}->@*, { type     => $datasource->{type},
                                                          name     => $datasource->{content},
                                                          datatype => $datasource->{datatype},
-                                                         encoding => $datasource->{encoding} // Biber::Config->getoption('input_encoding')};
+                                                         encoding => $datasource->{encoding} // Biber::Config->getoption('input_encoding'),
+                                                         glob     => $datasource->{glob} // Biber::Config->getoption('glob_datasources')};
       }
     }
   }
@@ -4400,7 +4401,7 @@ sub fetch_data {
     unless ($datasource->{type} eq 'file') {
       push $ds->@*, $datasource;
     }
-    foreach my $gds (glob_data_file($datasource->{name})) {
+    foreach my $gds (glob_data_file($datasource->{name}, $datasource->{glob})) {
       push $ds->@*, { type     => $datasource->{type},
                       name     => $gds,
                       datatype => $datasource->{datatype},

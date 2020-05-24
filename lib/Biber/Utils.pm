@@ -70,12 +70,12 @@ our @EXPORT = qw{ check_empty slurp_switchr slurp_switchw glob_data_file
 =cut
 
 sub glob_data_file {
-  my $source = shift;
+  my ($source, $globflag) = @_;
   my @sources;
 
   # No globbing unless requested. No globbing for remote datasources.
   if ($source =~ m/\A(?:http|ftp)(s?):\/\//xms or
-      not Biber::Config->getoption('glob_datasources')) {
+      not _bool_norm($globflag)) {
     push @sources, $source;
     return @sources;
   }
@@ -1844,6 +1844,12 @@ sub xdatarefcheck {
     return xdatarefout($val, $implicitmarker);
   }
   return undef;
+}
+
+sub _bool_norm {
+  my $b = shift;
+  return 1 if $b =~ m/(?:true|1)/i;
+  return 0;
 }
 
 1;
