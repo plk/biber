@@ -343,7 +343,7 @@ sub file_exist_check {
     #my $f = Win32::GetANSIPathName($filename);
     $logger->info("HERE: $filename");
     $logger->info("HERE: YES") if statW($filename);
-    return $filename if statW($filename);
+    return $filename if Win32::Unicode::File::statW($filename);
   }
   else {
     if (-e NFC("$filename")) {
