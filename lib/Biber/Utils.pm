@@ -110,7 +110,7 @@ sub slurp_switchr {
   if ($^O =~ /Win/) {
     $logger->debug("Enabling Windows-compat filesystem encoding reader");
     require Win32::Unicode::File;
-    my $fh = Win32::Unicode::File->new('<', NFC($filename)) or die $!;
+    my $fh = Win32::Unicode::File->new('<', NFC(encode_utf8($filename)));
     $fh->binmode(":encoding($encoding)");
     $slurp = $fh->slurp;
   }
