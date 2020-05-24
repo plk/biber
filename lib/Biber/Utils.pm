@@ -43,7 +43,7 @@ All functions are exported by default.
 
 =cut
 
-our @EXPORT = qw{ slurp_switchr slurp_switchw glob_data_file
+our @EXPORT = qw{ check_empty slurp_switchr slurp_switchw glob_data_file
   locate_data_file makenamesid makenameid stringify_hash normalise_string
   normalise_string_hash normalise_string_underscore normalise_string_sort
   normalise_string_label reduce_array remove_outer has_outer add_outer
