@@ -342,7 +342,7 @@ sub parse_ctrlfile {
   my $ctrl_file_path = locate_data_file($ctrl_file);
   Biber::Config->set_ctrlfile_path($ctrl_file_path);
 
-  biber_error("Cannot find control file '$ctrl_file'! - Did latex run successfully on your .tex file before you ran biber?") unless ($ctrl_file_path and -e $ctrl_file_path);
+  biber_error("Cannot find control file '$ctrl_file'! - Did latex run successfully on your .tex file before you ran biber?") unless ($ctrl_file_path and check_exists($ctrl_file_path));
 
   # Early check to make sure .bcf is well-formed. If not, this means that the last biblatex run
   # exited prematurely while writing the .bcf. This results is problems for latexmk. So, if the
@@ -395,7 +395,7 @@ sub parse_ctrlfile {
       $bcf_xsl = File::Spec->catpath($vol, "$biber_path/Biber", 'bcf.xsl');
     }
 
-    if (-e $bcf_xsl) {
+    if (check_exists($bcf_xsl)) {
       $CFstyle = XML::LibXML->load_xml( location => $bcf_xsl, no_cdata=>1 )
     }
     else {
