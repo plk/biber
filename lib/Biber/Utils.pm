@@ -73,12 +73,9 @@ sub glob_data_file {
   my $source = shift;
   my @sources;
 
-  if (Biber::Config->getoption('noglob')) {
-    push @sources, $source;
-    return @sources;
-  }
-
-  if ($source =~ m/\A(?:http|ftp)(s?):\/\//xms) {
+  # No globbing unless requested. No globbing for remote datasources.
+  if ($source =~ m/\A(?:http|ftp)(s?):\/\//xms or
+      not Biber::Config->getoption('glob_datasources')) {
     push @sources, $source;
     return @sources;
   }

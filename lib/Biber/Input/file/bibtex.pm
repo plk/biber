@@ -1597,14 +1597,17 @@ sub cache_data {
 sub preprocess_file {
   my ($filename, $benc) = @_;
 
-  # Put the utf8 encoded file into the global biber tempdir
-  # We have to do this in case we can't write to the location of the
-  # .bib file
+  # For windows, force the filename to the system codepage as Text::BibTeX::File
+  # can't take filehandles and so we can't pass a proper windows wide filehandle to
+  # deal with UTF8. So, normalise to system codepage for the temp .bib file
   if ($^O =~ /Win/) {
     require Win32;
     $filename = encode('cp' . Win32::GetACP(), $filename);
   }
 
+  # Put the utf8 encoded file into the global biber tempdir
+  # We have to do this in case we can't write to the location of the
+  # .bib file
   my $td = $Biber::MASTER->biber_tempdir;
   (undef, undef, my $fn) = File::Spec->splitpath($filename);
   my $ufilename = File::Spec->catfile($td->dirname, "${fn}_$$.utf8");
