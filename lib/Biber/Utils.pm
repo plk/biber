@@ -340,8 +340,8 @@ sub file_exist_check {
   my $filename = shift;
   if ($^O =~ /Win/) {
     require Win32;
-    my $f = Win32::GetANSIPathName($filename);
-    return $f if -e "$f";
+    #my $f = Win32::GetANSIPathName($filename);
+    return $f if -e "$filename";
   }
   else {
     if (-e NFC("$filename")) {
