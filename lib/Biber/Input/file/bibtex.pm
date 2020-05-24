@@ -116,7 +116,7 @@ sub extract_entries {
   }
 
   # Check for empty files because they confuse btparse
-  unless (-s $filename) { # File is empty
+  unless (check_empty($filename)) { # File is empty
     biber_warn("Data source '$filename' is empty, ignoring");
     return @rkeys;
   }

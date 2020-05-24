@@ -340,11 +340,12 @@ sub file_exist_check {
   my $filename = shift;
   if ($^O =~ /Win/) {
     require Win32::Unicode::File;
-    #my $f = Win32::GetANSIPathName($filename);
-    $logger->info("HERE: $filename");
-    #$logger->info("HERE: YES") if Win32::Unicode::File::statW(NFC($filename));
-    #use utf8;$logger->info("HERE: YES1:grüße.bib") if Win32::Unicode::File::statW('grüße.bib');
-    return $filename if Win32::Unicode::File::statW(NFC($filename));
+    if (Win32::Unicode::File::statW(NFC($filename))) {
+      return NFC($filename);
+    }
+    if (Win32::Unicode::File::statW(NFD($filename))) {
+      return NFD($filename);
+    }
   }
   else {
     if (-e NFC("$filename")) {
@@ -356,6 +357,23 @@ sub file_exist_check {
   }
 
   return undef;
+}
+
+=head2 check_empty
+
+    Wrapper around empty check to deal with Win32 Unicode filenames
+
+=cut
+
+sub check_empty {
+  my $filename = shift;
+  if ($^O =~ /Win/) {
+    require Win32::Unicode::File;
+    return (Win32::Unicode::File::file_size($filename)) ? 1 : 0;
+  }
+  else {
+    return (-s $filename) ? 1 : 0;
+  }
 }
 
 =head2 biber_warn
