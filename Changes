@@ -1,6 +1,7 @@
 Revision history for Biber
 
 2.15   (2020-)
+       * UTF-8 filenames supported on Windows
        * INCOMPATIBLE CHANGE - datasource globbing now has to be turned on
          explicitly with the --glob-datasources option. Globbing causes
          some issues with UTF8 encoding detection on some OSes and since it
