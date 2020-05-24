@@ -339,9 +339,9 @@ sub locate_data_file {
 sub file_exist_check {
   my $filename = shift;
   if ($^O =~ /Win/) {
-    require Win32;
+    require Win32::Unicode::File;
     #my $f = Win32::GetANSIPathName($filename);
-    return $f if -e "$filename";
+    return $filename if statW($filename);
   }
   else {
     if (-e NFC("$filename")) {
