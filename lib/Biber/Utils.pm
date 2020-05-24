@@ -342,7 +342,8 @@ sub file_exist_check {
     require Win32::Unicode::File;
     #my $f = Win32::GetANSIPathName($filename);
     $logger->info("HERE: $filename");
-    $logger->info("HERE: YES") if Win32::Unicode::File::statW(NFC(encode_utf8($filename)));
+    $logger->info("HERE: YES") if Win32::Unicode::File::statW($filename);
+    $logger->info("HERE: YES1") if Win32::Unicode::File::statW('grüße.bib');
     return $filename if Win32::Unicode::File::statW($filename);
   }
   else {
