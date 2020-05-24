@@ -90,8 +90,6 @@ sub glob_data_file {
     require Win32;
     require File::DosGlob;
     File::DosGlob->import('glob');
-    # Windows requires filenames as bytes due to appalling UTF8 handling
-    #$source = encode('cp' . Win32::GetACP(), $source);
   }
 
   push @sources, map {biber_decode_utf8($_)} glob NFC(qq("$source"));

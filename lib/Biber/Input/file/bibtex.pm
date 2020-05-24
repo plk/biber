@@ -1651,7 +1651,7 @@ sub parse_decode {
   my $lbuf;
 
   my $bib = Text::BibTeX::File->new();
-  $bib->open($ufilename, {binmode => 'utf-8', normalization => 'NFD'}) or biber_error("Cannot create Text::BibTeX::File object from $ufilename: $!");
+  $bib->open($ufilename, {binmode => 'utf-8', normalization => 'NFD'}) or biber_error("YCannot create Text::BibTeX::File object from $ufilename: $!");
 
   $logger->info("LaTeX decoding ...");
 
