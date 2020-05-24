@@ -1467,16 +1467,24 @@ sub cache_data {
   # Convert/decode file
   my $pfilename = preprocess_file($filename, $encoding);
 
-  my $bib = get_tb_fh($pfilename);
+  # For windows, force the filename to the system codepage as Text::BibTeX::File
+  # can't take filehandles and so we can't pass a proper windows wide filehandle to
+  # deal with UTF8. So, normalise to system codepage for the temp .bib file
+  if ($^O =~ /Win/) {
+    require Win32;
+    require Win32::Unicode::File;
+    my $winfilename = encode('cp' . Win32::GetACP(), $pfilename);
+    Win32::Unicode::File::copyW($pfilename, $winfilename);
+    $pfilename = $winfilename;
+  }
 
-  # my $bib = Text::BibTeX::File->new();
-  # $bib->open($pfilename, {binmode => 'utf-8', normalization => 'NFD'}) or biber_error("Cannot create Text::BibTeX::File object from $pfilename: $!");
+  my $bib = Text::BibTeX::File->new();
+  $bib->open($pfilename, {binmode => 'utf-8', normalization => 'NFD'}) or biber_error("Cannot create Text::BibTeX::File object from $pfilename: $!");
 
   # Log that we found a data file
   $logger->info("Found BibTeX data source '$filename'");
 
-#  while ( my $entry = Text::BibTeX::Entry->new($bib) ) {
-  while ( my $entry = Text::BibTeX::Entry->new({binmode => 'utf-8', normalization => 'NFD'}, $pfilename, $bib) ) {
+  while ( my $entry = Text::BibTeX::Entry->new($bib) ) {
     if ( $entry->metatype == BTE_PREAMBLE ) {
       push $cache->{preamble}{$filename}->@*, $entry->value;
       next;
@@ -1636,28 +1644,8 @@ sub preprocess_file {
 
   slurp_switchw($ufilename, $lbuf);# Unicode NFC boundary
 
-  # For windows, force the filename to the system codepage as Text::BibTeX::File
-  # can't take filehandles and so we can't pass a proper windows wide filehandle to
-  # deal with UTF8. So, normalise to system codepage for the temp .bib file
-  # if ($^O =~ /Win/) {
-  #   require Win32;
-  #   $ufilename = encode('cp' . Win32::GetACP(), $ufilename);
-  # }
-
   return $ufilename;
 }
-
-sub get_tb_fh {
-  my $filename = shift;
-  if ($^O =~ /Win/) {
-    require Win32::Unicode::File;
-    return Win32::Unicode::File->new('<', NFC($filename));
-  }
-  else {
-    return IO::File->new("< $filename");
-  }
-}
-
 
 =head2 parse_decode
 
@@ -1673,14 +1661,23 @@ sub parse_decode {
   my $dmh = Biber::Config->get_dm_helpers;
   my $lbuf;
 
-#  my $bib = Text::BibTeX::File->new();
-#  $bib->open($ufilename, {binmode => 'utf-8', normalization => 'NFD'}) or biber_error("Cannot create Text::BibTeX::File object from $ufilename: $!");
-  my $bib = get_tb_fh($ufilename);
+  # For windows, force the filename to the system codepage as Text::BibTeX::File
+  # can't take filehandles and so we can't pass a proper windows wide filehandle to
+  # deal with UTF8. So, normalise to system codepage for the temp .bib file
+  if ($^O =~ /Win/) {
+    require Win32;
+    require Win32::Unicode::File;
+    my $winfilename = encode('cp' . Win32::GetACP(), $ufilename);
+    Win32::Unicode::File::copyW($ufilename, $winfilename);
+    $ufilename = $winfilename;
+  }
+
+  my $bib = Text::BibTeX::File->new();
+  $bib->open($ufilename, {binmode => 'utf-8', normalization => 'NFD'}) or biber_error("Cannot create Text::BibTeX::File object from $ufilename: $!");
 
   $logger->info("LaTeX decoding ...");
 
-#  while ( my $entry = Text::BibTeX::Entry->new($bib) ) {
-  while ( my $entry = Text::BibTeX::Entry->new({binmode => 'utf-8', normalization => 'NFD'}, $ufilename, $bib) ) {
+  while ( my $entry = Text::BibTeX::Entry->new($bib) ) {
   if ( $entry->metatype == BTE_REGULAR ) {
       $lbuf .= '@' . $entry->type . '{' . $entry->key . ',' . "\n";
       foreach my $f ($entry->fieldlist) {
@@ -1718,6 +1715,8 @@ sub parse_decode {
       Text::BibTeX::add_macro_text($mon, $MONTHS{$mon});
     }
   }
+
+  $bib->close;
 
   return $lbuf;
 }

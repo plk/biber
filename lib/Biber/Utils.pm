@@ -113,6 +113,7 @@ sub slurp_switchr {
     my $fh = Win32::Unicode::File->new('<', NFC($filename));
     $fh->binmode(":encoding($encoding)");
     $slurp = $fh->slurp;
+    $fh->close;
   }
   else {
     $slurp = File::Slurper::read_text($filename, $encoding);
