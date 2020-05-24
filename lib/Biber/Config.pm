@@ -322,7 +322,7 @@ sub _config_file_set {
   if (defined($conf)) {
     require XML::LibXML::Simple;
 
-    my $buf = NFD(Biber::Utils::slurp_switch($conf)->$*);# Unicode NFD boundary
+    my $buf = NFD(Biber::Utils::slurp_switchr($conf)->$*);# Unicode NFD boundary
 
     $userconf = XML::LibXML::Simple::XMLin($buf,
                                            'ForceContent' => 1,

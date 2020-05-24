@@ -43,14 +43,14 @@ All functions are exported by default.
 
 =cut
 
-our @EXPORT = qw{ slurp_switch glob_data_file locate_data_file makenamesid
-  makenameid stringify_hash normalise_string normalise_string_hash
-  normalise_string_underscore normalise_string_sort normalise_string_label
-  reduce_array remove_outer has_outer add_outer ucinit strip_nosort
-  strip_noinit is_def is_undef is_def_and_notnull is_def_and_null
-  is_undef_or_null is_notnull is_null normalise_utf8 inits join_name
-  latex_recode_output filter_entry_options biber_error biber_warn ireplace
-  imatch validate_biber_xml process_entry_options escape_label
+our @EXPORT = qw{ slurp_switchr slurp_switchw glob_data_file
+  locate_data_file makenamesid makenameid stringify_hash normalise_string
+  normalise_string_hash normalise_string_underscore normalise_string_sort
+  normalise_string_label reduce_array remove_outer has_outer add_outer
+  ucinit strip_nosort strip_noinit is_def is_undef is_def_and_notnull
+  is_def_and_null is_undef_or_null is_notnull is_null normalise_utf8 inits
+  join_name latex_recode_output filter_entry_options biber_error biber_warn
+  ireplace imatch validate_biber_xml process_entry_options escape_label
   unescape_label biber_decode_utf8 out parse_date_start parse_date_end
   parse_date_range locale2bcp47 bcp472locale rangelen match_indices
   process_comment map_boolean parse_range parse_range_alt maploopreplace
@@ -98,7 +98,7 @@ sub glob_data_file {
     File::DosGlob->import('glob');
     # Windows requires filenames as bytes due to appalling UTF8 handling
     $source = encode('cp' . Win32::GetACP(), $source);
-    push @sources, glob qq("$source");
+    push @sources, map {biber_decode_utf8($_)} glob NFC(qq("$source"));
   }
   else {
     push @sources, map {biber_decode_utf8($_)} glob NFC(qq("$source"));
@@ -108,14 +108,14 @@ sub glob_data_file {
   return @sources;
 }
 
-=head2 slurp_switch
+=head2 slurp_switchr
 
-  Use different encoding/slurp interfaces for Windows due to its
+  Use different read encoding/slurp interfaces for Windows due to its
   horrible legacy codepage system
 
 =cut
 
-sub slurp_switch {
+sub slurp_switchr {
   my ($filename, $encoding) = @_;
   my $slurp;
   $encoding //= 'UTF-8';
@@ -130,6 +130,30 @@ sub slurp_switch {
     $slurp = File::Slurper::read_text($filename, $encoding);
   }
   return \$slurp;
+}
+
+=head2 slurp_switchw
+
+  Use different write encoding/slurp interfaces for Windows due to its
+  horrible legacy codepage system
+
+=cut
+
+sub slurp_switchw {
+  my ($filename, $string) = @_;
+  if ($^O =~ /Win/) {
+    $logger->debug("Enabling Windows-compat filesystem encoding writer");
+    require Win32::Unicode::File;
+    my $fh = Win32::Unicode::File->new('>', $filename);
+    $fh->binmode(':encoding(UTF-8)');
+    $fh->write($string);
+    $fh->flush;
+    $fh->close;
+  }
+  else {
+    File::Slurper::write_text($filename, NFC($string));
+  }
+  return;
 }
 
 =head2 locate_data_file
