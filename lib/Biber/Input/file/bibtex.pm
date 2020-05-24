@@ -1633,6 +1633,14 @@ sub preprocess_file {
 
   slurp_switchw($ufilename, $lbuf);# Unicode NFC boundary
 
+  # For windows, force the filename to the system codepage as Text::BibTeX::File
+  # can't take filehandles and so we can't pass a proper windows wide filehandle to
+  # deal with UTF8. So, normalise to system codepage for the temp .bib file
+  if ($^O =~ /Win/) {
+    require Win32;
+    $ufilename = encode('cp' . Win32::GetACP(), $ufilename);
+  }
+
   return $ufilename;
 }
 
@@ -1649,14 +1657,6 @@ sub parse_decode {
   my $ufilename = shift;
   my $dmh = Biber::Config->get_dm_helpers;
   my $lbuf;
-
-  # For windows, force the filename to the system codepage as Text::BibTeX::File
-  # can't take filehandles and so we can't pass a proper windows wide filehandle to
-  # deal with UTF8. So, normalise to system codepage for the temp .bib file
-  if ($^O =~ /Win/) {
-    require Win32;
-    $ufilename = encode('cp' . Win32::GetACP(), $ufilename);
-  }
 
   my $bib = Text::BibTeX::File->new();
   $bib->open($ufilename, {binmode => 'utf-8', normalization => 'NFD'}) or biber_error("Cannot create Text::BibTeX::File object from $ufilename: $!");
