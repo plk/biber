@@ -476,6 +476,7 @@ sub strip_noinit {
   }
   # remove latex macros (assuming they have only ASCII letters)
   $string =~ s{\\[A-Za-z]+\s*(\{([^\}]*)?\})?}{defined($2)?$2:q{}}eg;
+  $string =~ s/^\{\}$//; # Special case if only braces are left
   return $string;
 }
 
@@ -1735,7 +1736,7 @@ sub gen_initials {
       push @strings_out, join('-', gen_initials(split(/\p{Dash}/, $str)));
     }
     else {
-      # remove any leading braces from latex decoding or protection
+      # remove any leading braces and backslash from latex decoding or protection
       $str =~ s/^\{+//;
       my $chr = Unicode::GCString->new($str)->substr(0, 1)->as_string;
       # Keep diacritics with their following characters

@@ -423,7 +423,7 @@ my $t2 = q|    \entry{t2}{misc}{}
       \true{uniquework}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
-      \field{title}{Signs of W$\frac{o}{a}$nder}
+      \field{title}{Signs of W$\frac{o}a$nder}
       \field{year}{1994}
       \field{pages}{100\bibrangedash 108}
       \range{pages}{9}
