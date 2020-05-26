@@ -1044,7 +1044,7 @@ my $l31 = q|    \entry{L31}{book}{}
            giveni={A\bibinitperiod}}}%
       }
       \namepartms{translator}{1}{%
-          familydefaulten-us={{\~{Z}}elly},
+          familydefaulten-us={\~{Z}elly},
           familydefaulten-usi={\~{Z}\bibinitperiod},
           givendefaulten-us={Arthur},
           givendefaulten-usi={A\bibinitperiod}
