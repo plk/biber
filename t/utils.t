@@ -5,7 +5,7 @@ use utf8;
 no warnings 'utf8' ;
 use open qw/:std :utf8/;
 
-use Test::More tests => 83;
+use Test::More tests => 85;
 use Test::Differences;
 unified_diff;
 
@@ -82,15 +82,15 @@ eq_or_diff(NFC(latex_decode("{M{\\'a}t{\\'e}}")), '{Máté}', 'latex decode acce
 eq_or_diff(NFC(latex_decode("{M\\'{a}t\\'{e}}")), '{Máté}', 'latex decode accent 2');
 eq_or_diff(NFC(latex_decode("{M\\'at\\'e}")), '{Máté}', 'latex decode accent 3');
 eq_or_diff(NFC(latex_decode("R{\\'egis}")), 'R{égis}', 'latex decode accent 4');
-eq_or_diff(NFC(latex_decode("\\frac{a}{b}")), '\frac{a}{b}', 'latex decode accent 5');
-eq_or_diff(NFC(latex_decode("\\textuppercase{\\'e}")), '\textuppercase{é}', 'latex decode accent 5');
+eq_or_diff(NFC(latex_decode("\\frac{a}{b}")), '\frac{a}b', 'latex decode accent 5');
+eq_or_diff(NFC(latex_decode("\\textuppercase{\\'e}")), '\textuppercase{é}', 'latex decode accent 6');
 eq_or_diff(NFC(latex_decode("\\DH{}and\\dj{}and\\'{c}, H.")), 'Ðandđandć, H.', 'latex reversing recoding test 1');
 eq_or_diff(NFC(latex_decode("{\\DH{}and\\dj{}and\\'{c}, H.}")), '{Ðandđandć, H.}', 'latex reversing recoding test 2');
 eq_or_diff(latex_encode(NFD('Ðandđandć, H.')), '\\DH{}and\\dj{}and\\\'{c}, H.', 'latex reversing recoding test 3');
 eq_or_diff(latex_encode(NFD('{Ðandđandć, H.}')), '{\\DH{}and\\dj{}and\\\'{c}, H.}', 'latex reversing recoding test 4');
 
 Biber::LaTeX::Recode->init_sets('full', 'full'); # Need to do this to reset
-eq_or_diff(NFC(latex_decode('{\"{U}}ber {\"{U}}berlegungen zur \"{U}berwindung des \"{U}bels')), '{Ü}ber {Ü}berlegungen zur Überwindung des Übels', 'latex decode 4 (with 2 explicit brace protections)');
+eq_or_diff(NFC(latex_decode('{\"{U}}ber {\"{U}}berlegungen zur \"{U}berwindung des \"{U}bels')), 'Über Überlegungen zur Überwindung des Übels', 'latex decode 4 (with 2 explicit brace protections)');
 eq_or_diff(latex_decode('\alpha'), 'α', 'latex decode 4a'); # greek decoding with "full"
 eq_or_diff(NFC(latex_decode("\\'\\i")), 'ı́', 'latex decode 5'); # checking i/j with accents
 eq_or_diff(NFC(latex_decode("{\\'\\i}")), 'ı́', 'latex decode 5a (with redundant explicit brace protection)'); # checking i/j with accents
@@ -103,6 +103,8 @@ eq_or_diff(latex_decode('\j'), 'ȷ', 'latex decode 10'); # checking dotless j
 eq_or_diff(latex_decode('\textdiv'), '÷', 'latex decode 11'); # checking multiple set for types
 eq_or_diff(latex_decode('--'), '--', 'latex decode 13'); # Testing raw
 eq_or_diff(latex_decode('\textdegree C'), '°C', 'latex decode 14');
+eq_or_diff(NFC(latex_decode("{\\'{I}}")), 'Í', 'latex decode 15'); # single glyph braces
+eq_or_diff(NFC(latex_decode('{\v{C}}')), 'Č', 'latex decode 16'); # single glyph braces
 
 eq_or_diff(latex_encode(NFD('α')), '{$\alpha$}', 'latex encode 3'); # greek encoding with "full"
 eq_or_diff(latex_encode(NFD('µ')), '{$\mu$}', 'latex encode 4'); # Testing symbols

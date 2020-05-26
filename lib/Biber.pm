@@ -342,21 +342,21 @@ sub parse_ctrlfile {
   my $ctrl_file_path = locate_data_file($ctrl_file);
   Biber::Config->set_ctrlfile_path($ctrl_file_path);
 
-  biber_error("Cannot find control file '$ctrl_file'! - Did latex run successfully on your .tex file before you ran biber?") unless ($ctrl_file_path and -e $ctrl_file_path);
+  biber_error("Cannot find control file '$ctrl_file'! - Did latex run successfully on your .tex file before you ran biber?") unless ($ctrl_file_path and check_exists($ctrl_file_path));
 
   # Early check to make sure .bcf is well-formed. If not, this means that the last biblatex run
   # exited prematurely while writing the .bcf. This results is problems for latexmk. So, if the
   # .bcf is broken, just stop here, remove the .bcf and exit with error so that we don't write
   # a bad .bbl
   my $checkbuf;
-  unless ($checkbuf = eval {File::Slurper::read_text($ctrl_file_path)}) {
+  unless ($checkbuf = eval {slurp_switchr($ctrl_file_path)->$*}) {
     # Reading ctrl-file as UTF-8 failed. Probably it was written by fontenc as latin1
     # with some latin1 char in it (probably a sourcemap), so try that as a last resort
-    unless (eval {$checkbuf = File::Slurper::read_text($ctrl_file_path, 'latin1')}) {
+    unless (eval {$checkbuf = slurp_switchr($ctrl_file_path, 'latin1')->$*}) {
       biber_error("$ctrl_file_path is not UTF-8 or even latin1, please delete it and run latex again or check that biblatex is writing a valid .bcf file.");
     }
     # Write ctrl file as UTF-8
-    File::Slurper::write_text($ctrl_file_path, NFC($checkbuf));# Unicode NFC boundary
+    slurp_switchw($ctrl_file_path, $checkbuf);# Unicode NFC boundary
   }
 
   $checkbuf = NFD($checkbuf);# Unicode NFD boundary
@@ -395,7 +395,7 @@ sub parse_ctrlfile {
       $bcf_xsl = File::Spec->catpath($vol, "$biber_path/Biber", 'bcf.xsl');
     }
 
-    if (-e $bcf_xsl) {
+    if (check_exists($bcf_xsl)) {
       $CFstyle = XML::LibXML->load_xml( location => $bcf_xsl, no_cdata=>1 )
     }
     else {
@@ -413,7 +413,7 @@ sub parse_ctrlfile {
   # Open control file
  LOADCF:
   $logger->info("Reading '$ctrl_file_path'");
-  my $buf = File::Slurper::read_text($ctrl_file_path);
+  my $buf = slurp_switchr($ctrl_file_path)->$*;
   $buf = NFD($buf);# Unicode NFD boundary
 
   # Read control file
@@ -848,7 +848,8 @@ sub parse_ctrlfile {
         push $bibdatasources{$data->{section}[0]}->@*, { type     => $datasource->{type},
                                                          name     => $datasource->{content},
                                                          datatype => $datasource->{datatype},
-                                                         encoding => $datasource->{encoding} // Biber::Config->getoption('input_encoding')};
+                                                         encoding => $datasource->{encoding} // Biber::Config->getoption('input_encoding'),
+                                                         glob     => $datasource->{glob} // Biber::Config->getoption('glob_datasources')};
       }
     }
   }
@@ -4445,17 +4446,9 @@ sub fetch_data {
     unless ($datasource->{type} eq 'file') {
       push $ds->@*, $datasource;
     }
-    unless (Biber::Config->getoption('noglob')) {
-      foreach my $gds (glob_data_file($datasource->{name})) {
-        push $ds->@*, { type     => $datasource->{type},
-                        name     => $gds,
-                        datatype => $datasource->{datatype},
-                        encoding => $datasource->{encoding}};
-      }
-    }
-    else {
+    foreach my $gds (glob_data_file($datasource->{name}, $datasource->{glob})) {
       push $ds->@*, { type     => $datasource->{type},
-                      name     => $datasource->{name},
+                      name     => $gds,
                       datatype => $datasource->{datatype},
                       encoding => $datasource->{encoding}};
     }

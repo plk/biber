@@ -1038,8 +1038,8 @@ my $l31 = q|    \entry{L31}{book}{}
       }
       \name[default][en-us]{translator}{1}{}{%
         {{hash=29c3ff92fff79d09a8b44d2f775de0b1}{%
-           family={{\~{Z}}elly},
-           familyi={\~{Z}\bibinitperiod},
+           family={\~{Z}elly},
+           familyi={\~{Z}\\bibinitperiod},
            given={Arthur},
            giveni={A\bibinitperiod}}}%
       }

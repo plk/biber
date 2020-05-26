@@ -5,6 +5,7 @@ use warnings;
 use sigtrap qw(handler TBSIG SEGV);
 
 use Carp;
+use Digest::MD5 qw( md5_hex );
 use Text::BibTeX qw(:nameparts :joinmethods :metatypes);
 use Text::BibTeX::Name;
 use Text::BibTeX::NameFormat;
@@ -118,14 +119,14 @@ sub extract_entries {
   }
 
   # Check for empty files because they confuse btparse
-  unless (-s $filename) { # File is empty
+  unless (check_empty($filename)) { # File is empty
     biber_warn("Data source '$filename' is empty, ignoring");
     return @rkeys;
   }
 
   # Check for files with no macros - they also confuse btparse
   my $tbuf;
-  unless (eval {$tbuf = File::Slurper::read_text($filename, $encoding)}) {
+  unless (eval {$tbuf = slurp_switchr($filename, $encoding)->$*}) {
     biber_error("Data file '$filename' cannot be read in encoding '$encoding': $@");
   }
   unless ($tbuf =~ m/\@/) {
@@ -1646,7 +1647,13 @@ sub preprocess_file {
   # .bib file
   my $td = $Biber::MASTER->biber_tempdir;
   (undef, undef, my $fn) = File::Spec->splitpath($filename);
-  my $ufilename = File::Spec->catfile($td->dirname, "${fn}_$$.utf8");
+
+  # The filename that Text::BibTeX actually opens cannot be UTF-8 on Windows as there is no
+  # way to do this with the correct Win32::Unicode:File calls and so we normalise to a hash
+  # of the name so that it will work cross-platform.
+  my $fnh = md5_hex(encode_utf8(NFC($fn)));
+  my $ufilename = File::Spec->catfile($td->dirname, "${fnh}_$$.utf8");
+  $logger->debug("File '$fn' is converted to UTF8 as '$ufilename'");
 
   # We read the file in the bib encoding and then output to UTF-8, even if it was already UTF-8,
   # just in case there was a BOM so we can delete it as it makes T::B complain
@@ -1656,7 +1663,7 @@ sub preprocess_file {
     $benc = 'UTF-8';
   }
   my $buf;
-  unless (eval{$buf = NFD(File::Slurper::read_text($filename, $benc))}) {# Unicode NFD boundary
+  unless (eval{$buf = NFD(slurp_switchr($filename, $benc)->$*)}) {# Unicode NFD boundary
     biber_error("Data file '$filename' cannot be read in encoding '$benc': $@");
   }
 
@@ -1667,7 +1674,7 @@ sub preprocess_file {
   # in some circumstances
   $buf =~ s/\R/\n/g;
 
-  File::Slurper::write_text($ufilename, NFC($buf));# Unicode NFC boundary
+  slurp_switchw($ufilename, $buf);# Unicode NFC boundary
 
   my $lbuf = parse_decode($ufilename);
 
@@ -1675,7 +1682,7 @@ sub preprocess_file {
     $logger->trace("Buffer after decoding -> '$lbuf'");
   }
 
-  File::Slurper::write_text($ufilename, NFC($lbuf));# Unicode NFC boundary
+  slurp_switchw($ufilename, $lbuf);# Unicode NFC boundary
 
   return $ufilename;
 }
@@ -1700,7 +1707,7 @@ sub parse_decode {
   $logger->info("LaTeX decoding ...");
 
   while ( my $entry = Text::BibTeX::Entry->new($bib) ) {
-    if ( $entry->metatype == BTE_REGULAR ) {
+  if ( $entry->metatype == BTE_REGULAR ) {
       $lbuf .= '@' . $entry->type . '{' . $entry->key . ',' . "\n";
       foreach my $f ($entry->fieldlist) {
         my $fv = $entry->get(encode('UTF-8', NFC($f))); # NFC boundary: $f is "output" to Text::BibTeX
@@ -1737,6 +1744,8 @@ sub parse_decode {
       Text::BibTeX::add_macro_text($mon, $MONTHS{$mon});
     }
   }
+
+  $bib->close;
 
   return $lbuf;
 }

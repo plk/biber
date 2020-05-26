@@ -619,7 +619,7 @@ my $t2 = q|    \entry{t2}{misc}{}
       \true{uniquework}
       \fieldmssource{labelname}{author}{default}{en-us}
       \fieldmssource{labeltitle}{title}{default}{en-us}
-      \field[default][en-us]{title}{Signs of W$\frac{o}{a}$nder}
+      \field[default][en-us]{title}{Signs of W$\frac{o}a$nder}
       \field{year}{1994}
       \field{pages}{100\bibrangedash 108}
       \range{pages}{9}

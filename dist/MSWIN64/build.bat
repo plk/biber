@@ -60,6 +60,7 @@ CALL pp ^
   --module=File::Find::Rule ^
   --module=Text::CSV_XS ^
   --module=DateTime ^
+  --module=Win32::Unicode ^
   --link=C:\strawberry\c\bin\libbtparse.dll ^
   --link=C:\strawberry\c\bin\libxslt-1__.dll ^
   --link=C:\strawberry\c\bin\libexslt-0__.dll ^
