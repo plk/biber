@@ -5,7 +5,7 @@ use utf8;
 no warnings 'utf8' ;
 use open qw/:std :utf8/;
 
-use Test::More tests => 85;
+use Test::More tests => 86;
 use Test::Differences;
 unified_diff;
 
@@ -82,7 +82,7 @@ eq_or_diff(NFC(latex_decode("{M{\\'a}t{\\'e}}")), '{Máté}', 'latex decode acce
 eq_or_diff(NFC(latex_decode("{M\\'{a}t\\'{e}}")), '{Máté}', 'latex decode accent 2');
 eq_or_diff(NFC(latex_decode("{M\\'at\\'e}")), '{Máté}', 'latex decode accent 3');
 eq_or_diff(NFC(latex_decode("R{\\'egis}")), 'R{égis}', 'latex decode accent 4');
-eq_or_diff(NFC(latex_decode("\\frac{a}{b}")), '\frac{a}b', 'latex decode accent 5');
+eq_or_diff(NFC(latex_decode("\\frac{a}{b}")), '\frac{a}{b}', 'latex decode accent 5');
 eq_or_diff(NFC(latex_decode("\\textuppercase{\\'e}")), '\textuppercase{é}', 'latex decode accent 6');
 eq_or_diff(NFC(latex_decode("\\DH{}and\\dj{}and\\'{c}, H.")), 'Ðandđandć, H.', 'latex reversing recoding test 1');
 eq_or_diff(NFC(latex_decode("{\\DH{}and\\dj{}and\\'{c}, H.}")), '{Ðandđandć, H.}', 'latex reversing recoding test 2');
@@ -105,6 +105,7 @@ eq_or_diff(latex_decode('--'), '--', 'latex decode 13'); # Testing raw
 eq_or_diff(latex_decode('\textdegree C'), '°C', 'latex decode 14');
 eq_or_diff(NFC(latex_decode("{\\'{I}}")), 'Í', 'latex decode 15'); # single glyph braces
 eq_or_diff(NFC(latex_decode('{\v{C}}')), 'Č', 'latex decode 16'); # single glyph braces
+eq_or_diff(NFC(latex_decode('{I}')), '{I}', 'latex decode 17'); # non-accents
 
 eq_or_diff(latex_encode(NFD('α')), '{$\alpha$}', 'latex encode 3'); # greek encoding with "full"
 eq_or_diff(latex_encode(NFD('µ')), '{$\mu$}', 'latex encode 4'); # Testing symbols

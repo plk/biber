@@ -247,6 +247,13 @@ sub latex_decode {
                         '{' => "\x{1f}",
                         '}' => "\x{1e}"};
 
+        # Hacky - specially protect {\X} which is a simple protection as in
+        # TITLE = {Part {I}}
+        # Can't do this using the seperators above as these are stripping around \X
+        # later to avoid breaking capitliastion/kerning with spurious introduced/retained
+        # braces
+        $text =~ s/(?<!\\.)\{(\X)\}/\x{f}$1\x{e}/g;
+
         # Rename protecting braces so that they are not broken by RE manipulations
         $text =~ s/(\{?)\\($re)\s*\{(\pL\pM*)\}(\}?)/$bracemap->{$1} . $3 . $map->{$2} . $bracemap->{$4}/ge;
         $text =~ s/(\{)(\pL\pM*)(\})/$bracemap->{$1} . $2 . $bracemap->{$3}/ge;
@@ -313,6 +320,8 @@ sub latex_decode {
     # explicit braces in the data
     $text =~ s/\x{1f}/{/g;
     $text =~ s/\x{1e}/}/g;
+    $text =~ s/\x{f}/{/g;
+    $text =~ s/\x{e}/}/g;
 
     if ($logger->is_trace()) {# performance tune
       $logger->trace("String in latex_decode() now -> '$text'");

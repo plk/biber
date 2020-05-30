@@ -393,7 +393,7 @@ my $t1 = q+    \entry{t1}{misc}{}
       \true{uniquework}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
-      \field{title}{10\% of [100] and 90% of $Normal_2$ | \& # things {$^3$}}
+      \field{title}{10\% of [100] and 90% of $Normal_2$ | \& # things {$^{3}$}}
       \field{year}{1992}
       \field{pages}{100\bibrangedash}
       \range{pages}{-1}
@@ -423,7 +423,7 @@ my $t2 = q|    \entry{t2}{misc}{}
       \true{uniquework}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
-      \field{title}{Signs of W$\frac{o}a$nder}
+      \field{title}{Signs of W$\frac{o}{a}$nder}
       \field{year}{1994}
       \field{pages}{100\bibrangedash 108}
       \range{pages}{9}
