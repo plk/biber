@@ -5,7 +5,7 @@ use utf8;
 no warnings 'utf8' ;
 use open qw/:std :utf8/;
 
-use Test::More tests => 86;
+use Test::More tests => 88;
 use Test::Differences;
 unified_diff;
 
@@ -106,6 +106,8 @@ eq_or_diff(latex_decode('\textdegree C'), '°C', 'latex decode 14');
 eq_or_diff(NFC(latex_decode("{\\'{I}}")), 'Í', 'latex decode 15'); # single glyph braces
 eq_or_diff(NFC(latex_decode('{\v{C}}')), 'Č', 'latex decode 16'); # single glyph braces
 eq_or_diff(NFC(latex_decode('{I}')), '{I}', 'latex decode 17'); # non-accents
+eq_or_diff(NFC(latex_decode('\&{A}')), '\&{A}', 'latex decode 18'); # non-accents
+eq_or_diff(NFC(latex_decode('\&\;{A}')), '\&\;{A}', 'latex decode 19'); # non-accents
 
 eq_or_diff(latex_encode(NFD('α')), '{$\alpha$}', 'latex encode 3'); # greek encoding with "full"
 eq_or_diff(latex_encode(NFD('µ')), '{$\mu$}', 'latex encode 4'); # Testing symbols

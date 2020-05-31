@@ -252,7 +252,9 @@ sub latex_decode {
         # Can't do this using the seperators above as these are stripping around \X
         # later to avoid breaking capitliastion/kerning with spurious introduced/retained
         # braces
-        $text =~ s/(?<!\\.)\{(\X)\}/\x{f}$1\x{e}/g;
+        # Using the VLB method from the link below, this is equivalent to:
+        # $text =~ s/(?<!\\$re)\{(\X)\}/\x{f}$1\x{e}/g;
+        $text =~ s/(?!(?=(?'a'[\s\S]*))(?'b'\\$re(?=\k'a'\z)|(?<=(?=x^|(?&b))[\s\S])))\{(\X)\}/\x{f}$3\x{e}/g;
 
         # Rename protecting braces so that they are not broken by RE manipulations
         $text =~ s/(\{?)\\($re)\s*\{(\pL\pM*)\}(\}?)/$bracemap->{$1} . $3 . $map->{$2} . $bracemap->{$4}/ge;
