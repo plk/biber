@@ -583,7 +583,7 @@ my $t1 = q+    \entry{t1}{misc}{}
       \true{uniquework}
       \fieldmssource{labelname}{author}{default}{en-us}
       \fieldmssource{labeltitle}{title}{default}{en-us}
-      \field[default][en-us]{title}{10\% of [100] and 90% of $Normal_2$ | \& # things {$^3$}}
+      \field[default][en-us]{title}{10\% of [100] and 90% of $Normal_2$ | \& # things {$^{3}$}}
       \field{year}{1992}
       \field{pages}{100\bibrangedash}
       \range{pages}{-1}
@@ -619,7 +619,7 @@ my $t2 = q|    \entry{t2}{misc}{}
       \true{uniquework}
       \fieldmssource{labelname}{author}{default}{en-us}
       \fieldmssource{labeltitle}{title}{default}{en-us}
-      \field[default][en-us]{title}{Signs of W$\frac{o}a$nder}
+      \field[default][en-us]{title}{Signs of W$\frac{o}{a}$nder}
       \field{year}{1994}
       \field{pages}{100\bibrangedash 108}
       \range{pages}{9}
