@@ -2956,13 +2956,7 @@ sub process_lists {
       $self->process_entries_final($list);
     }
 
-    # Sorting
-    $self->generate_sortdataschema($list); # generate the sort schema information
-    $self->generate_sortinfo($list);       # generate the sort information
-    $self->sort_list($list);               # sort the list
-    $self->generate_contextdata($list) unless Biber::Config->getoption('tool');
-
-    # Filtering
+    # Filtering - must come before sorting/labelling so that there are no gaps in e.g. extradate
     if (my $filters = $list->get_filters) {
       my $flist = [];
     KEYLOOP: foreach my $k ($list->get_keys->@*) {
@@ -2984,6 +2978,13 @@ sub process_lists {
       }
       $list->set_keys($flist); # Now save the sorted list in the list object
     }
+
+    # Sorting
+    $self->generate_sortdataschema($list); # generate the sort schema information
+    $self->generate_sortinfo($list);       # generate the sort information
+    $self->sort_list($list);               # sort the list
+    $self->generate_contextdata($list) unless Biber::Config->getoption('tool');
+
   }
   return;
 }
