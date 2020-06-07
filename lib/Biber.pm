@@ -925,7 +925,6 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
           $key_flag = 1; # There is at least one key, used for error reporting below
         }
         else {
-          next if $bib_section->is_allkeys; # Skip if we have already encountered '*'
           # Track cite/nocite - needed for sourcemapping logic
           if ($keyc->{nocite}) {
             $bib_section->add_nocite($key);
