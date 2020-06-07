@@ -656,8 +656,27 @@ sub create_entry {
             }
 
             # \nocite{*}
+            if ($step->{map_entrykey_starnocited}) {
+              if ($section->is_allkeys_nocite and ($section->is_cite($key) or $section->is_nocite($key))) {  # check if NOT nocited
+                if ($step->{map_final}) {
+                  if ($logger->is_debug()) { # performance tune
+                    $logger->debug("Source mapping (type=$level, key=$key): Key is \\nocite{*}'ed but also either \\cite'd or explicitly \\nocited and step has 'final' set, skipping rest of map ...");
+                  }
+                  next MAP;
+                }
+                else {
+                  # just ignore this step
+                  if ($logger->is_debug()) { # performance tune
+                    $logger->debug("Source mapping (type=$level, key=$key): Key is \\nocite{*}'ed but also either \\cite'd or explicitly \\nocited, skipping step ...");
+                  }
+                  next;
+                }
+              }
+            }
+
+            # \nocite{key} or \nocite{*}
             if ($step->{map_entrykey_allnocited}) {
-              if (not $section->is_allkeys_nocite) {  # check if NOT allnoncited
+              if (not $section->is_allkeys_nocite) {  # check if NOT allnocited
                 if ($step->{map_final}) {
                   if ($logger->is_debug()) { # performance tune
                     $logger->debug("Source mapping (type=$level, key=$key): Key is not \\nocite{*}'ed and step has 'final' set, skipping rest of map ...");

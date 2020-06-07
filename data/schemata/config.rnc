@@ -337,6 +337,7 @@ map =
           attribute map_entrykey_nocited { "1" }?,
           attribute map_entrykey_citedornocited { "1" }?,
           attribute map_entrykey_allnocited { "1" }?,
+          attribute map_entrykey_starnocited { "1" }?,
           attribute map_type_source { xsd:string {minLength="1"} }?,
           attribute map_type_target { xsd:string {minLength="1"} }?,
           attribute map_field_source { xsd:string {minLength="1"} }?,
