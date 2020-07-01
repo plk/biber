@@ -482,7 +482,10 @@
                         <span>Entry must be CITED or NOCITED via \cite{key} or \nocite{key}</span>
                       </xsl:if>
                       <xsl:if test="./@map_entrykey_allnocited">
-                        <span>Entry must be NOCITED via \nocite{*}</span>
+                        <span>Entry must be NOCITED via \nocite{}</span>
+                      </xsl:if>
+                      <xsl:if test="./@map_entrykey_starnocited">
+                        <span>Entry must only be NOCITED via \nocite{*}</span>
                       </xsl:if>
                       <xsl:if test="./@map_entry_null">
                         <span><xsl:attribute name="class">map_null</xsl:attribute>entry</span>
