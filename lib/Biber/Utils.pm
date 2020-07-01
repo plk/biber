@@ -1290,13 +1290,18 @@ sub expand_option_input {
 =head2 parse_date_range
 
   Parse of ISO8601 date range
-  Returns two-element array ref: [start DT object, end DT object]
 
 =cut
 
 sub parse_date_range {
   my ($bibentry, $datetype, $datestring) = @_;
   my ($sd, $sep, $ed) = $datestring =~ m|^([^/]+)?(/)?([^/]+)?$|;
+
+  # Very bad date format, something like '2006/05/04' catch early
+  unless ($sd or $ed) {
+    return (undef, undef, undef, undef);
+  }
+
   my $unspec;
   if ($sd =~ /X/) {# ISO8601-2 4.3 unspecified format
     ($sd, $sep, $ed, $unspec) = parse_date_unspecified($sd);
