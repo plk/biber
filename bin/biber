@@ -381,11 +381,15 @@ my $biberoutput = $biber->get_output_obj;
 $biberoutput->set_output_target_file($outfile);
 
 # Fake some necessary .bcf parts if in tool mode
-if (Biber::Config->getoption('tool')) {
+if (exists($opts->{tool})) {
   $biber->tool_mode_setup;
 }
 else {
-  # parse the .bcf control file
+  # parse the .bcf control file.
+  # This sets the 'tool' option for non-tool
+  # mode bibtex output and so don't use Biber::Config::getoption('tool')
+  # after this when we need to know if --tool was specified on the command
+  # line
   $biber->parse_ctrlfile($bcf);
 }
 
@@ -416,7 +420,7 @@ if (Biber::Config->getoption('trace')) {
 }
 
 # Do all the real work
-Biber::Config->getoption('tool') ? $biber->prepare_tool : $biber->prepare;
+exists($opts->{tool}) ? $biber->prepare_tool : $biber->prepare;
 
 if (Biber::Config->getoption('trace')) {
   $logger->trace("\n###########################################################\n",
@@ -771,15 +775,19 @@ Convenience option to set all of the B<--output-resolve-*> options to
 
 =item B<--output-resolve-xdata>
 
-Whether to resolve XDATA inheritance in tool mode. Defaults to 'false'.
+Whether to resolve XDATA inheritance in tool mode or when
+B<--output-format=bibtex> in non tool mode. Defaults to 'false'.
 
 =item B<--output-resolve-crossrefs>
 
-Whether to resolve CROSSREF/XREF inheritance in tool mode. Defaults to 'false'.
+Whether to resolve CROSSREF/XREF inheritance in tool mode or when
+B<--output-format=bibtex> in non tool mode. Defaults to
+'false'.
 
 =item B<--output-resolve-sets>
 
-Whether to resolve data sets in tool mode. Defaults to 'false'.
+Whether to resolve data sets in tool mode or when
+B<--output-format=bibtex> in non tool mode. Defaults to 'false'.
 
 =item B<--output-safechars>
 

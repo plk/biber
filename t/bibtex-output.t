@@ -34,6 +34,9 @@ Log::Log4perl->init(\$l4pconf);
 # relying on here for tests
 
 # Biber options
+
+# THIS IS NOT TOOL MODE
+
 Biber::Config->setoption('output_resolve_xdata', 1);
 Biber::Config->setoption('output_resolve_crossrefs', 1);
 Biber::Config->setoption('output_format', 'bibtex');
@@ -43,7 +46,7 @@ $biber->parse_ctrlfile('bibtex-output.bcf');
 $biber->set_output_obj(Biber::Output::bibtex->new());
 
 # Now generate the information
-$biber->prepare_tool;
+$biber->prepare;
 my $main = $biber->datalists->get_list(Biber::Config->getblxoption(undef, 'sortingtemplatename') . '/global//global/global', 99999, 'entry');
 
 my $out = $biber->get_output_obj;
@@ -93,4 +96,4 @@ eq_or_diff($out->get_output_entry('murray',), $b1, 'bibtex output 1');
 eq_or_diff($out->get_output_entry('b1',), $b2, 'bibtex output 2');
 eq_or_diff($out->get_output_entry('xd1',), $b3, 'bibtex output 3');
 ok(is_undef($out->get_output_entry('reese')), 'bibtex output 4');
-is_deeply($main->get_keys, ['murray', 'kant:ku', 'b1', 'xd1'], 'bibtex output sorting');
+is_deeply($main->get_keys, ['murray', 'kant:ku', 'b1', 'xd1', 'mv1'], 'non-tool mode bibtex output sorting');

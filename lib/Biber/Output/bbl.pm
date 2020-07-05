@@ -430,7 +430,6 @@ sub set_output_entry {
           $be->field_exists($field)) ) {
 
       # we skip outputting the crossref or xref when the parent is not cited
-      # (biblatex manual, section 2.2.3)
       # sets are a special case so always output crossref/xref for them since their
       # children will always be in the .bbl otherwise they make no sense.
       unless ($bee eq 'set') {

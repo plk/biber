@@ -1072,8 +1072,12 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
   # bibtex output when not in tool mode, is essentially entering tool mode but
   # without allkeys. We are not in tool mode if we are here. We fake tool mode
   # and then add a special section which contains all cited keys from all sections
+  # No reference resolution for bibtex output and always include all cross/xrefs
+  # otherwise the output won't be a standalone .bib file
   if (Biber::Config->getoption('output_format') eq 'bibtex') {
-    Biber::Config->setoption('tool' ,1);
+    Biber::Config->setoption('tool', 1);
+    Biber::Config->setoption('mincrossrefs', 1);
+    Biber::Config->setoption('minxrefs', 1);
 
     my $bib_section = new Biber::Section('number' => 99999);
 
@@ -1214,6 +1218,15 @@ sub resolve_alias_refs {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $dm = Biber::Config->get_dm;
+
+
+  # Don't resolve alias refs in tool mode unless told to
+  if (Biber::Config->getoption('tool') and
+      not (Biber::Config->getoption('output_resolve_crossrefs') or
+           Biber::Config->getoption('output_resolve_xdata'))) {
+    return;
+  }
+
   foreach my $citekey ($section->get_citekeys) {
     my $be = $section->bibentry($citekey);
 
@@ -1342,6 +1355,13 @@ sub resolve_xdata {
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
+
+  # Don't resolve xdata in tool mode unless told to
+  if (Biber::Config->getoption('tool') and
+      not Biber::Config->getoption('output_resolve_xdata')) {
+    return;
+  }
+
   if ($logger->is_debug()) {# performance tune
     $logger->debug("Resolving XDATA for section $secnum");
   }
@@ -1432,6 +1452,12 @@ sub preprocess_sets {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
 
+  # Don't preprocess sets in tool mode unless told to
+  if (Biber::Config->getoption('tool') and
+      not Biber::Config->getoption('output_resolve_sets')) {
+    return;
+  }
+
   if ($logger->is_debug()) {# performance tune
     $logger->debug("Recording set information");
   }
@@ -1459,24 +1485,23 @@ sub preprocess_sets {
   }
 }
 
-=head2 process_interentry
 
-    $biber->process_interentry
+=head2 calculate_interentry
 
-    This does several things:
-    1. Ensures proper inheritance of data from cross-references.
-    2. Ensures that crossrefs/xrefs that are directly cited or cross-referenced
-       at least mincrossrefs/minxrefs times are included in the bibliography.
+    $biber->calculate_interentry
+
+    Ensures that crossrefs/xrefs that are directly cited or cross-referenced
+    at least mincrossrefs/minxrefs times are included in the bibliography.
 
 =cut
 
-sub process_interentry {
+sub calculate_interentry {
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
 
   if ($logger->is_debug()) {# performance tune
-    $logger->debug("Processing explicit and implicit xref/crossrefs for section $secnum");
+    $logger->debug("Calculating explicit and implicit xref/crossrefs for section $secnum");
   }
 
   foreach my $citekey ($section->get_citekeys) {
@@ -1534,6 +1559,30 @@ sub process_interentry {
       $section->bibentry($k)->set_field('xrefsource', 1) unless $section->has_citekey($k);
       $section->add_citekeys($k);
     }
+  }
+}
+
+=head2 process_interentry
+
+    $biber->process_interentry
+
+    Ensures proper inheritance of data from cross-references.
+
+=cut
+
+sub process_interentry {
+  my $self = shift;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+
+  # Don't resolve crossrefs in tool mode unless told to
+  if (Biber::Config->getoption('tool') and
+      not Biber::Config->getoption('output_resolve_crossrefs')) {
+    return;
+  }
+
+  if ($logger->is_debug()) {# performance tune
+    $logger->debug("Processing explicit and implicit xref/crossrefs for section $secnum");
   }
 
   # This must come after doing implicit inclusion based on minref/mincrossref
@@ -4282,6 +4331,7 @@ sub prepare {
     $self->resolve_xdata;                # Resolve xdata entries
     $self->cite_setmembers;              # Cite set members
     $self->preprocess_sets;              # Record set information
+    $self->calculate_interentry;         # Calculate crossrefs/xrefs etc.
     $self->process_interentry;           # Process crossrefs/xrefs etc.
     $self->validate_datamodel;           # Check against data model
     $self->postprocess_sets;             # Add options to set members etc.
@@ -4318,22 +4368,11 @@ sub prepare_tool {
   $self->preprocess_options;           # Preprocess any options
   $self->fetch_data;      # Fetch cited key and dependent data from sources
 
-  if (Biber::Config->getoption('output_resolve_xdata') or
-      Biber::Config->getoption('output_resolve_crossrefs')) {
-    $self->resolve_alias_refs; # Resolve xref/crossref/xdata aliases to real keys
-  }
-
-  if (Biber::Config->getoption('output_resolve_sets')) {
-    $self->preprocess_sets;    # Record set information
-  }
-
-  if (Biber::Config->getoption('output_resolve_crossrefs')) {
-    $self->process_interentry; # Process crossrefs/xrefs etc.
-  }
-
-  if (Biber::Config->getoption('output_resolve_xdata')) {
-    $self->resolve_xdata;      # Resolve xdata entries
-  }
+  $self->resolve_alias_refs;   # Resolve xref/crossref/xdata aliases to real keys
+  $self->preprocess_sets;      # Record set information
+  $self->calculate_interentry; # Calculate crossrefs/xrefs etc.
+  $self->process_interentry;   # Process crossrefs/xrefs etc.
+  $self->resolve_xdata;        # Resolve xdata entries
 
   $self->validate_datamodel;   # Check against data model
   $self->process_lists;        # process the output lists (sort and filtering)
