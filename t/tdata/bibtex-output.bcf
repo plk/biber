@@ -1988,6 +1988,7 @@
   <bcf:section number="1">
     <bcf:citekey order="1">b1</bcf:citekey>
     <bcf:citekey order="2">xd1</bcf:citekey>
+    <bcf:citekey order="3">bo1</bcf:citekey>
   </bcf:section>
   <!-- SORTING SCHEME -->
   <bcf:sortingtemplate name="nty">
