@@ -534,7 +534,7 @@ error is found. Default is to warn and continue.
 
 Specifies the element to include in GraphViz DOT output format if the output format is 'dot'.
 You can also choose to display crossref, xref, xdata and/or related entry connections.
-The default if not specified is C<--dot_include=section,xdata,crossref,xref>.
+The default if not specified is C<--dot-include=section,xdata,crossref,xref>.
 
 =item B<--fixinits>
 
@@ -550,7 +550,7 @@ Show this help message.
 
 F<.bcf> and data files will be looked for first in the F<directory>. See the biber
 PDF documentation for the other possibilities and how this interacts with the
-C<--output_directory> option.
+C<--output-directory> option.
 
 =item B<--input-encoding|-e [encoding]>
 
@@ -683,7 +683,7 @@ Use F<string> as the final name in a name field which implies "et al". Defaults 
 =item B<--output-align>
 
 Align field values in neat columns in output. Effect depends on the output format. Default is false.
-The legacy option B<--tool_align> is supported as an alias.
+The legacy option B<--tool-align> is supported as an alias.
 
 =item B<--output-annotation-marker=[marker]>
 
@@ -697,7 +697,8 @@ As B<--named-annotation-marker> but for tool mode bibtex output. The default is 
 
 Output files (including log files) are output to F<directory> instead
 of the current directory. Input files are also looked for in F<directory>
-before current directory (but after C<--input_directory> if that is specified).
+before current directory unless C<--input-directory> is also specified in which
+case input files are only looked for in the directory specified by C<--input-directory>.
 
 =item B<--output-encoding|-E [encoding]>
 
@@ -710,12 +711,12 @@ The legacy option B<--bblencoding> is supported as an alias.
 =item B<--output-indent=[num]>
 
 Indentation for body of entries in output. Effect depends on the output format. Defaults to 2.
-The legacy option B<--tool_indent> is supported as an alias.
+The legacy option B<--tool-indent> is supported as an alias.
 
 =item B<--output-fieldcase=upper|lower|title>
 
 Case for field names output. Effect depends on the output format. Defaults to 'upper'.
-The legacy option B<--tool_fieldcase> is supported as an alias.
+The legacy option B<--tool-fieldcase> is supported as an alias.
 
 =item B<--output-field-order=[field1, ... fieldn]>
 
@@ -733,8 +734,8 @@ By default, its value is 'options,abstract,names,lists,dates'.
 =item B<--output-file|-O [file]>
 
 Output to F<file> instead of F<basename.bbl> F<file> is relative to
-B<--output_directory>, if set (absolute paths in this case are stripped to
-filename only). F<file> can be absolute if B<--output_directory> is not
+B<--output-directory>, if set (absolute paths in this case are stripped to
+filename only). F<file> can be absolute if B<--output-directory> is not
 set. F<file> can be '-' to output directly to STDOUT. The legacy option
 B<--outfile> is supported as an alias.
 
@@ -744,7 +745,7 @@ Biber output format. Default if not specified is of course, F<bbl>. Use F<dot>
 to output a GraphViz DOT file instead of F<.bbl>. This is a directed graph of
 the bibliography data showing entries and, as requested, sections and fields.
 You must process this file with C<dot>, e.g. C<dot -Tsvg test.dot -o test.svg> to
-render the graph. See the B<--dot_include> option to select what is included in
+render the graph. See the B<--dot-include> option to select what is included in
 the DOT output. F<bblxml> is an XML version of the F<bbl> format which you could
 transform using XSLT. By default, when outputting F<bblxml>, a RelaxNG XML schema
 is generated from the active data modeal and saved with a F<rng> extension along
@@ -761,7 +762,7 @@ As B<--listsep> but for tool mode bibtex output. Defaults to BibTeX's usual
 
 A comma-separated list of field names whose values are, on output, treated as BibTeX macros.
 Effectively this means that they are not wrapped in braces. Effect depends on the output format.
-The legacy option B<--tool_macro_fields> is supported as an alias.
+The legacy option B<--tool-macro-fields> is supported as an alias.
 
 =item B<--output-namesep=[sep]>
 
@@ -795,13 +796,13 @@ Try to convert UTF-8 chars into LaTeX macros when writing the output.
 This can prevent unknown char errors when using PDFLaTeX and inputenc
 as this doesn't understand all of UTF-8. Note, it is better to switch
 to XeTeX or LuaTeX to avoid this situation. By default uses the
---output_safecharsset "base" set of characters.
+--output-safecharsset "base" set of characters.
 The legacy option B<--bblsafechars> is supported as an alias.
 
 =item B<--output-safecharsset=[recode set name]>
 
 The set of characters included in the conversion routine for
-B<--output_safechars>. Set to "full" to try harder with a much
+B<--output-safechars>. Set to "full" to try harder with a much
 larger set or "base" to use a basic set. Default is "base" which is
 fine for most use cases. You may need to load more macro packages to
 deal with the results of "full" (Dings, Greek characters, special
@@ -834,7 +835,7 @@ Log only errors. If this option is used more than once, don't even log errors.
 =item B<--recodedata=[file]>
 
 The data file to use for the reencoding between UTF-8 and LaTeX macros. It defines
-the sets specified with the B<--output_safecharsset> and B<--decodecharsset> options.
+the sets specified with the B<--output-safecharsset> and B<--decodecharsset> options.
 It defaults to F<recode_data.xml> in the same directory as Biber's F<Recode.pm> module.
 See the PDF documentation for the format of this file. If this option is
 used, then F<file> should be somewhere C<kpsewhich> can find it.
