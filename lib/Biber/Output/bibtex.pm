@@ -115,7 +115,7 @@ sub set_output_entry {
 
   # IDs
   if (my $val = $be->get_field('ids')) {
-    $acc{$casing->('ids')} = join(',', $val->@*);
+    $acc{$casing->('ids')} = join(',', $val->get_items->@*);
   }
 
   # Name fields
