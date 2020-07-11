@@ -201,7 +201,7 @@ ok(is_undef($out->get_output_entry('loh')), 'tool mode - 2');
 eq_or_diff($out->get_output_entry('xd1',), $t2, 'tool mode - 3');
 eq_or_diff($out->get_output_entry('b1',), $t3, 'tool mode - 4');
 eq_or_diff($out->get_output_entry('dt1',), $t4, 'tool mode - 5');
-is_deeply($main->get_keys, ['b1', 'macmillan', 'dt1', 'm1', 'macmillan:pub', 'macmillan:loc', 'mv1', 'gxd3', 'gxd4', NFD('i3Š'), 'badcr2', 'gxd2', 'xd1', 'badcr1', 'gxd1'], 'tool mode sorting');
+is_deeply($main->get_keys, ['b1', 'macmillan', 'dt1', 'm1', 'macmillan:pub', 'macmillan:loc', 'mv1', 'gxd3', 'gxd4', NFD('i3Š'), 'badcr2', 'gxd2', 'xd1', 'badcr1', 'bo1', 'gxd1'], 'tool mode sorting');
 eq_or_diff($out->get_output_comments, $tc1, 'tool mode - 6');
 eq_or_diff($out->get_output_entry('badcr1',), $badcr1, 'tool mode - 7');
 eq_or_diff($out->get_output_entry('badcr2',), $badcr2, 'tool mode - 8');

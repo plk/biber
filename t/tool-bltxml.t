@@ -339,6 +339,20 @@ my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
     </bltx:names>
     <bltx:title>Some title</bltx:title>
   </bltx:entry>
+  <bltx:entry id="bo1" entrytype="book">
+    <bltx:ids>
+      <bltx:list>
+        <bltx:item>box1</bltx:item>
+        <bltx:item>box2</bltx:item>
+      </bltx:list>
+    </bltx:ids>
+    <bltx:names type="author">
+      <bltx:name>
+        <bltx:namepart type="family" initial="S">Smith</bltx:namepart>
+        <bltx:namepart type="given" initial="S">Simon</bltx:namepart>
+      </bltx:name>
+    </bltx:names>
+  </bltx:entry>
 </bltx:entries>
 |;
 
@@ -586,12 +600,26 @@ my $bltxml2 = q|<?xml version="1.0" encoding="UTF-8"?>
     </bltx:names>
     <bltx:title>Some title</bltx:title>
   </bltx:entry>
+  <bltx:entry id="bo1" entrytype="book">
+    <bltx:ids>
+      <bltx:list>
+        <bltx:item>box1</bltx:item>
+        <bltx:item>box2</bltx:item>
+      </bltx:list>
+    </bltx:ids>
+    <bltx:names type="author">
+      <bltx:name>
+        <bltx:namepart type="family" initial="S">Smith</bltx:namepart>
+        <bltx:namepart type="given" initial="S">Simon</bltx:namepart>
+      </bltx:name>
+    </bltx:names>
+  </bltx:entry>
 </bltx:entries>
 |;
 
 
 eq_or_diff($outvar, encode_utf8($bltxml1), 'bltxml tool mode - 1');
-is_deeply($main->get_keys, ['b1', 'macmillan', 'dt1', 'm1', 'macmillan:pub', 'macmillan:loc', 'mv1', 'gxd3', 'gxd4', NFD('i3Š'), 'badcr2', 'gxd2', 'xd1', 'badcr1', 'gxd1'], 'tool mode sorting');
+is_deeply($main->get_keys, ['b1', 'macmillan', 'dt1', 'm1', 'macmillan:pub', 'macmillan:loc', 'mv1', 'gxd3', 'gxd4', NFD('i3Š'), 'badcr2', 'gxd2', 'xd1', 'badcr1', 'bo1', 'gxd1'], 'tool mode sorting');
 
 Biber::Config->setoption('output_resolve_xdata', 0);
 Biber::Config->setoption('output_xdatasep', '+');

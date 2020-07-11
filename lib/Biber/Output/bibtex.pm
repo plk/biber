@@ -113,6 +113,11 @@ sub set_output_entry {
   # $max_field_len can be calculated
   my %acc;
 
+  # IDs
+  if (my $val = $be->get_field('ids')) {
+    $acc{$casing->('ids')} = join(',', $val->@*);
+  }
+
   # Name fields
   my $tonamesub = 'name_to_bibtex';
   if (Biber::Config->getoption('output_xname')) {
