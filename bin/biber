@@ -70,6 +70,7 @@ GetOptions(
            'output_encoding|output-encoding|E=s',
            'output_fieldcase|output-fieldcase=s',
            'output_field_order|output-field-order=s',
+           'output_field_replace|output-field-replace=s',
            'output_file|output-file|O=s',
            'output_format|output-format=s',
            'output_indent|output-indent=s',
@@ -730,6 +731,12 @@ the explicitly specified fields. The classes of fields are:
 'dates' - All date fields
 
 By default, its value is 'options,abstract,names,lists,dates'.
+
+=item B<--output-field-replace=[field1:replacefield1, ... fieldn:replacefieldn]>
+
+When outputting bibtex format output C<replacefieldn> instead of C<fieldn>.
+This can be used to output legacy formats which undo the default driver
+source map which maps e.g B<--output-field-replace=location:address,journaltitle:journal>
 
 =item B<--output-file|-O [file]>
 
