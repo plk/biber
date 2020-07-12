@@ -54,20 +54,20 @@ sub set_output_comment {
   my $acc = '';
 
   # Make the right casing function
-  my $casing;
+  my $outmap;
 
   if (Biber::Config->getoption('output_fieldcase') eq 'upper') {
-    $casing = sub {uc(shift)};
+    $outmap = sub {my $f = shift; uc($CONFIG_OUTPUT_FIELDREPLACE{$f} // $f)};
   }
   elsif (Biber::Config->getoption('output_fieldcase') eq 'lower') {
-    $casing = sub {lc(shift)};
+    $outmap = sub {my $f = shift; lc($CONFIG_OUTPUT_FIELDREPLACE{$f} // $f)};
   }
   elsif (Biber::Config->getoption('output_fieldcase') eq 'title') {
-    $casing = sub {ucfirst(shift)};
+    $outmap = sub {my $f = shift; ucfirst($CONFIG_OUTPUT_FIELDREPLACE{$f} // $f)};
   }
 
   $acc .= '@';
-  $acc .= $casing->('comment');
+  $acc .= $outmap->('comment');
   $acc .= "{$comment}\n";
 
   push $self->{output_data}{COMMENTS}->@*, $acc;
@@ -92,21 +92,20 @@ sub set_output_entry {
   my $key = $be->get_field('citekey');
   my $omssep = $CONFIG_META_MARKERS{outputmssep};
 
-  # Make the right casing function
-  my $casing;
-
+  # Make the right casing/output mapping function
+  my $outmap;
   if (Biber::Config->getoption('output_fieldcase') eq 'upper') {
-    $casing = sub {uc(shift)};
+    $outmap = sub {my $f = shift; uc($CONFIG_OUTPUT_FIELDREPLACE{$f} // $f)};
   }
   elsif (Biber::Config->getoption('output_fieldcase') eq 'lower') {
-    $casing = sub {lc(shift)};
+    $outmap = sub {my $f = shift; lc($CONFIG_OUTPUT_FIELDREPLACE{$f} // $f)};
   }
   elsif (Biber::Config->getoption('output_fieldcase') eq 'title') {
-    $casing = sub {ucfirst(shift)};
+    $outmap = sub {my $f = shift; ucfirst($CONFIG_OUTPUT_FIELDREPLACE{$f} // $f)};
   }
 
   $acc .= '@';
-  $acc .= $casing->($bee);
+  $acc .= $outmap->($bee);
   $acc .=  "\{$key,\n";
 
   # hash accumulator so we can gather all the data before formatting so that things like
@@ -115,7 +114,7 @@ sub set_output_entry {
 
   # IDs
   if (my $val = $be->get_field('ids')) {
-    $acc{$casing->('ids')} = join(',', $val->get_items->@*);
+    $acc{$outmap->('ids')} = join(',', $val->get_items->@*);
   }
 
   # Name fields
@@ -136,7 +135,7 @@ sub set_output_entry {
       # XDATA is special
       unless (Biber::Config->getoption('output_resolve_xdata')) { # already resolved
         if (my $xdata = $names->get_xdata) {
-          $acc{$casing->($namefield) . lc($form) . lc($lang)} = xdatarefout($xdata);
+          $acc{$outmap->($namefield) . lc($form) . lc($lang)} = xdatarefout($xdata);
           next;
         }
       }
@@ -168,11 +167,11 @@ sub set_output_entry {
         push @namelist, $name->$tonamesub;
       }
 
-      $acc{$casing->($namefield) . lc($form) . lc($lang)} = join(" $namesep ", @namelist);
+      $acc{$outmap->($namefield) . lc($form) . lc($lang)} = join(" $namesep ", @namelist);
 
       # Deal with morenames
       if ($names->get_morenames) {
-        $acc{$casing->($namefield) . lc($form) . lc($lang)} .= " $namesep others";
+        $acc{$outmap->($namefield) . lc($form) . lc($lang)} .= " $namesep others";
       }
     }
   }
@@ -196,7 +195,7 @@ sub set_output_entry {
         }
         push @plainlist, $item;
       }
-      $acc{$casing->($listfield) . lc($form) . lc($lang)} = join(" $listsep ", @plainlist);
+      $acc{$outmap->($listfield) . lc($form) . lc($lang)} = join(" $listsep ", @plainlist);
     }
   }
 
@@ -205,7 +204,7 @@ sub set_output_entry {
   foreach my $opt (Biber::Config->getblxentryoptions($secnum, $key)) {
     push @entryoptions, $opt . '=' . Biber::Config->getblxoption($secnum, $opt, undef, $key);
   }
-  $acc{$casing->('options')} = join(',', @entryoptions) if @entryoptions;
+  $acc{$outmap->('options')} = join(',', @entryoptions) if @entryoptions;
 
   # YEAR and MONTH are legacy - convert these to DATE if possible if they are
   # datepart fields (they are in the default datamodel) otherwise output as literal
@@ -214,10 +213,10 @@ sub set_output_entry {
   if (my $val = $be->get_field('year') and
       $dm->get_datatype('year') ne 'datepart' and
       not $be->get_field('day')) {
-    $acc{$casing->('year')} = $val;
+    $acc{$outmap->('year')} = $val;
     $literalyear = 1;
     if (my $mval = $be->get_field('month') and $dm->get_datatype('month') ne 'datepart') {
-      $acc{$casing->('month')} = $mval;
+      $acc{$outmap->('month')} = $mval;
     }
   }
 
@@ -226,7 +225,7 @@ sub set_output_entry {
     $d =~ s/date$//;
     next unless $be->get_field("${d}year");
     next if $literalyear;
-    $acc{$casing->("${d}date")} = construct_datetime($be, $d);
+    $acc{$outmap->("${d}date")} = construct_datetime($be, $d);
   }
 
   # If CROSSREF and XDATA have been resolved, don't output them
@@ -256,7 +255,7 @@ sub set_output_entry {
         my $xd = xdatarefcheck($val);
         $val = $xd // $val;
       }
-      $acc{$casing->($field) . lc($form) . lc($lang)} = $val;
+      $acc{$outmap->($field) . lc($form) . lc($lang)} = $val;
     }
   }
 
@@ -278,7 +277,7 @@ sub set_output_entry {
         my $xd = xdatarefcheck($fl);
         $fl = $xd // $fl;
       }
-      $acc{$casing->($field) . lc($form) . lc($lang)} .= $fl;
+      $acc{$outmap->($field) . lc($form) . lc($lang)} .= $fl;
     }
   }
 
@@ -290,7 +289,7 @@ sub set_output_entry {
         my $xd = xdatarefcheck($rfl);
         $rfl = $xd // $rfl;
       }
-      $acc{$casing->($rfield)} = $rfl;
+      $acc{$outmap->($rfield)} = $rfl;
     }
   }
 
@@ -301,7 +300,7 @@ sub set_output_entry {
         my $xd = xdatarefcheck($vf);
         $vf = $xd // $vf;
       }
-      $acc{$casing->($vfield)} = $vf;
+      $acc{$outmap->($vfield)} = $vf;
     }
   }
 
@@ -312,7 +311,7 @@ sub set_output_entry {
       my $xd = xdatarefcheck($kl);
       $kl = $xd // $kl;
     }
-    $acc{$casing->('keywords')} = $kl;
+    $acc{$outmap->('keywords')} = $kl;
   }
 
   # Annotations
@@ -322,7 +321,7 @@ sub set_output_entry {
       foreach my $n (Biber::Annotation->get_annotation_names($key, lc($field), $form, $lang)) {
         my $nform = ($form eq 'default') ? '' : "$omssep$form";
         my $nlang = ($lang eq Biber::Config->get_mslang($key)) ? '' : "$omssep$lang";
-        $acc{$casing->($field) . lc($nform) . lc($nlang) . Biber::Config->getoption('output_annotation_marker') .
+        $acc{$outmap->($field) . lc($nform) . lc($nlang) . Biber::Config->getoption('output_annotation_marker') .
             Biber::Config->getoption('output_named_annotation_marker') . $n} = construct_annotation($key, lc($field), $n, $form, $lang);
       }
     }
@@ -352,8 +351,8 @@ sub set_output_entry {
       }
       delete @acc{@donefields};
     }
-    elsif (my $value = delete $acc{$casing->($field)}) {
-      $acc .= bibfield($casing->($field), $value, $max_field_len);
+    elsif (my $value = delete $acc{$outmap->($field)}) {
+      $acc .= bibfield($outmap->($field), $value, $max_field_len);
     }
   }
 

@@ -225,6 +225,14 @@ sub _initopts {
     $biberlog = File::Spec->catfile($outdir, $biberlog);
   }
 
+  # Parse output-field-replace into something easier to use
+  if (my $ofrs = Biber::Config->getoption('output_field_replace')) {
+    foreach my $ofr (split(/\s*,\s*/, $ofrs)) {
+      my ($f, $fr) = $ofr =~ m/^([^:]+):([^:]+)$/;
+      $CONFIG_OUTPUT_FIELDREPLACE{$f} = $fr;
+    }
+  }
+
   # cache meta markers since they are referenced in the oft-called _get_handler
   $CONFIG_META_MARKERS{annotation} = quotemeta(Biber::Config->getoption('annotation_marker'));
 

@@ -312,6 +312,11 @@
           </element>
         </optional>
         <optional>
+          <element name="output_field_replace">
+            <text/>
+          </element>
+        </optional>
+        <optional>
           <element name="output_file">
             <text/>
           </element>
