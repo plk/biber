@@ -736,7 +736,7 @@ By default, its value is 'options,abstract,names,lists,dates'.
 
 When outputting bibtex format output C<replacefieldn> instead of C<fieldn>.
 This can be used to output legacy formats which undo the default driver
-source map which maps e.g B<--output-field-replace=location:address,journaltitle:journal>
+source map e.g B<--output-field-replace=location:address,journaltitle:journal,date:year>
 
 =item B<--output-file|-O [file]>
 

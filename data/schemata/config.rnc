@@ -89,6 +89,7 @@ start =
     element output_directory     { text }? &
     element output_encoding      { text }? &
     element output_fieldcase     { "upper" | "lower" | "title" }? &
+    element output_field_replace { text }? &
     element output_file          { text }? &
     element output_format        { "bibtex" | "bbl" | "biblatexml" | "dot" }? &
     element output_indent        { xsd:unsignedByte }? &

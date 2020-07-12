@@ -27,6 +27,7 @@ our @EXPORT = qw{
                   %CONFIG_BIBLATEX_OPTIONS
                   %CONFIG_META_MARKERS
                   %CONFIG_DATE_PARSERS
+                  %CONFIG_OUTPUT_FIELDREPLACE
                   %DATAFIELD_SETS
                   %DM_DATATYPES
                   %LOCALE_MAP
