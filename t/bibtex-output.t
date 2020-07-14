@@ -43,6 +43,7 @@ Biber::Config->setoption('output_resolve_xdata', 1);
 Biber::Config->setoption('output_resolve_crossrefs', 1);
 Biber::Config->setoption('output_format', 'bibtex');
 Biber::Config->setoption('output_align', '1');
+Biber::Config->setoption('tool', '1');
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 $biber->parse_ctrlfile('bibtex-output.bcf');
 $biber->set_output_obj(Biber::Output::bibtex->new());

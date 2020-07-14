@@ -1122,11 +1122,24 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
 sub process_setup {
   my $self = shift;
 
+  # If this is tool mode and therefore there is a 99999 section, delete all other sections
+  # This is because bibtex output not in real tool mode retains sections from the .bcf
+  # which are not needed and cause unnecessary dual-processing of entries since everything
+  # is already in the 99999 section anyway
+  foreach my $section ($self->sections->get_sections->@*) {
+    if (Biber::Config->getoption('output_format') eq 'bibtex') {
+      if ($section->number != 99999) {
+        $self->sections->delete_section($section);
+      }
+    }
+  }
+
   # Make sure there is a default entry list with global sorting for each refsection
   # Needed in case someone cites entries which are included in no
   # bibliography as this results in no entry list in the .bcf
   foreach my $section ($self->sections->get_sections->@*) {
     my $secnum = $section->number;
+
     unless ($self->datalists->has_lists_of_type_for_section($secnum, 'entry')) {
       my $datalist = Biber::DataList->new(sortingtemplatename => Biber::Config->getblxoption(undef, 'sortingtemplatename'),
                                           sortingnamekeytemplatename => 'global',

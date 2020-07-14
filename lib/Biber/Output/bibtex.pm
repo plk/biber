@@ -206,26 +206,26 @@ sub set_output_entry {
   }
   $acc{$outmap->('options')} = join(',', @entryoptions) if @entryoptions;
 
-  # YEAR and MONTH are legacy - convert these to DATE if possible if they are
-  # datepart fields (they are in the default datamodel) otherwise output as literal
-  # as the datamodel has been redefined on purpose to not absorb these into DATE
-  my $literalyear = 0;
-  if (my $val = $be->get_field('year') and
-      $dm->get_datatype('year') ne 'datepart' and
-      not $be->get_field('day')) {
-    $acc{$outmap->('year')} = $val;
-    $literalyear = 1;
-    if (my $mval = $be->get_field('month') and $dm->get_datatype('month') ne 'datepart') {
-      $acc{$outmap->('month')} = $mval;
+  if (Biber::Config->getoption('output_legacy_dates')) {
+    if (my $val = $be->get_field('year') and
+        not $be->get_field('day') and
+        not $be->get_field('endyear')) {
+      $acc{$outmap->('year')} = $val;
+      if (my $mval = $be->get_field('month')) {
+        $acc{$outmap->('month')} = $mval;
+      }
+    }
+    else {
+      biber_warn("Date in entry '$key' has DAY or ENDYEAR, cannot be output in legacy format.");
     }
   }
-
-  # Date fields
-  foreach my $d ($dmh->{datefields}->@*) {
-    $d =~ s/date$//;
-    next unless $be->get_field("${d}year");
-    next if $literalyear;
-    $acc{$outmap->("${d}date")} = construct_datetime($be, $d);
+  else {
+    # Date fields
+    foreach my $d ($dmh->{datefields}->@*) {
+      $d =~ s/date$//;
+      next unless $be->get_field("${d}year");
+      $acc{$outmap->("${d}date")} = construct_datetime($be, $d);
+    }
   }
 
   # If CROSSREF and XDATA have been resolved, don't output them
