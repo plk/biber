@@ -74,6 +74,7 @@ GetOptions(
            'output_file|output-file|O=s',
            'output_format|output-format=s',
            'output_indent|output-indent=s',
+           'output_legacy_dates|output-legacy-dates',
            'output_listsep|output-listsep=s',
            'output_macro_fields|output-macro-fields=s',
            'output_named_annotation_marker|output-named-annotation-marker=s',
@@ -709,11 +710,6 @@ Normally it's not necessary to set this as it's passed via the
 See C<perldoc Encode::Supported> for a list of supported encodings.
 The legacy option B<--bblencoding> is supported as an alias.
 
-=item B<--output-indent=[num]>
-
-Indentation for body of entries in output. Effect depends on the output format. Defaults to 2.
-The legacy option B<--tool-indent> is supported as an alias.
-
 =item B<--output-fieldcase=upper|lower|title>
 
 Case for field names output. Effect depends on the output format. Defaults to 'upper'.
@@ -736,7 +732,10 @@ By default, its value is 'options,abstract,names,lists,dates'.
 
 When outputting bibtex format output C<replacefieldn> instead of C<fieldn>.
 This can be used to output legacy formats which undo the default driver
-source map e.g B<--output-field-replace=location:address,journaltitle:journal,date:year>
+source map e.g
+B<--output-field-replace=location:address,journaltitle:journal>. See
+B<--output-legacy-dates> if legacy (YEAR/MONTH) date fields are required in
+bibtex format output.
 
 =item B<--output-file|-O [file]>
 
@@ -759,6 +758,20 @@ is generated from the active data modeal and saved with a F<rng> extension along
 with the output file name (unless the B<--no-bblxml-schema> option is specified). You
 may validate the F<bblxml> using the schema with the B<--validate-bblxml> option.
 The legacy option B<--outformat> is supported as an alias.
+
+=item B<--output-indent=[num]>
+
+Indentation for body of entries in output. Effect depends on the output format. Defaults to 2.
+The legacy option B<--tool-indent> is supported as an alias.
+
+=item B<--output-legacy-dates>
+
+When outputting bibtex format, output YEAR/MONTH fields instead of DATE.
+This is not possible if the input is not convertible to legacy format,
+meaning that any date to be output with legacy fields can only have a YEAR
+part and perhaps a MONTH part. If a DAY or ENDYEAR part are found, the date
+is not convertible and the legacy output format will be skipped. Default is
+false.
 
 =item B<--output-listsep=[sep]>
 

@@ -153,6 +153,7 @@ our $CONFIG_DEFAULT_BIBER = {
   output_format                               => { content => 'bbl' },
   output_indent                               => { content => '2' },
   output_fieldcase                            => { content => 'upper' },
+  output_legacy_dates                         => { content => 0 },
   output_listsep                              => { content => 'and' },
   output_namesep                              => { content => 'and' },
   output_resolve_xdata                        => { content => 0 },
