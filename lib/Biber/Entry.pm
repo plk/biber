@@ -168,6 +168,9 @@ sub clone {
     $new->{origfields}{$k} = $v;
   }
 
+  # Clone xdata information
+  $new->{xdatarefs} = $self->{xdatarefs};
+
   # clone derived date fields
   foreach my $df ($dmh->{datefields}->@*) {
     $df =~ s/date$//;
