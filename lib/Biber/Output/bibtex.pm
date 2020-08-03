@@ -207,16 +207,17 @@ sub set_output_entry {
   $acc{$outmap->('options')} = join(',', @entryoptions) if @entryoptions;
 
   if (Biber::Config->getoption('output_legacy_dates')) {
-    if (my $val = $be->get_field('year') and
-        not $be->get_field('day') and
-        not $be->get_field('endyear')) {
-      $acc{$outmap->('year')} = $val;
-      if (my $mval = $be->get_field('month')) {
-        $acc{$outmap->('month')} = $mval;
+    if (my $val = $be->get_field('year')) {
+      if (not $be->get_field('day') and
+          not $be->get_field('endyear')) {
+        $acc{$outmap->('year')} = $val;
+        if (my $mval = $be->get_field('month')) {
+          $acc{$outmap->('month')} = $mval;
+        }
       }
-    }
-    else {
-      biber_warn("Date in entry '$key' has DAY or ENDYEAR, cannot be output in legacy format.");
+      else {
+        biber_warn("Date in entry '$key' has DAY or ENDYEAR, cannot be output in legacy format.");
+      }
     }
   }
   else {
