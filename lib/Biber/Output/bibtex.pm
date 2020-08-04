@@ -206,27 +206,29 @@ sub set_output_entry {
   }
   $acc{$outmap->('options')} = join(',', @entryoptions) if @entryoptions;
 
-  if (Biber::Config->getoption('output_legacy_dates')) {
-    if (my $val = $be->get_field('year')) {
-      if (not $be->get_field('day') and
-          not $be->get_field('endyear')) {
-        $acc{$outmap->('year')} = $val;
-        if (my $mval = $be->get_field('month')) {
-          $acc{$outmap->('month')} = $mval;
+  # Date fields
+  foreach my $d ($dmh->{datefields}->@*) {
+    $d =~ s/date$//;
+    next unless $be->get_field("${d}year");
+
+    # Output legacy dates for YEAR/MONTH if requested
+    if (not $d and Biber::Config->getoption('output_legacy_dates')) {
+      if (my $val = $be->get_field('year')) {
+        if (not $be->get_field('day') and
+            not $be->get_field('endyear')) {
+          $acc{$outmap->('year')} = $val;
+          if (my $mval = $be->get_field('month')) {
+            $acc{$outmap->('month')} = $mval;
+          }
+          next;
+        }
+        else {
+          biber_warn("Date in entry '$key' has DAY or ENDYEAR, cannot be output in legacy format.");
         }
       }
-      else {
-        biber_warn("Date in entry '$key' has DAY or ENDYEAR, cannot be output in legacy format.");
-      }
     }
-  }
-  else {
-    # Date fields
-    foreach my $d ($dmh->{datefields}->@*) {
-      $d =~ s/date$//;
-      next unless $be->get_field("${d}year");
-      $acc{$outmap->("${d}date")} = construct_datetime($be, $d);
-    }
+
+    $acc{$outmap->("${d}date")} = construct_datetime($be, $d);
   }
 
   # If CROSSREF and XDATA have been resolved, don't output them
