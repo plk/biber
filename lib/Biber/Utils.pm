@@ -1724,7 +1724,9 @@ sub gen_initials {
     # Deal with hyphenated name parts and normalise to a '-' character for easy
     # replacement with macro later
     # Dont' split a name part if it's brace-wrapped
-    if ($str !~ m/^\{.+\}$/ and $str =~ m/\p{Dash}/) {
+    # Dont' split a name part if the hyphen in a hyphenated name is protected like:
+    # Hans{-}Peter as this is an old BibTeX way of suppressing hyphenated names
+    if ($str !~ m/^\{.+\}$/ and $str =~ m/[^{]\p{Dash}[^}]/) {
       push @strings_out, join('-', gen_initials(split(/\p{Dash}/, $str)));
     }
     else {
