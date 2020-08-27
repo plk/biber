@@ -1738,8 +1738,7 @@ sub gen_initials {
     # replacement with macro later
     # Dont' split a name part if it's brace-wrapped
     if ($str !~ m/^\{.+\}$/ and $str =~ m/\p{Dash}/) {
-      # yes, people really do things like "Hans{-}Peter" for a hyphenated name ...
-      push @strings_out, join('-', gen_initials(split(/\{?\p{Dash}\}?/, $str)));
+      push @strings_out, join('-', gen_initials(split(/\p{Dash}/, $str)));
     }
     else {
       # remove any leading braces and backslash from latex decoding or protection
