@@ -496,15 +496,13 @@ See C<perldoc Unicode::Collate> for details.
 
 =item B<--configfile|-g [file]>
 
-Use F<file> as configuration file for C<biber>. The default is the first
-file found among F<biber.conf> in the current directory,
-C<$HOME/.biber.conf>, or else the output of C<kpsewhich biber.conf>. In
-tool mode, (B<--tool>) the F<biber-tool.conf> installed with Biber is
-always used to set default options if a user-defined config file is not
-specified. Use the B<--tool-config> option to view the location of the
-default tool mode config file, copy this file and edit it to your
-requirements for use with this option. The options in the default config
-file reflect the options set by biblatex by default.
+Use F<file> as the configuration file for C<biber> instead of looking in
+the default locations (see C<biber> PDF manual). In tool mode, (B<--tool>)
+the F<biber-tool.conf> installed with Biber is always used to set default
+options if a user-defined config file is not specified. Use the
+B<--tool-config> option to view the location of the default tool mode
+config file--copy this file and edit it to your requirements for use with
+this option in tool mode.
 
 =item B<--convert-control>
 
