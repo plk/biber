@@ -861,7 +861,7 @@ used, then F<file> should be somewhere C<kpsewhich> can find it.
 =item B<--show-tmp-dir>
 
 Prints the location of the temporary directory used for various intermediate
-files and data. Only useful if B<--remove-tmp-dir> is set to true.
+files and data. Only useful if B<--noremove-tmp-dir> is set to true.
 
 =item B<--sortdebug>
 
