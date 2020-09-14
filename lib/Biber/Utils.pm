@@ -111,7 +111,7 @@ sub slurp_switchr {
     require Win32::Unicode::File;
     my $fh = Win32::Unicode::File->new('<', NFC($filename));
     $fh->binmode(":encoding($encoding)");
-    $slurp = $fh->slurp;
+    $slurp = $fh->slurp({blk_size => 1024*1024*100}); # 100MB
     $fh->close;
   }
   else {
