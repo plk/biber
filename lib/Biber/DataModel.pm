@@ -12,6 +12,8 @@ use Biber::Utils;
 use Biber::Constants;
 use Data::Dump qw( pp );
 use Log::Log4perl qw( :no_extra_logdie_message );
+use Scalar::Util qw (blessed looks_like_number);
+use Unicode::UCD qw(num);
 
 =encoding utf-8
 
@@ -868,26 +870,14 @@ sub check_data_constraints {
     if ($c->{datatype} eq 'isbn') {
       foreach my $f ($c->{fields}->@*) {
         if (my $fv = $be->get_field($f)) {
-          require Business::ISBN;
-          my ($vol, $dir, undef) = File::Spec->splitpath( $INC{"Business/ISBN.pm"} );
-          $dir =~ s/\/$//; # splitpath sometimes leaves a trailing '/'
-          # Just in case it is already set. We also need to fake this in tests or it will
-          # look for it in the blib dir
-          unless (exists($ENV{ISBN_RANGE_MESSAGE})) {
-            $ENV{ISBN_RANGE_MESSAGE} = File::Spec->catpath($vol, "$dir/ISBN/", 'RangeMessage.xml');
-          }
+
           # Treat as a list field just in case someone has made it so in a custom datamodel
           unless ($self->get_fieldtype($f) eq 'list') {
             $fv = [$fv];
           }
           foreach ($fv->@*) {
-            my $isbn = Business::ISBN->new($_);
-            if (not $isbn) {
+            if (not $DM_DATATYPES{isbn}->($_, $f)) {
               push @warnings, "Datamodel: Entry '$key' ($ds): Invalid ISBN in value of field '$f'";
-            }
-            # Business::ISBN has an error() method so we might get more information
-            elsif (not $isbn->is_valid) {
-              push @warnings, "Datamodel: Entry '$key' ($ds): Invalid ISBN in value of field '$f' (" . $isbn->error. ')';
             }
           }
         }
@@ -896,15 +886,14 @@ sub check_data_constraints {
     elsif ($c->{datatype} eq 'issn') {
       foreach my $f ($c->{fields}->@*) {
         if (my $fv = $be->get_field($f)) {
-          require Business::ISSN;
+
           # Treat as a list field just in case someone has made it so in a custom datamodel
           unless ($self->get_fieldtype($f) eq 'list') {
             $fv = [$fv];
           }
           foreach ($fv->@*) {
-            my $issn = Business::ISSN->new($_);
-            unless ($issn and $issn->is_valid) {
-              push @warnings, "Datamodel: Entry '$key' ($ds): Invalid ISSN in value of field '$f'";
+            if (not $DM_DATATYPES{issn}->($_)) {
+            push @warnings, "Datamodel: Entry '$key' ($ds): Invalid ISSN in value of field '$f'";
             }
           }
         }
@@ -913,14 +902,13 @@ sub check_data_constraints {
     elsif ($c->{datatype} eq 'ismn') {
       foreach my $f ($c->{fields}->@*) {
         if (my $fv = $be->get_field($f)) {
-          require Business::ISMN;
+
           # Treat as a list field just in case someone has made it so in a custom datamodel
           unless ($self->get_fieldtype($f) eq 'list') {
             $fv = [$fv];
           }
           foreach ($fv->@*) {
-            my $ismn = Business::ISMN->new($_);
-            unless ($ismn and $ismn->is_valid) {
+            if (not $DM_DATATYPES{ismn}->($_)) {
               push @warnings, "Datamodel: Entry '$key' ($ds): Invalid ISMN in value of field '$f'";
             }
           }
@@ -929,14 +917,8 @@ sub check_data_constraints {
     }
     elsif ($c->{datatype} eq 'integer' or
            $c->{datatype} eq 'datepart') {
-      my $dt = $DM_DATATYPES{$c->{datatype}};
       foreach my $f ($c->{fields}->@*) {
         if (my $fv = $be->get_field($f)) {
-          unless ( $fv =~ /$dt/ ) {
-            push @warnings, "Datamodel: Entry '$key' ($ds): Invalid format (" . $c->{datatype}. ") of field '$f' - ignoring field";
-            $be->del_field($f);
-            next;
-          }
           if (my $fmin = $c->{rangemin}) {
             unless ($fv >= $fmin) {
               push @warnings, "Datamodel: Entry '$key' ($ds): Invalid value of field '$f' must be '>=$fmin' - ignoring field";
@@ -968,6 +950,52 @@ sub check_data_constraints {
       }
     }
   }
+  return @warnings;
+}
+
+=head2 check_datatypes
+
+    Checks datatypes of fields against fields. These are not explicit constraints
+    in the datamodel but rather checks of the datatype of fields in the datamodel.
+
+=cut
+
+sub check_datatypes {
+  my $self = shift;
+  my $be = shift;
+  my $secnum = $Biber::MASTER->get_current_section;
+  my $section = $Biber::MASTER->sections->get_section($secnum);
+  my @warnings;
+  my $et = $be->get_field('entrytype');
+  my $key = $be->get_field('citekey');
+  my $ds = $section->get_keytods($key);
+
+  foreach my $f ($be->fields) {
+    my $fv = $be->get_field($f);
+    my $fdt = $self->get_datatype($f);
+    my $fft = $self->get_fieldtype($f);
+    my $ffmt = $self->get_fieldformat($f);
+    # skip special fields which are not in the datamodel such as:
+    # citekey, entrykey, rawdata, datatype
+    next unless defined($fdt);
+    my $dt = exists($DM_DATATYPES{$fdt}) ? $DM_DATATYPES{$fdt} : $DM_DATATYPES{default};
+    if (($fft eq 'list' and $fdt ne 'name') or
+        $ffmt eq 'xsv') {
+      $dt = $DM_DATATYPES{list};
+    }
+
+    # Fields which are allowed to be null and are indeed null are fine
+    # These can mess up further tests so weed them out now
+    if ($self->field_is_nullok($f) and $fv eq '') {
+      next;
+    }
+
+    unless ($dt->($fv, $f)) {
+      push @warnings, "Datamodel: Entry '$key' ($ds): Invalid value of field '$f' must be datatype '$fdt' - ignoring field";
+      $be->del_field($f);
+    }
+  }
+
   return @warnings;
 }
 
