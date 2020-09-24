@@ -956,25 +956,31 @@ sub inherit_from {
   if ($inherit_all eq 'true') {
     my @fields = $parent->datafields;
 
-    # Special case:
-    # WITH NO override: If the child has any Xdate datepart, don't inherit any Xdateparts
-    # from parent otherwise you can end up with rather broken dates in the child.
-    # Remove such fields before we start since it can't be done in the loop because
-    # as soon as one Xdatepart field has been inherited, no more will be.
-    # Save removed fields as this is needed when copying derived special date fields below
-    # as these also need skipping if have skipped the *date field from which they were derived
-    # WITH override: Remove all related dateparts so that there is no conflict with inherited
+    # Special case: WITH NO override: If the child has any Xdate datepart,
+    # don't inherit any Xdateparts from parent otherwise you can end up
+    # with rather broken dates in the child. Remove such fields before we
+    # start since it can't be done in the loop because as soon as one
+    # Xdatepart field has been inherited, no more will be. Save removed
+    # fields as this is needed when copying derived special date fields
+    # below as these also need skipping if we have skipped the *date field
+    # from which they were derived
+    # WITH override: Remove all related dateparts so that there is no conflict
+    # with inherited
+    # ONLY DO THIS FOR ENTRIES WITH xDATE FIELDS - LEGACY YEAR/MONTH MESS THINGS UP
+    # AND WE JUST IGNORE THEM FOR THIS PRE-PROCESSING STEP
     my @filtered_fields;
     my @removed_fields;
     foreach my $field (@fields) {
       if (first {$_ eq $field} $dmh->{dateparts}->@*) {
-        if ($self->date_fields_exist($field)) {
-          if ($override_target eq 'true') {
-            $self->delete_date_fields($field); # clear out all date field parts in target
-          }
-          else {
-            push @removed_fields, $field;
-            next;
+        if ($parent->get_field('datesplit') and $self->get_field('datesplit')) {
+          if ($self->date_fields_exist($field)) {
+            if ($override_target eq 'true') {
+              $self->delete_date_fields($field); # clear out all date field parts in target
+            }
+            else {
+              push @removed_fields, $field;
+              next;
+            }
           }
         }
       }
