@@ -204,7 +204,16 @@ sub set_output_entry {
             not $be->get_field('endyear')) {
           $acc{$outmap->('year')} = $val;
           if (my $mval = $be->get_field('month')) {
-            $acc{$outmap->('month')} = $mval;
+            if (Biber::Config->getoption('nostdmacros')) {
+              $acc{$outmap->('month')} = $mval;
+            }
+            else {
+              my %RMONTHS = reverse %MONTHS;
+              $acc{$outmap->('month')} = $RMONTHS{$mval};
+              # month is a macro, no braces.
+              Biber::Config->setoption('output_macro_fields',
+                                       Biber::Config->getoption('output_macro_fields') || '' . ',month');
+            }
           }
           next;
         }
@@ -236,7 +245,8 @@ sub set_output_entry {
         my $xd = xdatarefcheck($val);
         $val = $xd // $val;
       }
-      $acc{$outmap->($field)} = $val;
+      # Could have been set in dates above (MONTH, YEAR special handling)
+      $acc{$outmap->($field)} = $val unless $acc{$outmap->($field)};
     }
   }
 
@@ -308,6 +318,7 @@ sub set_output_entry {
   my %classmap = ('names'     => 'namelists',
                   'lists'     => 'lists',
                   'dates'     => 'datefields');
+
 
   foreach my $field (split(/\s*,\s*/, Biber::Config->getoption('output_field_order'))) {
     if ($field eq 'names' or
