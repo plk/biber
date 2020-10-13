@@ -108,7 +108,6 @@ GetOptions(
            'tool_fieldcase|tool-fieldcase=s',       # legacy alias for output_fieldcase
            'tool_noremove_missing_dependants|tool-noremove-missing-dependants',
            'tool_indent|tool-indent=s',             # legacy alias for output_indent
-           'tool_macro_fields|tool-macro-fields=s', # legacy alias for output_macro_fields
            'tool_resolve|tool-resolve',             # legacy alias for output_resolve
            'trace|T',
            'u',                   # alias for input_encoding=UTF-8
@@ -179,10 +178,6 @@ if (my $o = $opts->{tool_indent}) {
   $opts->{output_indent} = $o;
   delete $opts->{tool_indent};
 }
-if (my $o = $opts->{tool_macro_fields}) {
-  $opts->{output_macro_fields} = $o;
-  delete $opts->{tool_macro_fields};
-}
 if (my $o = $opts->{tool_resolve}) {
   $opts->{output_resolve} = $o;
   delete $opts->{tool_resolve};
@@ -226,6 +221,11 @@ if (exists($opts->{output_resolve})) {
   $opts->{output_resolve_crossrefs} = 1;
   $opts->{output_resolve_sets} = 1;
   delete $opts->{output_resolve};
+}
+
+# Legacy warnings
+if ($opts->{output_macro_fields}) {
+  say STDERR "Biber: Deprecated option 'output-macro-fields' - no longer needed as macros are auto-detected on output";
 }
 
 # Check the output_format option
@@ -775,12 +775,6 @@ false.
 
 As B<--listsep> but for tool mode bibtex output. Defaults to BibTeX's usual
 'and'.
-
-=item B<--output-macro-fields=[field1, ... fieldn]>
-
-A comma-separated list of field names whose values are, on output, treated as BibTeX macros.
-Effectively this means that they are not wrapped in braces. Effect depends on the output format.
-The legacy option B<--tool-macro-fields> is supported as an alias.
 
 =item B<--output-namesep=[sep]>
 

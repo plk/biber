@@ -342,11 +342,6 @@
           </element>
         </optional>
         <optional>
-          <element name="output_macro_fields">
-            <text/>
-          </element>
-        </optional>
-        <optional>
           <element name="output_namesep">
             <text/>
           </element>

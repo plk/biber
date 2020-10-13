@@ -210,9 +210,6 @@ sub set_output_entry {
             else {
               my %RMONTHS = reverse %MONTHS;
               $acc{$outmap->('month')} = $RMONTHS{$mval};
-              # month is a macro, no braces.
-              Biber::Config->setoption('output_macro_fields',
-                                       Biber::Config->getoption('output_macro_fields') || '' . ',month');
             }
           }
           next;
@@ -479,9 +476,10 @@ sub bibfield {
   $acc .= ' ' x ($max_field_len - Unicode::GCString->new($field)->length) if $max_field_len;
   $acc .= ' = ';
 
-  # Don't wrap fields which should be macros in braces
-  my $mfs = Biber::Config->getoption('output_macro_fields');
-  if (defined($mfs) and first {lc($field) eq $_} map {lc($_)} split(/\s*,\s*/, $mfs) ) {
+  # Don't wrap fields which should be macros in braces - we can only deal with macros
+  # which are the whole field value - too messy to check for part values and this is better
+  # handles with XDATA anyway.
+  if (Text::BibTeX::macro_length($value)) {
     $acc .= "$value,\n";
   }
   else {

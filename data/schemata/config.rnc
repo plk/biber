@@ -94,7 +94,6 @@ start =
     element output_format        { "bibtex" | "bbl" | "biblatexml" | "dot" }? &
     element output_indent        { xsd:unsignedByte }? &
     element output_listsep       { text }? &
-    element output_macro_fields  { text }? &
     element output_namesep       { text }? &
     element output_resolve_xdata { "0" | "1" }? &
     element output_resolve_crossrefs { "0" | "1" }? &
