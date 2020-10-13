@@ -1,7 +1,7 @@
 # -*- cperl -*-
 use strict;
 use warnings;
-use Test::More tests => 15;
+use Test::More tests => 17;
 use Test::Differences;
 unified_diff;
 
@@ -195,13 +195,31 @@ my $gxd2 = q|@BOOK{gxd1,
 
 |;
 
+my $ld1 = q|@BOOK{ld1,
+  AUTHOR = {AAA and BBB and CCC and DDD and EEE},
+  MONTH  = apr,
+  TITLE  = {A title},
+  YEAR   = {2003},
+}
+
+|;
+
+my $ld2 = q|@BOOK{ld1,
+  AUTHOR = {AAA and BBB and CCC and DDD and EEE},
+  MONTH  = {4},
+  TITLE  = {A title},
+  YEAR   = {2003},
+}
+
+|;
+
 # NFD here because we are testing internals here and all internals expect NFD
 eq_or_diff(encode_utf8($out->get_output_entry(NFD('i3Š'))), encode_utf8($t1), 'tool mode - 1');
 ok(is_undef($out->get_output_entry('loh')), 'tool mode - 2');
 eq_or_diff($out->get_output_entry('xd1',), $t2, 'tool mode - 3');
 eq_or_diff($out->get_output_entry('b1',), $t3, 'tool mode - 4');
 eq_or_diff($out->get_output_entry('dt1',), $t4, 'tool mode - 5');
-is_deeply($main->get_keys, ['b1', 'macmillan', 'dt1', 'm1', 'macmillan:pub', 'macmillan:loc', 'mv1', 'gxd3', 'gxd4', NFD('i3Š'), 'badcr2', 'gxd2', 'xd1', 'badcr1', 'bo1', 'gxd1'], 'tool mode sorting');
+is_deeply($main->get_keys, ['b1', 'macmillan', 'dt1', 'm1', 'macmillan:pub', 'macmillan:loc', 'mv1', 'gxd3', 'gxd4', NFD('i3Š'), 'ld1', 'badcr2', 'gxd2', 'xd1', 'badcr1', 'bo1', 'gxd1'], 'tool mode sorting');
 eq_or_diff($out->get_output_comments, $tc1, 'tool mode - 6');
 eq_or_diff($out->get_output_entry('badcr1',), $badcr1, 'tool mode - 7');
 eq_or_diff($out->get_output_entry('badcr2',), $badcr2, 'tool mode - 8');
@@ -211,6 +229,7 @@ Biber::Config->setoption('output_xname', 1);
 Biber::Config->setoption('output_xnamesep', ':');
 Biber::Config->setoption('output_resolve_xdata', 0);
 Biber::Config->setoption('output_xdatasep', '+');
+
 $biber->tool_mode_setup;
 $biber->prepare_tool;
 $main = $biber->datalists->get_list(section                    => 99999,
@@ -237,3 +256,38 @@ $CFxmlschema->validate($CFxp);
 is($@, '', "Validation of $conf");
 # Bad name test
 ok(is_undef($out->get_output_entry('badname')), 'Bad name - 1');
+
+Biber::Config->setoption('output_xname', 0);
+Biber::Config->setoption('output_legacy_dates', '1');
+
+$biber->tool_mode_setup;
+$biber->prepare_tool;
+$main = $biber->datalists->get_list(section                    => 99999,
+                                    name                       => 'tool/global//global/global',
+                                    type                       => 'entry',
+                                    sortingtemplatename        => 'tool',
+                                    sortingnamekeytemplatename => 'global',
+                                    labelprefix                => '',
+                                    uniquenametemplatename     => 'global',
+                                    labelalphanametemplatename => 'global');
+
+$out = $biber->get_output_obj;
+eq_or_diff($out->get_output_entry('ld1',), $ld1, 'tool mode - 10');
+
+Biber::Config->setoption('output_legacy_dates', '1');
+Biber::Config->setoption('output_macro_fields', undef);
+Biber::Config->setoption('nostdmacros', '1');
+
+$biber->tool_mode_setup;
+$biber->prepare_tool;
+$main = $biber->datalists->get_list(section                    => 99999,
+                                    name                       => 'tool/global//global/global',
+                                    type                       => 'entry',
+                                    sortingtemplatename        => 'tool',
+                                    sortingnamekeytemplatename => 'global',
+                                    labelprefix                => '',
+                                    uniquenametemplatename     => 'global',
+                                    labelalphanametemplatename => 'global');
+
+$out = $biber->get_output_obj;
+eq_or_diff($out->get_output_entry('ld1',), $ld2, 'tool mode - 11');

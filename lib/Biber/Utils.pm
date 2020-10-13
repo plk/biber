@@ -108,11 +108,12 @@ sub slurp_switchr {
   my $slurp;
   $encoding //= 'UTF-8';
   if ($^O =~ /Win/) {
-    $logger->debug("Enabling Windows-compat filesystem encoding reader");
     require Win32::Unicode::File;
     my $fh = Win32::Unicode::File->new('<', NFC($filename));
     $fh->binmode(":encoding($encoding)");
-    $slurp = $fh->slurp;
+    # 100MB block size as the loop over the default 1MB block size seems to fail for
+    # files > 1Mb
+    $slurp = $fh->slurp({blk_size => 1024*1024*100});
     $fh->close;
   }
   else {
@@ -131,7 +132,6 @@ sub slurp_switchr {
 sub slurp_switchw {
   my ($filename, $string) = @_;
   if ($^O =~ /Win/) {
-    $logger->debug("Enabling Windows-compat filesystem encoding writer");
     require Win32::Unicode::File;
     my $fh = Win32::Unicode::File->new('>', NFC($filename));
     $fh->binmode(':encoding(UTF-8)');

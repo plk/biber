@@ -1092,15 +1092,15 @@ sub _literal {
   # year/month
   elsif ($field eq 'year') {
     return if $bibentry->get_datafield('year');
-    if ($value and not looks_like_number(num($value))and not $entry->get('sortyear')) {
-      biber_warn("year field '$value' in entry '$key' is not an integer - this will probably not sort properly.");
+    if ($value and not looks_like_number(num($value))) {
+      biber_warn("legacy year field '$value' in entry '$key' is not an integer - this will probably not sort properly.");
     }
     return $value;
   }
   elsif ($field eq 'month') {
     return if $bibentry->get_datafield('month');
     if ($value and not looks_like_number(num($value))) {
-      biber_warn("month field '$value' in entry '$key' is not an integer - this will probably not sort properly.");
+      biber_warn("legacy month field '$value' in entry '$key' is not an integer - this will probably not sort properly.");
     }
 
     # Try to sanitise months to biblatex requirements

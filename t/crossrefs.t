@@ -108,6 +108,7 @@ my $cr1 = q|    \entry{cr1}{inbook}{}
       \strng{crossref}{cr_m}
       \field{eprintclass}{SOMECLASS}
       \field{eprinttype}{SomEPrFiX}
+      \field{month}{1}
       \field{origyear}{1955}
       \field[default][en-us]{title}{Great and Good Graphs}
       \field{year}{1974}

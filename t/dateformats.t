@@ -51,7 +51,8 @@ my $main = $biber->datalists->get_list('nty/global//global/global');
 
 my $bibentries = $section->bibentries;
 my $l1 = [ "Entry 'L1' (dateformats.bib): Invalid format '1985-1030' of date field 'origdate' - ignoring",
-           "Entry 'L1' (dateformats.bib): Invalid format '1.5.1998' of date field 'urldate' - ignoring" ];
+           "Entry 'L1' (dateformats.bib): Invalid format '1.5.1998' of date field 'urldate' - ignoring",
+           "Datamodel: Entry 'L1' (dateformats.bib): Invalid value of field 'year' must be datatype 'datepart' - ignoring field"];
 my $l2 = [ "Entry 'L2' (dateformats.bib): Invalid format '1995-1230' of date field 'origdate' - ignoring" ];
 my $l3 = [ "Entry 'L3' (dateformats.bib): Invalid format '1.5.1988' of date field 'urldate' - ignoring" ];
 my $l4 = [ "Entry 'L4' (dateformats.bib): Invalid format '1995-1-04' of date field 'date' - ignoring",

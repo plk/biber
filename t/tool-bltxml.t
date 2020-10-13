@@ -353,6 +353,27 @@ my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
       </bltx:name>
     </bltx:names>
   </bltx:entry>
+  <bltx:entry id="ld1" entrytype="book">
+    <bltx:names type="author">
+      <bltx:name>
+        <bltx:namepart type="family" initial="A">AAA</bltx:namepart>
+      </bltx:name>
+      <bltx:name>
+        <bltx:namepart type="family" initial="B">BBB</bltx:namepart>
+      </bltx:name>
+      <bltx:name>
+        <bltx:namepart type="family" initial="C">CCC</bltx:namepart>
+      </bltx:name>
+      <bltx:name>
+        <bltx:namepart type="family" initial="D">DDD</bltx:namepart>
+      </bltx:name>
+      <bltx:name>
+        <bltx:namepart type="family" initial="E">EEE</bltx:namepart>
+      </bltx:name>
+    </bltx:names>
+    <bltx:title>A title</bltx:title>
+    <bltx:date>2003-04</bltx:date>
+  </bltx:entry>
 </bltx:entries>
 |;
 
@@ -614,12 +635,33 @@ my $bltxml2 = q|<?xml version="1.0" encoding="UTF-8"?>
       </bltx:name>
     </bltx:names>
   </bltx:entry>
+  <bltx:entry id="ld1" entrytype="book">
+    <bltx:names type="author">
+      <bltx:name>
+        <bltx:namepart type="family" initial="A">AAA</bltx:namepart>
+      </bltx:name>
+      <bltx:name>
+        <bltx:namepart type="family" initial="B">BBB</bltx:namepart>
+      </bltx:name>
+      <bltx:name>
+        <bltx:namepart type="family" initial="C">CCC</bltx:namepart>
+      </bltx:name>
+      <bltx:name>
+        <bltx:namepart type="family" initial="D">DDD</bltx:namepart>
+      </bltx:name>
+      <bltx:name>
+        <bltx:namepart type="family" initial="E">EEE</bltx:namepart>
+      </bltx:name>
+    </bltx:names>
+    <bltx:title>A title</bltx:title>
+    <bltx:date>2003-04</bltx:date>
+  </bltx:entry>
 </bltx:entries>
 |;
 
 
 eq_or_diff($outvar, encode_utf8($bltxml1), 'bltxml tool mode - 1');
-is_deeply($main->get_keys, ['b1', 'macmillan', 'dt1', 'm1', 'macmillan:pub', 'macmillan:loc', 'mv1', 'gxd3', 'gxd4', NFD('i3Š'), 'badcr2', 'gxd2', 'xd1', 'badcr1', 'bo1', 'gxd1'], 'tool mode sorting');
+is_deeply($main->get_keys, ['b1', 'macmillan', 'dt1', 'm1', 'macmillan:pub', 'macmillan:loc', 'mv1', 'gxd3', 'gxd4', NFD('i3Š'), 'ld1', 'badcr2', 'gxd2', 'xd1', 'badcr1', 'bo1', 'gxd1'], 'tool mode sorting');
 
 Biber::Config->setoption('output_resolve_xdata', 0);
 Biber::Config->setoption('output_xdatasep', '+');

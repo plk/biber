@@ -626,6 +626,8 @@ If returns the first file found among:
 
 =item * C<$ENV{XDG_CONFIG_HOME}/biber/biber.conf>
 
+=item * C<$HOME/.config/biber/biber.conf>
+
 =item * C<$HOME/Library/biber/biber.conf> (Mac OSX only)
 
 =item * C<$ENV{APPDATA}/biber.conf> (Windows only)
@@ -650,6 +652,10 @@ sub config_file {
   elsif ( defined $ENV{XDG_CONFIG_HOME} and
     -f File::Spec->catfile($ENV{XDG_CONFIG_HOME}, "biber", $BIBER_CONF_NAME) ) {
     $biberconf = File::Spec->catfile($ENV{XDG_CONFIG_HOME}, "biber", $BIBER_CONF_NAME);
+  }
+ # See https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html
+  elsif ( -f File::Spec->catfile($ENV{HOME}, ".config", "biber", $BIBER_CONF_NAME) ) {
+    $biberconf = File::Spec->catfile($ENV{HOME}, ".config", "biber", $BIBER_CONF_NAME);
   }
   elsif ( $^O =~ /(?:Mac|darwin)/ and
     -f File::Spec->catfile($ENV{HOME}, "Library", "biber", $BIBER_CONF_NAME) ) {
