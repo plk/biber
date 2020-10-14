@@ -1146,7 +1146,7 @@ sub inherit_from {
     my @filtered_fields;
     my @removed_fields;
     foreach my $field (@fields) {
-      if (first {$_ eq $field} $dmh->{dateparts}->@*) {
+      if (first {$_ eq $field} $self->{dmh}->{dateparts}->@*) {
         if ($parent->get_field('datesplit') and $self->get_field('datesplit')) {
           if ($self->date_fields_exist($field)) {
             if ($override_target eq 'true') {
