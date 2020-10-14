@@ -4418,6 +4418,8 @@ sub prepare {
 sub prepare_tool {
   my $self = shift;
   my $out = $self->get_output_obj;          # Biber::Output object
+  $out->clear_output_macros;                # Mostly for tool mode tests
+  $out->clear_output_comments;              # Mostly for tool mode tests
 
   # Place to put global pre-processing things
   $self->process_setup_tool;

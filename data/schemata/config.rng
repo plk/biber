@@ -259,6 +259,14 @@
           </element>
         </optional>
         <optional>
+          <element name="nooutputmacros">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </element>
+        </optional>
+        <optional>
           <element name="nostdmacros">
             <choice>
               <value>0</value>
@@ -281,6 +289,14 @@
         </optional>
         <optional>
           <element name="output_align">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="output_all_macros">
             <choice>
               <value>0</value>
               <value>1</value>

@@ -1,7 +1,7 @@
 # -*- cperl -*-
 use strict;
 use warnings;
-use Test::More tests => 17;
+use Test::More tests => 19;
 use Test::Differences;
 unified_diff;
 
@@ -196,22 +196,28 @@ my $gxd2 = q|@BOOK{gxd1,
 |;
 
 my $ld1 = q|@BOOK{ld1,
-  AUTHOR = {AAA and BBB and CCC and DDD and EEE},
-  MONTH  = apr,
-  TITLE  = {A title},
-  YEAR   = {2003},
+  AUTHOR    = {AAA and BBB and CCC and DDD and EEE},
+  PUBLISHER = P,
+  MONTH     = apr,
+  TITLE     = {A title},
+  YEAR      = {2003},
 }
 
 |;
 
 my $ld2 = q|@BOOK{ld1,
-  AUTHOR = {AAA and BBB and CCC and DDD and EEE},
-  MONTH  = {4},
-  TITLE  = {A title},
-  YEAR   = {2003},
+  AUTHOR    = {AAA and BBB and CCC and DDD and EEE},
+  PUBLISHER = P,
+  MONTH     = {4},
+  TITLE     = {A title},
+  YEAR      = {2003},
 }
 
 |;
+
+my $macros1 = ["\@STRING{P = \"Publisher\"}\n"];
+my $macros2 = ["\@STRING{N = \"NotUsed\"}\n",
+               "\@STRING{P = \"Publisher\"}\n"];
 
 # NFD here because we are testing internals here and all internals expect NFD
 eq_or_diff(encode_utf8($out->get_output_entry(NFD('i3Š'))), encode_utf8($t1), 'tool mode - 1');
@@ -273,10 +279,12 @@ $main = $biber->datalists->get_list(section                    => 99999,
 
 $out = $biber->get_output_obj;
 eq_or_diff($out->get_output_entry('ld1',), $ld1, 'tool mode - 10');
+is_deeply($out->get_output_macros, $macros1, 'tool mode - 11');
 
 Biber::Config->setoption('output_legacy_dates', '1');
 Biber::Config->setoption('output_macro_fields', undef);
 Biber::Config->setoption('nostdmacros', '1');
+Biber::Config->setoption('output_all_macros', '1');
 
 $biber->tool_mode_setup;
 $biber->prepare_tool;
@@ -290,4 +298,5 @@ $main = $biber->datalists->get_list(section                    => 99999,
                                     labelalphanametemplatename => 'global');
 
 $out = $biber->get_output_obj;
-eq_or_diff($out->get_output_entry('ld1',), $ld2, 'tool mode - 11');
+eq_or_diff($out->get_output_entry('ld1',), $ld2, 'tool mode - 12');
+is_deeply($out->get_output_macros, $macros2, 'tool mode - 13');

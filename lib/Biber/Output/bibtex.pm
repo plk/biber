@@ -74,6 +74,43 @@ sub set_output_comment {
   return;
 }
 
+=head2 set_output_macro
+
+  Set the output for a macro
+
+=cut
+
+sub set_output_macro {
+  my $self = shift;
+  my $macro = shift;
+  my $acc = '';
+
+  # Only output used macros unless we are asked to output all
+  unless (Biber::Config->getoption('output_all_macros')) {
+    return unless $USEDSTRINGS{$macro};
+  }
+
+  # Make the right casing function
+  my $casing;
+
+  if (Biber::Config->getoption('output_fieldcase') eq 'upper') {
+    $casing = sub {uc(shift)};
+  }
+  elsif (Biber::Config->getoption('output_fieldcase') eq 'lower') {
+    $casing = sub {lc(shift)};
+  }
+  elsif (Biber::Config->getoption('output_fieldcase') eq 'title') {
+    $casing = sub {ucfirst(shift)};
+  }
+
+  $acc .= '@';
+  $acc .= $casing->('string');
+  $acc .= '{' . $casing->($macro) . ' = "' . Text::BibTeX::macro_text($macro) . "\"}\n";
+
+  push $self->{output_data}{MACROS}->@*, $acc;
+  return;
+}
+
 =head2 set_output_entry
 
   Set the output for an entry
@@ -435,6 +472,16 @@ sub output {
 
   out($target, $data->{HEAD});
 
+  # Output any macros when in tool mode
+  if (Biber::Config->getoption('tool')) {
+    if (exists($data->{MACROS})) {
+      foreach my $macro (sort $data->{MACROS}->@*) {
+        out($target, $macro);
+      }
+      out($target, "\n"); # Extra newline between macros and entries, for clarity
+    }
+  }
+
   if ($logger->is_debug()) {# performance tune
     $logger->debug("Writing entries in bibtex format");
   }
@@ -484,9 +531,17 @@ sub create_output_section {
     $self->set_output_entry($be, $section, Biber::Config->get_dm);
   }
 
-  # Output all comments at the end
+  # Create the comments output
   foreach my $comment ($Biber::MASTER->{comments}->@*) {
     $self->set_output_comment($comment);
+  }
+
+  # Create the macros output unless suppressed. This has to come after entry output creation
+  # above as this gather information on which macros were actually used
+  unless (Biber::Config->getoption('nooutputmacros')) {
+    foreach my $m (sort values %RSTRINGS) {
+      $self->set_output_macro($m);
+    }
   }
 
   # Make sure the output object knows about the output section
@@ -509,9 +564,30 @@ sub bibfield {
   $acc .= ' ' x ($max_field_len - Unicode::GCString->new($field)->length) if $max_field_len;
   $acc .= ' = ';
 
+  # Is the field value a macro? If so, replace with macro
+  if (my $m = $RSTRINGS{$value}) {
+    # Make the right casing function
+    my $casing;
+
+    if (Biber::Config->getoption('output_fieldcase') eq 'upper') {
+      $casing = sub {uc(shift)};
+    }
+    elsif (Biber::Config->getoption('output_fieldcase') eq 'lower') {
+      $casing = sub {lc(shift)};
+    }
+    elsif (Biber::Config->getoption('output_fieldcase') eq 'title') {
+      $casing = sub {ucfirst(shift)};
+    }
+
+    $value = $casing->($m);
+    $USEDSTRINGS{$m} = 1;
+  }
+
   # Don't wrap fields which should be macros in braces - we can only deal with macros
   # which are the whole field value - too messy to check for part values and this is better
   # handles with XDATA anyway.
+  # Don't check %RSTRINGS here as macros can come from other places (like %MONTHS). Just check
+  # whether a macro is defined as that covers all sources
   if (Text::BibTeX::macro_length($value)) {
     $acc .= "$value,\n";
   }
