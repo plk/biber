@@ -39,6 +39,8 @@ our @EXPORT = qw{
                   %UNIQUENAME_CONTEXTS
                   %UNIQUENAME_VALUES
                   %MONTHS
+                  %RSTRINGS
+                  %USEDSTRINGS
               };
 
 # Version of biblatex control file which this release expects. Matched against version
@@ -67,6 +69,12 @@ unless ($locale) {
     $locale = 'en_US.UTF-8';
   }
 }
+
+# Reverse record of macros so we can reverse these for tool mode output
+our %RSTRINGS = ();
+# Record of macros which are actually used in output in tool mode, so that we don't
+# output unused strings.
+our %USEDSTRINGS = ();
 
 our %MONTHS = ('jan' => '1',
                'feb' => '2',
@@ -226,12 +234,14 @@ our $CONFIG_DEFAULT_BIBER = {
 #  nolabelwidthcount                          => { option =>  }, # default is nothing
   nolog                                       => { content => 0 },
   noskipduplicates                            => { content => 0 },
+  nooutputmacros                              => { content => 0 },
   nostdmacros                                 => { content => 0 },
   nosort                                      => { option => [ { name => 'setnames', value => q/\A\p{L}{2}\p{Pd}(?=\S)/ },
                                                                { name => 'setnames', value => q/[\x{2bf}\x{2018}]/ } ] },
   onlylog                                     => { content => 0 },
   others_string                               => { content => 'others' },
   output_align                                => { content => 0 },
+  output_all_macros                           => { content => 0 },
   output_annotation_marker                    => { content => '+an' },
   output_named_annotation_marker              => { content => ':' },
   output_encoding                             => { content => 'UTF-8' },

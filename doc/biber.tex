@@ -2852,8 +2852,9 @@ linux» if unsure about this. There are many pages about this, for example:
 \subsection{Building}
 
 Instructions for those who want/need to build an executable from the
-Perl version. For this, you will need to have Perl 5.24+ with
-the following modules (best installed in this order):
+Perl version. For this, you will need to have the required Perl minimum
+version (running \verb+perl Build.PL+ below will tell you if your version
+is not enough) and the following modules (best installed in this order):
 
 \begin{itemize}
 \item \verb+Module::Build+ and all dependencies
@@ -2875,7 +2876,7 @@ follows\footnote{On Unix-like systems, you may need to specify a full
   path to the scripts e.g. \texttt{./Build}}:
 
 \begin{itemize}
-\item Get the \biber\ source tree from SF and put it on the architecture
+\item Get the \biber\ source tree from Github and put it on the architecture
   you are building for
 \item cd to the root of the source tree
 \item \verb+perl Build.PL+ (this will check your module dependencies)

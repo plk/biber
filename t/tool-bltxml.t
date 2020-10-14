@@ -371,6 +371,11 @@ my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
         <bltx:namepart type="family" initial="E">EEE</bltx:namepart>
       </bltx:name>
     </bltx:names>
+    <bltx:publisher>
+      <bltx:list>
+        <bltx:item>Publisher</bltx:item>
+      </bltx:list>
+    </bltx:publisher>
     <bltx:title>A title</bltx:title>
     <bltx:date>2003-04</bltx:date>
   </bltx:entry>
@@ -653,6 +658,11 @@ my $bltxml2 = q|<?xml version="1.0" encoding="UTF-8"?>
         <bltx:namepart type="family" initial="E">EEE</bltx:namepart>
       </bltx:name>
     </bltx:names>
+    <bltx:publisher>
+      <bltx:list>
+        <bltx:item>Publisher</bltx:item>
+      </bltx:list>
+    </bltx:publisher>
     <bltx:title>A title</bltx:title>
     <bltx:date>2003-04</bltx:date>
   </bltx:entry>

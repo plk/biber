@@ -219,6 +219,17 @@ sub get_output_entries {
 }
 
 
+=head2 get_output_macros
+
+    Get the output macros for tool mode tests
+
+=cut
+
+sub get_output_macros {
+  my $self = shift;
+  return sort [$self->{output_data}{MACROS}->@*];
+}
+
 =head2 get_output_comments
 
     Get the output comments for tool mode tests
@@ -227,7 +238,29 @@ sub get_output_entries {
 
 sub get_output_comments {
   my $self = shift;
-  return $self->{output_data}{COMMENTS};
+  return sort [$self->{output_data}{COMMENTS}->@*];
+}
+
+=head2 clear_output_macros
+
+    Clear the output macros
+
+=cut
+
+sub clear_output_macros {
+  my $self = shift;
+  delete $self->{output_data}{MACROS};
+}
+
+=head2 clear_output_comments
+
+    Clear the output comments
+
+=cut
+
+sub clear_output_comments {
+  my $self = shift;
+  delete $self->{output_data}{COMMENTS};
 }
 
 =head2 get_output_entry
