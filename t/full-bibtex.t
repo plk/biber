@@ -29,8 +29,8 @@ my $stdout;
 my $stderr;
 
 run3  [ $perl, 'bin/biber', '--noconf', '--nolog', '--output-format=bibtex', "--output-file=$bib", '--output-align', 't/tdata/full-bibtex.bcf' ], \undef, \$stdout, \$stderr;
-# say $stdout;
-# say $stderr;
+ # say $stdout;
+ # say $stderr;
 
 is($? >> 8, 0, 'Full test has zero exit status');
 

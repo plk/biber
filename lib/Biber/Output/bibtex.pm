@@ -411,6 +411,7 @@ sub set_output_entry {
 sub output {
   my $self = shift;
   my $data = $self->{output_data};
+  my $target = $self->{output_target};
 
   my $target_string = "Target"; # Default
   if ($self->{output_target_file}) {
@@ -423,11 +424,12 @@ sub output {
   if (Biber::Config->getoption('output_encoding')) {
     $enc_out = ':encoding(' . Biber::Config->getoption('output_encoding') . ')';
   }
-  my $target = IO::File->new($target_string, ">$enc_out");
 
-  # for debugging mainly
-  if (not $target or $target_string eq '-') {
-    $target = new IO::File '>-';
+  if ($target_string eq '-') {
+    $target = new IO::File ">-$enc_out";
+  }
+  else {
+    $target = IO::File->new($target_string, ">$enc_out");
   }
 
   if ($logger->is_debug()) {# performance tune

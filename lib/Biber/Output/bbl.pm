@@ -639,9 +639,12 @@ sub output {
     $target_string = $self->{output_target_file};
   }
 
-  # for debugging mainly
-  unless ($target) {
-    $target = new IO::File '>-';
+  if (not $target or $target_string eq '-') {
+    my $enc_out;
+    if (Biber::Config->getoption('output_encoding')) {
+      $enc_out = ':encoding(' . Biber::Config->getoption('output_encoding') . ')';
+  }
+    $target = new IO::File ">-$enc_out";
   }
 
   if ($logger->is_debug()) {# performance tune
