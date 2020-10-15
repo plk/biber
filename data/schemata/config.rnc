@@ -81,12 +81,11 @@ start =
         attribute value { text }
       }+
     }? &
-    element nooutputmacros       { "0" | "1" }? &
     element nostdmacros          { "0" | "1" }? &
     element onlylog              { "0" | "1" }? &
     element others_string        { text }? &
     element output_align         { "0" | "1" }? &
-    element output_all_macros    { "0" | "1" }? &
+    element output_all_macrodefs { "0" | "1" }? &
     element output_annotation_marker { text }? &
     element output_directory     { text }? &
     element output_encoding      { text }? &
@@ -97,6 +96,7 @@ start =
     element output_indent        { xsd:unsignedByte }? &
     element output_listsep       { text }? &
     element output_namesep       { text }? &
+    element output_no_macrodefs  { "0" | "1" }? &
     element output_resolve_xdata { "0" | "1" }? &
     element output_resolve_crossrefs { "0" | "1" }? &
     element output_resolve_sets { "0" | "1" }? &

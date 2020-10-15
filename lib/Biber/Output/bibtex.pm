@@ -86,7 +86,7 @@ sub set_output_macro {
   my $acc = '';
 
   # Only output used macros unless we are asked to output all
-  unless (Biber::Config->getoption('output_all_macros')) {
+  unless (Biber::Config->getoption('output_all_macrodefs')) {
     return unless $USEDSTRINGS{$macro};
   }
 
@@ -505,7 +505,7 @@ sub create_output_section {
 
   # Create the macros output unless suppressed. This has to come after entry output creation
   # above as this gather information on which macros were actually used
-  unless (Biber::Config->getoption('nooutputmacros')) {
+  unless (Biber::Config->getoption('output_no_macrodefs')) {
     foreach my $m (sort values %RSTRINGS) {
       $self->set_output_macro($m);
     }

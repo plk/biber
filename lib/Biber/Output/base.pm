@@ -227,7 +227,7 @@ sub get_output_entries {
 
 sub get_output_macros {
   my $self = shift;
-  return sort [$self->{output_data}{MACROS}->@*];
+  return [sort $self->{output_data}{MACROS}->@*];
 }
 
 =head2 get_output_comments
@@ -238,7 +238,7 @@ sub get_output_macros {
 
 sub get_output_comments {
   my $self = shift;
-  return sort [$self->{output_data}{COMMENTS}->@*];
+  return [sort $self->{output_data}{COMMENTS}->@*];
 }
 
 =head2 clear_output_macros

@@ -284,7 +284,7 @@ is_deeply($out->get_output_macros, $macros1, 'tool mode - 11');
 Biber::Config->setoption('output_legacy_dates', '1');
 Biber::Config->setoption('output_macro_fields', undef);
 Biber::Config->setoption('nostdmacros', '1');
-Biber::Config->setoption('output_all_macros', '1');
+Biber::Config->setoption('output_all_macrodefs', '1');
 
 $biber->tool_mode_setup;
 $biber->prepare_tool;

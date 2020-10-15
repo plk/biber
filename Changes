@@ -3,8 +3,8 @@ Revision history for Biber
 2.16   (2020-)
        * Option "output_macro_fields" no longer does anything as macro
          fields are auto-detected.
-       * New options "nooutputmacros" and "output_all_macros" control
-         BibTeX macros (@STRING) output in tool mode.
+       * New options "output_no_macrodefs" and "output_all_macrodefs" control
+         BibTeX macros (@STRING) output for bibtex format output.
 2.15   (2020-08)
        * Added --output-legacy-dates and --output-field-replace options to
          aid in outputting legacy bibtex format in tool and non-tool mode
