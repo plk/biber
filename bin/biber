@@ -59,14 +59,13 @@ GetOptions(
            'no_default_datamodel|no-default-datamodel',
            'nodieonerror',
            'nolog',
-           'nooutputmacros',
            'nostdmacros',
            'onlylog',
            'others_string|others-string=s',
            'outfile=s',           # legacy alias for output_file
            'outformat=s',         # legacy alias for output_format
            'output_align|output-align',
-           'output_all_macros|output-all-macros',
+           'output_all_macrodefs|output-all-macrodefs',
            'output_annotation_marker|output-annotation-marker=s',
            'output_directory|output-directory=s',
            'output_encoding|output-encoding|E=s',
@@ -82,6 +81,7 @@ GetOptions(
            'output_mssep|output-mssep=s',
            'output_named_annotation_marker|output-named-annotation-marker=s',
            'output_namesep|output-namesep=s',
+           'output_no_macrodefs|output-no-macrodefs',
            'output_resolve|output-resolve',
            'output_resolve_xdata|output-resolve-xdata',
            'output_resolve_crossrefs|output-resolve-crossrefs',
@@ -631,11 +631,6 @@ Don't skip duplicate bibliography keys if found. The detection of duplicate keys
 all data sources. Sometimes you might need duplicates when using several data sources
 across several refsections in which case you might need to use this option.
 
-=item B<--nooutputmacros>
-
-In tool mode, don't output macro definitions (@STRING entries). You might not want to
-output macro definitions if you keep them in a separate file.
-
 =item B<--nostdmacros>
 
 Don't automatically define any standard macros like month abbreviations.
@@ -668,11 +663,11 @@ Use F<string> as the final name in a name field which implies "et al". Defaults 
 Align field values in neat columns in output. Effect depends on the output format. Default is false.
 The legacy option B<--tool-align> is supported as an alias.
 
-=item B<--output-all-macros>
+=item B<--output-all-macrodefs>
 
-When outputting bibtex format, whether to output all found macros (@STRING
-entries) rather than just macros which are actually used in the output
-entries. Default is false.
+When outputting bibtex format, whether to output all found macro (@STRING
+entries) definitions rather than just definitions for macros which are
+actually used in the output entries. Default is false.
 
 =item B<--output-annotation-marker=[marker]>
 
@@ -764,6 +759,12 @@ As B<--mssep> but for bibtex output. Defaults to '_'.
 
 As B<--namesep> but for bibtex output. Defaults to BibTeX's usual
 'and'.
+
+=item B<--output-no-macrodefs>
+
+When outputting BibTeX format, don't output macro definitions (@STRING entries).
+You might not want to output macro definitions if you keep them in a
+separate file.
 
 =item B<--output-resolve>
 

@@ -1555,9 +1555,9 @@ sub cache_data {
     # Record macros in T::B so we can output then properly in tool mode
     if ($entry->metatype == BTE_MACRODEF) {
       foreach my $f ($entry->fieldlist) {
-        Text::BibTeX::add_macro_text($f, $entry->get($f));
         $RSTRINGS{$entry->get($f)} = $f;
       }
+      next;
     }
 
     # Ignore misc BibTeX entry types we don't care about

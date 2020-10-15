@@ -86,7 +86,7 @@ sub set_output_macro {
   my $acc = '';
 
   # Only output used macros unless we are asked to output all
-  unless (Biber::Config->getoption('output_all_macros')) {
+  unless (Biber::Config->getoption('output_all_macrodefs')) {
     return unless $USEDSTRINGS{$macro};
   }
 
@@ -444,6 +444,7 @@ sub set_output_entry {
 sub output {
   my $self = shift;
   my $data = $self->{output_data};
+  my $target = $self->{output_target};
 
   my $target_string = "Target"; # Default
   if ($self->{output_target_file}) {
@@ -456,11 +457,12 @@ sub output {
   if (Biber::Config->getoption('output_encoding')) {
     $enc_out = ':encoding(' . Biber::Config->getoption('output_encoding') . ')';
   }
-  my $target = IO::File->new($target_string, ">$enc_out");
 
-  # for debugging mainly
-  if (not $target or $target_string eq '-') {
-    $target = new IO::File '>-';
+  if ($target_string eq '-') {
+    $target = new IO::File ">-$enc_out";
+  }
+  else {
+    $target = IO::File->new($target_string, ">$enc_out");
   }
 
   if ($logger->is_debug()) {# performance tune
@@ -538,7 +540,7 @@ sub create_output_section {
 
   # Create the macros output unless suppressed. This has to come after entry output creation
   # above as this gather information on which macros were actually used
-  unless (Biber::Config->getoption('nooutputmacros')) {
+  unless (Biber::Config->getoption('output_no_macrodefs')) {
     foreach my $m (sort values %RSTRINGS) {
       $self->set_output_macro($m);
     }

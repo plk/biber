@@ -259,14 +259,6 @@
           </element>
         </optional>
         <optional>
-          <element name="nooutputmacros">
-            <choice>
-              <value>0</value>
-              <value>1</value>
-            </choice>
-          </element>
-        </optional>
-        <optional>
           <element name="nostdmacros">
             <choice>
               <value>0</value>
@@ -296,7 +288,7 @@
           </element>
         </optional>
         <optional>
-          <element name="output_all_macros">
+          <element name="output_all_macrodefs">
             <choice>
               <value>0</value>
               <value>1</value>
@@ -370,6 +362,14 @@
         <optional>
           <element name="output_namesep">
             <text/>
+          </element>
+        </optional>
+        <optional>
+          <element name="output_no_macrodefs">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
           </element>
         </optional>
         <optional>
