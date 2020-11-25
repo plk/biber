@@ -1402,7 +1402,6 @@ sub parse_date {
   return 0 if $string eq '..';    # ISO8601-2 4.4 (open date)
 
   my $dt = eval {$obj->parse_datetime($string)};
-
   return $dt unless $dt; # bad parse, don't do anything else
 
   # Check if this datetime is before the Gregorian start date. If so, return Julian date
