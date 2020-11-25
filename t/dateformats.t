@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 53;
+use Test::More tests => 56;
 use Test::Differences;
 unified_diff;
 
@@ -915,3 +915,8 @@ eq_or_diff($bibentries->entry('script1')->get_field('day'), '१५', 'Scripts -
 eq_or_diff($bibentries->entry('script1')->get_field('endyear'), '१९८८', 'Scripts - 4');
 eq_or_diff($bibentries->entry('script1')->get_field('endmonth'), '०५', 'Scripts - 5');
 eq_or_diff($bibentries->entry('script1')->get_field('endday'), '११', 'Scripts - 6');
+
+# Milliseconds
+eq_or_diff($bibentries->entry('mill1')->get_field('year'), '2016', 'Milliseconds - 1');
+eq_or_diff($bibentries->entry('mill1')->get_field('month'), '1', 'Milliseconds - 2');
+eq_or_diff($bibentries->entry('mill1')->get_field('day'), '19', 'Milliseconds - 3');

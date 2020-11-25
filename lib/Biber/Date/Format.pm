@@ -78,10 +78,11 @@ DateTime::Format::Builder->create_class(
         parse_datetime => [
             [ preprocess => \&_pre ],
             {# ISO8601-1 4.2
-                #[-]YYYY-MM-DDThh:mm:ss 1985-04-12T10:15:30
-                length => [ qw( 19 20 ) ],
+             # Ignore milliseconds, if present
+                #[-]YYYY-MM-DDThh:mm:ss[.mmm] 1985-04-12T10:15:30.003
+                length => [ qw( 19 20 23 24) ],
                 regex  => qr/^ (-?\d{4}) - (\d\d) - (\d\d)
-                            T (\d\d) : (\d\d) : (\d\d) $/x,
+                            T (\d\d) : (\d\d) : (\d\d) (?:\.\d\d\d)? $/x,
                 params => [ qw( year month day hour minute second ) ],
             },
             {# ISO8601-1 4.1
