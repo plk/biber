@@ -74,7 +74,7 @@ my $dl1 = q|    \entry{AbdelbarH98}{article}{}
       \strng{authornamehash}{bb887c5d0458bfb1f3f7e6afc8d1def4}
       \strng{authorfullhash}{bb887c5d0458bfb1f3f7e6afc8d1def4}
       \field{sortinit}{A}
-      \field{sortinithash}{a3dcedd53b04d1adfd5ac303ecd5e6fa}
+      \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{year}
       \field{labelnamesource}{author}

@@ -56,7 +56,7 @@ my $k1 = q|    \entry{key1}{article}{}
       \strng{authorfullhash}{a517747c3d12f99244ae598910d979c5}
       \field{extraname}{1}
       \field{sortinit}{1}
-      \field{sortinithash}{50c6687d7fc80f50136d75228e3c59ba}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
@@ -95,7 +95,7 @@ my $k2 = q|    \entry{key2}{inbook}{}
       \strng{authorfullhash}{a517747c3d12f99244ae598910d979c5}
       \field{extraname}{2}
       \field{sortinit}{2}
-      \field{sortinithash}{ed39bb39cf854d5250e95b1c1f94f4ed}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
@@ -254,7 +254,7 @@ my $kck4 = q|    \entry{caf8e34be07426ae7127c1b4829983c1}{inbook}{skipbib=true,s
 
 my $c1 = q|    \entry{c1}{book}{}
       \field{sortinit}{3}
-      \field{sortinithash}{a37a8ef248a93c322189792c34fc68c9}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
       \field{related}{9ab62b5ef34a985438bfdf7ee0102229}
     \endentry
 |;
@@ -341,7 +341,7 @@ my $un1 = q|    \entry{kullback}{book}{}
       \strng{authorfullhash}{34c5bbf9876c37127c3abe4e7d7a7198}
       \field{extraname}{1}
       \field{sortinit}{5}
-      \field{sortinithash}{5dd416adbafacc8226114bc0202d5fdd}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
       \field{extradatescope}{year}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -375,7 +375,7 @@ my $un2 = q|    \entry{kullback:related}{book}{}
       \strng{authorfullhash}{34c5bbf9876c37127c3abe4e7d7a7198}
       \field{extraname}{2}
       \field{sortinit}{6}
-      \field{sortinithash}{7851c86048328b027313775d8fbd2131}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
       \field{extradatescope}{year}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}

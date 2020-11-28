@@ -63,7 +63,7 @@ my $us1 = q|    \entry{us1}{book}{}
       \strng{authorfullhash}{6a9b0705c275273262103333472cc656}
       \field{labelalpha}{Elk72}
       \field{sortinit}{E}
-      \field{sortinithash}{c554bd1a0b76ea92b9f105fe36d9c7b0}
+      \field{sortinithash}{8da8a182d344d5b9047633dfc0cc9131}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
@@ -93,7 +93,7 @@ my $us2a = q|    \entry{us2}{book}{}
       \strng{authorfullhash}{40a337fc8d6319ae5a7b50f6324781ec}
       \field{labelalpha}{Elk\textbf{+}72}
       \field{sortinit}{E}
-      \field{sortinithash}{c554bd1a0b76ea92b9f105fe36d9c7b0}
+      \field{sortinithash}{8da8a182d344d5b9047633dfc0cc9131}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
@@ -121,7 +121,7 @@ my $us3 = q|    \entry{us3}{book}{}
       \strng{authorfullhash}{e06f6e5a8c1d5204dea326aa5f4f8d17}
       \field{labelalpha}{Uth00}
       \field{sortinit}{U}
-      \field{sortinithash}{77a6935510e008adcf5b555e7b4f0711}
+      \field{sortinithash}{6901a00e45705986ee5e7ca9fd39adca}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
@@ -169,7 +169,7 @@ my $us4a = q|    \entry{us4}{book}{}
       \field{extraname}{1}
       \field{labelalpha}{Uth\textbf{+}00}
       \field{sortinit}{U}
-      \field{sortinithash}{77a6935510e008adcf5b555e7b4f0711}
+      \field{sortinithash}{6901a00e45705986ee5e7ca9fd39adca}
       \field{extradate}{1}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
@@ -202,7 +202,7 @@ my $us2b = q|    \entry{us2}{book}{}
       \field{extraname}{2}
       \field{labelalpha}{Elk\textbf{+}72}
       \field{sortinit}{E}
-      \field{sortinithash}{c554bd1a0b76ea92b9f105fe36d9c7b0}
+      \field{sortinithash}{8da8a182d344d5b9047633dfc0cc9131}
       \field{extradate}{2}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
@@ -251,7 +251,7 @@ my $us4b = q|    \entry{us4}{book}{}
       \field{extraname}{2}
       \field{labelalpha}{Uth\textbf{+}00}
       \field{sortinit}{U}
-      \field{sortinithash}{77a6935510e008adcf5b555e7b4f0711}
+      \field{sortinithash}{6901a00e45705986ee5e7ca9fd39adca}
       \field{extradate}{2}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
@@ -281,7 +281,7 @@ my $us6 = q|    \entry{us6}{book}{}
       \strng{authorfullhash}{cbe9a5912d961199801c3fcd32356ecf}
       \field{labelalpha}{Red71}
       \field{sortinit}{R}
-      \field{sortinithash}{b9c68a358aea118dfa887b6e902414a7}
+      \field{sortinithash}{5e1c39a9d46ffb6bebd8f801023a9486}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
@@ -311,7 +311,7 @@ my $us7 = q|    \entry{us7}{misc}{}
       \strng{authorfullhash}{d70785a70cdf36c7b5dc7b136207ada9}
       \field{labelalpha}{Red\textbf{+}71}
       \field{sortinit}{R}
-      \field{sortinithash}{b9c68a358aea118dfa887b6e902414a7}
+      \field{sortinithash}{5e1c39a9d46ffb6bebd8f801023a9486}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
@@ -340,7 +340,7 @@ my $us8 = q|    \entry{us8}{book}{}
       \field{extraname}{1}
       \field{labelalpha}{Sly00}
       \field{sortinit}{S}
-      \field{sortinithash}{c319cff79d99c853d775f88277d4e45f}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
       \field{extradate}{1}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
@@ -387,7 +387,7 @@ my $us9 = q|    \entry{us9}{book}{}
       \strng{authorfullhash}{afe15ce8d7d22d0bbc042705c4b5fdf6}
       \field{labelalpha}{Sly\textbf{+}00}
       \field{sortinit}{S}
-      \field{sortinithash}{c319cff79d99c853d775f88277d4e45f}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
       \field{extraalpha}{1}

@@ -83,7 +83,7 @@ my $cr1 = q|    \entry{cr1}{inbook}{}
       \strng{editornamehash}{c129df5593fdaa7475548811bfbb227d}
       \strng{editorfullhash}{c129df5593fdaa7475548811bfbb227d}
       \field{sortinit}{G}
-      \field{sortinithash}{62eb2aa29549e4fdbd3cb154ec5711cb}
+      \field{sortinithash}{32d67eca0634bf53703493fb1090a2e8}
       \true{singletitle}
       \true{uniquetitle}
       \true{uniquework}
@@ -133,7 +133,7 @@ my $cr2 = q|    \entry{cr2}{inbook}{}
       \strng{editornamehash}{c129df5593fdaa7475548811bfbb227d}
       \strng{editorfullhash}{c129df5593fdaa7475548811bfbb227d}
       \field{sortinit}{F}
-      \field{sortinithash}{fb0c0faa89eb6abae8213bf60e6799ea}
+      \field{sortinithash}{2638baaa20439f1b5a8f80c6c08a13b4}
       \true{singletitle}
       \true{uniquetitle}
       \true{uniquework}
@@ -167,7 +167,7 @@ my $cr_m = q|    \entry{cr_m}{book}{}
       \strng{editornamehash}{c129df5593fdaa7475548811bfbb227d}
       \strng{editorfullhash}{c129df5593fdaa7475548811bfbb227d}
       \field{sortinit}{G}
-      \field{sortinithash}{62eb2aa29549e4fdbd3cb154ec5711cb}
+      \field{sortinithash}{32d67eca0634bf53703493fb1090a2e8}
       \true{crossrefsource}
       \true{uniquetitle}
       \field{labeltitlesource}{title}
@@ -205,7 +205,7 @@ my $cr3 = q|    \entry{cr3}{inbook}{}
       \strng{editornamehash}{a1f5c22413396d599ec766725b226735}
       \strng{editorfullhash}{a1f5c22413396d599ec766725b226735}
       \field{sortinit}{A}
-      \field{sortinithash}{a3dcedd53b04d1adfd5ac303ecd5e6fa}
+      \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
       \true{singletitle}
       \true{uniquetitle}
       \true{uniquework}
@@ -250,7 +250,7 @@ my $cr4 = q|    \entry{cr4}{inbook}{}
       \strng{editornamehash}{6ea89bd4958743a20b70fe17647d6af5}
       \strng{editorfullhash}{6ea89bd4958743a20b70fe17647d6af5}
       \field{sortinit}{M}
-      \field{sortinithash}{2e5c2f51f7fa2d957f3206819bf86dc3}
+      \field{sortinithash}{4625c616857f13d17ce56f7d4f97d451}
       \true{singletitle}
       \true{uniquetitle}
       \true{uniquework}
@@ -281,7 +281,7 @@ my $crt = q|    \entry{crt}{book}{}
       \strng{editornamehash}{a1f5c22413396d599ec766725b226735}
       \strng{editorfullhash}{a1f5c22413396d599ec766725b226735}
       \field{sortinit}{B}
-      \field{sortinithash}{8de16967003c7207dae369d874f1456e}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
       \true{uniquetitle}
       \field{labeltitlesource}{title}
       \field{title}{Beasts of the Burbling Burns}
@@ -317,7 +317,7 @@ my $cr6 = q|    \entry{cr6}{inproceedings}{}
       \strng{editorfullhash}{344a7f427fb765610ef96eb7bce95257}
       \field{extraname}{2}
       \field{sortinit}{A}
-      \field{sortinithash}{a3dcedd53b04d1adfd5ac303ecd5e6fa}
+      \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
       \true{uniquetitle}
       \true{uniquework}
       \field{labelnamesource}{author}
@@ -370,7 +370,7 @@ my $cr7 = q|    \entry{cr7}{inbook}{}
       \strng{bookauthorfullhash}{91a1dd4aeed3c4ec29ca74c4e778be5f}
       \field{extraname}{1}
       \field{sortinit}{A}
-      \field{sortinithash}{a3dcedd53b04d1adfd5ac303ecd5e6fa}
+      \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
       \true{uniquetitle}
       \true{uniquework}
       \field{labelnamesource}{author}
@@ -405,7 +405,7 @@ my $cr8 = q|    \entry{cr8}{incollection}{}
       \strng{authorfullhash}{3d449e56eb3ca1ae80dc99a18d689795}
       \field{extraname}{4}
       \field{sortinit}{S}
-      \field{sortinithash}{c319cff79d99c853d775f88277d4e45f}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
       \true{singletitle}
       \true{uniquetitle}
       \true{uniquework}
@@ -435,7 +435,7 @@ my $xr1 = q|    \entry{xr1}{inbook}{}
       \strng{authornamehash}{e0ecc4fc668ee499d1afba44e1ac064d}
       \strng{authorfullhash}{e0ecc4fc668ee499d1afba44e1ac064d}
       \field{sortinit}{Z}
-      \field{sortinithash}{8f7b480688e809b50b6f6577b16f3db5}
+      \field{sortinithash}{96892c0b0a36bb8557c40c49813d48b3}
       \true{singletitle}
       \true{uniquetitle}
       \true{uniquework}
@@ -464,7 +464,7 @@ my $xr2 = q|    \entry{xr2}{inbook}{}
       \strng{authornamehash}{6afa09374ecfd6b394ce714d2d9709c7}
       \strng{authorfullhash}{6afa09374ecfd6b394ce714d2d9709c7}
       \field{sortinit}{I}
-      \field{sortinithash}{9417e9a1288a9371e2691d999083ed39}
+      \field{sortinithash}{8d291c51ee89b6cd86bf5379f0b151d8}
       \true{singletitle}
       \true{uniquetitle}
       \true{uniquework}
@@ -495,7 +495,7 @@ my $xrm = q|    \entry{xrm}{book}{}
       \strng{editornamehash}{809950f9b59ae207092b909a19dcb27b}
       \strng{editorfullhash}{809950f9b59ae207092b909a19dcb27b}
       \field{sortinit}{C}
-      \field{sortinithash}{4c244ceae61406cdc0cc2ce1cb1ff703}
+      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
       \true{xrefsource}
       \true{uniquetitle}
       \field{labeltitlesource}{title}
@@ -520,7 +520,7 @@ my $xr3 = q|    \entry{xr3}{inbook}{}
       \strng{authornamehash}{9788055665b9bb4b37c776c3f6b74f16}
       \strng{authorfullhash}{9788055665b9bb4b37c776c3f6b74f16}
       \field{sortinit}{N}
-      \field{sortinithash}{98cf339a479c0454fe09153a08675a15}
+      \field{sortinithash}{22369a73d5f88983a108b63f07f37084}
       \true{singletitle}
       \true{uniquetitle}
       \true{uniquework}
@@ -550,7 +550,7 @@ my $xrt = q|    \entry{xrt}{book}{}
       \strng{editornamehash}{bf7d6b02f3e073913e5bfe5059508dd5}
       \strng{editorfullhash}{bf7d6b02f3e073913e5bfe5059508dd5}
       \field{sortinit}{K}
-      \field{sortinithash}{d3edc18d54b9438a72c24c925bfb38f4}
+      \field{sortinithash}{c02bf6bff1c488450c352b40f5d853ab}
       \true{uniquetitle}
       \field{labeltitlesource}{title}
       \field{title}{Kings, Cork and Calculation}
@@ -576,7 +576,7 @@ my $xr4 = q|    \entry{xr4}{inbook}{}
       \strng{authorfullhash}{7804ffef086c0c4686c235807f5cb502}
       \field{extraname}{1}
       \field{sortinit}{M}
-      \field{sortinithash}{2e5c2f51f7fa2d957f3206819bf86dc3}
+      \field{sortinithash}{4625c616857f13d17ce56f7d4f97d451}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{origyear}{1933}
@@ -604,7 +604,7 @@ my $mxr = q|    \entry{mxr}{inbook}{}
       \strng{authorfullhash}{7804ffef086c0c4686c235807f5cb502}
       \field{extraname}{2}
       \field{sortinit}{M}
-      \field{sortinithash}{2e5c2f51f7fa2d957f3206819bf86dc3}
+      \field{sortinithash}{4625c616857f13d17ce56f7d4f97d451}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{origyear}{1933}
@@ -629,7 +629,7 @@ my $mcr = q|    \entry{mcr}{inbook}{}
       \strng{authorfullhash}{7804ffef086c0c4686c235807f5cb502}
       \field{extraname}{3}
       \field{sortinit}{M}
-      \field{sortinithash}{2e5c2f51f7fa2d957f3206819bf86dc3}
+      \field{sortinithash}{4625c616857f13d17ce56f7d4f97d451}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{origyear}{1933}
@@ -664,7 +664,7 @@ my $ccr1 = q|    \entry{ccr2}{book}{}
       \strng{editorfullhash}{cfee758a1c82df2e26af1985e061bb0a}
       \field{extraname}{1}
       \field{sortinit}{V}
-      \field{sortinithash}{02432525618c08e2b03cac47c19764af}
+      \field{sortinithash}{afb52128e5b4dc4b843768c0113d673b}
       \true{uniquetitle}
       \true{uniquework}
       \field{labelnamesource}{author}
@@ -698,7 +698,7 @@ my $ccr2 = q|    \entry{ccr3}{inbook}{}
       \strng{editornamehash}{cfee758a1c82df2e26af1985e061bb0a}
       \strng{editorfullhash}{cfee758a1c82df2e26af1985e061bb0a}
       \field{sortinit}{P}
-      \field{sortinithash}{bb5b15f2db90f7aef79bb9e83defefcb}
+      \field{sortinithash}{ff3bcf24f47321b42cb156c2cc8a8422}
       \true{uniquetitle}
       \field{labeltitlesource}{title}
       \field{booktitle}{Misc etc.}
@@ -730,7 +730,7 @@ my $ccr3 = q|    \entry{ccr4}{inbook}{}
 
 my $s1 = q|    \entry{s1}{inbook}{}
       \field{sortinit}{S}
-      \field{sortinithash}{c319cff79d99c853d775f88277d4e45f}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
       \true{uniquetitle}
       \field{labeltitlesource}{title}
       \strng{crossref}{s2}
@@ -764,7 +764,7 @@ my $xc2 = q|    \entry{xc2}{inbook}{}
       \strng{bookauthorfullhash}{1a0f7d518cccdad859a74412ef956474}
       \field{extraname}{2}
       \field{sortinit}{C}
-      \field{sortinithash}{4c244ceae61406cdc0cc2ce1cb1ff703}
+      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
       \true{xrefsource}
       \field{labelnamesource}{author}
       \field{booktitle}{Title}
@@ -773,7 +773,7 @@ my $xc2 = q|    \entry{xc2}{inbook}{}
 
 my $b1 = q|    \entry{b1}{inbook}{}
       \field{sortinit}{2}
-      \field{sortinithash}{ed39bb39cf854d5250e95b1c1f94f4ed}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
       \strng{crossref}{b2}
       \field{day}{3}
       \field{month}{3}
@@ -807,7 +807,7 @@ my $sup1 = q|    \entry{sup1}{mvbook}{}
       \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
       \field{extraname}{3}
       \field{sortinit}{S}
-      \field{sortinithash}{c319cff79d99c853d775f88277d4e45f}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
       \true{crossrefsource}
       \true{singletitle}
       \field{labelnamesource}{author}
@@ -832,7 +832,7 @@ my $sup2 = q|    \entry{sup2}{book}{}
       \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
       \field{extraname}{1}
       \field{sortinit}{S}
-      \field{sortinithash}{c319cff79d99c853d775f88277d4e45f}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
       \true{singletitle}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
