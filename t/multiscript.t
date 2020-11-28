@@ -189,7 +189,7 @@ my $ms1 = q|    \entry{ms1}{article}{}
       \strng{authortransliterationru-latnfullhash}{6506017dedcafd386988f8f975fedd0d}
       \field{labelalpha}{SPXeS95}
       \field{sortinit}{S}
-      \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
+      \strng{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
       \fieldmssource{labelname}{author}{transliteration}{ru-latn}
       \fieldmssource{labeltitle}{title}{translation}{fr}
       \field[default][en-us]{title}{Title}
@@ -260,7 +260,7 @@ my $ms2 = q|    \entry{ms2}{inbook}{}
       \strng{editordefaultdefullhash}{da4e9104ade84cb0fcd815add03dd1fd}
       \field{labelalpha}{Cle96}
       \field{sortinit}{C}
-      \strng{sortinithash}{4c244ceae61406cdc0cc2ce1cb1ff703}
+      \strng{sortinithash}{4d103a86280481745c9c897c925753c0}
       \fieldmssource{labelname}{author}{transliteration}{ru-latn}
       \field[default][de]{booktitle}{Book Title}
       \field[translated][fr]{booktitle}{Livre Titre}

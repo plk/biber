@@ -47,7 +47,7 @@ my $out = $biber->get_output_obj;
 my $string1 = q|    \entry{Static1}{set}{}
       \set{Static2,Static4,Static3}
       \field{sortinit}{B}
-      \strng{sortinithash}{8de16967003c7207dae369d874f1456e}
+      \strng{sortinithash}{d7095fff47cda75ca2589920aae98399}
       \field{annotation}{Some notes}
     \endentry
 |;
@@ -74,7 +74,7 @@ my $string2 = q|    \entry{Static2}{book}{skipbib=true,skipbiblist=true,skiplab=
       \strng{authordefaulten-usnamehash}{43874d80d7ce68027102819f16c47df1}
       \strng{authordefaulten-usfullhash}{43874d80d7ce68027102819f16c47df1}
       \field{sortinit}{B}
-      \strng{sortinithash}{8de16967003c7207dae369d874f1456e}
+      \strng{sortinithash}{d7095fff47cda75ca2589920aae98399}
       \field{labeldatesource}{year}
       \fieldmssource{labelname}{author}{default}{en-us}
       \fieldmssource{labeltitle}{title}{default}{en-us}
@@ -106,7 +106,7 @@ my $string3 = q|    \entry{Static3}{book}{skipbib=true,skipbiblist=true,skiplab=
       \strng{authordefaulten-usnamehash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
       \strng{authordefaulten-usfullhash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
       \field{sortinit}{D}
-      \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
+      \strng{sortinithash}{6f385f66841fb5e82009dc833c761848}
       \field{labeldatesource}{year}
       \fieldmssource{labelname}{author}{default}{en-us}
       \fieldmssource{labeltitle}{title}{default}{en-us}
@@ -137,7 +137,7 @@ my $string4 = q|    \entry{Static4}{book}{skipbib=true,skipbiblist=true,skiplab=
       \strng{authordefaulten-usnamehash}{da80091c8cd89e5269bd55af1bd5d2fa}
       \strng{authordefaulten-usfullhash}{da80091c8cd89e5269bd55af1bd5d2fa}
       \field{sortinit}{C}
-      \strng{sortinithash}{4c244ceae61406cdc0cc2ce1cb1ff703}
+      \strng{sortinithash}{4d103a86280481745c9c897c925753c0}
       \field{labeldatesource}{year}
       \fieldmssource{labelname}{author}{default}{en-us}
       \fieldmssource{labeltitle}{title}{default}{en-us}
@@ -169,7 +169,7 @@ my $string5 = q|    \entry{Static2}{book}{}
       \strng{authordefaulten-usnamehash}{43874d80d7ce68027102819f16c47df1}
       \strng{authordefaulten-usfullhash}{43874d80d7ce68027102819f16c47df1}
       \field{sortinit}{1}
-      \strng{sortinithash}{50c6687d7fc80f50136d75228e3c59ba}
+      \strng{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{year}
       \fieldmssource{labelname}{author}{default}{en-us}

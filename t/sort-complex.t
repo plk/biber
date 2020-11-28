@@ -135,7 +135,7 @@ my $l4 = q|    \entry{L4}{book}{}
       \field{extraname}{2}
       \field{labelalpha}{Doe\textbf{+}95}
       \field{sortinit}{D}
-      \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
+      \strng{sortinithash}{6f385f66841fb5e82009dc833c761848}
       \field{extraalpha}{2}
       \fieldmssource{labelname}{author}{default}{en-us}
       \fieldmssource{labeltitle}{title}{default}{en-us}
@@ -179,7 +179,7 @@ my $l1 = q|    \entry{L1}{book}{}
       \field{extraname}{1}
       \field{labelalpha}{Doe95}
       \field{sortinit}{D}
-      \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
+      \strng{sortinithash}{6f385f66841fb5e82009dc833c761848}
       \field{extraalpha}{1}
       \fieldmssource{labelname}{author}{default}{en-us}
       \fieldmssource{labeltitle}{title}{default}{en-us}
@@ -223,7 +223,7 @@ my $l2 = q|    \entry{L2}{book}{}
       \field{extraname}{3}
       \field{labelalpha}{Doe95}
       \field{sortinit}{D}
-      \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
+      \strng{sortinithash}{6f385f66841fb5e82009dc833c761848}
       \field{extraalpha}{3}
       \fieldmssource{labelname}{author}{default}{en-us}
       \fieldmssource{labeltitle}{title}{default}{en-us}
@@ -267,7 +267,7 @@ my $l3 = q|    \entry{L3}{book}{}
       \field{extraname}{2}
       \field{labelalpha}{Doe95}
       \field{sortinit}{D}
-      \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
+      \strng{sortinithash}{6f385f66841fb5e82009dc833c761848}
       \field{extraalpha}{2}
       \fieldmssource{labelname}{author}{default}{en-us}
       \fieldmssource{labeltitle}{title}{default}{en-us}
@@ -313,7 +313,7 @@ my $l5 = q|    \entry{L5}{book}{}
       \field{extraname}{1}
       \field{labelalpha}{Doe\textbf{+}95}
       \field{sortinit}{D}
-      \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
+      \strng{sortinithash}{6f385f66841fb5e82009dc833c761848}
       \field{extraalpha}{1}
       \fieldmssource{labelname}{author}{default}{en-us}
       \fieldmssource{labeltitle}{title}{default}{en-us}

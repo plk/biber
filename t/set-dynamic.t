@@ -51,7 +51,7 @@ my $out = $biber->get_output_obj;
 my $string1 = q|    \entry{DynSet}{set}{}
       \set{Dynamic1,Dynamic2,Dynamic3}
       \field{sortinit}{1}
-      \strng{sortinithash}{50c6687d7fc80f50136d75228e3c59ba}
+      \strng{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
     \endentry
 |;
 
@@ -77,7 +77,7 @@ my $string2 = q|    \entry{Dynamic1}{book}{skipbib=true,skipbiblist=true,skiplab
       \strng{authordefaulten-usnamehash}{252caa7921a061ca92087a1a52f15b78}
       \strng{authordefaulten-usfullhash}{252caa7921a061ca92087a1a52f15b78}
       \field{sortinit}{8}
-      \strng{sortinithash}{1b24cab5087933ef0826a7cd3b99e994}
+      \strng{sortinithash}{a231b008ebf0ecbe0b4d96dcc159445f}
       \field{labeldatesource}{year}
       \fieldmssource{labelname}{author}{default}{en-us}
       \fieldmssource{labeltitle}{title}{default}{en-us}
@@ -110,7 +110,7 @@ my $string3 = q|    \entry{Dynamic2}{book}{skipbib=true,skipbiblist=true,skiplab
       \strng{authordefaulten-usnamehash}{894a5fe6de820f5dcce84a65581667f4}
       \strng{authordefaulten-usfullhash}{894a5fe6de820f5dcce84a65581667f4}
       \field{sortinit}{9}
-      \strng{sortinithash}{54047ffb55bdefa0694bbd554c1b11a0}
+      \strng{sortinithash}{0a5ebc79d83c96b6579069544c73c7d4}
       \field{labeldatesource}{year}
       \fieldmssource{labelname}{author}{default}{en-us}
       \fieldmssource{labeltitle}{title}{default}{en-us}
@@ -142,7 +142,7 @@ my $string4 = q|    \entry{Dynamic3}{book}{skipbib=true,skipbiblist=true,skiplab
       \strng{authordefaulten-usnamehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \strng{authordefaulten-usfullhash}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \field{sortinit}{1}
-      \strng{sortinithash}{50c6687d7fc80f50136d75228e3c59ba}
+      \strng{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
       \field{labeldatesource}{year}
       \fieldmssource{labelname}{author}{default}{en-us}
       \fieldmssource{labeltitle}{title}{default}{en-us}
@@ -175,7 +175,7 @@ my $string5 = q|    \entry{Dynamic3}{book}{}
       \strng{authordefaulten-usnamehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \strng{authordefaulten-usfullhash}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \field{sortinit}{1}
-      \strng{sortinithash}{50c6687d7fc80f50136d75228e3c59ba}
+      \strng{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{year}
       \fieldmssource{labelname}{author}{default}{en-us}

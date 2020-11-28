@@ -89,7 +89,7 @@ my $un1 = q|    \entry{un1}{article}{}
       \strng{authordefaulten-usfullhash}{329d8f9192ea3349d700160c9ddb505d}
       \field{labelalpha}{SmiJohSim}
       \field{sortinit}{S}
-      \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
+      \strng{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
       \fieldmssource{labelname}{author}{default}{en-us}
     \endentry
 |;
@@ -122,7 +122,7 @@ my $un2 = q|    \entry{un2}{article}{}
       \strng{authordefaulten-usfullhash}{7551114aede4ef69e4b3683039801706}
       \field{labelalpha}{SmiJohAla}
       \field{sortinit}{S}
-      \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
+      \strng{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
       \fieldmssource{labelname}{author}{default}{en-us}
     \endentry
 |;
@@ -155,7 +155,7 @@ my $un3 = q|    \entry{un3}{article}{}
       \strng{authordefaulten-usfullhash}{401aebda288799a7c757526242d8c9fc}
       \field{labelalpha}{SmiJohArt}
       \field{sortinit}{S}
-      \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
+      \strng{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
       \fieldmssource{labelname}{author}{default}{en-us}
     \endentry
 |;
@@ -188,7 +188,7 @@ my $un4 = q|    \entry{un4}{article}{}
       \strng{authordefaulten-usfullhash}{f6038a264619efefd49c7daac56424ca}
       \field{labelalpha}{SmiAlaSim}
       \field{sortinit}{S}
-      \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
+      \strng{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
       \fieldmssource{labelname}{author}{default}{en-us}
     \endentry
 |;
@@ -221,7 +221,7 @@ my $un1a = q|    \entry{un1}{article}{}
       \strng{authordefaulten-usfullhash}{329d8f9192ea3349d700160c9ddb505d}
       \field{labelalpha}{SmiJohSim}
       \field{sortinit}{S}
-      \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
+      \strng{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
       \fieldmssource{labelname}{author}{default}{en-us}
     \endentry
 |;
@@ -254,7 +254,7 @@ my $un2a = q|    \entry{un2}{article}{}
       \strng{authordefaulten-usfullhash}{7551114aede4ef69e4b3683039801706}
       \field{labelalpha}{SmiJohAla}
       \field{sortinit}{S}
-      \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
+      \strng{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
       \fieldmssource{labelname}{author}{default}{en-us}
     \endentry
 |;
@@ -287,7 +287,7 @@ my $un3a = q|    \entry{un3}{article}{}
       \strng{authordefaulten-usfullhash}{401aebda288799a7c757526242d8c9fc}
       \field{labelalpha}{SmiJohArt}
       \field{sortinit}{S}
-      \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
+      \strng{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
       \fieldmssource{labelname}{author}{default}{en-us}
     \endentry
 |;
@@ -321,7 +321,7 @@ my $un4a = q|    \entry{un4}{article}{}
       \strng{authordefaulten-usfullhash}{f6038a264619efefd49c7daac56424ca}
       \field{labelalpha}{SmiAlaSim}
       \field{sortinit}{S}
-      \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
+      \strng{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
       \fieldmssource{labelname}{author}{default}{en-us}
     \endentry
 |;
@@ -357,7 +357,7 @@ my $un1b = q|    \entry{un1}{article}{}
       \field{extraname}{5}
       \field{labelalpha}{SmiJohSim}
       \field{sortinit}{S}
-      \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
+      \strng{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
       \field{extradate}{5}
       \fieldmssource{labelname}{author}{default}{en-us}
     \endentry
@@ -391,7 +391,7 @@ my $un2b = q|    \entry{un2}{article}{}
       \strng{authordefaulten-usfullhash}{7551114aede4ef69e4b3683039801706}
       \field{labelalpha}{SmiJohAla}
       \field{sortinit}{S}
-      \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
+      \strng{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
       \fieldmssource{labelname}{author}{default}{en-us}
     \endentry
 |;
@@ -424,7 +424,7 @@ my $un3b = q|    \entry{un3}{article}{}
       \strng{authordefaulten-usfullhash}{401aebda288799a7c757526242d8c9fc}
       \field{labelalpha}{SmiJohArt}
       \field{sortinit}{S}
-      \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
+      \strng{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
       \fieldmssource{labelname}{author}{default}{en-us}
     \endentry
 |;
@@ -460,7 +460,7 @@ my $un4b = q|    \entry{un4}{article}{}
       \field{extraname}{1}
       \field{labelalpha}{SmiAlaSim}
       \field{sortinit}{S}
-      \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
+      \strng{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
       \field{extradate}{1}
       \fieldmssource{labelname}{author}{default}{en-us}
     \endentry
@@ -497,7 +497,7 @@ my $un5 = q|    \entry{un5}{article}{uniquenametemplatename=test3}
       \field{extraname}{2}
       \field{labelalpha}{SmiArtSim}
       \field{sortinit}{S}
-      \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
+      \strng{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
       \field{extradate}{2}
       \fieldmssource{labelname}{author}{default}{en-us}
     \endentry
@@ -534,7 +534,7 @@ my $un6 = q|    \entry{un6}{article}{}
       \field{extraname}{3}
       \field{labelalpha}{SmiArtSmy}
       \field{sortinit}{S}
-      \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
+      \strng{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
       \field{extradate}{3}
       \fieldmssource{labelname}{author}{default}{en-us}
     \endentry
@@ -571,7 +571,7 @@ my $un7 = q|    \entry{un7}{article}{}
       \field{extraname}{4}
       \field{labelalpha}{SmiArtSme}
       \field{sortinit}{S}
-      \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
+      \strng{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
       \field{extradate}{4}
       \fieldmssource{labelname}{author}{default}{en-us}
     \endentry

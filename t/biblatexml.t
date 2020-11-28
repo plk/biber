@@ -150,7 +150,7 @@ my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
       \strng{translatordefaulten-usnamehash}{b44eba830fe9817fbe8e53c82f1cbe04}
       \strng{translatordefaulten-usfullhash}{b44eba830fe9817fbe8e53c82f1cbe04}
       \field{sortinit}{v}
-      \strng{sortinithash}{02432525618c08e2b03cac47c19764af}
+      \strng{sortinithash}{afb52128e5b4dc4b843768c0113d673b}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
       \fieldmssource{labelname}{author}{default}{en-us}
@@ -197,7 +197,7 @@ my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
 
 my $l2 = q|    \entry{loopkey:a}{book}{}
       \field{sortinit}{0}
-      \strng{sortinithash}{bcf7a1f4afb88b7299f988caccb80d1c}
+      \strng{sortinithash}{c5602f03f17cc894ea7a6362c3cb0e13}
     \endentry
 |;
 

@@ -113,7 +113,7 @@ my $u1 = q|    \entry{u1}{misc}{}
       \strng{authordefaulten-usfullhash}{b78abdc838d79b6576f2ed0021642766}
       \field{labelalpha}{AAA\textbf{+}00}
       \field{sortinit}{A}
-      \strng{sortinithash}{a3dcedd53b04d1adfd5ac303ecd5e6fa}
+      \strng{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
       \true{singletitle}
       \true{uniquework}
       \fieldmssource{labelname}{author}{default}{en-us}
@@ -331,7 +331,7 @@ my $murray1 = q|    \entry{murray}{article}{}
       \strng{authordefaulten-usfullhash}{1572cc3fd324f560e5e71d041a6bd764}
       \field{labelalpha}{Hos\textbf{+}98}
       \field{sortinit}{H}
-      \strng{sortinithash}{6db6145dae8dc9e1271a8d556090b50a}
+      \strng{sortinithash}{23a3aa7c24e56cfa16945d55545109b5}
       \true{singletitle}
       \true{uniquework}
       \fieldmssource{labelname}{author}{default}{en-us}
@@ -532,7 +532,7 @@ my $murray2 = q|    \entry{murray}{article}{}
       \strng{authordefaulten-usfullhash}{1572cc3fd324f560e5e71d041a6bd764}
       \field{labelalpha}{Hos98}
       \field{sortinit}{H}
-      \strng{sortinithash}{6db6145dae8dc9e1271a8d556090b50a}
+      \strng{sortinithash}{23a3aa7c24e56cfa16945d55545109b5}
       \true{singletitle}
       \true{uniquework}
       \fieldmssource{labelname}{author}{default}{en-us}
@@ -579,7 +579,7 @@ my $t1 = q+    \entry{t1}{misc}{}
       \field{extraname}{1}
       \field{labelalpha}{Bro92}
       \field{sortinit}{B}
-      \strng{sortinithash}{8de16967003c7207dae369d874f1456e}
+      \strng{sortinithash}{d7095fff47cda75ca2589920aae98399}
       \true{uniquework}
       \fieldmssource{labelname}{author}{default}{en-us}
       \fieldmssource{labeltitle}{title}{default}{en-us}
@@ -615,7 +615,7 @@ my $t2 = q|    \entry{t2}{misc}{}
       \field{extraname}{2}
       \field{labelalpha}{Bro94}
       \field{sortinit}{B}
-      \strng{sortinithash}{8de16967003c7207dae369d874f1456e}
+      \strng{sortinithash}{d7095fff47cda75ca2589920aae98399}
       \true{uniquework}
       \fieldmssource{labelname}{author}{default}{en-us}
       \fieldmssource{labeltitle}{title}{default}{en-us}
@@ -652,7 +652,7 @@ my $anon1 = q|    \entry{anon1}{unpublished}{}
       \strng{shortauthorfullhash}{9873a6cc65c553faa2b21aaad626fe4b}
       \field{labelalpha}{XAn35}
       \field{sortinit}{A}
-      \strng{sortinithash}{a3dcedd53b04d1adfd5ac303ecd5e6fa}
+      \strng{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
       \true{singletitle}
       \true{uniquework}
       \fieldmssource{labelname}{shortauthor}{}{}
@@ -695,7 +695,7 @@ my $anon2 = q|    \entry{anon2}{unpublished}{}
       \strng{shortauthorfullhash}{f64c29e89ea49402b997956610b58ef6}
       \field{labelalpha}{YAn39}
       \field{sortinit}{A}
-      \strng{sortinithash}{a3dcedd53b04d1adfd5ac303ecd5e6fa}
+      \strng{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
       \true{singletitle}
       \true{uniquework}
       \fieldmssource{labelname}{shortauthor}{}{}
@@ -736,7 +736,7 @@ my $url1 = q|    \entry{url1}{misc}{}
       \field{extraname}{4}
       \field{labelalpha}{Ali05}
       \field{sortinit}{A}
-      \strng{sortinithash}{a3dcedd53b04d1adfd5ac303ecd5e6fa}
+      \strng{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
       \field{extraalpha}{4}
       \fieldmssource{labelname}{author}{default}{en-us}
       \field{year}{2005}
@@ -932,7 +932,7 @@ my $isbn1 = q|    \entry{isbn1}{misc}{}
       \field{extraname}{1}
       \field{labelalpha}{Flu}
       \field{sortinit}{F}
-      \strng{sortinithash}{fb0c0faa89eb6abae8213bf60e6799ea}
+      \strng{sortinithash}{2638baaa20439f1b5a8f80c6c08a13b4}
       \field{extraalpha}{1}
       \fieldmssource{labelname}{author}{default}{en-us}
       \field{isbn}{978-0-8165-2066-4}
@@ -963,7 +963,7 @@ my $isbn2 = q|    \entry{isbn2}{misc}{}
       \field{extraname}{2}
       \field{labelalpha}{Flu}
       \field{sortinit}{F}
-      \strng{sortinithash}{fb0c0faa89eb6abae8213bf60e6799ea}
+      \strng{sortinithash}{2638baaa20439f1b5a8f80c6c08a13b4}
       \field{extraalpha}{2}
       \fieldmssource{labelname}{author}{default}{en-us}
       \field{isbn}{978-0-8165-2066-4}
@@ -1016,7 +1016,7 @@ my $clone1 = q|    \entry{snk1}{book}{}
       \field{extraname}{2}
       \field{labelalpha}{vDoe}
       \field{sortinit}{v}
-      \strng{sortinithash}{02432525618c08e2b03cac47c19764af}
+      \strng{sortinithash}{afb52128e5b4dc4b843768c0113d673b}
       \field{extraalpha}{2}
       \fieldmssource{labelname}{author}{default}{en-us}
     \endentry
@@ -1055,7 +1055,7 @@ my $clone2 = q|    \entry{clone-snk1}{book}{}
       \field{extraname}{1}
       \field{labelalpha}{vDoe}
       \field{sortinit}{v}
-      \strng{sortinithash}{02432525618c08e2b03cac47c19764af}
+      \strng{sortinithash}{afb52128e5b4dc4b843768c0113d673b}
       \field{extraalpha}{1}
       \fieldmssource{labelname}{author}{default}{en-us}
       \field[default][en-us]{addendum}{add}
@@ -1101,7 +1101,7 @@ my $ent1 = q|    \entry{ent1}{book}{}
       \strng{authordefaulten-usfullhash}{b2536a425d549b46de5f21c4d468050a}
       \field{labelalpha}{SdB}
       \field{sortinit}{S}
-      \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
+      \strng{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
       \true{singletitle}
       \fieldmssource{labelname}{author}{default}{en-us}
     \endentry
@@ -1130,7 +1130,7 @@ my $verb1 = q|    \entry{verb1}{book}{}
       \strng{authordefaulten-usfullhash}{cac5a25f503e71f5ef28f474e14007b6}
       \field{labelalpha}{All}
       \field{sortinit}{A}
-      \strng{sortinithash}{a3dcedd53b04d1adfd5ac303ecd5e6fa}
+      \strng{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
       \true{singletitle}
       \fieldmssource{labelname}{author}{default}{en-us}
       \verb{verba}

@@ -199,7 +199,7 @@ my $K11 = q|    \entry{K11}{book}{}
       \strng{authordefaulten-usnamehash}{4edc280a0ef229f9c061e3b121b17482}
       \strng{authordefaulten-usfullhash}{4edc280a0ef229f9c061e3b121b17482}
       \field{sortinit}{a}
-      \strng{sortinithash}{a3dcedd53b04d1adfd5ac303ecd5e6fa}
+      \strng{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
       \fieldmssource{labelname}{author}{default}{en-us}
@@ -243,7 +243,7 @@ my $K12 = q|    \entry{K12}{book}{}
       \strng{authordefaulten-usnamehash}{a846a485fc9cbb59b0ebeedd6ac637e4}
       \strng{authordefaulten-usfullhash}{a846a485fc9cbb59b0ebeedd6ac637e4}
       \field{sortinit}{Z}
-      \strng{sortinithash}{8f7b480688e809b50b6f6577b16f3db5}
+      \strng{sortinithash}{96892c0b0a36bb8557c40c49813d48b3}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
       \fieldmssource{labelname}{author}{default}{en-us}

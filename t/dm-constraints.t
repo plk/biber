@@ -64,7 +64,7 @@ my $c2 = [ "Datamodel: Entry 'c2' (dm-constraints.bib): Field 'badfield' invalid
            "Datamodel: Entry 'c2' (dm-constraints.bib): Invalid field 'journaltitle' for entrytype 'eta'",
            "Datamodel: Entry 'c2' (dm-constraints.bib): Missing mandatory field 'author'" ];
 my $c3 = [ "Datamodel: Entry 'c3' (dm-constraints.bib): Invalid value of field 'month' must be datatype 'datepart' - ignoring field",
-           "Datamodel: Entry 'c3' (dm-constraints.bib): Invalid value (pattern match fails) for field 'gender'" ];
+           "Datamodel: Entry 'c3' (dm-constraints.bib): Invalid value (pattern match fails) for field 'gender//'" ];
 my $c4 = [ "Datamodel: Entry 'c4' (dm-constraints.bib): Invalid value of field 'month' must be '<=12' - ignoring field",
            "Datamodel: Entry 'c4' (dm-constraints.bib): Invalid value of field 'field1' must be '>=5' - ignoring field" ];
 # There would also have been a date+year constraint violation in the next test if

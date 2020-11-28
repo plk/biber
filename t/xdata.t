@@ -95,7 +95,7 @@ my $xd1 = q|    \entry{xd1}{book}{}
       \strng{authordefaulten-usfullhash}{51db4bfd331cba22959ce2d224c517cd}
       \field{extraname}{2}
       \field{sortinit}{E}
-      \strng{sortinithash}{c554bd1a0b76ea92b9f105fe36d9c7b0}
+      \strng{sortinithash}{8da8a182d344d5b9047633dfc0cc9131}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
       \fieldmssource{labelname}{author}{default}{en-us}
@@ -143,7 +143,7 @@ my $xd2 = q|    \entry{xd2}{book}{}
       \strng{authordefaulten-usnamehash}{68539e0ce4922cc4957c6cabf35e6fc8}
       \strng{authordefaulten-usfullhash}{68539e0ce4922cc4957c6cabf35e6fc8}
       \field{sortinit}{P}
-      \strng{sortinithash}{bb5b15f2db90f7aef79bb9e83defefcb}
+      \strng{sortinithash}{ff3bcf24f47321b42cb156c2cc8a8422}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
       \fieldmssource{labelname}{author}{default}{en-us}
@@ -252,7 +252,7 @@ my $gxd1 = q|    \entry{gxd1}{book}{}
       \strng{translatordefaulten-usnamehash}{d41d8cd98f00b204e9800998ecf8427e}
       \strng{translatordefaulten-usfullhash}{d41d8cd98f00b204e9800998ecf8427e}
       \field{sortinit}{S}
-      \strng{sortinithash}{c319cff79d99c853d775f88277d4e45f}
+      \strng{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
       \fieldmssource{labelname}{author}{default}{en-us}
       \fieldmssource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{addendum}{xdata=missing}
@@ -354,7 +354,7 @@ my $bltxgxd1 = q|    \entry{bltxgxd1}{book}{}
       \strng{translatordefaulten-usnamehash}{d41d8cd98f00b204e9800998ecf8427e}
       \strng{translatordefaulten-usfullhash}{d41d8cd98f00b204e9800998ecf8427e}
       \field{sortinit}{B}
-      \strng{sortinithash}{8de16967003c7207dae369d874f1456e}
+      \strng{sortinithash}{d7095fff47cda75ca2589920aae98399}
       \fieldmssource{labelname}{author}{default}{en-us}
       \fieldmssource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{addendum}{xdata=missing}

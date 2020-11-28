@@ -109,7 +109,7 @@ my $l1 = q|    \entry{L1}{book}{}
       \strng{authordefaulten-usnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{authordefaulten-usfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{sortinit}{D}
-      \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
+      \strng{sortinithash}{6f385f66841fb5e82009dc833c761848}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
       \fieldmssource{labelname}{author}{default}{en-us}
@@ -155,7 +155,7 @@ my $l2 = q|    \entry{L2}{book}{maxalphanames=10,maxbibnames=3,maxcitenames=3,ma
       \strng{authordefaulten-usnamehash}{19eec87c959944d6d9c72434a42856ba}
       \strng{authordefaulten-usfullhash}{19eec87c959944d6d9c72434a42856ba}
       \field{sortinit}{E}
-      \strng{sortinithash}{c554bd1a0b76ea92b9f105fe36d9c7b0}
+      \strng{sortinithash}{8da8a182d344d5b9047633dfc0cc9131}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
       \fieldmssource{labelname}{author}{default}{en-us}
@@ -196,7 +196,7 @@ my $l3 = q|    \entry{L3}{book}{blah=10}
       \strng{authordefaulten-usnamehash}{490250da1f3b92580d97563dc96c6c84}
       \strng{authordefaulten-usfullhash}{490250da1f3b92580d97563dc96c6c84}
       \field{sortinit}{B}
-      \strng{sortinithash}{8de16967003c7207dae369d874f1456e}
+      \strng{sortinithash}{d7095fff47cda75ca2589920aae98399}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
       \fieldmssource{labelname}{author}{default}{en-us}

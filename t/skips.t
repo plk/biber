@@ -50,7 +50,7 @@ my $set1 = q|    \entry{seta}{set}{}
       \field{labelalpha}{Doe10}
       \field{extraalpha}{1}
       \field{sortinit}{D}
-      \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
+      \strng{sortinithash}{6f385f66841fb5e82009dc833c761848}
     \endentry
 |;
 
@@ -76,7 +76,7 @@ my $set2 = q|    \entry{set:membera}{book}{skipbib=true,skipbiblist=true,skiplab
       \strng{authordefaulten-usnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{authordefaulten-usfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{sortinit}{D}
-      \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
+      \strng{sortinithash}{6f385f66841fb5e82009dc833c761848}
       \field{labeldatesource}{}
       \fieldmssource{labelname}{author}{default}{en-us}
       \fieldmssource{labeltitle}{title}{default}{en-us}
@@ -109,7 +109,7 @@ my $set3 = q|    \entry{set:memberb}{book}{skipbib=true,skipbiblist=true,skiplab
       \strng{authordefaulten-usnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{authordefaulten-usfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{sortinit}{D}
-      \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
+      \strng{sortinithash}{6f385f66841fb5e82009dc833c761848}
       \field{labeldatesource}{}
       \fieldmssource{labelname}{author}{default}{en-us}
       \fieldmssource{labeltitle}{title}{default}{en-us}
@@ -141,7 +141,7 @@ my $set4 = q|    \entry{set:memberc}{book}{skipbib=true,skipbiblist=true,skiplab
       \strng{authordefaulten-usnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{authordefaulten-usfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{sortinit}{D}
-      \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
+      \strng{sortinithash}{6f385f66841fb5e82009dc833c761848}
       \field{labeldatesource}{}
       \fieldmssource{labelname}{author}{default}{en-us}
       \fieldmssource{labeltitle}{title}{default}{en-us}
@@ -174,7 +174,7 @@ my $noset1 = q|    \entry{noseta}{book}{}
       \field{extraname}{3}
       \field{labelalpha}{Doe10}
       \field{sortinit}{D}
-      \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
+      \strng{sortinithash}{6f385f66841fb5e82009dc833c761848}
       \field{extradate}{2}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
@@ -210,7 +210,7 @@ my $noset2 = q|    \entry{nosetb}{book}{}
       \field{extraname}{4}
       \field{labelalpha}{Doe10}
       \field{sortinit}{D}
-      \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
+      \strng{sortinithash}{6f385f66841fb5e82009dc833c761848}
       \field{extradate}{3}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
@@ -246,7 +246,7 @@ my $noset3 = q|    \entry{nosetc}{book}{}
       \field{extraname}{5}
       \field{labelalpha}{Doe10}
       \field{sortinit}{D}
-      \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
+      \strng{sortinithash}{6f385f66841fb5e82009dc833c761848}
       \field{extradate}{4}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
@@ -292,7 +292,7 @@ my $sk4 = q|    \entry{skip4}{article}{skipbib=true,skipbiblist=true,skiplab=tru
       \strng{authordefaulten-usnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{authordefaulten-usfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{sortinit}{D}
-      \strng{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
+      \strng{sortinithash}{6f385f66841fb5e82009dc833c761848}
       \field{labeldatesource}{year}
       \fieldmssource{labelname}{author}{default}{en-us}
       \fieldmssource{labeltitle}{title}{default}{en-us}

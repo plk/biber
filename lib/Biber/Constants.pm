@@ -110,7 +110,7 @@ our %DM_DATATYPES = (
                      },
                      list => sub {
                        my $v = shift;
-                       return 1 if ref($v) eq 'ARRAY';
+                       return 1 if (blessed($v) and $v->isa('Biber::Entry::List'));
                        return 0;
                      },
                      datepart => sub {
