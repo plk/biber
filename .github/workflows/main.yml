@@ -30,9 +30,9 @@ jobs:
 
            mkdir perl
            wget -nc $URL
-           tar -xf $(basename $URL) --strip-components=1 --directory=perl
+           tar -xf $(basename $URL) --strip-components=1 --directory=perlsource
 
-           pushd perl
+           pushd perlsource
            bash +x ./Configure -sde -Dprefix="$PWD/../perl"
            test -f Makefile
            make
@@ -44,7 +44,7 @@ jobs:
 
        - name: Install Biber Dependencies Without Test
          run: |
-           $PWD/../perl/bin/perl Build.PL
+           ./perl/bin/perl Build.PL
            ./Build installdeps --cpan_client './perl/bin/cpan -T'
 
        - name: Run biber tests
