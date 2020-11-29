@@ -1,0 +1,52 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Biber CI
+
+env:
+  URL: https://www.cpan.org/src/5.0/perl-5.32.0.tar.gz
+  MAKEFLAGS: -j2
+  BIBER_DEV_TESTS: 1
+  
+# Controls when the action will run. 
+on:
+  # Triggers the workflow on push or pull request events but only for the dev branch
+  push:
+    branches: [ dev ]
+  pull_request:
+    branches: [ dev ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    runs-on: ubuntu-latest
+    steps:
+       - name: Install Perl
+         run: |
+           echo Downloading and compiling in [$PWD] from [$URL]
+
+           mkdir perl
+           wget -nc $URL
+           tar -xf $(basename $URL) --strip-components=1 --directory=perl
+
+           pushd perl
+           bash +x ./Configure -sde -Dprefix="$PWD/../perl"
+           test -f Makefile
+           make
+           make install
+           popd
+
+       - name: Checkout DEV
+         uses: actions/checkout@v2
+
+       - name: Install Biber Dependencies Without Test
+         run: |
+           ./perl/bin/perl Build.PL
+           ./Build installdeps --cpan_client './perl/bin/cpan -T'
+
+       - name: Run biber tests
+         run: |
+           ./Build test
