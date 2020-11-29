@@ -44,8 +44,7 @@ jobs:
 
        - name: Install Biber Dependencies Without Test
          run: |
-           ls .
-           ls ..
+           ls ../..
            $PWD/../perl/bin/perl Build.PL
            ./Build installdeps --cpan_client '/home/runner/work/biber/biber/perl/bin/cpan -T'
 
