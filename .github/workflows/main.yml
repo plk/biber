@@ -37,6 +37,8 @@ jobs:
            test -f Makefile
            make
            make install
+           echo "$PWD/../perl"
+           ls "$PWD/../perl/bin"
            popd
 
        - name: Checkout DEV
@@ -44,7 +46,7 @@ jobs:
 
        - name: Install Biber Dependencies Without Test
          run: |
-           /home/runner/work/biber/biber/perl/bin/perl Build.PL
+           perl Build.PL
            ./Build installdeps --cpan_client '/home/runner/work/biber/biber/perl/bin/cpan -T'
 
        - name: Run biber tests
