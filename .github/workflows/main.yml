@@ -37,6 +37,7 @@ jobs:
            test -f Makefile
            make
            make install
+           export PATH=$PWD/../perl:$PATH
            popd
 
        - name: Checkout DEV
@@ -44,8 +45,9 @@ jobs:
 
        - name: Install Biber Dependencies Without Test
          run: |
-           ../perl/bin/perl Build.PL
-           ./Build installdeps --cpan_client './perl/bin/cpan -T'
+           perl -v
+           perl Build.PL
+           ./Build installdeps --cpan_client 'cpan -T'
 
        - name: Run biber tests
          run: |
