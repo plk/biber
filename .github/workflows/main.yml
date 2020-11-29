@@ -28,7 +28,7 @@ jobs:
          run: |
            echo Downloading and compiling in [$PWD] from [$URL]
 
-           mkdir perl
+           mkdir perlsource
            wget -nc $URL
            tar -xf $(basename $URL) --strip-components=1 --directory=perlsource
 
