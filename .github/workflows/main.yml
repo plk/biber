@@ -33,7 +33,7 @@ jobs:
            tar -xf $(basename $URL) --strip-components=1 --directory=perlsource
 
            pushd perlsource
-           bash +x ./Configure -sde -Dprefix="$PWD/../perl"
+           bash +x ./Configure -sde -Dprefix="$RUNNER_WORKSPACE/localperl"
            test -f Makefile
            make
            make install
@@ -44,10 +44,8 @@ jobs:
 
        - name: Install Biber Dependencies Without Test
          run: |
-           env
-           $PWD
-           ./perl Build.PL
-           ./Build installdeps --cpan_client '/home/runner/work/biber/biber/perl/bin/cpan -T'
+           $RUNNER_WORKSPACE/localperl/bin/perl Build.PL
+           ./Build installdeps --cpan_client "$RUNNER_WORKSPACE/localperl/bin/cpan -T"
 
        - name: Run biber tests
          run: |
