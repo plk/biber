@@ -37,7 +37,6 @@ COPY C:\strawberry\perl\site\bin\biber %TEMP%\biber-MSWIN64
 SET PAR_VERBATIM=1
 
 CALL pp ^
-  --unicode ^
   --module=deprecate ^
   --module=Biber::Input::file::bibtex ^
   --module=Biber::Input::file::biblatexml ^

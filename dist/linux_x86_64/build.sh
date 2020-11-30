@@ -48,7 +48,6 @@ fi
 echo "USING Unicode::Collate at: ${ucpath}"
 
 PAR_VERBATIM=1 /usr/local/perl/bin/pp \
-  --unicode \
   --module=deprecate \
   --module=Biber::Input::file::bibtex \
   --module=Biber::Input::file::biblatexml \
