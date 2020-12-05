@@ -35,7 +35,7 @@
 # by looking to see if there is a site_perl directory for the module. If there is, we use that
 # version.
 
-declare -r perlv='5.30.0'
+declare -r perlv='5.32.0'
 declare ucpath="/usr/local/perl/lib/${perlv}/Unicode/Collate"
 
 # Unicode::Collate has a site_perl version so has been updated since this
@@ -48,7 +48,6 @@ fi
 echo "USING Unicode::Collate at: ${ucpath}"
 
 PAR_VERBATIM=1 /usr/local/perl/bin/pp \
-  --unicode \
   --module=deprecate \
   --module=Biber::Input::file::bibtex \
   --module=Biber::Input::file::biblatexml \
