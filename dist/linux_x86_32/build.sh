@@ -32,20 +32,20 @@
 # by looking to see if there is a site_perl directory for the module. If there is, we use that
 # version.
 
-declare -r perlv='5.30.1'
-declare ucpath="/usr/local/perl5301/lib/${perlv}/Unicode/Collate"
+declare -r perlpath="/usr/local/perl5320"
+declare -r perlv='5.32.0'
+declare ucpath="${perlpath}/lib/${perlv}/Unicode/Collate"
 
 # Unicode::Collate has a site_perl version so has been updated since this
 # perl was released
-if [ -d "/usr/local/perl5301/lib/site_perl/${perlv}/i686-linux-thread-multi/Unicode/Collate" ]
+if [ -d "${perlpath}/lib/site_perl/${perlv}/i686-linux-thread-multi/Unicode/Collate" ]
 then
-  ucpath="/usr/local/perl5301/lib/site_perl/${perlv}/i686-linux-thread-multi/Unicode/Collate"
+  ucpath="${perlpath}/lib/site_perl/${perlv}/i686-linux-thread-multi/Unicode/Collate"
 fi
 
 echo "USING Unicode::Collate at: ${ucpath}"
 
-PAR_VERBATIM=1 /usr/local/perl5301/bin/pp \
-  --unicode \
+PAR_VERBATIM=1 ${perlpath}/bin/pp \
   --module=deprecate \
   --module=Biber::Input::file::bibtex \
   --module=Biber::Input::file::biblatexml \
@@ -86,10 +86,10 @@ PAR_VERBATIM=1 /usr/local/perl5301/bin/pp \
   --addfile="${ucpath}/CJK;lib/Unicode/Collate/CJK" \
   --addfile="${ucpath}/allkeys.txt;lib/Unicode/Collate/allkeys.txt" \
   --addfile="${ucpath}/keys.txt;lib/Unicode/Collate/keys.txt" \
-  --addfile="/usr/local/perl5301/lib/site_perl/${perlv}/Mozilla/CA/cacert.pem;lib/Mozilla/CA/cacert.pem" \
-  --addfile="/usr/local/perl5301/lib/${perlv}/i686-linux-thread-multi/PerlIO;lib/PerlIO" \
-  --addfile="/usr/local/perl5301/lib/${perlv}/i686-linux-thread-multi/auto/PerlIO;lib/auto/PerlIO" \
-  --addfile="/usr/local/perl5301/lib/site_perl/${perlv}/Business/ISBN/RangeMessage.xml;lib/Business/ISBN/RangeMessage.xml" \
+  --addfile="${perlpath}/lib/site_perl/${perlv}/Mozilla/CA/cacert.pem;lib/Mozilla/CA/cacert.pem" \
+  --addfile="${perlpath}/lib/${perlv}/i686-linux-thread-multi/PerlIO;lib/PerlIO" \
+  --addfile="${perlpath}/lib/${perlv}/i686-linux-thread-multi/auto/PerlIO;lib/auto/PerlIO" \
+  --addfile="${perlpath}/lib/site_perl/${perlv}/Business/ISBN/RangeMessage.xml;lib/Business/ISBN/RangeMessage.xml" \
   --cachedeps=scancache \
   --output=biber-linux_x86_32 \
-  /usr/local/perl5301/bin/biber
+  ${perlpath}/bin/biber
