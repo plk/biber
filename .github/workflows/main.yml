@@ -6,8 +6,6 @@ env:
   URL: https://www.cpan.org/src/5.0/perl-5.32.0.tar.gz
   MAKEFLAGS: -j2
   BIBER_DEV_TESTS: 1
-  LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$RUNNER_WORKSPACE/localperl/lib
-  PATH: $RUNNER_WORKSPACE/localperl/bin:$PATH
   
 # Controls when the action will run. 
 on:
@@ -38,6 +36,11 @@ jobs:
            make
            make install
            popd
+
+       - name: Set ENV
+         run: |
+           echo "$RUNNER_WORKSPACE/localperl/bin" >> $GITHUB_PATH
+           echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$RUNNER_WORKSPACE/localperl/lib" >> $GITHUB_ENV
 
        - name: Checkout DEV
          uses: actions/checkout@v2
