@@ -6,6 +6,7 @@ env:
   URL: https://www.cpan.org/src/5.0/perl-5.32.0.tar.gz
   MAKEFLAGS: -j2
   BIBER_DEV_TESTS: 1
+  LD_LIBRARY_PATH: $LD_LIBRARY_PATH:/home/runner/work/biber/localperl/lib 
   
 # Controls when the action will run. 
 on:
