@@ -6,7 +6,8 @@ env:
   URL: https://www.cpan.org/src/5.0/perl-5.32.0.tar.gz
   MAKEFLAGS: -j2
   BIBER_DEV_TESTS: 1
-  LD_LIBRARY_PATH: $LD_LIBRARY_PATH:/home/runner/work/biber/localperl/lib 
+  LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$RUNNER_WORKSPACE/localperl/lib
+  PATH: $RUNNER_WORKSPACE/localperl/bin:$PATH
   
 # Controls when the action will run. 
 on:
@@ -43,9 +44,9 @@ jobs:
 
        - name: Install Biber Dependencies Without Test
          run: |
-           $RUNNER_WORKSPACE/localperl/bin/cpan -T Module::Build
-           $RUNNER_WORKSPACE/localperl/bin/perl Build.PL
-           ./Build installdeps --cpan_client "$RUNNER_WORKSPACE/localperl/bin/cpan -T"
+           cpan -T Module::Build
+           perl Build.PL
+           ./Build installdeps --cpan_client "cpan -T"
 
        - name: Run biber tests
          run: |
