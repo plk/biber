@@ -1,5 +1,3 @@
-# This is a basic workflow to help you get started with Actions
-
 name: Biber CI
 
 env:
@@ -9,17 +7,14 @@ env:
   
 # Controls when the action will run. 
 on:
-  # Triggers the workflow on push or pull request events but only for the dev branch
-  #schedule:
-  # - cron: "0 2 * * *"
+  schedule:
+   - cron: "0 2 * * *"
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
+  test:
     runs-on: ubuntu-latest
     steps:
        - name: Install Perl
@@ -37,14 +32,19 @@ jobs:
            make install
            popd
 
-       - name: Checkout DEV
+       - name: Set ENV
+         run: |
+           echo "$RUNNER_WORKSPACE/localperl/bin" >> $GITHUB_PATH
+           echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$RUNNER_WORKSPACE/localperl/lib" >> $GITHUB_ENV
+
+       - name: Checkout
          uses: actions/checkout@v2
 
        - name: Install Biber Dependencies Without Test
          run: |
-           $RUNNER_WORKSPACE/localperl/bin/cpan -T Module::Build
-           $RUNNER_WORKSPACE/localperl/bin/perl Build.PL
-           ./Build installdeps --cpan_client "$RUNNER_WORKSPACE/localperl/bin/cpan -T"
+           cpan -T Module::Build
+           perl Build.PL
+           ./Build installdeps --cpan_client "cpan -T"
 
        - name: Run biber tests
          run: |

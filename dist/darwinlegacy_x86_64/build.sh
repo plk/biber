@@ -15,7 +15,7 @@
 # by looking to see if there is a site_perl directory for the module. If there is, we use that
 # version.
 
-declare -r perlv='5.30'
+declare -r perlv='5.32'
 declare ucpath="/opt/local/lib/perl5/${perlv}/Unicode/Collate"
 
 # Unicode::Collate has a site_perl version so has been updated since this
@@ -30,7 +30,6 @@ echo "USING Unicode::Collate at: ${ucpath}"
 cp /opt/local/libexec/perl${perlv}/sitebin/biber /tmp/biber-darwin
 
 PAR_VERBATIM=1 pp \
-  --unicode \
   --module=deprecate \
   --module=Biber::Input::file::bibtex \
   --module=Biber::Input::file::biblatexml \
@@ -60,13 +59,13 @@ PAR_VERBATIM=1 pp \
   --link=/opt/local/lib/libxslt.1.dylib \
   --link=/opt/local/lib/libgdbm.6.dylib \
   --link=/opt/local/lib/libexslt.0.dylib \
-  --link=/opt/local/lib/libssl.1.0.0.dylib \
-  --link=/opt/local/lib/libcrypto.1.0.0.dylib \
+  --link=/opt/local/lib/libssl.1.1.dylib \
+  --link=/opt/local/lib/libcrypto.1.1.dylib \
   --link=/opt/local/lib/liblzma.5.dylib \
   --link=/opt/local/lib/libintl.8.dylib \
-  --link=/opt/local/lib/libicui18n.58.dylib \
-  --link=/opt/local/lib/libicuuc.58.dylib \
-  --link=/opt/local/lib/libicudata.58.dylib \
+  --link=/opt/local/lib/libicui18n.67.dylib \
+  --link=/opt/local/lib/libicuuc.67.dylib \
+  --link=/opt/local/lib/libicudata.67.dylib \
   --addfile="../../data/biber-tool.conf;lib/Biber/biber-tool.conf" \
   --addfile="../../data/schemata/config.rnc;lib/Biber/config.rnc" \
   --addfile="../../data/schemata/config.rng;lib/Biber/config.rng" \
