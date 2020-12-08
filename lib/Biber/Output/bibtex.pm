@@ -554,10 +554,10 @@ sub bibfield {
 
   # Don't wrap fields which should be macros in braces - we can only deal with macros
   # which are the whole field value - too messy to check for part values and this is better
-  # handles with XDATA anyway.
+  # handled with XDATA anyway.
   # Don't check %RSTRINGS here as macros can come from other places (like %MONTHS). Just check
   # whether a macro is defined as that covers all sources
-  if (Text::BibTeX::macro_length($value)) {
+  if (Text::BibTeX::macro_length($value))
     $acc .= "$value,\n";
   }
   else {
