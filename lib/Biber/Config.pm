@@ -281,7 +281,6 @@ sub _initopts {
   my $l4pconf = qq|
     log4perl.category.main                             = $LOGLEVEL, $LOG_MAIN
     log4perl.category.screen                           = $LOGLEVEL_S, Screen
-
     log4perl.appender.Screen                           = Log::Log4perl::Appender::Screen
     log4perl.appender.Screen.utf8                      = 1
     log4perl.appender.Screen.Threshold                 = $LOGLEVEL_S
