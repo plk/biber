@@ -121,7 +121,7 @@ GetOptions(
            'validate_control|validate-control',
            'validate_datamodel|validate-datamodel|V',
            'version|v',
-           'winunicode|W';
+           'winunicode|W',
            'wraplines|w',
            'xdatamarker=s',
            'xdatasep=s',
