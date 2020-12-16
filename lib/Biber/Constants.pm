@@ -275,6 +275,7 @@ our $CONFIG_DEFAULT_BIBER = {
   validate_config                             => { content => 0 },
   validate_control                            => { content => 0 },
   validate_datamodel                          => { content => 0 },
+  winunicode                                  => { content => 0 },
   wraplines                                   => { content => 0 },
   xdatamarker                                 => { content => 'xdata' },
   xdatasep                                    => { content => '-' },

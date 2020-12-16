@@ -16,6 +16,7 @@ use Log::Log4perl::Level;
 use POSIX qw(strftime);
 use Biber;
 use Biber::Utils;
+use Encode;
 use File::Spec;
 use Pod::Usage;
 use List::AllUtils qw( first );
@@ -120,6 +121,7 @@ GetOptions(
            'validate_control|validate-control',
            'validate_datamodel|validate-datamodel|V',
            'version|v',
+           'winunicode|W';
            'wraplines|w',
            'xdatamarker=s',
            'xdatasep=s',
@@ -166,6 +168,10 @@ unless (@ARGV) {
   pod2usage(-verbose => 0,
             -exitval => EXIT_ERROR);
 }
+
+# Make sure ARGV is decoded UTF8 as this is important on Windows when using
+# the Windows 10 1803+ UTF8 system local option
+@ARGV = map {decode('UTF-8', $_)} @ARGV;
 
 # Resolve some option shortcuts and legacy aliases
 if (my $o = $opts->{tool_align}) {
@@ -967,6 +973,14 @@ Validate the data against a data model.
 =item B<--version|-v>
 
 Display version number.
+
+=item B<--winunicode|-W>
+
+In Windows 10 1803+, turning on the 'Use Unicode UTF8 for worldwide
+language support' option makes Windows use UTF-8 instead of UTF-16 for many
+system APIs. If that option is enabled, use this option to turn off biber's
+UTF-16 filename support on Windows. This will result in much improved
+handling of Unicode filenames.
 
 =item B<--wraplines|-w>
 
