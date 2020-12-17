@@ -170,8 +170,10 @@ unless (@ARGV) {
 }
 
 # Make sure ARGV is decoded UTF8 as this is important on Windows when using
-# the Windows 10 1803+ UTF8 system local option
-@ARGV = map {decode('UTF-8', $_)} @ARGV;
+# the Windows 10 1803+ UTF8 system locale option
+if ($opts->{winunicode}) {
+  @ARGV = map {decode('UTF-8', $_)} @ARGV;
+}
 
 # Resolve some option shortcuts and legacy aliases
 if (my $o = $opts->{tool_align}) {
