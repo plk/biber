@@ -10,6 +10,7 @@
 * Run test suite and make sure it passes cleanly
 * Commit and tag with version number
 * Move "current" to version number on SF
+* Create "current" folder using SF GUI
 * Create a new empty version tree for new version, use the dist/empty_tree.sh script:
   empty_tree.sh current
 * Build binaries from release and upload to SF to new version folder using
