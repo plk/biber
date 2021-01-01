@@ -587,7 +587,7 @@ sub bibfield {
 
   # Don't wrap fields which should be macros in braces - we can only deal with macros
   # which are the whole field value - too messy to check for part values and this is better
-  # handles with XDATA anyway.
+  # handled with XDATA anyway.
   # Don't check %RSTRINGS here as macros can come from other places (like %MONTHS). Just check
   # whether a macro is defined as that covers all sources
   if (Text::BibTeX::macro_length($value)) {
@@ -845,7 +845,7 @@ L<https://github.com/plk/biber/issues>.
 =head1 COPYRIGHT & LICENSE
 
 Copyright 2009-2012 François Charette and Philip Kime, all rights reserved.
-Copyright 2012-2020 Philip Kime, all rights reserved.
+Copyright 2012-2021 Philip Kime, all rights reserved.
 
 This module is free software.  You can redistribute it and/or
 modify it under the terms of the Artistic License 2.0.

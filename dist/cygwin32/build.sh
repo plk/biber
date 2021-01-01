@@ -20,7 +20,7 @@
 
 cp /usr/local/bin/biber /tmp/biber-cygwin
 
-declare -r perlv='5.30'
+declare -r perlv='5.32'
 declare ucpath="/usr/share/perl5/${perlv}/Unicode/Collate"
 
 # Unicode::Collate has a vendor_perl version so has been updated since this
@@ -33,7 +33,6 @@ fi
 echo "USING Unicode::Collate at: ${ucpath}"
 
 PAR_VERBATIM=1 pp \
-   --unicode \
    --module=deprecate \
    --module=Biber::Input::file::bibtex \
    --module=Biber::Input::file::biblatexml \

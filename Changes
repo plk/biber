@@ -1,6 +1,8 @@
 Revision history for Biber
 
-2.16   (2020-)
+2.16   (2020-12)
+       * Better support for Unicode on Windows (10 1803+) with the
+         --winunicode option
        * Option "output_macro_fields" no longer does anything as macro
          fields are auto-detected.
        * New options "output_no_macrodefs" and "output_all_macrodefs" control

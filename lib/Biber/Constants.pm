@@ -273,6 +273,7 @@ our $CONFIG_DEFAULT_BIBER = {
   validate_config                             => { content => 0 },
   validate_control                            => { content => 0 },
   validate_datamodel                          => { content => 0 },
+  winunicode                                  => { content => 0 },
   wraplines                                   => { content => 0 },
   xdatamarker                                 => { content => 'xdata' },
   xdatasep                                    => { content => '-' },
@@ -482,7 +483,7 @@ L<https://github.com/plk/biber/issues>.
 =head1 COPYRIGHT & LICENSE
 
 Copyright 2009-2012 François Charette and Philip Kime, all rights reserved.
-Copyright 2012-2020 Philip Kime, all rights reserved.
+Copyright 2012-2021 Philip Kime, all rights reserved.
 
 This module is free software.  You can redistribute it and/or
 modify it under the terms of the Artistic License 2.0.

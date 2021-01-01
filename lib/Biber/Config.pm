@@ -292,7 +292,6 @@ sub _initopts {
   my $l4pconf = qq|
     log4perl.category.main                             = $LOGLEVEL, $LOG_MAIN
     log4perl.category.screen                           = $LOGLEVEL_S, Screen
-
     log4perl.appender.Screen                           = Log::Log4perl::Appender::Screen
     log4perl.appender.Screen.utf8                      = 1
     log4perl.appender.Screen.Threshold                 = $LOGLEVEL_S
@@ -1394,7 +1393,7 @@ L<https://github.com/plk/biber/issues>.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2012-2020 Philip Kime, all rights reserved.
+Copyright 2012-2021 Philip Kime, all rights reserved.
 
 This module is free software.  You can redistribute it and/or
 modify it under the terms of the Artistic License 2.0.

@@ -35,8 +35,8 @@
 # by looking to see if there is a site_perl directory for the module. If there is, we use that
 # version.
 
-declare -r perlv='5.30.0'
-declare ucpath="/usr/local/lib/perl5/5.30.0/Unicode/Collate"
+declare -r perlv='5.32.0'
+declare ucpath="/usr/local/lib/perl5/5.32.0/Unicode/Collate"
 
 # Unicode::Collate has a site_perl version so has been updated since this
 # perl was released
@@ -48,7 +48,6 @@ fi
 echo "USING Unicode::Collate at: ${ucpath}"
 
 PAR_VERBATIM=1 /usr/local/bin/pp \
-  --unicode \
   --module=deprecate \
   --module=Biber::Input::file::bibtex \
   --module=Biber::Input::file::biblatexml \
@@ -74,6 +73,7 @@ PAR_VERBATIM=1 /usr/local/bin/pp \
   --link=/usr/local/lib/libbtparse.so \
   --link=/usr/lib/libxml2.so.2 \
   --link=/lib/libz.so.1 \
+  --link=/usr/lib/liblzma.so.5 \
   --link=/usr/lib/libxslt.so.1 \
   --link=/usr/lib/libexslt.so.0 \
   --link=/usr/lib/libssl.so.1.1 \
@@ -91,9 +91,9 @@ PAR_VERBATIM=1 /usr/local/bin/pp \
   --addfile="${ucpath}/CJK;lib/Unicode/Collate/CJK" \
   --addfile="${ucpath}/allkeys.txt;lib/Unicode/Collate/allkeys.txt" \
   --addfile="${ucpath}/keys.txt;lib/Unicode/Collate/keys.txt" \
-  --addfile="/usr/local/lib/perl5/site_perl/5.30.0/Mozilla/CA/cacert.pem" \
-  --addfile="/usr/local/lib/perl5/5.30.0/PerlIO" \
-  --addfile="/usr/local/lib/perl5/site_perl/5.30.0/Business/ISBN/RangeMessage.xml" \
+  --addfile="/usr/local/lib/perl5/site_perl/5.32.0/Mozilla/CA/cacert.pem" \
+  --addfile="/usr/local/lib/perl5/5.32.0/PerlIO" \
+  --addfile="/usr/local/lib/perl5/site_perl/5.32.0/Business/ISBN/RangeMessage.xml" \
   --cachedeps=scancache \
   --output=/opt/biber \
   /usr/local/bin/biber

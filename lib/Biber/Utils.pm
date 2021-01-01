@@ -107,7 +107,7 @@ sub slurp_switchr {
   my ($filename, $encoding) = @_;
   my $slurp;
   $encoding //= 'UTF-8';
-  if ($^O =~ /Win/) {
+  if ($^O =~ /Win/ and not Biber::Config->getoption('winunicode')) {
     require Win32::Unicode::File;
     my $fh = Win32::Unicode::File->new('<', NFC($filename));
     $fh->binmode(":encoding($encoding)");
@@ -131,7 +131,7 @@ sub slurp_switchr {
 
 sub slurp_switchw {
   my ($filename, $string) = @_;
-  if ($^O =~ /Win/) {
+  if ($^O =~ /Win/ and not Biber::Config->getoption('winunicode')) {
     require Win32::Unicode::File;
     my $fh = Win32::Unicode::File->new('>', NFC($filename));
     $fh->binmode(':encoding(UTF-8)');
@@ -327,7 +327,7 @@ sub locate_data_file {
 
 sub file_exist_check {
   my $filename = shift;
-  if ($^O =~ /Win/) {
+  if ($^O =~ /Win/ and not Biber::Config->getoption('winunicode')) {
     require Win32::Unicode::File;
     if (Win32::Unicode::File::statW(NFC($filename))) {
       return NFC($filename);
@@ -356,7 +356,7 @@ sub file_exist_check {
 
 sub check_empty {
   my $filename = shift;
-  if ($^O =~ /Win/) {
+  if ($^O =~ /Win/ and not Biber::Config->getoption('winunicode')) {
     require Win32::Unicode::File;
     return (Win32::Unicode::File::file_size(NFC($filename))) ? 1 : 0;
   }
@@ -373,7 +373,7 @@ sub check_empty {
 
 sub check_exists {
   my $filename = shift;
-  if ($^O =~ /Win/) {
+  if ($^O =~ /Win/ and not Biber::Config->getoption('winunicode')) {
     require Win32::Unicode::File;
     return Win32::Unicode::File::statW(NFC($filename)) ? 1 : 0;
   }
@@ -1907,7 +1907,7 @@ L<https://github.com/plk/biber/issues>.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2012-2020 Philip Kime, all rights reserved.
+Copyright 2012-2021 Philip Kime, all rights reserved.
 
 This module is free software.  You can redistribute it and/or
 modify it under the terms of the Artistic License 2.0.
