@@ -3716,7 +3716,7 @@ sub create_uniquelist_info {
 
       $dlist->add_uniquelistcount($namelist);
     }
-    # We need to know the list uniqueness counts for the whole list seperately otherwise
+    # We need to know the list uniqueness counts for the whole list separately otherwise
     # we will falsely "disambiguate" identical name lists from each other by setting
     # uniquelist to the full list because every part of each list will have more than
     # one count. We therefore need to distinguish counts which are of the final, complete

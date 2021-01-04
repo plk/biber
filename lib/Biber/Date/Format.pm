@@ -13,7 +13,7 @@ use Unicode::UCD qw(num);
 
 =head1 NAME
 
-Biber::Date::Format
+Biber::Date::Format - Biber::Date::Format objects
 
 =head2 Description
 

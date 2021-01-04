@@ -650,7 +650,7 @@ BibTeX parsing C library which can complain about parsing errors which can be ig
 
 By default, glob (expand according to pattern) any data source filenames.
 Allows data sources to be specified like B<*.bib> to load all B<.bib> files
-in a directory. Can be overriden on a per-dataource basis with the B<glob>
+in a directory. Can be overridden on a per-dataource basis with the B<glob>
 option to B<\addbibresource> in biblatex.
 
 =item B<--nolog>

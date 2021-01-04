@@ -25,7 +25,7 @@ __PACKAGE__->mk_accessors(keys %bcp47parts);
 
 =head1 NAME
 
-Biber::LangTag
+Biber::LangTag - Biber::LangTag objects
 
 =head2 new
 

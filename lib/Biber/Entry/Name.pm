@@ -32,7 +32,7 @@ __PACKAGE__->mk_accessors(qw (
 
 =head1 NAME
 
-Biber::Entry::Name
+Biber::Entry::Name - Biber::Entry::Name objects
 
 =head2 new
 

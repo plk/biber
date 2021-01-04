@@ -18,7 +18,7 @@ my $logger = Log::Log4perl::get_logger('main');
 
 =head1 NAME
 
-Biber::Entry
+Biber::Entry - Biber::Entry objects
 
 =head2 new
 

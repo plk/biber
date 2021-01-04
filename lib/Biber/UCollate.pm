@@ -12,7 +12,7 @@ my $logger = Log::Log4perl::get_logger('main');
 
 =head1 NAME
 
-Biber::UCollate
+Biber::UCollate - Biber::UCollate objects
 
 =head2 new
 

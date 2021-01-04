@@ -767,7 +767,7 @@ sub ucinit {
 
     defined($thing->method($arg)->method)
 
-    wheras:
+    whereas:
 
     is_undef($thing->method($arg)->method)
 

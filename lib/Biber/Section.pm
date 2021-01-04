@@ -11,7 +11,7 @@ use List::Util qw( first );
 
 =head1 NAME
 
-Biber::Section
+Biber::Section - Biber::Section objects
 
 =head2 new
 
