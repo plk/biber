@@ -773,10 +773,12 @@ with the output file name (unless the B<--no-bblxml-schema> option is specified)
 may validate the F<bblxml> using the schema with the B<--validate-bblxml> option.
 The legacy option B<--outformat> is supported as an alias.
 
-=item B<--output-indent=[num]>
+=item B<--output-indent=[num][t]>
 
-Indentation for body of entries in output. Effect depends on the output format. Defaults to 2.
-The legacy option B<--tool-indent> is supported as an alias.
+Indentation for body of entries in output. Effect depends on the output
+format. Defaults to 2. The C<num> can be followed by C<'t'> to specify tabs
+instead of spaces. The legacy option B<--tool-indent> is supported as an
+alias.
 
 =item B<--output-legacy-dates>
 

@@ -528,7 +528,13 @@ sub create_output_section {
 sub bibfield {
   my ($field, $value, $max_field_len) = @_;
   my $acc;
-  $acc .= ' ' x Biber::Config->getoption('output_indent');
+  my $inum = Biber::Config->getoption('output_indent');
+  my $ichar = ' ';
+  if (substr($inum, -1) eq 't') {
+    $ichar = "\t";
+    $inum = substr($inum, 0, length($inum)-1);
+  }
+  $acc .= $ichar x $inum;
   $acc .= $field;
   $acc .= ' ' x ($max_field_len - Unicode::GCString->new($field)->length) if $max_field_len;
   $acc .= ' = ';
