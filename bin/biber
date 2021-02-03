@@ -285,7 +285,7 @@ if (exists($opts->{isbn10}) and exists($opts->{isbn13})) {
 }
 
 # Check the tool_* options
-if (exists($opts->{output_indent}) and $opts->{output_indent} !~ /^\d+$/) {
+if (exists($opts->{output_indent}) and $opts->{output_indent} !~ /^\d+t?$/) {
   say STDERR "Biber: Invalid non-numeric argument for 'output_indent' option!";
   exit EXIT_ERROR;
 }
