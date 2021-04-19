@@ -1527,7 +1527,9 @@ sub calculate_interentry {
       if ($logger->is_debug()) {# performance tune
         $logger->debug("Incrementing crossrefkey count for entry '$refkey' via entry '$citekey'");
       }
-      Biber::Config->incr_crossrefkey($refkey);
+
+      # Don't increment if the crossref doesn't exist
+      Biber::Config->incr_crossrefkey($refkey) if $section->bibentry($refkey);
     }
 
     if (my $refkey = $be->get_field('xref')) {
