@@ -242,10 +242,10 @@ my $kck4 = q|    \entry{caf8e34be07426ae7127c1b4829983c1}{inbook}{skipbib=true,s
       \field{labeltitlesource}{title}
       \field{clonesourcekey}{key4}
       \field{booktitle}{Booktitle}
-      \field{season}{summer}
       \field{shorthand}{RK4}
       \field{title}{Orig Language Title}
       \field{year}{2011}
+      \field{yeardivision}{summer}
       \field{dateera}{ce}
       \field{pages}{33\bibrangedash 57}
       \range{pages}{25}

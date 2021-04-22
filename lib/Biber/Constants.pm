@@ -41,13 +41,14 @@ our @EXPORT = qw{
                   %MONTHS
                   %RSTRINGS
                   %USEDSTRINGS
+                  %YEARDIVISIONS
               };
 
 # Version of biblatex control file which this release expects. Matched against version
 # passed in control file. Used when checking the .bcf
-our $BCF_VERSION = '3.7';
+our $BCF_VERSION = '3.8';
 # Format version of the .bbl. Used when writing the .bbl
-our $BBL_VERSION = '3.1';
+our $BBL_VERSION = '3.2';
 
 # Global flags needed for sorting
 our $BIBER_SORT_FINAL;
@@ -69,6 +70,29 @@ unless ($locale) {
     $locale = 'en_US.UTF-8';
   }
 }
+
+# ISO8601-2 4.8 year divisions
+our %YEARDIVISIONS = ( 21 => 'spring',
+                       22 => 'summer',
+                       23 => 'autumn',
+                       24 => 'winter',
+                       25 => 'springN',
+                       26 => 'summerN',
+                       27 => 'autumnN',
+                       28 => 'winterN',
+                       29 => 'springS',
+                       30 => 'summerS',
+                       31 => 'autumnS',
+                       32 => 'winterS',
+                       33 => 'Q1',
+                       34 => 'Q2',
+                       35 => 'Q3',
+                       36 => 'Q4',
+                       37 => 'QD1',
+                       38 => 'QD2',
+                       39 => 'QD3',
+                       40 => 'S1',
+                       41 => 'S2' );
 
 # Reverse record of macros so we can reverse these for tool mode output
 our %RSTRINGS = ();
@@ -128,8 +152,12 @@ our %DM_DATATYPES = (
                            return 0;
                          }
                        }
-                       elsif ($f =~ /season$/) {
+                       elsif ($f =~ /season$/) { # LEGACY
                          return 0 unless $v =~ m/(?:winter|spring|summer|autumn)/
+                       }
+                       elsif ($f =~ /yeardivision$/) {
+                         return 0 unless grep {$v eq $_} values %YEARDIVISIONS;
+#                         return 0 unless $v =~ m/(?:winter[NS]?|spring[NS]?|summer[NS]?|autumn[NS]?|Q[1234]|QD[123]|S[12])/
                        }
                        else {
                          # num() doesn't like negatives

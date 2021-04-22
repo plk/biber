@@ -1037,9 +1037,9 @@ sub _datetime {
         $bibentry->set_datafield($datetype . 'day', $sdate->day)
           unless $CONFIG_DATE_PARSERS{start}->missing('day');
 
-        # Save start season date information
-        if (my $season = $CONFIG_DATE_PARSERS{start}->season) {
-          $bibentry->set_field($datetype . 'season', $season);
+        # Save start yeardivision date information
+        if (my $yeardivision = $CONFIG_DATE_PARSERS{start}->yeardivision) {
+          $bibentry->set_field($datetype . 'yeardivision', $yeardivision);
         }
 
         # must be an hour if there is a time but could be 00 so use defined()
@@ -1082,9 +1082,9 @@ sub _datetime {
           $bibentry->set_datafield($datetype . 'endday', $edate->day)
             unless $CONFIG_DATE_PARSERS{end}->missing('day');
 
-          # Save end season date information
-          if (my $season = $CONFIG_DATE_PARSERS{end}->season) {
-            $bibentry->set_field($datetype . 'endseason', $season);
+          # Save end yeardivision date information
+          if (my $yeardivision = $CONFIG_DATE_PARSERS{end}->yeardivision) {
+            $bibentry->set_field($datetype . 'endyeardivision', $yeardivision);
           }
 
           # must be an hour if there is a time but could be 00 so use defined()
@@ -1138,9 +1138,9 @@ sub _datetime {
         $bibentry->set_datafield($datetype . 'day', $sdate->day)
           unless $CONFIG_DATE_PARSERS{start}->missing('day');
 
-        # Save start season date information
-        if (my $season = $CONFIG_DATE_PARSERS{start}->season) {
-          $bibentry->set_field($datetype . 'season', $season);
+        # Save start yeardivision date information
+        if (my $yeardivision = $CONFIG_DATE_PARSERS{start}->yeardivision) {
+          $bibentry->set_field($datetype . 'yeardivision', $yeardivision);
         }
 
         # must be an hour if there is a time but could be 00 so use defined()

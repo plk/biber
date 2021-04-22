@@ -54,9 +54,6 @@ my $w1 = ["Datamodel: Entry 'alias2' (bibtex-aliases.bib): Field 'school' invali
 ];
 
 my $w2 = ["Datamodel: Entry 'alias4' (bibtex-aliases.bib): Invalid field 'author' for entrytype 'customa'",
-          "Datamodel: Entry 'alias4' (bibtex-aliases.bib): Invalid field 'eprint' for entrytype 'customa'",
-          "Datamodel: Entry 'alias4' (bibtex-aliases.bib): Invalid field 'eprinttype' for entrytype 'customa'",
-          "Datamodel: Entry 'alias4' (bibtex-aliases.bib): Invalid field 'namea' for entrytype 'customa'",
           "Datamodel: Entry 'alias4' (bibtex-aliases.bib): Invalid field 'title' for entrytype 'customa'",
 ];
 

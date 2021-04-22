@@ -760,11 +760,11 @@ my $season1 = q|    \entry{season1}{inproceedings}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{booktitle}{Book Title}
-      \field{eventseason}{autumn}
       \field{eventyear}{2002}
-      \field{season}{spring}
+      \field{eventyeardivision}{autumn}
       \field{title}{Title}
       \field{year}{2003}
+      \field{yeardivision}{spring}
       \field{dateera}{ce}
       \field{eventdateera}{ce}
     \endentry

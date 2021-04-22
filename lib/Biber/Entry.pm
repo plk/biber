@@ -176,7 +176,7 @@ sub clone {
     $df =~ s/date$//;
     foreach my $dsf ('dateunspecified', 'datesplit', 'datejulian',
                      'enddatejulian', 'dateapproximate', 'enddateapproximate',
-                     'dateuncertain', 'enddateuncertain', 'season', 'endseason',
+                     'dateuncertain', 'enddateuncertain', 'yeardivision', 'yeardivision',
                      'era', 'endera') {
       if (my $ds = $self->{derivedfields}{"$df$dsf"}) {
         $new->{derivedfields}{"$df$dsf"} = $ds;
@@ -531,8 +531,8 @@ sub field_exists {
 
 sub date_fields_exist {
   my ($self, $field) = @_;
-  my $t = $field =~ s/(?:end)?(?:year|month|day|hour|minute|second|season|timezone)$//r;
-  foreach my $dp ('year', 'month', 'day', 'hour', 'minute', 'second', 'season', 'timezone') {
+  my $t = $field =~ s/(?:end)?(?:year|month|day|hour|minute|second|yeardivision|timezone)$//r;
+  foreach my $dp ('year', 'month', 'day', 'hour', 'minute', 'second', 'yeardivision', 'timezone') {
     if (exists($self->{datafields}{"$t$dp"}) or exists($self->{datafields}{"${t}end$dp"})) {
       return 1;
     }
@@ -548,8 +548,8 @@ sub date_fields_exist {
 
 sub delete_date_fields {
   my ($self, $field) = @_;
-  my $t = $field =~ s/(?:end)?(?:year|month|day|hour|minute|second|season|timezone)$//r;
-  foreach my $dp ('year', 'month', 'day', 'hour', 'minute', 'second', 'season', 'timezone') {
+  my $t = $field =~ s/(?:end)?(?:year|month|day|hour|minute|second|yeardivision|timezone)$//r;
+  foreach my $dp ('year', 'month', 'day', 'hour', 'minute', 'second', 'yeardivision', 'timezone') {
     delete($self->{datafields}{"$t$dp"});
     delete($self->{datafields}{"${t}end$dp"});
   }
@@ -996,7 +996,7 @@ sub inherit_from {
       next if first {$_ eq $datefield} @removed_fields;
       foreach my $dsf ('dateunspecified', 'datesplit', 'datejulian',
                        'enddatejulian', 'dateapproximate', 'enddateapproximate',
-                       'dateuncertain', 'enddateuncertain', 'season', 'endseason',
+                       'dateuncertain', 'enddateuncertain', 'yeardivision', 'endyeardivision',
                        'era', 'endera') {
         if (my $ds = $parent->{derivedfields}{"$df$dsf"}) {
           # Set unless the child has the *date datepart, otherwise you can

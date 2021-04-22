@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/xsl" href="../../data/bcf.xsl"?>
 <?xml-model href="../../data/schemata/bcf.rnc" type="application/relax-ng-compact-syntax"?>
-<bcf:controlfile version="3.7" bltxversion="3.14" xmlns:bcf="https://sourceforge.net/projects/biblatex">
+<bcf:controlfile version="3.8" bltxversion="3.17" xmlns:bcf="https://sourceforge.net/projects/biblatex">
   <!-- OPTIONS -->
   <bcf:options component="biber" type="global">
     <bcf:option type="singlevalued">
@@ -739,14 +739,6 @@
       <bcf:entrytype>misc</bcf:entrytype>
     </bcf:entrytypes>
     <bcf:fields>
-      <bcf:field fieldtype="field" datatype="datepart">season</bcf:field>
-      <bcf:field fieldtype="field" datatype="datepart">endseason</bcf:field>
-      <bcf:field fieldtype="field" datatype="datepart">eventseason</bcf:field>
-      <bcf:field fieldtype="field" datatype="datepart">eventendseason</bcf:field>
-      <bcf:field fieldtype="field" datatype="datepart">origseason</bcf:field>
-      <bcf:field fieldtype="field" datatype="datepart">origendseason</bcf:field>
-      <bcf:field fieldtype="field" datatype="datepart">urlseason</bcf:field>
-      <bcf:field fieldtype="field" datatype="datepart">urlendseason</bcf:field>
       <bcf:field fieldtype="field" datatype="datepart" nullok="true">endyear</bcf:field>
       <bcf:field fieldtype="field" datatype="datepart">year</bcf:field>
       <bcf:field fieldtype="field" datatype="datepart">month</bcf:field>

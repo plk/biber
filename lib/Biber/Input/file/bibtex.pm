@@ -1295,7 +1295,7 @@ sub _datetime {
 
   if (defined($sdate)) { # Start date was successfully parsed
     if ($sdate) { # Start date is an object not "0"
-      # Did this entry get its datepart fields from splitting an EDTF date field?
+      # Did this entry get its datepart fields from splitting an IS08601 date field?
       $bibentry->set_field("${datetype}datesplit", 1);
 
       # Some warnings for overwriting YEAR and MONTH from DATE
@@ -1324,9 +1324,9 @@ sub _datetime {
       $bibentry->set_field($datetype . 'dateuncertain', 1) if $CONFIG_DATE_PARSERS{start}->uncertain;
       $bibentry->set_field($datetype . 'enddateuncertain', 1) if $CONFIG_DATE_PARSERS{end}->uncertain;
 
-      # Save start season date information
-      if (my $season = $CONFIG_DATE_PARSERS{start}->season) {
-        $bibentry->set_field($datetype . 'season', $season);
+      # Save start yeardivision date information
+      if (my $yeardivision = $CONFIG_DATE_PARSERS{start}->yeardivision) {
+        $bibentry->set_field($datetype . 'yeardivision', $yeardivision);
       }
 
       unless ($CONFIG_DATE_PARSERS{start}->missing('year')) {
@@ -1383,9 +1383,10 @@ sub _datetime {
                                    $CONFIG_DATE_PARSERS{end}->resolvescript($edate->day))
             unless $CONFIG_DATE_PARSERS{end}->missing('day');
 
-          # Save end season date information
-          if (my $season = $CONFIG_DATE_PARSERS{end}->season) {
-            $bibentry->set_field($datetype . 'endseason', $season);
+          # Save end yeardivision date information
+          if (my $yeardivision = $CONFIG_DATE_PARSERS{end}->yeardivision) {
+            $bibentry->set_field($datetype . 'endyeardivision', $yeardivision);
+            $bibentry->set_field($datetype . 'endseaason', $yeardivision); # legacy
           }
 
           # must be an hour if there is a time but could be 00 so use defined()
