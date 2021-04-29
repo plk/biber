@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 69;
+use Test::More tests => 72;
 use Test::Differences;
 unified_diff;
 
@@ -58,21 +58,26 @@ my $section = $biber->sections->get_section(0);
 my $main = $biber->datalists->get_list('nty/global//global/global');
 
 my @keys = sort $section->get_citekeys;
-my @citedkeys = sort qw{ alias1 alias2 alias5 anon1 anon2 murray t1 kant:ku kant:kpv t2 shore u1 u2 us1 list1 isbn1 isbn2 markey ent1 verb1 over1 recurse1};
+my @citedkeys = sort qw{ alias1 alias2 alias5 anon1 anon2 matches1 matches2 matches3 murray t1 kant:ku kant:kpv t2 shore u1 u2 us1 list1 isbn1 isbn2 markey ent1 verb1 over1 recurse1};
 
 # entry "loh" is missing as the biber.conf map removes it with map_entry_null
 my @allkeys = sort map {lc()} qw{ anon1 anon2 stdmodel aristotle:poetics vazques-de-parga t1
 gonzalez averroes/bland laufenberg westfahl:frontier knuth:ct:a kastenholz
 averroes/hannes iliad luzzatto malinowski sorace knuth:ct:d britannica
-nietzsche:historie stdmodel:weinberg knuth:ct:b baez/article knuth:ct:e itzhaki
-jaffe padhye cicero stdmodel:salam reese averroes/hercz murray shore
-aristotle:physics massa aristotle:anima gillies set kowalik gaonkar springer
-geer hammond wormanx westfahl:space worman set:herrmann augustine gerhardt
-piccato hasan hyman stdmodel:glashow stdmodel:ps_sc kant:kpv companion almendro
-sigfridsson ctan baez/online aristotle:rhetoric pimentel00 pines knuth:ct:c moraux cms
-angenendt angenendtsk markey cotton vangennepx kant:ku nussbaum nietzsche:ksa1
-vangennep knuth:ct angenendtsa spiegelberg bertram brandt set:aksin chiu nietzsche:ksa
-set:yoon maron coleridge tvonb t2 u1 u2 i1 i2 tmn1 tmn2 tmn3 tmn4 lne1 alias1 alias2 alias5 url1 ol1 pages1 pages2 pages3 pages4 pages5 pages6 pages7 pages8 us1 labelstest list1 sn1 pages9 isbn1 isbn2 snk1 clone-snk1 newtestkey ent1 avona rvonr verb1 over1 others1 others2 recurse1 final};
+nietzsche:historie stdmodel:weinberg knuth:ct:b baez/article knuth:ct:e
+itzhaki jaffe padhye cicero stdmodel:salam reese averroes/hercz murray
+shore aristotle:physics massa aristotle:anima gillies set kowalik gaonkar
+springer geer hammond wormanx westfahl:space worman set:herrmann augustine
+gerhardt piccato hasan hyman stdmodel:glashow stdmodel:ps_sc kant:kpv
+companion almendro sigfridsson ctan baez/online aristotle:rhetoric
+pimentel00 pines knuth:ct:c matches1 matches2 matches3 moraux cms angenendt
+angenendtsk markey cotton vangennepx kant:ku nussbaum nietzsche:ksa1
+vangennep knuth:ct angenendtsa spiegelberg bertram brandt set:aksin chiu
+nietzsche:ksa set:yoon maron coleridge tvonb t2 u1 u2 i1 i2 tmn1 tmn2 tmn3
+tmn4 lne1 alias1 alias2 alias5 url1 ol1 pages1 pages2 pages3 pages4 pages5
+pages6 pages7 pages8 us1 labelstest list1 sn1 pages9 isbn1 isbn2 snk1
+clone-snk1 newtestkey ent1 avona rvonr verb1 over1 others1 others2 recurse1
+final};
 
 my $u1 = q|    \entry{u1}{misc}{}
       \name{author}{4}{ul=4}{%
@@ -892,3 +897,7 @@ eq_or_diff($out->get_output_entry('ent1', $main), $ent1, 'Extended name test - 1
 # Verbatim decode test
 eq_or_diff($out->get_output_entry('verb1', $main), $verb1, 'Decoding verbatim fields - 1');
 
+# Static matches list test
+eq_or_diff($bibentries->entry('matches1')->get_field('note'), '1', 'Static match list - 1');
+eq_or_diff($bibentries->entry('matches2')->get_field('note'), '3', 'Static match list - 2');
+eq_or_diff($bibentries->entry('matches3')->get_field('note'), '2', 'Static match list - 3');

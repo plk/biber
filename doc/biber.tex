@@ -849,6 +849,7 @@ examples. A \opt{map} element looks like this:
              +\textcolor{blue}{map\_field\_target="\textcolor{red}{target-field}"}+
              +\textcolor{blue}{map\_match="\textcolor{red}{match-regexp}"}+
              +\textcolor{blue}{map\_nomatch="\textcolor{red}{match-regexp}"}+
+             +\textcolor{blue}{map\_matches="\textcolor{red}{match-list}"}+
              +\textcolor{blue}{map\_replace="\textcolor{red}{replace-regexp}"}+
              +\textcolor{blue}{map\_field\_set="\textcolor{red}{set-field}"}+
              +\textcolor{blue}{map\_field\_value="\textcolor{red}{set-value}"}+
@@ -959,8 +960,19 @@ datasource entry being processed. A \opt{map\_step} works like this:
   step if the \textcolor{red}{\texttt{source-field}} matches
   \textcolor{blue}{\texttt{map\_match}}. You can use parentheses as usual
   to capture parts of the match and can then use these later when setting a \textcolor{blue}{\texttt{map\_field\_value}}.
+\item \textcolor{blue}{\texttt{map\_matchi}} is the same as
+  \textcolor{blue}{\texttt{map\_match}} but case insensitive
 \item \textcolor{blue}{\texttt{map\_notmatch}} is the same as
   \textcolor{blue}{\texttt{map\_match}} but with the logic reversed.
+\item \textcolor{blue}{\texttt{map\_notmatchi}} is the same as
+  \textcolor{blue}{\texttt{map\_notmatch}} but case insensitive.
+\item If \textcolor{blue}{\texttt{map\_matches}} is defined, it should be a
+  comma-separated list of literal strings which are replaced by
+  corresponding locations in a comma-separated list provided in
+  \textcolor{blue}{\texttt{map\_replace}}. The lists must have the same
+  number of elements or the step will be skipped.
+\item \textcolor{blue}{\texttt{map\_matchesi}} is the same as
+  \textcolor{blue}{\texttt{map\_matches}} but case insensitive.
 \item Perform a Perl regular expression match and replace on the value of
   \textcolor{red}{\texttt{source-field}} if
   \textcolor{blue}{\texttt{map\_match}} and
@@ -1190,9 +1202,6 @@ be completely ignored. \bigskip \minisec{Other datasource types} For
 datasources other than \BibTeX, (e.g. \verb+biblatexml+), the source
 entrytypes and fields are usually very differently modelled and named.
 
-\noindent Here we use a loop to apply a regular expression replacement to
-several fields:
-
 \begin{lstlisting}[language=xml,escapechar=;,mathescape=true]
 <maps datatype="bibtex" level="user">
   <map map_overwrite="1" map_foreach="author,editor,translator">
@@ -1200,6 +1209,25 @@ several fields:
   </map>
 </maps>
 \end{lstlisting}
+
+\noindent In this example, a loop is used to apply a regular expression
+replacement to several fields.
+
+\begin{lstlisting}[language=xml,escapechar=;,mathescape=true]
+<maps datatype="bibtex" level="user">
+  <map>
+    <map_step map_field_source="NOTE" map_matchesi="test1,test2,Test3" map_replace="1,3,2"/>
+  </map>
+</maps>
+\end{lstlisting}
+
+\noindent Here, the \bibfield{NOTE} field content «test1» will be replaced
+with «1», «test2» will be replaced with «3» and «test3» will be replaced
+with «2». This sort of map is useful for sorting fields which have a
+defined order for some application but where the order is neither
+alphabetical or numeric, for example, courts in legal references. A map
+could create a new field with a defined alpha or numeric sort order which a
+custom sorting template then uses to sort in the order required.
 
 \bigskip
 \subsubsection{The \texttt{inheritance} option}\label{inheritance}

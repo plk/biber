@@ -741,6 +741,29 @@ sub create_entry {
                 $caseinsensitive = 1;
               }
 
+              my $caseinsensitives = 0;
+              my $mis;
+              # Case insensitive matches are normal matches with a special flag
+              if ($mis = $step->{map_matchesi}) {
+                $step->{map_matches} = $mis;
+                $caseinsensitives = 1;
+              }
+
+              if (my $ms = $step->{map_matches}) {
+                my @ms = split(/\s*,\s*/,$ms);
+                my @rs = split(/\s*,\s*/,$step->{map_replace});
+                unless (scalar(@ms) == scalar(@rs)) {
+                  $logger->debug("Source mapping (type=$level, key=$etargetkey): Different number of fixed matches vs replaces, skipping ...");
+                  next;
+                }
+                for (my $i = 0; $i <= $#ms; $i++) {
+                  if (($caseinsensitives and fc($last_fieldval) eq fc($ms[$i]))
+                      or ($last_fieldval eq $ms[$i])) {
+                    $etarget->set(encode('UTF-8', NFC($fieldsource)), $rs[$i]);
+                  }
+                }
+              }
+
               # map fields to targets
               if (my $m = maploopreplace($step->{map_match}, $maploop)) {
                 if (defined($step->{map_replace})) { # replace can be null

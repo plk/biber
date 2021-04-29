@@ -461,6 +461,11 @@
                           <xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text><xsl:value-of select="./@map_field_target"/>
                         </xsl:if>
                         <xsl:if test="./@map_match"> <xsl:text disable-output-escaping="yes">&amp;asymp;</xsl:text> <span class="map_regexp"><xsl:value-of select="./@map_match"/></span></xsl:if>
+                        <xsl:if test="./@map_matchi"> <xsl:text disable-output-escaping="yes">&amp;asymp;</xsl:text> <span class="map_regexp"><xsl:value-of select="./@map_matchi"/></span></xsl:if>
+                        <xsl:if test="./@map_notmatch"> <xsl:text disable-output-escaping="yes">&amp;asymp;</xsl:text> <span class="map_regexp"><xsl:value-of select="./@map_notmatch"/></span></xsl:if>
+                        <xsl:if test="./@map_notmatchi"> <xsl:text disable-output-escaping="yes">&amp;asymp;</xsl:text> <span class="map_regexp"><xsl:value-of select="./@map_notmatchi"/></span></xsl:if>
+                        <xsl:if test="./@map_matches"> <xsl:text disable-output-escaping="yes">&amp;asymp;</xsl:text> <span class="map_regexp"><xsl:value-of select="./@map_matches"/></span></xsl:if>
+                        <xsl:if test="./@map_matchesi"> <xsl:text disable-output-escaping="yes">&amp;asymp;</xsl:text> <span class="map_regexp"><xsl:value-of select="./@map_matchesi"/></span></xsl:if>
                         <xsl:if test="./@map_replace"> <xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text> <span class="map_regexp"><xsl:value-of select="./@map_replace"/></span></xsl:if>
                       </xsl:if>
 

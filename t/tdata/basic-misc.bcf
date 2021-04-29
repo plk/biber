@@ -564,6 +564,11 @@
         <bcf:map_step map_field_source="key" map_field_target="sortkey"/>
         <bcf:map_step map_field_source="pdf" map_field_target="file"/>
       </bcf:map>
+      <bcf:map>
+        <bcf:per_type>REPORT</bcf:per_type>
+        <bcf:map_step map_field_source="NOTE" map_matches="test1,test2,Test3" map_replace="1,3,2"/>
+        <bcf:map_step map_field_source="NOTE" map_matchesi="Test3" map_replace="2"/>
+      </bcf:map>
     </bcf:maps>
   </bcf:sourcemap>
   <!-- LABELALPHA NAME TEMPLATE -->
@@ -2061,6 +2066,9 @@
     <bcf:citekey order="23">verb1</bcf:citekey>
     <bcf:citekey order="24">over1</bcf:citekey>
     <bcf:citekey order="25">recurse1</bcf:citekey>
+    <bcf:citekey order="26">matches1</bcf:citekey>
+    <bcf:citekey order="27">matches2</bcf:citekey>
+    <bcf:citekey order="28">matches3</bcf:citekey>
   </bcf:section>
   <!-- SORTING SCHEME -->
   <bcf:sortingtemplate name="nty">
