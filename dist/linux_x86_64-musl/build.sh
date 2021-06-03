@@ -36,7 +36,7 @@
 # version.
 
 declare -r perlv='5.32.0'
-declare ucpath="/usr/local/lib/perl5/5.32.0/Unicode/Collate"
+declare ucpath="/usr/local/lib/perl5/site_perl/Unicode/Collate"
 
 # Unicode::Collate has a site_perl version so has been updated since this
 # perl was released
@@ -91,9 +91,9 @@ PAR_VERBATIM=1 /usr/local/bin/pp \
   --addfile="${ucpath}/CJK;lib/Unicode/Collate/CJK" \
   --addfile="${ucpath}/allkeys.txt;lib/Unicode/Collate/allkeys.txt" \
   --addfile="${ucpath}/keys.txt;lib/Unicode/Collate/keys.txt" \
-  --addfile="/usr/local/lib/perl5/site_perl/5.32.0/Mozilla/CA/cacert.pem" \
-  --addfile="/usr/local/lib/perl5/5.32.0/PerlIO" \
-  --addfile="/usr/local/lib/perl5/site_perl/5.32.0/Business/ISBN/RangeMessage.xml" \
+  --addfile="/usr/local/share/perl5/site_perl/Mozilla/CA/cacert.pem" \
+  --addfile="/usr/local/lib/perl5/site_perl/PerlIO" \
+  --addfile="/usr/local/share/perl5/site_perl/Business/ISBN/RangeMessage.xml" \
   --cachedeps=scancache \
   --output=/opt/biber \
   /usr/local/bin/biber
