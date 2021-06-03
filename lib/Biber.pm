@@ -3665,6 +3665,7 @@ sub create_uniquelist_info {
     next unless defined($lni); # only care about labelname
     my $nl = $be->get_field($lni);
     my $nlid = $nl->get_id;
+    my $labelyear = $be->get_field('labelyear');
 
     my $ul = Biber::Config->getblxoption($secnum, 'uniquelist', $bee, $citekey);
 
@@ -3726,10 +3727,15 @@ sub create_uniquelist_info {
     # two or more identical name lists), we don't expand them at all as there is no point.
     $dlist->add_uniquelistcount_final($namelist);
 
+    # uniquelist=minyear needs tracking only of namelists in same labelyear
+    if ($ul eq 'minyear') {
+      $dlist->add_uniquelistcount_final($namelist, $labelyear);
+    }
+
     # Add count for uniquelist=minyear
     unless (Compare($ulminyear_namelist, [])) {
       $dlist->add_uniquelistcount_minyear($ulminyear_namelist,
-                                          $be->get_field('labelyear'),
+                                          $labelyear,
                                           $namelist);
     }
   }
@@ -3753,6 +3759,7 @@ sub generate_uniquelist {
  MAIN: foreach my $citekey ( $section->get_citekeys ) {
     my $be = $bibentries->entry($citekey);
     my $bee = $be->get_field('entrytype');
+    my $labelyear = $be->get_field('labelyear');
     my $maxcn = Biber::Config->getblxoption($secnum, 'maxcitenames', $bee, $citekey);
     my $mincn = Biber::Config->getblxoption($secnum, 'mincitenames', $bee, $citekey);
     my $lni = $be->get_labelname_info;
@@ -3802,7 +3809,7 @@ sub generate_uniquelist {
       if ($ul eq 'minyear' and
           $num_names > $maxcn and
           $n->get_index <= $mincn and
-          $dlist->get_uniquelistcount_minyear($namelist, $be->get_field('labelyear')) == 1) {
+          $dlist->get_uniquelistcount_minyear($namelist, $labelyear) == 1) {
         if ($logger->is_trace()) { # performance tune
           $logger->trace("Not setting uniquelist=minyear for '$citekey'");
         }
@@ -3820,7 +3827,7 @@ sub generate_uniquelist {
     if ($logger->is_trace()) {  # performance tune
       $logger->trace("Setting uniquelist for '$citekey' using " . join(',', $namelist->@*));
     }
-    $dlist->set_uniquelist($nl, $namelist, $maxcn, $mincn);
+    $dlist->set_uniquelist($nl, $namelist, $labelyear, $ul, $maxcn, $mincn);
   }
   return;
 }

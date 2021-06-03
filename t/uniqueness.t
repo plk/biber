@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 214;
+use Test::More tests => 217;
 use Test::Differences;
 unified_diff;
 
@@ -406,6 +406,31 @@ eq_or_diff($main->get_uniquelist($bibentries->entry('uls4')->get_field($bibentri
 eq_or_diff($main->get_uniquelist($bibentries->entry('uls5')->get_field($bibentries->entry('uls5')->get_labelname_info)->get_id), '2', 'Uniquelist strict - 5');
 eq_or_diff($main->get_uniquelist($bibentries->entry('uls6')->get_field($bibentries->entry('uls6')->get_labelname_info)->get_id), '2', 'Uniquelist strict - 6');
 ok(is_undef($main->get_uniquelist($bibentries->entry('uls7')->get_field($bibentries->entry('uls7')->get_labelname_info)->get_id)), 'Uniquelist strict - 7');
+
+#############################################################################
+
+$biber = Biber->new(noconf => 1);
+$biber->parse_ctrlfile('uniqueness5.bcf');
+$biber->set_output_obj(Biber::Output::bbl->new());
+# Biber options
+Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
+# Biblatex options
+Biber::Config->setblxoption(undef,'maxnames', 3);
+Biber::Config->setblxoption(undef,'minnames', 1);
+Biber::Config->setblxoption(undef,'uniquename', 'full');
+Biber::Config->setblxoption(undef,'uniquelist', 'minyear');
+Biber::Config->setblxoption(undef,'labeldateparts', 'true');
+Biber::Config->setblxoption(undef,'singletitle', 0);
+Biber::Config->setblxoption(undef,'labeldatespec', [ {content => 'date', type => 'field'}, {content => 'year', type => 'field'} ]);
+# Now generate the information
+$biber->prepare;
+$section = $biber->sections->get_section(0);
+$bibentries = $section->bibentries;
+$main = $biber->datalists->get_list('nty/global//global/global');
+
+eq_or_diff($main->get_uniquelist($bibentries->entry('ulmy1')->get_field($bibentries->entry('ulmy1')->get_labelname_info)->get_id), '2', 'Uniquelist minyear - 1');
+eq_or_diff($main->get_uniquelist($bibentries->entry('ulmy2')->get_field($bibentries->entry('ulmy2')->get_labelname_info)->get_id), '2', 'Uniquelist minyear - 2');
+ok(is_undef($main->get_uniquelist($bibentries->entry('ulmy3')->get_field($bibentries->entry('ulmy3')->get_labelname_info)->get_id)), 'Uniquelist minyear - 3');
 
 #############################################################################
 
