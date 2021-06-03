@@ -915,7 +915,7 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
         }
         $key_flag = 1; # There is at least one key, used for error reporting below
       }
-      elsif (not Biber::Config->get_seenkey($key, $secnum)) {
+      elsif (not $bib_section->get_seenkey($key)) {
         # Dynamic set definition
         # Save dynamic key -> member keys mapping for set entry auto creation later
         # We still need to find these even if allkeys is set
@@ -937,9 +937,9 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
           Biber::Config->set_keyorder($secnum, $key, $keyc->{order});
           push @keys, $key;
           $key_flag = 1; # There is at least one key, used for error reporting below
-          Biber::Config->incr_seenkey($key, $secnum);
         }
       }
+      $bib_section->incr_seenkey($key); # always increment to track citecount sorts
     }
 
     if ($bib_section->is_allkeys) {

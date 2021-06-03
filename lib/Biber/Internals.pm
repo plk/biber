@@ -1009,6 +1009,7 @@ my %internal_dispatch_sorting = (
                                  'editorbtype'     =>  [\&_sort_editort,       ['editorbtype']],
                                  'editorctype'     =>  [\&_sort_editort,       ['editorctype']],
                                  'citeorder'       =>  [\&_sort_citeorder,     []],
+                                 'citecount'       =>  [\&_sort_citecount,     []],
                                  'labelalpha'      =>  [\&_sort_labelalpha,    []],
                                  'labelname'       =>  [\&_sort_labelname,     []],
                                  'labeltitle'      =>  [\&_sort_labeltitle,    []],
@@ -1222,6 +1223,11 @@ sub _sort_citeorder {
   }
 }
 
+sub _sort_citecount {
+  my ($self, $citekey, $secnum, $section, $be, $dlist, $sortelementattributes) = @_;
+  return $section->get_seenkey($citekey) // '';
+}
+
 sub _sort_integer {
   my ($self, $citekey, $secnum, $section, $be, $dlist, $sortelementattributes, $args) = @_;
   my $dmtype = $args->[0]; # get int field type
@@ -1235,7 +1241,7 @@ sub _sort_integer {
     }
 
     # Use Unicode::UCD::num() to map Unicode numbers to integers if possible
-    $field = num($field) //$field;
+    $field = num($field) // $field;
 
     return _process_sort_attributes($field, $sortelementattributes);
   }

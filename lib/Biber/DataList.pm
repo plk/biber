@@ -128,8 +128,6 @@ sub set_entryfield {
   return;
 }
 
-
-
 =head2 add_uniquenamecount
 
     Add a name to the list of name contexts which have the name in it

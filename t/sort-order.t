@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 15;
+use Test::More tests => 16;
 
 use Biber;
 use Biber::Output::bbl;
@@ -153,6 +153,14 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 is_deeply($main->get_keys, ['L3','L2','L1B','L1','L4','L5','L1A','L7','L8','L6','L9'], 'sorting=none + year');
+
+# Test citecount sort
+$main->set_sortingtemplatename('count');
+
+$biber->set_output_obj(Biber::Output::bbl->new());
+$biber->prepare;
+$section = $biber->sections->get_section(0);
+is_deeply($main->get_keys, ['L9','L4','L6','L7','L8','L5','L2','L1','L1A','L1B','L3'], 'citecount 1');
 
 # Testing special case of sorting=none and allkeys because in this case "citeorder" means
 # bib order

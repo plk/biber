@@ -69,9 +69,6 @@ $CONFIG->{state}{xdata} = [];
 # Used for generating inheritance trees
 $CONFIG->{state}{graph} = {};
 
-$CONFIG->{state}{seenkeys} = {};
-$CONFIG->{globalstate}{seenkeys} = {};
-
 # Track the order of keys as cited. Keys cited in the same \cite*{} get the same order
 # Used for sorting schemes which use \citeorder
 $CONFIG->{state}{keyorder} = {};
@@ -93,7 +90,6 @@ sub _init {
   $CONFIG->{state}{control_file_location} = '';
   $CONFIG->{state}{crossrefkeys} = {};
   $CONFIG->{state}{xrefkeys} = {};
-  $CONFIG->{state}{seenkeys} = {};
   $CONFIG->{state}{datafiles} = [];
   $CONFIG->{state}{crossref} = [];
   $CONFIG->{state}{xdata} = [];
@@ -1164,42 +1160,6 @@ sub reset_keyorder {
   return;
 }
 
-
-=head1 seenkey
-
-=head2 get_seenkey
-
-    Get the count of a key
-
-=cut
-
-sub get_seenkey {
-  shift; # class method so don't care about class name
-  my $key = shift;
-  my $section = shift; # If passed, return count for just this section
-  if (defined($section)) {
-    return $CONFIG->{state}{seenkeys}{$section}{$key};
-  }
-  else {
-    return $CONFIG->{globalstate}{seenkeys}{$key};
-  }
-}
-
-
-=head2 incr_seenkey
-
-    Increment the seen count of a key
-
-=cut
-
-sub incr_seenkey {
-  shift; # class method so don't care about class name
-  my $key = shift;
-  my $section = shift;
-  $CONFIG->{state}{seenkeys}{$section}{$key}++;
-  $CONFIG->{globalstate}{seenkeys}{$key}++;
-  return;
-}
 
 =head1 crossrefkeys
 

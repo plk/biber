@@ -45,7 +45,34 @@ sub new {
   $self->{citekey_alias} = {};
   $self->{static_keys} = {};
   $self->{state} = {};
+  $self->{seenkeys} = {};
   return $self;
+}
+
+=head1 seenkey
+
+=head2 get_seenkey
+
+    Get the count of a key
+
+=cut
+
+sub get_seenkey {
+  my ($self, $key) = @_;
+  return $self->{seenkeys}{$key};
+}
+
+
+=head2 incr_seenkey
+
+    Increment the seen count of a key
+
+=cut
+
+sub incr_seenkey {
+  my ($self, $key) = @_;
+  $self->{seenkeys}{$key}++;
+  return;
 }
 
 =head2 reset_caches
