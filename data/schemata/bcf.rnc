@@ -509,6 +509,10 @@ secspec =
       ( attribute order { xsd:integer },
         attribute nocite { xsd:boolean }?,
         xsd:string {minLength="1"} )
+    }*,
+    element bcf:citekeycount {
+      attribute count { xsd:integer },
+      xsd:string {minLength="1"}
     }*
   }
 

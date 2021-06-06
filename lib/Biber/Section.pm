@@ -46,7 +46,39 @@ sub new {
   $self->{static_keys} = {};
   $self->{state} = {};
   $self->{seenkeys} = {};
+  $self->{citecount} = {};
   return $self;
+}
+
+
+=head1 citecount
+
+=head2 set_citecount
+
+    Set the citecount of a key. This comes from biblatex via the
+    citecounter option and reflects the actual number of citations using
+    this key, taking into account things like \citeauthor etc. which are not
+    real citations.
+
+=cut
+
+sub set_citecount {
+  my ($self, $key, $count) = @_;
+  $self->{citecount}{$key} = $count;
+}
+
+=head2 get_keycount
+
+    Get the citecount of a key. This comes from biblatex via the
+    citecounter option and reflects the actual number of citations using
+    this key, taking into account things like \citeauthor etc. which are not
+    real citations.
+
+=cut
+
+sub get_citecount {
+  my ($self, $key) = @_;
+  return $self->{citecount}{$key} // 0;
 }
 
 =head1 seenkey

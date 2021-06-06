@@ -1286,6 +1286,16 @@
           </choice>
         </element>
       </zeroOrMore>
+      <zeroOrMore>
+        <element name="bcf:citekeycount">
+          <attribute name="count">
+            <data type="integer"/>
+          </attribute>
+          <data type="string">
+            <param name="minLength">1</param>
+          </data>
+        </element>
+      </zeroOrMore>
     </element>
   </define>
   <define name="filteror">
@@ -2166,13 +2176,6 @@
                 </attribute>
               </optional>
               <optional>
-                <attribute name="map_matchi">
-                  <data type="string">
-                    <param name="minLength">1</param>
-                  </data>
-                </attribute>
-              </optional>
-              <optional>
                 <attribute name="map_matches">
                   <data type="string">
                     <param name="minLength">1</param>
@@ -2181,6 +2184,13 @@
               </optional>
               <optional>
                 <attribute name="map_matchesi">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                  </data>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="map_matchi">
                   <data type="string">
                     <param name="minLength">1</param>
                   </data>

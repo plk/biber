@@ -1225,7 +1225,7 @@ sub _sort_citeorder {
 
 sub _sort_citecount {
   my ($self, $citekey, $secnum, $section, $be, $dlist, $sortelementattributes) = @_;
-  return $section->get_seenkey($citekey) // '';
+  return $section->get_citecount($citekey) // '';
 }
 
 sub _sort_integer {

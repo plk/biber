@@ -422,7 +422,7 @@ sub parse_ctrlfile {
   my $bcfxml = XML::LibXML::Simple::XMLin($buf,
                                           'ForceContent' => 1,
                                           'ForceArray' => [
-                                                           qr/\A(?:no)*citekey\z/,
+                                                           qr/\A(?:no)*citekey(?:count)?\z/,
                                                            qr/\Aoption\z/,
                                                            qr/\Aoptions\z/,
                                                            qr/\Avalue\z/,
@@ -939,7 +939,13 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
           $key_flag = 1; # There is at least one key, used for error reporting below
         }
       }
-      $bib_section->incr_seenkey($key); # always increment to track citecount sorts
+      $bib_section->incr_seenkey($key); # always increment
+    }
+
+    # Get citecounts if present
+    foreach my $keycount ($section->{citekeycount}->@*) {
+      my $key = NFD($keycount->{content}); # Key is already UTF-8 - it comes from UTF-8 XML
+      $bib_section->set_citecount($key, $keycount->{count});
     }
 
     if ($bib_section->is_allkeys) {

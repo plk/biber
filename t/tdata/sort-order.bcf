@@ -2025,6 +2025,17 @@
     <bcf:citekey order="11">L9</bcf:citekey>
     <bcf:citekey order="12">L9</bcf:citekey>
     <bcf:citekey order="13">L9</bcf:citekey>
+    <bcf:citekeycount count="1">L1</bcf:citekeycount>
+    <bcf:citekeycount count="1">L1A</bcf:citekeycount>
+    <bcf:citekeycount count="1">L1B</bcf:citekeycount>
+    <bcf:citekeycount count="1">L2</bcf:citekeycount>
+    <bcf:citekeycount count="1">L3</bcf:citekeycount>
+    <bcf:citekeycount count="2">L4</bcf:citekeycount>
+    <bcf:citekeycount count="1">L5</bcf:citekeycount>
+    <bcf:citekeycount count="1">L6</bcf:citekeycount>
+    <bcf:citekeycount count="1">L7</bcf:citekeycount>
+    <bcf:citekeycount count="1">L8</bcf:citekeycount>
+    <bcf:citekeycount count="3">L9</bcf:citekeycount>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="nty">

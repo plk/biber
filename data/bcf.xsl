@@ -1198,7 +1198,7 @@
         <h4>Section 0</h4>
         <table>
           <thead>
-            <tr><td>Data sources</td><td>Citekeys</td><td>Dynamic sets</td></tr>
+            <tr><td>Data sources</td><td>Citekeys</td><td>Citekey counts</td><td>Dynamic sets</td></tr>
           </thead>
           <tbody>
             <tr>
@@ -1224,6 +1224,14 @@
               <td>
                 <ul>
                   <xsl:for-each
+                      select="/bcf:controlfile/bcf:section[@number='0']/bcf:citekeycount">
+                    <li><tt><xsl:value-of select="./text()"/> (<xsl:value-of select="./@count"/>)</tt></li>
+                  </xsl:for-each>
+                </ul>
+              </td>
+              <td>
+                <ul>
+                  <xsl:for-each
                       select="/bcf:controlfile/bcf:section[@number='0']/bcf:citekey[@type='set']">
                     <li><tt><xsl:value-of select="./text()"/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>(<xsl:value-of select="./@members"/>)</tt></li>
                   </xsl:for-each>
@@ -1238,7 +1246,7 @@
           <h4>Section <xsl:value-of select="$secnum"/></h4>
           <table>
             <thead>
-              <tr><td>Data sources</td><td>Citekeys</td></tr>
+              <tr><td>Data sources</td><td>Citekeys</td><td>Citekey counts</td></tr>
             </thead>
             <tbody>
               <tr>
@@ -1257,6 +1265,13 @@
                   <ul>
                     <xsl:for-each select="./bcf:citekey">
                       <li><tt><xsl:value-of select="./text()"/></tt></li>
+                    </xsl:for-each>
+                  </ul>
+                </td>
+                <td>
+                  <ul>
+                    <xsl:for-each select="./bcf:citekeycount">
+                      <li><tt><xsl:value-of select="./text()"/> (<xsl:value-of select="./@count"/>)</tt></li>
                     </xsl:for-each>
                   </ul>
                 </td>
