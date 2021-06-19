@@ -4540,10 +4540,10 @@ sub fetch_data {
 
     # Slightly different message for tool mode
     if (Biber::Config->getoption('tool')) {
-      $logger->info("Looking for $datatype format $type '$name'");
+      $logger->info("Looking for $datatype $type '$name'");
     }
     else {
-      $logger->info("Looking for $datatype format $type '$name' for section $secnum");
+      $logger->info("Looking for $datatype $type '$name' for section $secnum");
     }
 
     @remaining_keys = "${package}::extract_entries"->(locate_data_file($name), $encoding, \@remaining_keys);
