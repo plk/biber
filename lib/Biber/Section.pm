@@ -72,13 +72,13 @@ sub set_citecount {
     Get the citecount of a key. This comes from biblatex via the
     citecounter option and reflects the actual number of citations using
     this key, taking into account things like \citeauthor etc. which are not
-    real citations.
+    real citations. A zero or undef value needs to be less than 0.
 
 =cut
 
 sub get_citecount {
   my ($self, $key) = @_;
-  return $self->{citecount}{$key} // 0;
+  return $self->{citecount}{$key} || -1;
 }
 
 =head1 seenkey
