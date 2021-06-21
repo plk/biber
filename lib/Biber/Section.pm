@@ -72,7 +72,8 @@ sub set_citecount {
     Get the citecount of a key. This comes from biblatex via the
     citecounter option and reflects the actual number of citations using
     this key, taking into account things like \citeauthor etc. which are not
-    real citations. A zero or undef value needs to be less than 0.
+    real citations. A zero or undef value needs to be less than 0 which does
+    not fail if() checks - required for the delicate sorting dispatch logic
 
 =cut
 
