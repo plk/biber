@@ -304,12 +304,12 @@ sub tool_mode_setup {
 
   my $datalists = new Biber::DataLists;
   my $seclist = Biber::DataList->new(section => 99999,
-                                     sortingtemplatename => 'tool',
+                                     sortingtemplatename        => 'tool',
                                      sortingnamekeytemplatename => 'global',
-                                     uniquenametemplatename => 'global',
+                                     uniquenametemplatename     => 'global',
                                      labelalphanametemplatename => 'global',
-                                     labelprefix => '',
-                                     name => 'tool/global//global/global');
+                                     labelprefix                => '',
+                                     name                       => 'tool/global//global/global');
   $seclist->set_type('entry');
   # Locale just needs a default here - there is no biblatex option to take it from
   Biber::Config->setblxoption(undef, 'sortlocale', 'en_US');
@@ -988,7 +988,7 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
                              name                       => $lname,
                              type                       => $ltype,
                              sortingtemplatename        => $lstn,
-                             sortingnamekeytemplatename    => $lsnksn,
+                             sortingnamekeytemplatename => $lsnksn,
                              labelprefix                => $lpn,
                              uniquenametemplatename     => $luntn,
                              labelalphanametemplatename => $llantn)) {
@@ -1000,7 +1000,7 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
 
     my $datalist = Biber::DataList->new(section                    => $lsection,
                                         sortingtemplatename        => $lstn,
-                                        sortingnamekeytemplatename    => $lsnksn,
+                                        sortingnamekeytemplatename => $lsnksn,
                                         uniquenametemplatename     => $luntn,
                                         labelalphanametemplatename => $llantn,
                                         labelprefix                => $lpn,
@@ -1043,7 +1043,7 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
     unless ($datalists->get_lists_by_attrs(section                    => $secnum,
                                            type                       => 'entry',
                                            sortingtemplatename        => $globalss,
-                                           sortingnamekeytemplatename    => 'global',
+                                           sortingnamekeytemplatename => 'global',
                                            uniquenametemplatename     => 'global',
                                            labelalphanametemplatename => 'global',
                                            labelprefix                => '',
@@ -1051,7 +1051,7 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
       my $datalist = Biber::DataList->new(section                    => $secnum,
                                           type                       => 'entry',
                                           sortingtemplatename        => $globalss,
-                                          sortingnamekeytemplatename    => 'global',
+                                          sortingnamekeytemplatename => 'global',
                                           uniquenametemplatename     => 'global',
                                           labelalphanametemplatename => 'global',
                                           labelprefix                => '',
@@ -1104,7 +1104,7 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
     my $datalist = Biber::DataList->new(section => 99999,
                                         sortingtemplatename => Biber::Config->getblxoption(undef, 'sortingtemplatename'),
                                         sortingnamekeytemplatename => 'global',
-                                        uniquenametemplatename => 'global',
+                                        uniquenametemplatename     => 'global',
                                         labelalphanametemplatename => 'global',
                                         labelprefix => '',
                                         name => Biber::Config->getblxoption(undef, 'sortingtemplatename') . '/global//global/global');
@@ -1149,7 +1149,7 @@ sub process_setup {
     unless ($self->datalists->has_lists_of_type_for_section($secnum, 'entry')) {
       my $datalist = Biber::DataList->new(sortingtemplatename => Biber::Config->getblxoption(undef, 'sortingtemplatename'),
                                           sortingnamekeytemplatename => 'global',
-                                          uniquenametemplatename => 'global',
+                                          uniquenametemplatename     => 'global',
                                           labelalphanametemplatename => 'global',
                                           labelprefix => '',
                                           name => Biber::Config->getblxoption(undef, 'sortingtemplatename') . '/global//global/global');
@@ -1760,6 +1760,12 @@ MAIN:  foreach my $pn ($dmh->{namelistsall}->@*) {
       # per-name uniquenametemplatename
       if (defined($n->get_uniquenametemplatename)) {
         $untname = $n->get_uniquenametemplatename;
+      }
+
+      # Die if no uniquenametemplate found as this results in an infinite loop
+      # in the disambiguation code
+      unless (Biber::Config->getblxoption(undef, 'uniquenametemplate')->{$untname}) {
+        biber_error("No uniquenametemplate called '$untname' found, cannot continue.");
       }
 
       # per-name uniquename
