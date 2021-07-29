@@ -540,6 +540,11 @@ sub strip_nonamestring {
     if (fc($nnopt->{name}) eq fc($fieldname)) {
       push $restrings->@*, $nnopt->{value};
     }
+        elsif (my $set = $DATAFIELD_SETS{lc($nnopt->{name})} ) {
+      if (first {fc($_) eq fc($fieldname)} $set->@*) {
+        push $restrings->@*, $nnopt->{value};
+      }
+    }
   }
 
   # If no nonamestring to do, just return string

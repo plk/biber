@@ -1799,7 +1799,11 @@ The value of the \opt{nonamestring} option can only be set in the config
 file and not on the command line. \opt{nonamestring} allows you to ignore
 parts of a name field when generating hashes and uniquename information.
 This is done using Perl regular expressions which specify what to ignore in
-a field. You can specify as many patterns as you like for a specific name field.
+a field. You can specify as many patterns as you like for a specific name
+field. Datasource field sets defined using \cmd{DeclareDatafieldSet} in
+\biblatex are also recognised as valid values, see \cmd{DeclareNosort}
+above. However, only sets of name list fields are valid for this command as
+it only applies to name fields.
 
 For example, this option can be used to ignore square brackets when authors
 are given in variations like «D[onald] Knuth» as well as «Donald Knuth»:
