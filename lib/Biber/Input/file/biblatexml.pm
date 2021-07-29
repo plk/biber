@@ -1202,7 +1202,7 @@ sub _name {
   my $xdmi = Biber::Config->getoption('xdatamarker');
   my $xnsi = Biber::Config->getoption('xnamesep');
 
-  my $names = new Biber::Entry::Names;
+  my $names = Biber::Entry::Names->new('type' => $f);
 
   # per-namelist options
   foreach my $nlo (keys $CONFIG_SCOPEOPT_BIBLATEX{NAMELIST}->%*) {

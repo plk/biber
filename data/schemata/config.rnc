@@ -81,6 +81,13 @@ start =
         attribute value { text }
       }+
     }? &
+    # nonamestring specification
+    element nonamestring     {
+      element option {
+        attribute name { text } &
+        attribute value { text }
+      }+
+    }? &
     element nostdmacros          { "0" | "1" }? &
     element onlylog              { "0" | "1" }? &
     element others_string        { text }? &

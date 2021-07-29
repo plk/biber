@@ -638,6 +638,22 @@
           </oneOrMore>
         </element>
       </optional>
+      <optional>
+        <!-- nonamestring specification -->
+        <element name="bcf:nonamestrings">
+          <oneOrMore>
+            <element name="bcf:nonamestring">
+              <attribute name="field">
+                <data type="string"/>
+              </attribute>
+              <attribute name="value">
+                <data type="string"/>
+              </attribute>
+              <empty/>
+            </element>
+          </oneOrMore>
+        </element>
+      </optional>
       <zeroOrMore>
         <!-- Transliteration specification(s) -->
         <ref name="translit"/>

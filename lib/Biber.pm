@@ -446,6 +446,7 @@ sub parse_ctrlfile {
                                                            qr/\Asortingtemplate\z/,
                                                            qr/\Aper_datasource\z/,
                                                            qr/\Anosort\z/,
+                                                           qr/\Anonamestring\z/,
                                                            qr/\Amember\z/,
                                                            qr/\Anoinit\z/,
                                                            qr/\Anolabel\z/,
@@ -716,6 +717,16 @@ sub parse_ctrlfile {
   }
   # There is a default so don't set this option if nothing is in the .bcf
   Biber::Config->setoption('nosort', $nosort) if $nosort;
+
+  # NONAMESTRING
+  # Make the data structure look like the biber config file structure
+  # "field" and "value" are forced to arrays for other elements so we extract
+  # the first element here as they will always be only length=1
+  my $nonamestring;
+  foreach my $ns ($bcfxml->{nonamestrings}{nonamestring}->@*) {
+    push $nonamestring->@*, {name => $ns->{field}[0], value => $ns->{value}[0]};
+  }
+  Biber::Config->setoption('nonamestring', $nonamestring) if $nonamestring;
 
   # UNIQUENAME TEMPLATE
   my $unts;
@@ -1867,8 +1878,8 @@ MAIN:  foreach my $pn ($dmh->{namelistsall}->@*) {
       # of the sub are used
       $namedis->{$nlid}{$nid} = {nameun        => $nameun,
                                  namelistul    => $ul,
-                                 namestring    => $namestring,
-                                 namestrings   => $namestrings,
+                                 namestring    => strip_nonamestring($namestring, $nl->get_type),
+                                 namestrings   => [map {strip_nonamestring($_, $nl->get_type)} $namestrings->@*],
                                  namedisschema => $namedisschema};
     }
   }
@@ -4316,6 +4327,14 @@ sub preprocess_options {
     foreach my $nsopt ($nosort->@*) {
       my $re = $nsopt->{value};
       $nsopt->{value} = qr/$re/;
+    }
+  }
+
+  # nonamestring - compile regexps
+  if (my $nonamestring = Biber::Config->getoption('nonamestring')) {
+    foreach my $nnopt ($nonamestring->@*) {
+      my $re = $nnopt->{value};
+      $nnopt->{value} = qr/$re/;
     }
   }
 

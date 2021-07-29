@@ -261,6 +261,14 @@ start =
         empty
       }+
     }?,
+    # nonamestring specification
+    element bcf:nonamestrings {
+      element bcf:nonamestring {
+        attribute field { xsd:string },
+        attribute value { xsd:string },
+        empty
+      }+
+    }?,
     # Transliteration specification(s)
     translit*,
     # Uniquename template

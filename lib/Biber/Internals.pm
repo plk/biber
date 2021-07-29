@@ -86,7 +86,7 @@ sub _getfullhash {
   foreach my $n ($names->names->@*) {
     foreach my $nt (@nps) {# list type so returns list
       if (my $np = $n->get_namepart($nt)) {
-        $hashkey .= $np;
+        $hashkey .= strip_nonamestring($np, $names->get_type);
       }
     }
   }

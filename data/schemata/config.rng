@@ -259,6 +259,19 @@
           </element>
         </optional>
         <optional>
+          <!-- nonamestring specification -->
+          <element name="nonamestring">
+            <oneOrMore>
+              <element name="option">
+                <interleave>
+                  <attribute name="name"/>
+                  <attribute name="value"/>
+                </interleave>
+              </element>
+            </oneOrMore>
+          </element>
+        </optional>
+        <optional>
           <element name="nostdmacros">
             <choice>
               <value>0</value>

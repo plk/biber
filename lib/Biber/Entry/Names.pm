@@ -16,6 +16,7 @@ my $logger = Log::Log4perl::get_logger('main');
 # by the option scope in the .bcf
 __PACKAGE__->mk_accessors(qw (
                               id
+                              type
                             ));
 
 =encoding utf-8
