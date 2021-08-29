@@ -802,7 +802,7 @@ sub resolve_xdata {
               if ($xdatum->{xdataposition} eq '*') { # insert all positions from XDATA field
                 my $bibentries = $section->bibentries;
                 my $be = $bibentries->entry($xdatum->{xdataentries}[0]);
-                $self->get_field($reffield)->splice_names($xdataentry->get_field($xdatafield), $refposition);
+                $self->get_field($reffield)->splice($xdataentry->get_field($xdatafield), $refposition);
                 if ($logger->is_debug()) { # performance tune
                   $logger->debug("Inserting at position $refposition in name field '$reffield' in entry '$entry_key' via XDATA");
                 }

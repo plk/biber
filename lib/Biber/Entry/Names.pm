@@ -107,14 +107,14 @@ sub replace_name {
   return;
 }
 
-=head2 splice_names
+=head2 splice
 
-    Splice a list (ref) of names into Biber::Entry::Names object at a
-    position (1-based) with a provided Biber::Entry::Names object
+    Splice a Biber::Entry::Names object into a Biber::Entry::Names object at a
+    position (1-based)
 
 =cut
 
-sub splice_names {
+sub splice {
   my ($self, $names, $position) = @_;
   splice($self->{namelist}->@*, $position-1, 1, $names->{namelist}->@*);
   # now re-index all names in list
