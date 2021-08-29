@@ -19,7 +19,7 @@ use Unicode::UCD qw(num);
 
 =head1 NAME
 
-Biber::DataModel
+Biber::DataModel - Biber::DataModel objects
 
 
 =cut
@@ -333,7 +333,7 @@ sub new {
   # Mapping of sorting fields to Sort::Key sort data types which are not 'str'
   $self->{sortdataschema} = sub {
     my $f = shift;
-    if (first {$f eq $_} ('citeorder', $self->{helpers}{integers}->@*)) {
+    if (first {$f eq $_} ('citeorder', 'citecount', $self->{helpers}{integers}->@*)) {
       return 'int';
     }
     else {

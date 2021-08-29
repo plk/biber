@@ -8,20 +8,20 @@ use DateTime::TimeZone;
 use DateTime::Format::Builder;
 use DateTime::Calendar::Julian;
 use Unicode::UCD qw(num);
+use Biber::Constants;
 
 =encoding utf-8
 
 =head1 NAME
 
-Biber::Date::Format
+Biber::Date::Format - Biber::Date::Format objects
 
 =head2 Description
 
-  Implements ISO8601-2:2016 Extended Format and also allows detection of
+  Implements ISO8601-2 Extended Format and also allows detection of
   missing month/year.
 
 =cut
-
 
 # Needed as a reset of class information between parses as this isn't reset
 # by a new parse_datetime
@@ -30,7 +30,7 @@ sub init {
   delete $self->{missing};
   delete $self->{approximate};
   delete $self->{uncertain};
-  delete $self->{season};
+  delete $self->{yeardivision};
   delete $self->{julian};
   # map of Unicode numeric script dateparts to arabic as DateTime needs arabic
   delete $self->{scriptmap};
@@ -63,9 +63,9 @@ sub uncertain {
   return $self->{uncertain};
 }
 
-sub season {
+sub yeardivision {
   my $self = shift;
-  return $self->{season};
+  return $self->{yeardivision};
 }
 
 sub resolvescript {
@@ -128,12 +128,7 @@ sub _pre {
   delete $p{self}{missing};
   delete $p{self}{approximate};
   delete $p{self}{uncertain};
-  delete $p{self}{season};
-
-  my %seasons = ( 21 => 'spring',
-                  22 => 'summer',
-                  23 => 'autumn',
-                  24 => 'winter' );
+  delete $p{self}{yeardivision};
 
   # Convert and save information on non-arabic numerics
   foreach my $num ($p{input} =~ m/\d+/g) {
@@ -174,9 +169,9 @@ sub _pre {
     $p{parsed}{time_zone} = $1;
   }
 
-  # ISO8601-2:2016 4.7 (season)
-  if ($p{input} =~ s/^(-?\d{4})-(2[1234])$/$1/) {
-    $p{self}{season} = $seasons{$2};
+  # ISO8601-2:2016 4.8 (yeardivisions)
+  if ($p{input} =~ s/^(-?\d{4})-([23]\d|4[01])$/$1/) {
+    $p{self}{yeardivision} = $Biber::Constants::YEARDIVISIONS{$2};
   }
 
   return $p{input};

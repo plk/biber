@@ -52,22 +52,36 @@
 
 % Granular XDATA tests
 @BOOK{gxd1,
-  AUTHOR = {Simon Smith and xdata=gxd2-author}, % Picks name 1, no position
+  AUTHOR = {Simon Smith and xdata=gxd2-author-1}, % Picks name 1
   EDITOR = {xdata=gxd2-editor-2},
   TITLE  = {xdata=gxd4-title},
-  LOCATION = {xdata=gxd3-location and B}, % Picks list element 1, no position
+  LOCATION = {xdata=gxd3-location-1 and B}, % Picks list element 1
   PUBLISHER = {xdata=gxd2},             % malformed (unspecified field)- output literally
   NOTE = {xdata=gxd2-note},             % malformed (missing field) - output literally
   TRANSLATOR = {xdata=gxd2-author-3},   % malformed (bad position) - output literally
   LISTA = {xdata=gxd3-location-5},      % malformed (bad position) - output literally
   ADDENDUM = {xdata=missing},           % malformed (missing entry) - output literally
   ORGANIZATION = {xdata=gxd2-author-3}, % malformed (incompatible types)- output literally
-  NAMEA = {xdata=lxd1-author}           % malformed (not an XDATA ref)- output literally
+  NAMEA = {xdata=lxd1-author-1}         % malformed (not an XDATA ref)- output literally
+}
+
+@BOOK{gxd1g,
+  AUTHOR = {Simon Smith and xdata=gxd2-author}, % Picks all names, no position
+  EDITOR = {xdata=gxd2-editor-2},
+  TITLE  = {xdata=gxd4-title},
+  LOCATION = {xdata=gxd3-location and B}, % Picks all list elements
+  PUBLISHER = {xdata=gxd2},             % malformed (unspecified field)- output literally
+  NOTE = {xdata=gxd2-note},             % malformed (missing field) - output literally
+  TRANSLATOR = {xdata=gxd2-author-3},   % malformed (bad position) - output literally
+  LISTA = {xdata=gxd3-location-5},      % malformed (bad position) - output literally
+  ADDENDUM = {xdata=missing},           % malformed (missing entry) - output literally
+  ORGANIZATION = {xdata=gxd2-author-3}, % malformed (incompatible types)- output literally
+  NAMEA = {xdata=lxd1-author-1}         % malformed (not an XDATA ref)- output literally
 }
 
 @XDATA{gxd2,
   AUTHOR = {Brian Bloom and Arthur Anderson},
-  EDITOR = {William Wool and xdata=gxd4-editor}
+  EDITOR = {William Wool and xdata=gxd4-editor-1}
 }
 
 @XDATA{gxd3,
@@ -81,16 +95,16 @@
 
 % Granular loop detection XDATA test
 @BOOK{lxd1,
-  AUTHOR = {Simon Smith and xdata=lxd1:loop-author},
-  EDITOR = {xdata=lxd3:loop-editor}
+  AUTHOR = {Simon Smith and xdata=lxd1:loop-author-1},
+  EDITOR = {xdata=lxd3:loop-editor-1}
 }
 
 @XDATA{lxd1:loop,
-  AUTHOR = {xdata=lxd2:loop-author}
+  AUTHOR = {xdata=lxd2:loop-author-1}
 }
 
 @XDATA{lxd2:loop,
-  AUTHOR = {xdata=lxd1:loop-author}
+  AUTHOR = {xdata=lxd1:loop-author-1}
 }
 
 @XDATA{lxd3:loop,

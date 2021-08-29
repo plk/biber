@@ -89,6 +89,19 @@ sub replace_item {
   return;
 }
 
+=head2 splice
+
+    Splice a Biber::Entry::List into a Biber::Entry::List object at a
+    position (1-based)
+
+=cut
+
+sub splice {
+  my ($self, $listobj, $position) = @_;
+  splice($self->{items}->@*, $position-1, 1, $listobj->{items}->@*);
+  return;
+}
+
 =head2 set_moreitems
 
     Sets a flag to say that we had a "and others" in the data

@@ -915,6 +915,7 @@ my $season1 = q|    \entry{season1}{inproceedings}{}
       \field{season}{spring}
       \field[default][en-us]{title}{Title}
       \field{year}{2003}
+      \field{yeardivision}{spring}
       \field{dateera}{ce}
       \field{eventdateera}{ce}
     \endentry

@@ -28,7 +28,7 @@ __PACKAGE__->mk_accessors(qw (
 
 =head1 NAME
 
-Biber::Entry
+Biber::Entry - Biber::Entry objects
 
 =head2 new
 
@@ -184,7 +184,7 @@ sub clone {
     $df =~ s/date$//;
     foreach my $dsf ('dateunspecified', 'datesplit', 'datejulian',
                      'enddatejulian', 'dateapproximate', 'enddateapproximate',
-                     'dateuncertain', 'enddateuncertain', 'season', 'endseason',
+                     'dateuncertain', 'enddateuncertain', 'yeardivision', 'yeardivision',
                      'era', 'endera') {
       if (my $ds = $self->{derivedfields}{"$df$dsf"}) {
         $new->{derivedfields}{"$df$dsf"} = $ds;
@@ -271,7 +271,7 @@ sub add_xdata_ref {
                                     # XDATA field lang
                                     xdatalang => $xdl,
                                     # XDATA field position, 1-based
-                                    xdataposition => $xfp//1};
+                                    xdataposition => $xfp//'*'};
       return 1;
     }
     else {
@@ -674,8 +674,8 @@ sub field_exists {
 
 sub date_fields_exist {
   my ($self, $field) = @_;
-  my $t = $field =~ s/(?:end)?(?:year|month|day|hour|minute|second|season|timezone)$//r;
-  foreach my $dp ('year', 'month', 'day', 'hour', 'minute', 'second', 'season', 'timezone') {
+  my $t = $field =~ s/(?:end)?(?:year|month|day|hour|minute|second|yeardivision|timezone)$//r;
+  foreach my $dp ('year', 'month', 'day', 'hour', 'minute', 'second', 'yeardivision', 'timezone') {
     if (exists($self->{datafields}{"$t$dp"}) or exists($self->{datafields}{"${t}end$dp"})) {
       return 1;
     }
@@ -691,8 +691,8 @@ sub date_fields_exist {
 
 sub delete_date_fields {
   my ($self, $field) = @_;
-  my $t = $field =~ s/(?:end)?(?:year|month|day|hour|minute|second|season|timezone)$//r;
-  foreach my $dp ('year', 'month', 'day', 'hour', 'minute', 'second', 'season', 'timezone') {
+  my $t = $field =~ s/(?:end)?(?:year|month|day|hour|minute|second|yeardivision|timezone)$//r;
+  foreach my $dp ('year', 'month', 'day', 'hour', 'minute', 'second', 'yeardivision', 'timezone') {
     delete($self->{datafields}{"$t$dp"});
     delete($self->{datafields}{"${t}end$dp"});
   }
@@ -902,9 +902,7 @@ sub resolve_xdata {
   # ]
 
   foreach my $xdatum ($xdata->@*) {
-
     foreach my $xdref ($xdatum->{xdataentries}->@*) {
-
       unless (my $xdataentry = $section->bibentry($xdref)) {
         biber_warn("Entry '$entry_key' references XDATA entry '$xdref' which does not exist, not resolving (section $secnum)", $self);
         $xdatum->{resolved} = 0;
@@ -968,28 +966,50 @@ sub resolve_xdata {
             }
 
             # Name lists
-            if ($dm->field_is_type('list', 'name', $reffield)){
-              unless ($xdataentry->get_field($xdatafield, $xdataform, $xdatalang)->is_nth_name($xdataposition)) {
-                biber_warn("Field '$reffield/$refform/$reflang' in entry '$entry_key' references field '$xdatafield/$xdataform/$xdatalang' position $xdataposition in entry '$xdref' and this position does not exist, not resolving (section $secnum)", $self);
-                $xdatum->{resolved} = 0;
-                next;
+            if ($dm->field_is_type('list', 'name', $reffield)) {
+              if ($xdatum->{xdataposition} eq '*') { # insert all positions from XDATA field
+                my $bibentries = $section->bibentries;
+                my $be = $bibentries->entry($xdatum->{xdataentries}[0]);
+                $self->get_field($reffield, $refform, $reflang)->splice($xdataentry->get_field($xdatafield, $xdataform, $xdatalang), $refposition);
+                if ($logger->is_debug()) { # performance tune
+                  $logger->debug("Inserting at position $refposition in name field '$reffield' in entry '$entry_key' via XDATA");
+                }
               }
-              $self->get_field($reffield, $refform, $reflang)->replace_name($xdataentry->get_field($xdatafield, $xdataform, $xdatalang)->nth_name($xdataposition), $refposition);
-              if ($logger->is_debug()) { # performance tune
-                $logger->debug("Setting position $refposition in name field '$reffield/$refform/$reflang' in entry '$entry_key' via XDATA");
+              else {
+                unless ($xdataentry->get_field($xdatafield, $xdataform, $xdatalang)->is_nth_name($xdataposition)) {
+                  biber_warn("Field '$reffield' in entry '$entry_key' references field '$xdatafield' position $xdataposition in entry '$xdref' and this position does not exist, not resolving (section $secnum)", $self);
+                  $xdatum->{resolved} = 0;
+                  next;
+                }
+
+                $self->get_field($reffield, $refform, $reflang)->replace_name($xdataentry->get_field($xdatafield, $xdataform, $xdatalang)->nth_name($xdataposition), $refposition);
+
+                if ($logger->is_debug()) { # performance tune
+                  $logger->debug("Setting position $refposition in name field '$reffield' in entry '$entry_key' via XDATA");
+                }
               }
             }
             # Non-name lists
             elsif ($dm->field_is_fieldtype('list', $reffield)) {
-              unless ($xdataentry->get_field($xdatafield, $xdataform, $xdatalang)->nth_item($xdataposition)) {
-                biber_warn("Field '$reffield/$refform/$reflang' in entry '$entry_key' references field '$xdatafield/$xdataform/$xdatalang' position $xdataposition in entry '$xdref' and this position does not exist, not resolving (section $secnum)", $self);
-                $xdatum->{resolved} = 0;
-                next;
+              if ($xdatum->{xdataposition} eq '*') { # insert all positions from XDATA field
+                my $bibentries = $section->bibentries;
+                my $be = $bibentries->entry($xdatum->{xdataentries}[0]);
+                $self->get_field($reffield, $refform, $reflang)->splice($xdataentry->get_field($xdatafield, $xdataform, $xdatalang), $refposition);
+                if ($logger->is_debug()) { # performance tune
+                  $logger->debug("Inserting at position $refposition in list field '$reffield' in entry '$entry_key' via XDATA");
+                }
               }
+              else {
 
-              $self->get_field($reffield, $refform, $reflang)->replace_item($xdataentry->get_field($xdatafield, $xdataform, $xdatalang)->nth_item($refposition), $refposition);
-              if ($logger->is_debug()) { # performance tune
-                $logger->debug("Setting position $refposition in list field '$reffield/$refform/$reflang' in entry '$entry_key' via XDATA");
+                unless ($xdataentry->get_field($xdatafield, $xdataform, $xdatalang)->nth_item($xdataposition)) {
+                  biber_warn("Field '$reffield' in entry '$entry_key' references field '$xdatafield' position $xdataposition in entry '$xdref' and this position does not exist, not resolving (section $secnum)", $self);
+                  $xdatum->{resolved} = 0;
+                  next;
+                }
+                $self->get_field($reffield, $refform, $reflang)->replace_item($xdataentry->get_field($xdatafield, $xdataform, $xdatalang)->nth_item($refposition), $refposition);
+                if ($logger->is_debug()) { # performance tune
+                  $logger->debug("Setting position $refposition in list field '$reffield' in entry '$entry_key' via XDATA");
+                }
               }
             }
             # Non-list
@@ -1171,7 +1191,7 @@ sub inherit_from {
       next if first {$_ eq $datefield} @removed_fields;
       foreach my $dsf ('dateunspecified', 'datesplit', 'datejulian',
                        'enddatejulian', 'dateapproximate', 'enddateapproximate',
-                       'dateuncertain', 'enddateuncertain', 'season', 'endseason',
+                       'dateuncertain', 'enddateuncertain', 'yeardivision', 'endyeardivision',
                        'era', 'endera') {
         if (my $ds = $parent->{derivedfields}{"$df$dsf"}) {
           # Set unless the child has the *date datepart, otherwise you can

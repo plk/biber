@@ -687,14 +687,14 @@ an example config file which displays the \biber\ defaults:
 \end{lstlisting}
 
 \noindent In practice, the most commonly used options will be set via
-\biblatex\ macros in your document and automatically passed to \biber\
-via the \verb+.bcf+ file. Certain options apply only to \biber\ and can
-only be set in the config file, particularly the more complex
-options. Most options are simple tags. Exceptions are the
-\opt{nosort}, \opt{noinit} and \opt{collate-options} options which are slightly
-more complex and can have sub-options as shown. A much more complex
-option is the \opt{sourcemap} option which is not set by default and
-which is described in section \ref{ref:map}.
+\biblatex\ macros in your document and automatically passed to \biber\ via
+the \verb+.bcf+ file. Certain options apply only to \biber\ and can only be
+set in the config file, particularly the more complex options. Most options
+are simple tags. Exceptions are the \opt{nosort}, \opt{nonamestring},
+\opt{noinit} and \opt{collate-options} options which are slightly more
+complex and can have sub-options as shown. A much more complex option is
+the \opt{sourcemap} option which is not set by default and which is
+described in section \ref{ref:map}.
 
 \subsubsection{The \texttt{output-format} option}\label{ref:of}
 
@@ -825,6 +825,7 @@ examples. A \opt{map} element looks like this:
              +\textcolor{blue}{map\_field\_target\_lang="\textcolor{red}{target-field-lang}"}+
              +\textcolor{blue}{map\_match="\textcolor{red}{match-regexp}"}+
              +\textcolor{blue}{map\_nomatch="\textcolor{red}{match-regexp}"}+
+             +\textcolor{blue}{map\_matches="\textcolor{red}{match-list}"}+
              +\textcolor{blue}{map\_replace="\textcolor{red}{replace-regexp}"}+
              +\textcolor{blue}{map\_field\_set="\textcolor{red}{set-field}"}+
              +\textcolor{blue}{map\_field\_value="\textcolor{red}{set-value}"}+
@@ -941,8 +942,19 @@ datasource entry being processed. A \opt{map\_step} works like this:
   step if the \textcolor{red}{\texttt{source-field}} matches
   \textcolor{blue}{\texttt{map\_match}}. You can use parentheses as usual
   to capture parts of the match and can then use these later when setting a \textcolor{blue}{\texttt{map\_field\_value}}.
+\item \textcolor{blue}{\texttt{map\_matchi}} is the same as
+  \textcolor{blue}{\texttt{map\_match}} but case insensitive
 \item \textcolor{blue}{\texttt{map\_notmatch}} is the same as
   \textcolor{blue}{\texttt{map\_match}} but with the logic reversed.
+\item \textcolor{blue}{\texttt{map\_notmatchi}} is the same as
+  \textcolor{blue}{\texttt{map\_notmatch}} but case insensitive.
+\item If \textcolor{blue}{\texttt{map\_matches}} is defined, it should be a
+  comma-separated list of literal strings which are replaced by
+  corresponding locations in a comma-separated list provided in
+  \textcolor{blue}{\texttt{map\_replace}}. The lists must have the same
+  number of elements or the step will be skipped.
+\item \textcolor{blue}{\texttt{map\_matchesi}} is the same as
+  \textcolor{blue}{\texttt{map\_matches}} but case insensitive.
 \item Perform a Perl regular expression match and replace on the value of
   \textcolor{red}{\texttt{source-field}} if
   \textcolor{blue}{\texttt{map\_match}} and
@@ -1172,9 +1184,6 @@ be completely ignored. \bigskip \minisec{Other datasource types} For
 datasources other than \BibTeX, (e.g. \verb+biblatexml+), the source
 entrytypes and fields are usually very differently modelled and named.
 
-\noindent Here we use a loop to apply a regular expression replacement to
-several fields:
-
 \begin{lstlisting}[language=xml,escapechar=;,mathescape=true]
 <maps datatype="bibtex" level="user">
   <map map_overwrite="1" map_foreach="author,editor,translator">
@@ -1182,6 +1191,25 @@ several fields:
   </map>
 </maps>
 \end{lstlisting}
+
+\noindent In this example, a loop is used to apply a regular expression
+replacement to several fields.
+
+\begin{lstlisting}[language=xml,escapechar=;,mathescape=true]
+<maps datatype="bibtex" level="user">
+  <map>
+    <map_step map_field_source="NOTE" map_matchesi="test1,test2,Test3" map_replace="1,3,2"/>
+  </map>
+</maps>
+\end{lstlisting}
+
+\noindent Here, the \bibfield{NOTE} field content «test1» will be replaced
+with «1», «test2» will be replaced with «3» and «test3» will be replaced
+with «2». This sort of map is useful for sorting fields which have a
+defined order for some application but where the order is neither
+alphabetical or numeric, for example, courts in legal references. A map
+could create a new field with a defined alpha or numeric sort order which a
+custom sorting template then uses to sort in the order required.
 
 \bigskip
 \subsubsection{The \texttt{inheritance} option}\label{inheritance}
@@ -1746,6 +1774,32 @@ beginning of a \bibfield{TITLE} field when sorting, you could add this to your
 
 \noindent \textbf{Note:} \opt{nosort} can be specified for most fields but
 not for things like dates and special fields as that wouldn't make much sense.
+\bigskip
+\subsubsection{The \texttt{nonamestring} option}\label{nonamestring}
+
+The value of the \opt{nonamestring} option can only be set in the config
+file and not on the command line. \opt{nonamestring} allows you to ignore
+parts of a name field when generating hashes and uniquename information.
+This is done using Perl regular expressions which specify what to ignore in
+a field. You can specify as many patterns as you like for a specific name
+field. Datasource field sets defined using \cmd{DeclareDatafieldSet} in
+\biblatex are also recognised as valid values, see \cmd{DeclareNosort}
+above. However, only sets of name list fields are valid for this command as
+it only applies to name fields.
+
+For example, this option can be used to ignore square brackets when authors
+are given in variations like «D[onald] Knuth» as well as «Donald Knuth»:
+
+\begin{lstlisting}[language=xml]
+<nonamestring>
+  <option name="author" value="[[]]"/>
+</nonamestring>
+\end{lstlisting}
+
+This will strip square brackets from author names so that the name variants
+will count as the same for hashing and uniqueness generation. It will often
+be useful to apply the same regular expression in \opt{nonamstring} for
+consistency. You may specify any number of \opt{option} elements.
 \bigskip
 \subsubsection{The \texttt{collate-options} option}
 
@@ -2857,7 +2911,7 @@ of \biber\ version and locale of course but there should be no errors
 or warnings).
 
 \begin{verbatim}
-INFO - This is Biber 2.14
+INFO - This is Biber 2.17
 INFO - Logfile is 'test.blg'
 INFO - BibLaTeX control file 'test.bcf' validates
 INFO - Converted BibLaTeX control file 'test.bcf' to 'test.bcf.html'

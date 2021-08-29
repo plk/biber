@@ -18,9 +18,9 @@ my $ANN = {};
 
 =encoding utf-8
 
-=head1 ANNOTATION
+=head1 NAME
 
-Biber::Entry::Annotation
+Biber::Entry::Annotation - Biber::Annotation objects
 
 =head2 set_annotation
 

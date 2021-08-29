@@ -16,13 +16,14 @@ my $logger = Log::Log4perl::get_logger('main');
 # by the option scope in the .bcf
 __PACKAGE__->mk_accessors(qw (
                               id
+                              type
                             ));
 
 =encoding utf-8
 
 =head1 NAME
 
-Biber::Entry::Names
+Biber::Entry::Names - Biber::Entry::Names objects
 
 =head2 new
 
@@ -101,6 +102,23 @@ sub replace_name {
   my ($self, $name_obj, $position) = @_;
   $name_obj->set_index($position-1);
   $self->{namelist}[$position-1] = $name_obj;
+  return;
+}
+
+=head2 splice
+
+    Splice a Biber::Entry::Names object into a Biber::Entry::Names object at a
+    position (1-based)
+
+=cut
+
+sub splice {
+  my ($self, $names, $position) = @_;
+  splice($self->{namelist}->@*, $position-1, 1, $names->{namelist}->@*);
+  # now re-index all names in list
+  foreach (my $i=0;$i<$#{$self->{namelist}};$i++) {
+    $self->{namelist}->[$i]->set_index($i);
+  }
   return;
 }
 

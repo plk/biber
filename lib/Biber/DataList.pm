@@ -13,7 +13,7 @@ use List::Util qw( first );
 
 =head1 NAME
 
-Biber::DataList
+Biber::DataList - Biber::DataLists objects
 
 =head2 new
 
@@ -128,8 +128,6 @@ sub set_entryfield {
   return;
 }
 
-
-
 =head2 add_uniquenamecount
 
     Add a name to the list of name contexts which have the name in it
@@ -188,29 +186,32 @@ sub add_uniquelistcount {
 =cut
 
 sub add_uniquelistcount_final {
-  my ($self, $namelist) = @_;
+  my ($self, $namelist, $labelyear) = @_;
   $self->{state}{uniquelistcount}{global}{final}{join("\x{10FFFD}", $namelist->@*)}++;
+  if ($labelyear) { # uniquelist=minyear
+    $self->{state}{uniquelistcount}{global}{final}{$labelyear}{join("\x{10FFFD}", $namelist->@*)}++;
+  }
   return;
 }
 
 
 =head2 add_uniquelistcount_minyear
 
-    Increment the count for a list and year to the data for a name
+    Increment the count for a list and year for a name
     Used to track uniquelist = minyear
 
 =cut
 
 sub add_uniquelistcount_minyear {
   my ($self, $minyearnamelist, $year, $namelist) = @_;
-  # Allow year a default in case labelname is undef
+  # Allow year a default in case labelyear is undef
   $self->{state}{uniquelistcount}{minyear}{join("\x{10FFFD}", $minyearnamelist->@*)}{$year // '0'}{join("\x{10FFFD}", $namelist->@*)}++;
   return;
 }
 
 =head2 get_uniquelistcount_minyear
 
-    Get the count for a list and year to the data for a name
+    Get the count for a list and year for a name
     Used to track uniquelist = minyear
 
 =cut
@@ -568,7 +569,9 @@ sub get_uniquelist {
 =cut
 
 sub set_uniquelist {
-  my ($self, $nl, $namelist, $maxcn, $mincn) = @_;
+  # $nl is the namelist object
+  # $namelist is the extracted string concatenation from $nl which forms the tracking key
+  my ($self, $nl, $namelist, $labelyear, $ul, $maxcn, $mincn) = @_;
   my $nlid = $nl->get_id;
   my $uniquelist = $self->count_uniquelist($namelist);
   my $num_names = $nl->count;
@@ -617,7 +620,7 @@ sub set_uniquelist {
   # this is an elsif because for final count > 1, we are setting uniquelist and don't
   # want to mess about with it any more
   elsif ($num_names > $uniquelist and
-         not $self->namelist_differs_nth($namelist, $uniquelist)) {
+         not $self->namelist_differs_nth($namelist, $uniquelist, $ul, $labelyear)) {
     # If there are more names than uniquelist, reduce it by one unless
     # there is another list which differs at uniquelist and is at least as long
     # so we get:
@@ -2057,13 +2060,21 @@ sub namelist_differs_index {
 
 sub namelist_differs_nth {
   my $self = shift;
-  my ($list, $n) = @_;
+  my ($list, $n, $ul, $labelyear) = @_;
   my @list_one = $list->@*;
   # Loop over all final lists, looking for ones which match:
   # * up to n - 1
   # * differ at $n
   # * are at least as long
-  foreach my $l_s (keys $self->{state}{uniquelistcount}{global}{final}->%*) {
+
+  # uniquelist=minyear should only disambiguate from entries with the
+  # same labelyear
+  my $unames = $self->{state}{uniquelistcount}{global}{final};
+  if ($ul eq 'minyear') {
+    $unames = $self->{state}{uniquelistcount}{global}{final}{$labelyear};
+  }
+
+  foreach my $l_s (keys $unames->%*) {
     my @l = split("\x{10FFFD}", $l_s);
     # If list is shorter than the list we are checking, it's irrelevant
     next if $#l < $list->$#*;

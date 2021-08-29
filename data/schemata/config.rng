@@ -259,6 +259,19 @@
           </element>
         </optional>
         <optional>
+          <!-- nonamestring specification -->
+          <element name="nonamestring">
+            <oneOrMore>
+              <element name="option">
+                <interleave>
+                  <attribute name="name"/>
+                  <attribute name="value"/>
+                </interleave>
+              </element>
+            </oneOrMore>
+          </element>
+        </optional>
+        <optional>
           <element name="nostdmacros">
             <choice>
               <value>0</value>
@@ -1253,6 +1266,20 @@
               </optional>
               <optional>
                 <attribute name="map_matchi">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                  </data>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="map_matches">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                  </data>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="map_matchesi">
                   <data type="string">
                     <param name="minLength">1</param>
                   </data>

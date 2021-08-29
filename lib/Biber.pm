@@ -304,12 +304,12 @@ sub tool_mode_setup {
 
   my $datalists = new Biber::DataLists;
   my $seclist = Biber::DataList->new(section => 99999,
-                                     sortingtemplatename => 'tool',
+                                     sortingtemplatename        => 'tool',
                                      sortingnamekeytemplatename => 'global',
-                                     uniquenametemplatename => 'global',
+                                     uniquenametemplatename     => 'global',
                                      labelalphanametemplatename => 'global',
-                                     labelprefix => '',
-                                     name => 'tool/global//global/global');
+                                     labelprefix                => '',
+                                     name                       => 'tool/global//global/global');
   $seclist->set_type('entry');
   # Locale just needs a default here - there is no biblatex option to take it from
   Biber::Config->setblxoption(undef, 'sortlocale', 'en_US');
@@ -422,7 +422,7 @@ sub parse_ctrlfile {
   my $bcfxml = XML::LibXML::Simple::XMLin($buf,
                                           'ForceContent' => 1,
                                           'ForceArray' => [
-                                                           qr/\A(?:no)*citekey\z/,
+                                                           qr/\A(?:no)*citekey(?:count)?\z/,
                                                            qr/\Aoption\z/,
                                                            qr/\Aoptions\z/,
                                                            qr/\Avalue\z/,
@@ -446,6 +446,7 @@ sub parse_ctrlfile {
                                                            qr/\Asortingtemplate\z/,
                                                            qr/\Aper_datasource\z/,
                                                            qr/\Anosort\z/,
+                                                           qr/\Anonamestring\z/,
                                                            qr/\Amember\z/,
                                                            qr/\Anoinit\z/,
                                                            qr/\Anolabel\z/,
@@ -717,6 +718,16 @@ sub parse_ctrlfile {
   # There is a default so don't set this option if nothing is in the .bcf
   Biber::Config->setoption('nosort', $nosort) if $nosort;
 
+  # NONAMESTRING
+  # Make the data structure look like the biber config file structure
+  # "field" and "value" are forced to arrays for other elements so we extract
+  # the first element here as they will always be only length=1
+  my $nonamestring;
+  foreach my $ns ($bcfxml->{nonamestrings}{nonamestring}->@*) {
+    push $nonamestring->@*, {name => $ns->{field}[0], value => $ns->{value}[0]};
+  }
+  Biber::Config->setoption('nonamestring', $nonamestring) if $nonamestring;
+
   # UNIQUENAME TEMPLATE
   my $unts;
   my $checkbase = 0;
@@ -915,7 +926,7 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
         }
         $key_flag = 1; # There is at least one key, used for error reporting below
       }
-      elsif (not Biber::Config->get_seenkey($key, $secnum)) {
+      elsif (not $bib_section->get_seenkey($key)) {
         # Dynamic set definition
         # Save dynamic key -> member keys mapping for set entry auto creation later
         # We still need to find these even if allkeys is set
@@ -937,9 +948,15 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
           Biber::Config->set_keyorder($secnum, $key, $keyc->{order});
           push @keys, $key;
           $key_flag = 1; # There is at least one key, used for error reporting below
-          Biber::Config->incr_seenkey($key, $secnum);
         }
       }
+      $bib_section->incr_seenkey($key); # always increment
+    }
+
+    # Get citecounts if present
+    foreach my $keycount ($section->{citekeycount}->@*) {
+      my $key = NFD($keycount->{content}); # Key is already UTF-8 - it comes from UTF-8 XML
+      $bib_section->set_citecount($key, $keycount->{count});
     }
 
     if ($bib_section->is_allkeys) {
@@ -982,7 +999,7 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
                              name                       => $lname,
                              type                       => $ltype,
                              sortingtemplatename        => $lstn,
-                             sortingnamekeytemplatename    => $lsnksn,
+                             sortingnamekeytemplatename => $lsnksn,
                              labelprefix                => $lpn,
                              uniquenametemplatename     => $luntn,
                              labelalphanametemplatename => $llantn)) {
@@ -994,7 +1011,7 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
 
     my $datalist = Biber::DataList->new(section                    => $lsection,
                                         sortingtemplatename        => $lstn,
-                                        sortingnamekeytemplatename    => $lsnksn,
+                                        sortingnamekeytemplatename => $lsnksn,
                                         uniquenametemplatename     => $luntn,
                                         labelalphanametemplatename => $llantn,
                                         labelprefix                => $lpn,
@@ -1037,7 +1054,7 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
     unless ($datalists->get_lists_by_attrs(section                    => $secnum,
                                            type                       => 'entry',
                                            sortingtemplatename        => $globalss,
-                                           sortingnamekeytemplatename    => 'global',
+                                           sortingnamekeytemplatename => 'global',
                                            uniquenametemplatename     => 'global',
                                            labelalphanametemplatename => 'global',
                                            labelprefix                => '',
@@ -1045,7 +1062,7 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
       my $datalist = Biber::DataList->new(section                    => $secnum,
                                           type                       => 'entry',
                                           sortingtemplatename        => $globalss,
-                                          sortingnamekeytemplatename    => 'global',
+                                          sortingnamekeytemplatename => 'global',
                                           uniquenametemplatename     => 'global',
                                           labelalphanametemplatename => 'global',
                                           labelprefix                => '',
@@ -1098,7 +1115,7 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
     my $datalist = Biber::DataList->new(section => 99999,
                                         sortingtemplatename => Biber::Config->getblxoption(undef, 'sortingtemplatename'),
                                         sortingnamekeytemplatename => 'global',
-                                        uniquenametemplatename => 'global',
+                                        uniquenametemplatename     => 'global',
                                         labelalphanametemplatename => 'global',
                                         labelprefix => '',
                                         name => Biber::Config->getblxoption(undef, 'sortingtemplatename') . '/global//global/global');
@@ -1143,7 +1160,7 @@ sub process_setup {
     unless ($self->datalists->has_lists_of_type_for_section($secnum, 'entry')) {
       my $datalist = Biber::DataList->new(sortingtemplatename => Biber::Config->getblxoption(undef, 'sortingtemplatename'),
                                           sortingnamekeytemplatename => 'global',
-                                          uniquenametemplatename => 'global',
+                                          uniquenametemplatename     => 'global',
                                           labelalphanametemplatename => 'global',
                                           labelprefix => '',
                                           name => Biber::Config->getblxoption(undef, 'sortingtemplatename') . '/global//global/global');
@@ -1549,7 +1566,9 @@ sub calculate_interentry {
       if ($logger->is_debug()) {# performance tune
         $logger->debug("Incrementing crossrefkey count for entry '$refkey' via entry '$citekey'");
       }
-      Biber::Config->incr_crossrefkey($refkey);
+
+      # Don't increment if the crossref doesn't exist
+      Biber::Config->incr_crossrefkey($refkey) if $section->bibentry($refkey);
     }
 
     if (my $refkey = $be->get_field('xref')) {
@@ -1773,6 +1792,12 @@ sub process_namedis {
         $untname = $n->get_uniquenametemplatename;
       }
 
+      # Die if no uniquenametemplate found as this results in an infinite loop
+      # in the disambiguation code
+      unless (Biber::Config->getblxoption(undef, 'uniquenametemplate')->{$untname}) {
+        biber_error("No uniquenametemplate called '$untname' found, cannot continue.");
+      }
+
       # per-name uniquename
       if (defined($n->get_uniquename)) {
         $un = $n->get_uniquename;
@@ -1872,8 +1897,8 @@ sub process_namedis {
       # of the sub are used
       $namedis->{$nlid}{$nid} = {nameun        => $nameun,
                                  namelistul    => $ul,
-                                 namestring    => $namestring,
-                                 namestrings   => $namestrings,
+                                 namestring    => strip_nonamestring($namestring, $nl->get_type),
+                                 namestrings   => [map {strip_nonamestring($_, $nl->get_type)} $namestrings->@*],
                                  namedisschema => $namedisschema};
 
     }
@@ -3706,6 +3731,7 @@ sub create_uniquelist_info {
     next unless defined($lni); # only care about labelname
     my $nl = $be->get_field($lni, $lnf, $lnl);
     my $nlid = $nl->get_id;
+    my $labelyear = $be->get_field('labelyear');
 
     my $ul = Biber::Config->getblxoption($secnum, 'uniquelist', $bee, $citekey);
 
@@ -3759,7 +3785,7 @@ sub create_uniquelist_info {
 
       $dlist->add_uniquelistcount($namelist);
     }
-    # We need to know the list uniqueness counts for the whole list seperately otherwise
+    # We need to know the list uniqueness counts for the whole list separately otherwise
     # we will falsely "disambiguate" identical name lists from each other by setting
     # uniquelist to the full list because every part of each list will have more than
     # one count. We therefore need to distinguish counts which are of the final, complete
@@ -3767,10 +3793,15 @@ sub create_uniquelist_info {
     # two or more identical name lists), we don't expand them at all as there is no point.
     $dlist->add_uniquelistcount_final($namelist);
 
+    # uniquelist=minyear needs tracking only of namelists in same labelyear
+    if ($ul eq 'minyear') {
+      $dlist->add_uniquelistcount_final($namelist, $labelyear);
+    }
+
     # Add count for uniquelist=minyear
     unless (Compare($ulminyear_namelist, [])) {
       $dlist->add_uniquelistcount_minyear($ulminyear_namelist,
-                                          $be->get_field('labelyear'),
+                                          $labelyear,
                                           $namelist);
     }
   }
@@ -3794,6 +3825,7 @@ sub generate_uniquelist {
  MAIN: foreach my $citekey ( $section->get_citekeys ) {
     my $be = $bibentries->entry($citekey);
     my $bee = $be->get_field('entrytype');
+    my $labelyear = $be->get_field('labelyear');
     my $maxcn = Biber::Config->getblxoption($secnum, 'maxcitenames', $bee, $citekey);
     my $mincn = Biber::Config->getblxoption($secnum, 'mincitenames', $bee, $citekey);
     my ($lni, $lnf, $lnl) = $be->get_labelname_info->@*;
@@ -3843,7 +3875,7 @@ sub generate_uniquelist {
       if ($ul eq 'minyear' and
           $num_names > $maxcn and
           $n->get_index <= $mincn and
-          $dlist->get_uniquelistcount_minyear($namelist, $be->get_field('labelyear')) == 1) {
+          $dlist->get_uniquelistcount_minyear($namelist, $labelyear) == 1) {
         if ($logger->is_trace()) { # performance tune
           $logger->trace("Not setting uniquelist=minyear for '$citekey'");
         }
@@ -3861,7 +3893,7 @@ sub generate_uniquelist {
     if ($logger->is_trace()) {  # performance tune
       $logger->trace("Setting uniquelist for '$citekey' using " . join(',', $namelist->@*));
     }
-    $dlist->set_uniquelist($nl, $namelist, $maxcn, $mincn);
+    $dlist->set_uniquelist($nl, $namelist, $labelyear, $ul, $maxcn, $mincn);
   }
   return;
 }
@@ -4342,6 +4374,14 @@ sub preprocess_options {
     }
   }
 
+  # nonamestring - compile regexps
+  if (my $nonamestring = Biber::Config->getoption('nonamestring')) {
+    foreach my $nnopt ($nonamestring->@*) {
+      my $re = $nnopt->{value};
+      $nnopt->{value} = qr/$re/;
+    }
+  }
+
   # nolabel - compile regexps
   if (my $nolabel = Biber::Config->getoption('nolabel')) {
     foreach my $nsopt ($nolabel->@*) {
@@ -4570,10 +4610,10 @@ sub fetch_data {
 
     # Slightly different message for tool mode
     if (Biber::Config->getoption('tool')) {
-      $logger->info("Looking for $datatype format $type '$name'");
+      $logger->info("Looking for $datatype $type '$name'");
     }
     else {
-      $logger->info("Looking for $datatype format $type '$name' for section $secnum");
+      $logger->info("Looking for $datatype $type '$name' for section $secnum");
     }
 
     @remaining_keys = "${package}::extract_entries"->(locate_data_file($name), $encoding, \@remaining_keys);

@@ -7,7 +7,7 @@ use warnings;
 
 =head1 NAME
 
-Biber::Sections
+Biber::Sections - Biber::Sections objects
 
 =head2 new
 

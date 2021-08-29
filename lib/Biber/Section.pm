@@ -11,7 +11,7 @@ use List::Util qw( first );
 
 =head1 NAME
 
-Biber::Section
+Biber::Section - Biber::Section objects
 
 =head2 new
 
@@ -45,7 +45,67 @@ sub new {
   $self->{citekey_alias} = {};
   $self->{static_keys} = {};
   $self->{state} = {};
+  $self->{seenkeys} = {};
+  $self->{citecount} = {};
   return $self;
+}
+
+
+=head1 citecount
+
+=head2 set_citecount
+
+    Set the citecount of a key. This comes from biblatex via the
+    citecounter option and reflects the actual number of citations using
+    this key, taking into account things like \citeauthor etc. which are not
+    real citations.
+
+=cut
+
+sub set_citecount {
+  my ($self, $key, $count) = @_;
+  $self->{citecount}{$key} = $count;
+}
+
+=head2 get_keycount
+
+    Get the citecount of a key. This comes from biblatex via the
+    citecounter option and reflects the actual number of citations using
+    this key, taking into account things like \citeauthor etc. which are not
+    real citations. A zero or undef value needs to be less than 0 which does
+    not fail if() checks - required for the delicate sorting dispatch logic
+
+=cut
+
+sub get_citecount {
+  my ($self, $key) = @_;
+  return $self->{citecount}{$key} || -1;
+}
+
+=head1 seenkey
+
+=head2 get_seenkey
+
+    Get the count of a key
+
+=cut
+
+sub get_seenkey {
+  my ($self, $key) = @_;
+  return $self->{seenkeys}{$key};
+}
+
+
+=head2 incr_seenkey
+
+    Increment the seen count of a key
+
+=cut
+
+sub incr_seenkey {
+  my ($self, $key) = @_;
+  $self->{seenkeys}{$key}++;
+  return;
 }
 
 =head2 reset_caches

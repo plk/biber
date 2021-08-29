@@ -264,6 +264,14 @@ start =
         empty
       }+
     }?,
+    # nonamestring specification
+    element bcf:nonamestrings {
+      element bcf:nonamestring {
+        attribute field { xsd:string },
+        attribute value { xsd:string },
+        empty
+      }+
+    }?,
     # Transliteration specification(s)
     translit*,
     # Uniquename template
@@ -514,6 +522,10 @@ secspec =
       ( attribute order { xsd:integer },
         attribute nocite { xsd:boolean }?,
         xsd:string {minLength="1"} )
+    }*,
+    element bcf:citekeycount {
+      attribute count { xsd:integer },
+      xsd:string {minLength="1"}
     }*
   }
 
@@ -888,6 +900,8 @@ map =
           attribute map_appendstrict { "1" }?,
           attribute map_final { "1" }?,
           attribute map_match { xsd:string {minLength="1"} }?,
+          attribute map_matches { xsd:string {minLength="1"} }?,
+          attribute map_matchesi { xsd:string {minLength="1"} }?,
           attribute map_matchi { xsd:string {minLength="1"} }?,
           attribute map_notmatch { xsd:string {minLength="1"} }?,
           attribute map_notmatchi { xsd:string {minLength="1"} }?,

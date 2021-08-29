@@ -645,6 +645,22 @@
           </oneOrMore>
         </element>
       </optional>
+      <optional>
+        <!-- nonamestring specification -->
+        <element name="bcf:nonamestrings">
+          <oneOrMore>
+            <element name="bcf:nonamestring">
+              <attribute name="field">
+                <data type="string"/>
+              </attribute>
+              <attribute name="value">
+                <data type="string"/>
+              </attribute>
+              <empty/>
+            </element>
+          </oneOrMore>
+        </element>
+      </optional>
       <zeroOrMore>
         <!-- Transliteration specification(s) -->
         <ref name="translit"/>
@@ -1297,6 +1313,16 @@
               </data>
             </group>
           </choice>
+        </element>
+      </zeroOrMore>
+      <zeroOrMore>
+        <element name="bcf:citekeycount">
+          <attribute name="count">
+            <data type="integer"/>
+          </attribute>
+          <data type="string">
+            <param name="minLength">1</param>
+          </data>
         </element>
       </zeroOrMore>
     </element>
@@ -2220,6 +2246,20 @@
               </optional>
               <optional>
                 <attribute name="map_match">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                  </data>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="map_matches">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                  </data>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="map_matchesi">
                   <data type="string">
                     <param name="minLength">1</param>
                   </data>

@@ -516,6 +516,46 @@ sub strip_nosort {
   return $string;
 }
 
+=head2 strip_nonamestring
+
+  Removes elements which are not to be used in certain name-related operations like:
+
+  * fullhash generation
+  * uniquename generation
+
+ from a name
+
+=cut
+
+sub strip_nonamestring {
+  no autovivification;
+  my ($string, $fieldname) = @_;
+  return '' unless $string; # Sanitise missing data
+  return $string unless my $nonamestring = Biber::Config->getoption('nonamestring');
+
+  my $restrings;
+
+  foreach my $nnopt ($nonamestring->@*) {
+    # Specific fieldnames override sets
+    if (fc($nnopt->{name}) eq fc($fieldname)) {
+      push $restrings->@*, $nnopt->{value};
+    }
+        elsif (my $set = $DATAFIELD_SETS{lc($nnopt->{name})} ) {
+      if (first {fc($_) eq fc($fieldname)} $set->@*) {
+        push $restrings->@*, $nnopt->{value};
+      }
+    }
+  }
+
+  # If no nonamestring to do, just return string
+  return $string unless $restrings;
+
+  foreach my $re ($restrings->@*) {
+    $string =~ s/$re//gxms;
+  }
+  return $string;
+}
+
 =head2 normalise_string_label
 
 Remove some things from a string for label generation. Don't strip \p{Dash}
@@ -767,7 +807,7 @@ sub ucinit {
 
     defined($thing->method($arg)->method)
 
-    wheras:
+    whereas:
 
     is_undef($thing->method($arg)->method)
 

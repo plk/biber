@@ -100,7 +100,7 @@ my $ssd1 = [
   { spec => "str", str => 1 },
   { spec => "str", str => 1 },
   { spec => "str", str => 1 },
-  { spec => "str", str => 1 },
+  { spec => "int", int => 1 },
   { spec => "str", str => 1 },
   { spec => "int", int => 1 },
 ];

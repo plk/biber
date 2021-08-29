@@ -753,6 +753,29 @@ sub create_entry {
                 $caseinsensitive = 1;
               }
 
+              my $caseinsensitives = 0;
+              my $mis;
+              # Case insensitive matches are normal matches with a special flag
+              if ($mis = $step->{map_matchesi}) {
+                $step->{map_matches} = $mis;
+                $caseinsensitives = 1;
+              }
+
+              if (my $ms = $step->{map_matches}) {
+                my @ms = split(/\s*,\s*/,$ms);
+                my @rs = split(/\s*,\s*/,$step->{map_replace});
+                unless (scalar(@ms) == scalar(@rs)) {
+                  $logger->debug("Source mapping (type=$level, key=$etargetkey): Different number of fixed matches vs replaces, skipping ...");
+                  next;
+                }
+                for (my $i = 0; $i <= $#ms; $i++) {
+                  if (($caseinsensitives and fc($last_fieldval) eq fc($ms[$i]))
+                      or ($last_fieldval eq $ms[$i])) {
+                    $etarget->set(encode('UTF-8', NFC($fieldsource)), $rs[$i]);
+                  }
+                }
+              }
+
               # map fields to targets
               if (my $m = maploopreplace($step->{map_match}, $maploop)) {
                 if (defined($step->{map_replace})) { # replace can be null
@@ -1232,7 +1255,7 @@ sub _name {
   my $xnamesep = Biber::Config->getoption('xnamesep');
   my $bee = $bibentry->get_field('entrytype');
 
-  my $names = Biber::Entry::Names->new();
+  my $names = Biber::Entry::Names->new('type' => $fc);
 
   my @tmp = Text::BibTeX::split_list(NFC($value),# Unicode NFC boundary
                                      Biber::Config->getoption('namesep'),
@@ -1342,7 +1365,7 @@ sub _datetime {
 
   if (defined($sdate)) { # Start date was successfully parsed
     if ($sdate) { # Start date is an object not "0"
-      # Did this entry get its datepart fields from splitting an EDTF date field?
+      # Did this entry get its datepart fields from splitting an IS08601 date field?
       $bibentry->set_field("${datetype}datesplit", 1);
 
       # Some warnings for overwriting YEAR and MONTH from DATE
@@ -1371,9 +1394,9 @@ sub _datetime {
       $bibentry->set_field($datetype . 'dateuncertain', 1) if $CONFIG_DATE_PARSERS{start}->uncertain;
       $bibentry->set_field($datetype . 'enddateuncertain', 1) if $CONFIG_DATE_PARSERS{end}->uncertain;
 
-      # Save start season date information
-      if (my $season = $CONFIG_DATE_PARSERS{start}->season) {
-        $bibentry->set_field($datetype . 'season', $season);
+      # Save start yeardivision date information
+      if (my $yeardivision = $CONFIG_DATE_PARSERS{start}->yeardivision) {
+        $bibentry->set_field($datetype . 'yeardivision', $yeardivision);
       }
 
       unless ($CONFIG_DATE_PARSERS{start}->missing('year')) {
@@ -1430,9 +1453,10 @@ sub _datetime {
                                    $CONFIG_DATE_PARSERS{end}->resolvescript($edate->day))
             unless $CONFIG_DATE_PARSERS{end}->missing('day');
 
-          # Save end season date information
-          if (my $season = $CONFIG_DATE_PARSERS{end}->season) {
-            $bibentry->set_field($datetype . 'endseason', $season);
+          # Save end yeardivision date information
+          if (my $yeardivision = $CONFIG_DATE_PARSERS{end}->yeardivision) {
+            $bibentry->set_field($datetype . 'endyeardivision', $yeardivision);
+            $bibentry->set_field($datetype . 'endseaason', $yeardivision); # legacy
           }
 
           # must be an hour if there is a time but could be 00 so use defined()

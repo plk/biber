@@ -561,7 +561,13 @@ sub create_output_section {
 sub bibfield {
   my ($field, $value, $max_field_len) = @_;
   my $acc;
-  $acc .= ' ' x Biber::Config->getoption('output_indent');
+  my $inum = Biber::Config->getoption('output_indent');
+  my $ichar = ' ';
+  if (substr($inum, -1) eq 't') {
+    $ichar = "\t";
+    $inum = substr($inum, 0, length($inum)-1);
+  }
+  $acc .= $ichar x $inum;
   $acc .= $field;
   $acc .= ' ' x ($max_field_len - Unicode::GCString->new($field)->length) if $max_field_len;
   $acc .= ' = ';
@@ -666,10 +672,27 @@ sub construct_datetime {
   my $overrideem;
   my $overrided;
 
-  my %seasons = ( 'spring' => 21,
-                  'summer' => 22,
-                  'autumn' => 23,
-                  'winter' => 24 );
+  my %yeardivisions = ( 'spring'  => 21,
+                        'summer'  => 22,
+                        'autumn'  => 23,
+                        'winter'  => 24,
+                        'springN' => 25,
+                        'summerN' => 26,
+                        'autumnN' => 27,
+                        'winterN' => 28,
+                        'springS' => 29,
+                        'summerS' => 30,
+                        'autumnS' => 31,
+                        'WinterS' => 32,
+                        'Q1'      => 33,
+                        'Q2'      => 34,
+                        'Q3'      => 35,
+                        'Q4'      => 36,
+                        'QD1'     => 37,
+                        'QD2'     => 38,
+                        'QD3'     => 39,
+                        'S1'      => 40,
+                        'S2'      => 41 );
 
   # Did the date fields come from interpreting an ISO8601-2:2016 unspecified date?
   # If so, do the reverse of Biber::Utils::parse_date_unspecified()
@@ -710,12 +733,12 @@ sub construct_datetime {
     }
   }
 
-  # Seasons derived from EDTF dates
-  if (my $s = $be->get_field("${d}season")) {
-    $overridem = $seasons{$s};
+  # Seasons derived from ISO 8601 dates
+  if (my $s = $be->get_field("${d}yeardivision")) {
+    $overridem = $yeardivisions{$s};
   }
-  if (my $s = $be->get_field("${d}endseason")) {
-    $overrideem = $seasons{$s};
+  if (my $s = $be->get_field("${d}endyeardivision")) {
+    $overrideem = $yeardivisions{$s};
   }
 
   # date exists if there is a start year

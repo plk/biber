@@ -181,11 +181,11 @@ my $gxd1 = q|@BOOK{gxd1,
 |;
 
 my $gxd2 = q|@BOOK{gxd1,
-  AUTHOR       = {family:Smith, given:Simon and xdata:gxd2+author},
+  AUTHOR       = {family:Smith, given:Simon and xdata:gxd2+author+1},
   EDITOR       = {xdata:gxd2+editor+2},
   TRANSLATOR   = {xdata:gxd2+author+3},
   LISTA        = {xdata:gxd3+location+5},
-  LOCATION     = {xdata:gxd3+location and B},
+  LOCATION     = {xdata:gxd3+location+1 and B},
   ORGANIZATION = {xdata:gxd2+author+3},
   PUBLISHER    = {xdata:gxd2},
   ADDENDUM     = {xdata:missing},

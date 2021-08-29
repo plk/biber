@@ -40,9 +40,9 @@ declare ucpath="/usr/local/lib/perl5/site_perl/Unicode/Collate"
 
 # Unicode::Collate has a site_perl version so has been updated since this
 # perl was released
-if [ -d "/usr/local/perl/lib/site_perl/${perlv}/x86_64-linux-thread-multi/Unicode/Collate" ]
+if [ -d "/usr/local/perl/lib/site_perl/${perlv}/aarch64-linux-thread-multi/Unicode/Collate" ]
 then
-  ucpath="/usr/local/perl/lib/site_perl/${perlv}/x86_64-linux-thread-multi/Unicode/Collate"
+  ucpath="/usr/local/perl/lib/site_perl/${perlv}/aarch64-linux-thread-multi/Unicode/Collate"
 fi
 
 echo "USING Unicode::Collate at: ${ucpath}"

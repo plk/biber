@@ -86,7 +86,7 @@ sub _getfullhash {
   foreach my $n ($names->names->@*) {
     foreach my $nt (@nps) {# list type so returns list
       if (my $np = $n->get_namepart($nt)) {
-        $hashkey .= $np;
+        $hashkey .= strip_nonamestring($np, $names->get_type);
       }
     }
   }
@@ -1037,6 +1037,7 @@ my %internal_dispatch_sorting = (
                                  'editorbtype'     =>  [\&_sort_editort,       ['editorbtype']],
                                  'editorctype'     =>  [\&_sort_editort,       ['editorctype']],
                                  'citeorder'       =>  [\&_sort_citeorder,     []],
+                                 'citecount'       =>  [\&_sort_citecount,     []],
                                  'labelalpha'      =>  [\&_sort_labelalpha,    []],
                                  'labelname'       =>  [\&_sort_labelname,     []],
                                  'labeltitle'      =>  [\&_sort_labeltitle,    []],
@@ -1248,6 +1249,11 @@ sub _sort_citeorder {
   else {
     return $ko || '';
   }
+}
+
+sub _sort_citecount {
+  my ($self, $citekey, $secnum, $section, $be, $dlist, $sortelementattributes) = @_;
+  return $section->get_citecount($citekey) // '';
 }
 
 sub _sort_integer {
