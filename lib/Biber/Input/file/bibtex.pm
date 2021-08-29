@@ -1255,7 +1255,7 @@ sub _name {
   my $xnamesep = Biber::Config->getoption('xnamesep');
   my $bee = $bibentry->get_field('entrytype');
 
-  my $names = Biber::Entry::Names->new('type' => $fc);
+  my $names = Biber::Entry::Names->new();
 
   my @tmp = Text::BibTeX::split_list(NFC($value),# Unicode NFC boundary
                                      Biber::Config->getoption('namesep'),
