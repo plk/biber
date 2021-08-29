@@ -428,9 +428,9 @@ $section = $biber->sections->get_section(0);
 $bibentries = $section->bibentries;
 $main = $biber->datalists->get_list('nty/global//global/global');
 
-eq_or_diff($main->get_uniquelist($bibentries->entry('ulmy1')->get_field($bibentries->entry('ulmy1')->get_labelname_info)->get_id), '2', 'Uniquelist minyear - 1');
-eq_or_diff($main->get_uniquelist($bibentries->entry('ulmy2')->get_field($bibentries->entry('ulmy2')->get_labelname_info)->get_id), '2', 'Uniquelist minyear - 2');
-ok(is_undef($main->get_uniquelist($bibentries->entry('ulmy3')->get_field($bibentries->entry('ulmy3')->get_labelname_info)->get_id)), 'Uniquelist minyear - 3');
+eq_or_diff($main->get_uniquelist($bibentries->entry('ulmy1')->get_field($bibentries->entry('ulmy1')->get_labelname_info->[0])->get_id), '2', 'Uniquelist minyear - 1');
+eq_or_diff($main->get_uniquelist($bibentries->entry('ulmy2')->get_field($bibentries->entry('ulmy2')->get_labelname_info->[0])->get_id), '2', 'Uniquelist minyear - 2');
+ok(is_undef($main->get_uniquelist($bibentries->entry('ulmy3')->get_field($bibentries->entry('ulmy3')->get_labelname_info->[0])->get_id)), 'Uniquelist minyear - 3');
 
 #############################################################################
 

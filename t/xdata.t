@@ -269,7 +269,7 @@ my $gxd1 = q|    \entry{gxd1}{book}{}
 |;
 
 my $gxd1g = q|    \entry{gxd1g}{book}{}
-      \name{author}{3}{}{%
+      \name[default][en-us]{author}{3}{}{%
         {{hash=6b3653417f9aa97391c37cff5dfda7fa}{%
            family={Smith},
            familyi={S\bibinitperiod},
@@ -286,63 +286,111 @@ my $gxd1g = q|    \entry{gxd1g}{book}{}
            given={Arthur},
            giveni={A\bibinitperiod}}}%
       }
-      \name{editor}{1}{}{%
+      \namepartms{author}{1}{%
+          familydefaulten-us={Smith},
+          familydefaulten-usi={S\bibinitperiod},
+          givendefaulten-us={Simon},
+          givendefaulten-usi={S\bibinitperiod}
+      }
+      \namepartms{author}{2}{%
+          familydefaulten-us={Bloom},
+          familydefaulten-usi={B\bibinitperiod},
+          givendefaulten-us={Brian},
+          givendefaulten-usi={B\bibinitperiod}
+      }
+      \namepartms{author}{3}{%
+          familydefaulten-us={Anderson},
+          familydefaulten-usi={A\bibinitperiod},
+          givendefaulten-us={Arthur},
+          givendefaulten-usi={A\bibinitperiod}
+      }
+      \name[default][en-us]{editor}{1}{}{%
         {{hash=6238b302317c6baeba56035f2c4998c9}{%
            family={Frill},
            familyi={F\bibinitperiod},
            given={Frank},
            giveni={F\bibinitperiod}}}%
       }
-      \name{namea}{1}{}{%
+      \namepartms{editor}{1}{%
+          familydefaulten-us={Frill},
+          familydefaulten-usi={F\bibinitperiod},
+          givendefaulten-us={Frank},
+          givendefaulten-usi={F\bibinitperiod}
+      }
+      \name[default][en-us]{namea}{1}{}{%
         {{hash=d41d8cd98f00b204e9800998ecf8427e}{%
 }}%
       }
-      \name{translator}{1}{}{%
+      \namepartms{namea}{1}{%
+
+      }
+      \name[default][en-us]{translator}{1}{}{%
         {{hash=d41d8cd98f00b204e9800998ecf8427e}{%
 }}%
       }
-      \list{lista}{1}{%
+      \namepartms{translator}{1}{%
+
+      }
+      \list[default][en-us]{lista}{1}{%
         {xdata=gxd3-location-5}%
       }
-      \list{location}{3}{%
+      \listitemms{lista}{1}{%
+        defaulten-us={xdata=gxd3-location-5}
+      }
+      \list[default][en-us]{location}{3}{%
         {A}%
         {C}%
         {B}%
       }
-      \list{organization}{1}{%
+      \listitemms{location}{1}{%
+        defaulten-us={A}
+      }
+      \listitemms{location}{2}{%
+        defaulten-us={C}
+      }
+      \listitemms{location}{3}{%
+        defaulten-us={B}
+      }
+      \list[default][en-us]{organization}{1}{%
         {xdata=gxd2-author-3}%
       }
-      \list{publisher}{1}{%
+      \listitemms{organization}{1}{%
+        defaulten-us={xdata=gxd2-author-3}
+      }
+      \list[default][en-us]{publisher}{1}{%
         {xdata=gxd2}%
+      }
+      \listitemms{publisher}{1}{%
+        defaulten-us={xdata=gxd2}
       }
       \strng{namehash}{9fd3d5e0bec66ae3baacf58cf747485a}
       \strng{fullhash}{9fd3d5e0bec66ae3baacf58cf747485a}
       \strng{bibnamehash}{9fd3d5e0bec66ae3baacf58cf747485a}
-      \strng{authorbibnamehash}{9fd3d5e0bec66ae3baacf58cf747485a}
-      \strng{authornamehash}{9fd3d5e0bec66ae3baacf58cf747485a}
-      \strng{authorfullhash}{9fd3d5e0bec66ae3baacf58cf747485a}
-      \strng{editorbibnamehash}{6238b302317c6baeba56035f2c4998c9}
-      \strng{editornamehash}{6238b302317c6baeba56035f2c4998c9}
-      \strng{editorfullhash}{6238b302317c6baeba56035f2c4998c9}
-      \strng{nameabibnamehash}{d41d8cd98f00b204e9800998ecf8427e}
-      \strng{nameanamehash}{d41d8cd98f00b204e9800998ecf8427e}
-      \strng{nameafullhash}{d41d8cd98f00b204e9800998ecf8427e}
-      \strng{translatorbibnamehash}{d41d8cd98f00b204e9800998ecf8427e}
-      \strng{translatornamehash}{d41d8cd98f00b204e9800998ecf8427e}
-      \strng{translatorfullhash}{d41d8cd98f00b204e9800998ecf8427e}
+      \strng{authordefaulten-usbibnamehash}{9fd3d5e0bec66ae3baacf58cf747485a}
+      \strng{authordefaulten-usnamehash}{9fd3d5e0bec66ae3baacf58cf747485a}
+      \strng{authordefaulten-usfullhash}{9fd3d5e0bec66ae3baacf58cf747485a}
+      \strng{editordefaulten-usbibnamehash}{6238b302317c6baeba56035f2c4998c9}
+      \strng{editordefaulten-usnamehash}{6238b302317c6baeba56035f2c4998c9}
+      \strng{editordefaulten-usfullhash}{6238b302317c6baeba56035f2c4998c9}
+      \strng{nameadefaulten-usbibnamehash}{d41d8cd98f00b204e9800998ecf8427e}
+      \strng{nameadefaulten-usnamehash}{d41d8cd98f00b204e9800998ecf8427e}
+      \strng{nameadefaulten-usfullhash}{d41d8cd98f00b204e9800998ecf8427e}
+      \strng{translatordefaulten-usbibnamehash}{d41d8cd98f00b204e9800998ecf8427e}
+      \strng{translatordefaulten-usnamehash}{d41d8cd98f00b204e9800998ecf8427e}
+      \strng{translatordefaulten-usfullhash}{d41d8cd98f00b204e9800998ecf8427e}
       \field{sortinit}{S}
-      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{addendum}{xdata=missing}
-      \field{note}{xdata=gxd2-note}
-      \field{title}{Some title}
-      \warn{\item Entry 'gxd1g' has XDATA reference from field 'publisher' that contains no source field (section 0)}
-      \warn{\item Entry 'gxd1g' has XDATA reference from field 'addendum' that contains no source field (section 0)}
-      \warn{\item Field 'note' in entry 'gxd1g' references XDATA field 'note' in entry 'gxd2' and this field does not exist, not resolving (section 0)}
-      \warn{\item Field 'translator' in entry 'gxd1g' references field 'author' position 3 in entry 'gxd2' and this position does not exist, not resolving (section 0)}
-      \warn{\item Field 'lista' in entry 'gxd1g' references field 'location' position 5 in entry 'gxd3' and this position does not exist, not resolving (section 0)}
-      \warn{\item Field 'organization' in entry 'gxd1g' which xdata references field 'author' in entry 'gxd2' are not the same types, not resolving (section 0)}
+      \strng{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \fieldmssource{labelname}{author}{default}{en-us}
+      \fieldmssource{labeltitle}{title}{default}{en-us}
+      \field[default][en-us]{addendum}{xdata=missing}
+      \field[default][en-us]{note}{xdata=gxd2-note}
+      \field[default][en-us]{title}{Some title}
+      \warn{\item Entry 'gxd1g' has XDATA reference from field 'publisher/default/en-us' that contains no source field (section 0)}
+      \warn{\item Entry 'gxd1g' has XDATA reference from field 'addendum/default/en-us' that contains no source field (section 0)}
+      \warn{\item Field 'note/default/en-us' in entry 'gxd1g' references XDATA field 'note/default/en-us' in entry 'gxd2' and this field does not exist, not resolving (section 0)}
+      \warn{\item Field 'translator/default/en-us' in entry 'gxd1g' references field 'author/default/en-us' position 3 in entry 'gxd2' and this position does not exist, not resolving (section 0)}
+      \warn{\item Field 'lista/default/en-us' in entry 'gxd1g' references field 'location/default/en-us' position 5 in entry 'gxd3' and this position does not exist, not resolving (section 0)}
+      \warn{\item Field 'organization/default/en-us' in entry 'gxd1g' which xdata references field 'author/default/en-us' in entry 'gxd2' are not the same types, not resolving (section 0)}
       \warn{\item Entry 'gxd1g' references XDATA entry 'lxd1' which is not an XDATA entry, not resolving (section 0)}
     \endentry
 |;

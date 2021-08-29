@@ -290,7 +290,6 @@ my $kck4 = q|    \entry{caf8e34be07426ae7127c1b4829983c1}{inbook}{skipbib=true,s
       \fieldmssource{labeltitle}{title}{default}{en-us}
       \field{clonesourcekey}{key4}
       \field[default][en-us]{booktitle}{Booktitle}
-      \field{season}{summer}
       \field{shorthand}{RK4}
       \field[default][en-us]{title}{Orig Language Title}
       \field{year}{2011}

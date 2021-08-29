@@ -102,7 +102,7 @@ my $encode1 = q|% $ biblatex auxiliary file $
 |;
 
 my $encode2 = q|% $ biblatex auxiliary file $
-% $ biblatex bbl format version 3.2 $
+% $ biblatex bbl format version 4.0 $
 % Do not modify the above lines!
 %
 % This is an auxiliary file used by the 'biblatex' package.
@@ -171,7 +171,7 @@ my $encode2 = q|% $ biblatex auxiliary file $
 |;
 
 my $encode3 = q|% $ biblatex auxiliary file $
-% $ biblatex bbl format version 3.2 $
+% $ biblatex bbl format version 4.0 $
 % Do not modify the above lines!
 %
 % This is an auxiliary file used by the 'biblatex' package.
@@ -240,7 +240,7 @@ my $encode3 = q|% $ biblatex auxiliary file $
 |;
 
 my $encode5 = q|% $ biblatex auxiliary file $
-% $ biblatex bbl format version 3.2 $
+% $ biblatex bbl format version 4.0 $
 % Do not modify the above lines!
 %
 % This is an auxiliary file used by the 'biblatex' package.
@@ -309,7 +309,7 @@ my $encode5 = q|% $ biblatex auxiliary file $
 |;
 
 my $encode6 = q|% $ biblatex auxiliary file $
-% $ biblatex bbl format version 3.2 $
+% $ biblatex bbl format version 4.0 $
 % Do not modify the above lines!
 %
 % This is an auxiliary file used by the 'biblatex' package.
@@ -378,7 +378,7 @@ my $encode6 = q|% $ biblatex auxiliary file $
 |;
 
 my $encode7 = q|% $ biblatex auxiliary file $
-% $ biblatex bbl format version 3.2 $
+% $ biblatex bbl format version 4.0 $
 % Do not modify the above lines!
 %
 % This is an auxiliary file used by the 'biblatex' package.

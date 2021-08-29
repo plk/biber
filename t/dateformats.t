@@ -910,9 +910,8 @@ my $season1 = q|    \entry{season1}{inproceedings}{}
       \fieldmssource{labelname}{author}{default}{en-us}
       \fieldmssource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{booktitle}{Book Title}
-      \field{eventseason}{autumn}
       \field{eventyear}{2002}
-      \field{season}{spring}
+      \field{eventyeardivision}{autumn}
       \field[default][en-us]{title}{Title}
       \field{year}{2003}
       \field{yeardivision}{spring}
