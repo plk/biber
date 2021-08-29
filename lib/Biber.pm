@@ -2841,7 +2841,7 @@ sub process_visible_names {
     foreach my $n ($dmh->{namelistsall}->@*) {
       next unless my $nl = $be->get_field($n);
 
-      my $count = $nl->count_names;
+      my $count = $nl->count;
       my $visible_names_cite;
       my $visible_names_bib;
       my $visible_names_sort;
@@ -3425,7 +3425,7 @@ sub create_uniquename_info {
     # would be uniquename = 2 unless even the full name doesn't disambiguate
     # and then it is left at uniquename = 0
 
-    my $num_names = $nl->count_names;
+    my $num_names = $nl->count;
     my $names = $nl->names;
 
     # If name list was truncated in bib with "and others", this overrides maxcitenames
@@ -3578,7 +3578,7 @@ MAIN:  foreach my $citekey ( $section->get_citekeys ) {
     my $maxcn = Biber::Config->getblxoption($secnum, 'maxcitenames', $bee, $citekey);
     my $mincn = Biber::Config->getblxoption($secnum, 'mincitenames', $bee, $citekey);
 
-    my $num_names = $nl->count_names;
+    my $num_names = $nl->count;
     my $names = $nl->names;
     # If name list was truncated in bib with "and others", this overrides maxcitenames
     my $morenames = ($nl->get_morenames) ? 1 : 0;
@@ -3703,7 +3703,7 @@ sub create_uniquelist_info {
       $logger->trace("Generating uniquelist information for '$citekey'");
     }
 
-    my $num_names = $nl->count_names;
+    my $num_names = $nl->count;
     my $namelist = [];
     my $ulminyear_namelist = [];
 
@@ -3803,7 +3803,7 @@ sub generate_uniquelist {
     }
 
     my $namelist = [];
-    my $num_names = $nl->count_names;
+    my $num_names = $nl->count;
 
     foreach my $n ($nl->names->@*) {
       my $nid = $n->get_id;

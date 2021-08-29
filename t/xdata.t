@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 11;
+use Test::More tests => 12;
 use Test::Differences;
 use List::AllUtils qw( first );
 unified_diff;
@@ -198,6 +198,85 @@ my $gxd1 = q|    \entry{gxd1}{book}{}
     \endentry
 |;
 
+my $gxd1g = q|    \entry{gxd1g}{book}{}
+      \name{author}{3}{}{%
+        {{hash=6b3653417f9aa97391c37cff5dfda7fa}{%
+           family={Smith},
+           familyi={S\bibinitperiod},
+           given={Simon},
+           giveni={S\bibinitperiod}}}%
+        {{hash=350a836ae63897de6d88baf1d62dc9f2}{%
+           family={Bloom},
+           familyi={B\bibinitperiod},
+           given={Brian},
+           giveni={B\bibinitperiod}}}%
+        {{hash=7370e41a0804af6d5598ecf557c59841}{%
+           family={Anderson},
+           familyi={A\bibinitperiod},
+           given={Arthur},
+           giveni={A\bibinitperiod}}}%
+      }
+      \name{editor}{1}{}{%
+        {{hash=6238b302317c6baeba56035f2c4998c9}{%
+           family={Frill},
+           familyi={F\bibinitperiod},
+           given={Frank},
+           giveni={F\bibinitperiod}}}%
+      }
+      \name{namea}{1}{}{%
+        {{hash=d41d8cd98f00b204e9800998ecf8427e}{%
+}}%
+      }
+      \name{translator}{1}{}{%
+        {{hash=d41d8cd98f00b204e9800998ecf8427e}{%
+}}%
+      }
+      \list{lista}{1}{%
+        {xdata=gxd3-location-5}%
+      }
+      \list{location}{3}{%
+        {A}%
+        {C}%
+        {B}%
+      }
+      \list{organization}{1}{%
+        {xdata=gxd2-author-3}%
+      }
+      \list{publisher}{1}{%
+        {xdata=gxd2}%
+      }
+      \strng{namehash}{9fd3d5e0bec66ae3baacf58cf747485a}
+      \strng{fullhash}{9fd3d5e0bec66ae3baacf58cf747485a}
+      \strng{bibnamehash}{9fd3d5e0bec66ae3baacf58cf747485a}
+      \strng{authorbibnamehash}{9fd3d5e0bec66ae3baacf58cf747485a}
+      \strng{authornamehash}{9fd3d5e0bec66ae3baacf58cf747485a}
+      \strng{authorfullhash}{9fd3d5e0bec66ae3baacf58cf747485a}
+      \strng{editorbibnamehash}{6238b302317c6baeba56035f2c4998c9}
+      \strng{editornamehash}{6238b302317c6baeba56035f2c4998c9}
+      \strng{editorfullhash}{6238b302317c6baeba56035f2c4998c9}
+      \strng{nameabibnamehash}{d41d8cd98f00b204e9800998ecf8427e}
+      \strng{nameanamehash}{d41d8cd98f00b204e9800998ecf8427e}
+      \strng{nameafullhash}{d41d8cd98f00b204e9800998ecf8427e}
+      \strng{translatorbibnamehash}{d41d8cd98f00b204e9800998ecf8427e}
+      \strng{translatornamehash}{d41d8cd98f00b204e9800998ecf8427e}
+      \strng{translatorfullhash}{d41d8cd98f00b204e9800998ecf8427e}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{addendum}{xdata=missing}
+      \field{note}{xdata=gxd2-note}
+      \field{title}{Some title}
+      \warn{\item Entry 'gxd1g' has XDATA reference from field 'publisher' that contains no source field (section 0)}
+      \warn{\item Entry 'gxd1g' has XDATA reference from field 'addendum' that contains no source field (section 0)}
+      \warn{\item Field 'note' in entry 'gxd1g' references XDATA field 'note' in entry 'gxd2' and this field does not exist, not resolving (section 0)}
+      \warn{\item Field 'translator' in entry 'gxd1g' references field 'author' position 3 in entry 'gxd2' and this position does not exist, not resolving (section 0)}
+      \warn{\item Field 'lista' in entry 'gxd1g' references field 'location' position 5 in entry 'gxd3' and this position does not exist, not resolving (section 0)}
+      \warn{\item Field 'organization' in entry 'gxd1g' which xdata references field 'author' in entry 'gxd2' are not the same types, not resolving (section 0)}
+      \warn{\item Entry 'gxd1g' references XDATA entry 'lxd1' which is not an XDATA entry, not resolving (section 0)}
+    \endentry
+|;
+
 my $bltxgxd1 = q|    \entry{bltxgxd1}{book}{}
       \name{author}{2}{}{%
         {{hash=ecc4a87e596c582a09b19d4ab187d8c2}{%
@@ -270,7 +349,8 @@ eq_or_diff(encode_utf8($out->get_output_entry('xd2', $main)), encode_utf8($xd2),
 eq_or_diff($out->get_output_entry('macmillan', $main), undef, 'xdata test - 3');
 eq_or_diff($out->get_output_entry('macmillan:pub', $main), undef, 'xdata test - 4');
 eq_or_diff($out->get_output_entry('gxd1', $main), $gxd1, 'xdata granular test - 1');
-eq_or_diff($out->get_output_entry('bltxgxd1', $main), $bltxgxd1, 'xdata granular test - 2');
+eq_or_diff($out->get_output_entry('gxd1g', $main), $gxd1g, 'xdata granular test - 2');
+eq_or_diff($out->get_output_entry('bltxgxd1', $main), $bltxgxd1, 'xdata granular test - 3');
 chomp $stderr;
 ok((first {$_ eq "ERROR - Circular XDATA inheritance between 'lxd1:loop'<->'lxd2:loop'"} split("\n",$stderr)), 'Cyclic xdata error check - 1');
 ok((first {$_ eq "ERROR - Circular XDATA inheritance between 'lxd4:loop'<->'lxd4:loop'"} split("\n",$stderr)), 'Cyclic xdata error check - 2');

@@ -557,7 +557,7 @@ my $bltxml2 = q|<?xml version="1.0" encoding="UTF-8"?>
         <bltx:namepart type="family" initial="S">Smith</bltx:namepart>
         <bltx:namepart type="given" initial="S">Simon</bltx:namepart>
       </bltx:name>
-      <bltx:name xdata="gxd2+author" />
+      <bltx:name xdata="gxd2+author+1" />
     </bltx:names>
     <bltx:names type="editor">
       <bltx:name xdata="gxd2+editor+2" />
@@ -572,7 +572,7 @@ my $bltxml2 = q|<?xml version="1.0" encoding="UTF-8"?>
     </bltx:lista>
     <bltx:location>
       <bltx:list>
-        <bltx:item xdata="gxd3+location" />
+        <bltx:item xdata="gxd3+location+1" />
         <bltx:item>B</bltx:item>
       </bltx:list>
     </bltx:location>
@@ -606,7 +606,7 @@ my $bltxml2 = q|<?xml version="1.0" encoding="UTF-8"?>
         <bltx:namepart type="family" initial="W">Wool</bltx:namepart>
         <bltx:namepart type="given" initial="W">William</bltx:namepart>
       </bltx:name>
-      <bltx:name xdata="gxd4+editor" />
+      <bltx:name xdata="gxd4+editor+1" />
     </bltx:names>
   </bltx:entry>
   <bltx:entry id="gxd3" entrytype="xdata">

@@ -232,7 +232,7 @@ sub set_output_entry {
         $plo{more} = 'true';
       }
 
-      my $total = $nf->count_names;
+      my $total = $nf->count;
 
       if (defined($lni) and $lni eq $namefield) {
 

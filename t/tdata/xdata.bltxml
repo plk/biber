@@ -21,7 +21,7 @@
         <bltx:namepart type="family" initial="B">Brian</bltx:namepart>
         <bltx:namepart type="given" initial="B">Bell</bltx:namepart>
       </bltx:name>
-      <bltx:name xdata="bltxgxd2-author" />
+      <bltx:name xdata="bltxgxd2-author-1" />
     </bltx:names>
     <bltx:names type="editor">
       <bltx:name xdata="bltxgxd2-editor-2" />
@@ -36,7 +36,7 @@
     </bltx:lista>
     <bltx:location>
       <bltx:list>
-        <bltx:item xdata="bltxgxd3-location" />
+        <bltx:item xdata="bltxgxd3-location-1" />
         <bltx:item>B</bltx:item>
       </bltx:list>
     </bltx:location>

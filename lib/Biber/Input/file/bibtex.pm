@@ -1295,7 +1295,7 @@ sub _name {
   }
 
   # Don't set if there were no valid names due to special errors above
-  return $names->count_names ? $names : undef;
+  return $names->count ? $names : undef;
 }
 
 # Dates

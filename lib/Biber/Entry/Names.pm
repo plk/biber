@@ -107,6 +107,23 @@ sub replace_name {
   return;
 }
 
+=head2 splice_names
+
+    Splice a list (ref) of names into Biber::Entry::Names object at a
+    position (1-based) with a provided Biber::Entry::Names object
+
+=cut
+
+sub splice_names {
+  my ($self, $names, $position) = @_;
+  splice($self->{namelist}->@*, $position-1, 1, $names->{namelist}->@*);
+  # now re-index all names in list
+  foreach (my $i=0;$i<$#{$self->{namelist}};$i++) {
+    $self->{namelist}->[$i]->set_index($i);
+  }
+  return;
+}
+
 =head2 set_morenames
 
     Sets a flag to say that we had a "and others" in the data
@@ -130,13 +147,13 @@ sub get_morenames {
   return $self->{morenames} ? 1 : 0;
 }
 
-=head2 count_names
+=head2 count
 
     Returns the number of Biber::Entry::Name objects in the object
 
 =cut
 
-sub count_names {
+sub count {
   my $self = shift;
   return scalar $self->{namelist}->@*;
 }

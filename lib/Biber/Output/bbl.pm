@@ -281,7 +281,7 @@ sub set_output_entry {
         }
       }
 
-      my $total = $nf->count_names;
+      my $total = $nf->count;
 
       my $nfv = '';
 

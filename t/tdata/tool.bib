@@ -102,10 +102,10 @@
 
 % Granular XDATA tests
 @BOOK{gxd1,
-  AUTHOR       = {Simon Smith and xdata=gxd2-author}, % Picks name 1, no position
+  AUTHOR       = {Simon Smith and xdata=gxd2-author-1}, % Picks name 1
   EDITOR       = {xdata=gxd2-editor-2},
   TITLE        = {xdata=gxd4-title},
-  LOCATION     = {xdata=gxd3-location and B}, % Picks list element 1, no position
+  LOCATION     = {xdata=gxd3-location-1 and B}, % Picks list element 1
   PUBLISHER    = {xdata=gxd2},                % malformed (unspecified field)- output literally
   NOTE         = {xdata=gxd2-note},           % malformed (missing field) - output literally
   TRANSLATOR   = {xdata=gxd2-author-3},       % malformed (bad position) - output literally
@@ -116,7 +116,7 @@
 
 @XDATA{gxd2,
   AUTHOR = {Brian Bloom and Arthur Anderson},
-  EDITOR = {William Wool and xdata=gxd4-editor}
+  EDITOR = {William Wool and xdata=gxd4-editor-1}
 }
 
 @XDATA{gxd3,

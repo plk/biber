@@ -954,7 +954,7 @@ eq_or_diff( $out->get_output_entry('L29', $main), $l29, 'Escaped name with 3 com
 
 # Checking visibility
 # Count does not include the "and others" as this "name" is deleted in the output driver
-eq_or_diff($bibentries->entry('V1')->get_field($bibentries->entry('V1')->get_labelname_info)->count_names, '2', 'Name count for "and others" - 1');
+eq_or_diff($bibentries->entry('V1')->get_field($bibentries->entry('V1')->get_labelname_info)->count, '2', 'Name count for "and others" - 1');
 eq_or_diff($main->get_visible_cite($bibentries->entry('V1')->get_field($bibentries->entry('V1')->get_labelname_info)->get_id), '2', 'Visibility for "and others" - 1');
 eq_or_diff($main->get_visible_cite($bibentries->entry('V2')->get_field($bibentries->entry('V2')->get_labelname_info)->get_id), '1', 'Visibility for "and others" - 2');
 # A few tests depend on non UTF-8 output
