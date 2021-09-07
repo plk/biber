@@ -511,8 +511,7 @@ the default locations (see C<biber> PDF manual). In tool mode, (B<--tool>)
 the F<biber-tool.conf> installed with Biber is always used to set default
 options if a user-defined config file is not specified. Use the
 B<--tool-config> option to view the location of the default tool mode
-config file--copy this file and edit it to your requirements for use with
-this option in tool mode.
+config file which may be useful as a source for writing your own.
 
 =item B<--convert-control>
 
