@@ -507,11 +507,27 @@ See C<perldoc Unicode::Collate> for details.
 =item B<--configfile|-g [file]>
 
 Use F<file> as the configuration file for C<biber> instead of looking in
-the default locations (see C<biber> PDF manual). In tool mode, (B<--tool>)
-the F<biber-tool.conf> installed with Biber is always used to set default
-options if a user-defined config file is not specified. Use the
-B<--tool-config> option to view the location of the default tool mode
-config file which may be useful as a source for writing your own.
+the default locations which are, in order:
+
+* C<biber.conf> or C<.biber.conf> in the current directory
+
+* C<$HOME/.biber.conf>
+
+* C<$ENV{XDG_CONFIG_HOME}/biber/biber.conf>
+
+* C<$HOME/.config/biber/biber.conf>
+
+* C<$HOME/Library/biber/biber.conf> (Mac OSX only)
+
+* C<$ENV{APPDATA}/biber.conf> (Windows only)
+
+* The output of C<kpsewhich biber.conf> (if available on the system).
+
+In tool mode, (B<--tool>) the F<biber-tool.conf> installed with Biber is
+always used to set default options if a user-defined config file is not
+specified. Use the B<--tool-config> option to view the location of the
+default tool mode config file which may be useful as a source for writing
+your own.
 
 =item B<--convert-control>
 
