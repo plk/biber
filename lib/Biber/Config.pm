@@ -600,11 +600,11 @@ sub _config_file_set {
 =head2 config_file
 
 Returns the full path of the B<Biber> configuration file.
-If returns the first file found among:
+It returns the first file found among:
 
 =over 4
 
-=item * C<biber.conf> in the current directory
+=item * C<biber.conf> or C<.biber.conf> in the current directory
 
 =item * C<$HOME/.biber.conf>
 
@@ -629,6 +629,9 @@ sub config_file {
 
   if ( -f $BIBER_CONF_NAME ) {
     $biberconf = abs_path($BIBER_CONF_NAME);
+  }
+  elsif ( -f ".$BIBER_CONF_NAME" ) {
+    $biberconf = abs_path(".$BIBER_CONF_NAME");
   }
   elsif ( -f File::Spec->catfile($ENV{HOME}, ".$BIBER_CONF_NAME" ) ) {
     $biberconf = File::Spec->catfile($ENV{HOME}, ".$BIBER_CONF_NAME" );
