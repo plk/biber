@@ -12,7 +12,7 @@
 # <deletescancache> is a boolean which says to delete the scancache
 # <codesign> is a boolean which says to not codesign OSX binary
 
-BASE="~/extcode/biber"
+BASE=~/extcode/biber
 DOCDIR=$BASE/doc
 BINDIR=$BASE/dist
 XSLDIR=$BASE/data
@@ -41,7 +41,8 @@ cd $BASE
 sudo ./Build realclean
 
 cd $BINDIR/darwin_arm
-
+\rm -rf biber-darwin_arm.tar.gz
+exit 0
 if [ "$CODESIGN" = "1" ]; then
     security unlock-keychain -p $(</Users/philkime/.pw) login.keychain;codesign --sign 45MA3H23TG --force --timestamp --options runtime biber-darwin_arm
 fi
