@@ -35,7 +35,6 @@ function vmoff {
 
 BASE="/usr/local/data/code/biblatex-biber"
 DOCDIR=$BASE/doc
-DRIVERDIR=$BASE/lib/Biber/Input/
 BINDIR=$BASE/dist
 XSLDIR=$BASE/data
 DIR=${1:-"/tmp/b"}
