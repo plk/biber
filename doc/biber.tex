@@ -2070,7 +2070,7 @@ You can force this with the \opt{--output-safechars} option which will do a
 generally good job of making your \verb+.bbl+ plain ASCII. It can be useful
 in certain edge cases where your bibliography introduces characters which
 can't be handled by your main document. See section \ref{ldecode} above for
-an example such case.
+an example of such a case.
 
 A common use case for \latex\ macro encoding is when the bibliography
 datasource is not ASCII but the \verb+.tex+ file is and so this case
@@ -2089,7 +2089,7 @@ this.
 See also the \opt{biber --help} output for the \opt{--output-safecharsset}
 and \linebreak[4]\opt{--decodecharsset} options which can customise the set
 of conversion rules to use. The builtin sets of characters and macros which \biber\
-maps during encoding and decoding are documented\footnote{\url{https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/\biberversion/documentation/utf8-macro-map.html}}.
+maps during encoding and decoding are documented\footnote{\url{https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/documentation/utf8-macro-map.html}}.
 
 It is possible to provide a customised encode/decode mapping file using the
 \opt{--recodedata} option. It must adhere to the format of the default
@@ -2355,7 +2355,7 @@ biber --tool --output-macro_fields='month, publisher'
 \end{verbatim}
 
 Tool mode also allows some reformatting of the \file{.bib} file. The
-option \opt{--tool-fieldcase} can be used to force the entrytype and
+option \opt{--output-fieldcase} can be used to force the entrytype and
 fieldnames to upper, lower or title case. The option
 \opt{--tool-indent} can be used to customise the indentation of
 fields. The option \opt{output-align} can be used to align all field

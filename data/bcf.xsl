@@ -1326,7 +1326,7 @@
   </xsl:template>
 </xsl:stylesheet>
 <!--
-    Copyright 2012-2021 Philip Kime, all rights reserved.
+    Copyright 2012-2022 Philip Kime, all rights reserved.
     
     This code is free software.  You can redistribute it and/or
     modify it under the terms of the Artistic License 2.0.
