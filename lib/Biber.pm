@@ -126,7 +126,10 @@ sub display_end {
   }
 
   if ($self->{warnings}) {
-    $logger->info('WARNINGS: ' . $self->{warnings});
+    foreach my $w ($self->{warnings}->@*) {
+      $logger->warn($w);
+    }
+    $logger->info('WARNINGS: ' . scalar($self->{warnings}->@*));
   }
   if ($self->{errors}) {
     $logger->info('ERRORS: ' . $self->{errors});
