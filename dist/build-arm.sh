@@ -42,7 +42,7 @@ sudo ./Build realclean
 
 cd $BINDIR/darwin_arm
 \rm -rf biber-darwin_arm.tar.gz
-exit 0
+
 if [ "$CODESIGN" = "1" ]; then
     security unlock-keychain -p $(</Users/philkime/.pw) login.keychain
     codesign --sign 45MA3H23TG --force --timestamp --options runtime biber-darwin_arm
@@ -61,7 +61,7 @@ if [ "$JUSTBUILD" = "1" ]; then
   exit 0;
 fi
 
-scp biber-darwin_arm.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/biblatex-biber/$RELEASE/binaries/OSX_Intel/biber-darwin_arm.tar.gz
+scp biber-darwin_arm.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/biblatex-biber/$RELEASE/binaries/OSX_Arm64/biber-darwin_arm.tar.gz
 
 
 
