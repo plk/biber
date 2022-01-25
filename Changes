@@ -1,5 +1,10 @@
 Revision history for Biber
 
+2.17   (2022-01)
+       * Tool mode now supports tab indentation in output as well as spaces
+         (see --output-indent)
+       * More compact match/replace syntax for serial items in data maps
+       * Native ARM64 binary for OSX now provided
 2.16   (2020-12)
        * Better support for Unicode on Windows (10 1803+) with the
          --winunicode option
