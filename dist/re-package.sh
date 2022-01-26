@@ -79,10 +79,6 @@ if [ ! -e $ROOT/binaries/Solaris_Intel/biber-x86_64-pc-solaris2.11.tar.xz ]; the
   /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/Solaris_Intel/biber-x86_64-pc-solaris2.11.tar.xz
   [ $? -eq 0 ] || exit 1
 fi
-if [ ! -e $ROOT/binaries/Solaris_Intel/biber-i386-pc-solaris2.11.tar.xz ]; then
-  /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/Solaris_Intel/biber-i386-pc-solaris2.11.tar.xz
-  [ $? -eq 0 ] || exit 1
-fi
 
 # Cygwin
 cd ${ROOT}/binaries/Cygwin
