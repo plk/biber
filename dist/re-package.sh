@@ -68,6 +68,7 @@ if [ ! -e $ROOT/binaries/OSX_Intel/biber-darwin_x86_64.tar.gz ]; then
 fi
 
 # OSX_Arm64
+cd ${ROOT}/binaries/OSX_Arm64
 if [ ! -e $ROOT/binaries/OSX_Arm64/biber-darwin_arm.tar.gz ]; then
   /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/OSX_Arm64/biber-darwin_arm.tar.gz
   [ $? -eq 0 ] || exit 1
@@ -105,12 +106,12 @@ cd ${ROOT}/source/
 
 # README
 cd ${ROOT}
-/opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/README.md
+/opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/README.md --output-document=README.md
 [ $? -eq 0 ] || exit 1
 
 # Pack and upload
 cd /tmp/biber-repack
-tar czf biber.tgz biber
+gnutar czf biber.tgz biber
 cp /tmp/biber-repack/biber.tgz ~/Dropbox/
 cd /tmp
 \rm -rf /tmp/biber-repack
@@ -118,6 +119,6 @@ cd /tmp
 # Make empty archive
 cd ~/Desktop
 echo "Please retrieve file from location in comments" > ~/Desktop/biber.txt
-tar zcf biber.tgz biber.txt
+gnutar zcf biber.tgz biber.txt
 \rm -f biber.txt
 echo "Empty archive is: ~/Desktop/biber.tgz"
