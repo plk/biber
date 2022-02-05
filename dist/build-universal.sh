@@ -1,10 +1,11 @@
 #!/bin/bash
 
-# Local OSX 64-bit ARM
+# Local MacOS 64-bit ARM build and then combine with the x86_64 build to
+# make a universal binary
 
-# build-arm.sh <release> <branch> <justbuild> <deletescancache> <codesign>
+# build-universal.sh <release> <branch> <justbuild> <deletescancache> <codesign>
 #
-# ./build-arm.sh development dev 1 0 1
+# ./build-universal.sh development dev 1 0 1
 # 
 # <release> is a SF subdir of /home/frs/project/biblatex-biber/biblatex-biber/
 # <branch> is a git branch to checkout on the build farm servers
@@ -49,10 +50,16 @@ if [ "$CODESIGN" = "1" ]; then
     codesign --verbose --sign 45MA3H23TG --force --timestamp --options runtime biber-darwin_arm
 fi
 
-mv biber-darwin_arm biber
+echo "Downloading x86_64 binary ... make sure it's the one you want"
+\rm -rf biber-darwin_x86_64.tar.gz
+/opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/$RELEASE/binaries/MacOS/biber-darwin_x86_64.tar.gz
+gnutar zxf biber-darwin_x86_64.tar.gz
+/usr/bin/lipo -create -output biber biber-darwin_x86_64 biber-darwin_arm
 chmod +x biber
-tar cf biber-darwin_arm.tar biber
-gzip biber-darwin_arm.tar
+gnutar cf biber-darwin_universal.tar biber
+gzip biber-darwin_universal.tar
+\rm biber-darwin_arm*
+\rm biber-darwin_x86_64*
 \rm biber
 
 # Stop here if JUSTBUILD is set
@@ -61,6 +68,6 @@ if [ "$JUSTBUILD" = "1" ]; then
   exit 0;
 fi
 
-scp biber-darwin_arm.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/biblatex-biber/$RELEASE/binaries/OSX_Arm64/biber-darwin_arm.tar.gz
+scp biber-darwin_universal.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/biblatex-biber/$RELEASE/binaries/MacOS/biber-darwin_universal.tar.gz
 
 

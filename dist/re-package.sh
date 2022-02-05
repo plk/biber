@@ -8,8 +8,7 @@ mkdir -p ${ROOT}/binaries
 mkdir -p ${ROOT}/binaries/Linux
 mkdir -p ${ROOT}/binaries/Linux-musl
 mkdir -p ${ROOT}/binaries/FreeBSD
-mkdir -p ${ROOT}/binaries/OSX_Intel
-mkdir -p ${ROOT}/binaries/OSX_Arm64
+mkdir -p ${ROOT}/binaries/MacOS
 mkdir -p ${ROOT}/binaries/Solaris_Intel
 mkdir -p ${ROOT}/binaries/Cygwin
 mkdir -p ${ROOT}/binaries/Windows
@@ -56,21 +55,21 @@ if [ ! -e $ROOT/binaries/Windows/biber-MSWIN32.zip ]; then
   [ $? -eq 0 ] || exit 1
 fi
 
-# OSX_Intel (including legacy (10.5<version<10.13))
-cd ${ROOT}/binaries/OSX_Intel
-if [ ! -e $ROOT/binaries/OSX_Intel/biber-darwinlegacy_x86_64.tar.gz ]; then
-  /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/OSX_Intel/biber-darwinlegacy_x86_64.tar.gz
+# MacOS Intel (including legacy (10.5<version<10.13))
+cd ${ROOT}/binaries/MacOS
+if [ ! -e $ROOT/binaries/MacOS/biber-darwinlegacy_x86_64.tar.gz ]; then
+  /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/MacOS/biber-darwinlegacy_x86_64.tar.gz
   [ $? -eq 0 ] || exit 1
 fi
-if [ ! -e $ROOT/binaries/OSX_Intel/biber-darwin_x86_64.tar.gz ]; then
-  /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/OSX_Intel/biber-darwin_x86_64.tar.gz
+if [ ! -e $ROOT/binaries/MacOS/biber-darwin_x86_64.tar.gz ]; then
+  /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/MacOS/biber-darwin_x86_64.tar.gz
   [ $? -eq 0 ] || exit 1
 fi
 
-# OSX_Arm64
-cd ${ROOT}/binaries/OSX_Arm64
-if [ ! -e $ROOT/binaries/OSX_Arm64/biber-darwin_arm.tar.gz ]; then
-  /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/OSX_Arm64/biber-darwin_arm.tar.gz
+# MacOS Arm64
+cd ${ROOT}/binaries/MacOS
+if [ ! -e $ROOT/binaries/MacOS/biber-darwin_arm.tar.gz ]; then
+  /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/MacOS/biber-darwin_arm.tar.gz
   [ $? -eq 0 ] || exit 1
 fi
 
