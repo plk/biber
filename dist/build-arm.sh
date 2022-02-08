@@ -34,25 +34,25 @@ git pull
 perl ./Build.PL
 sudo ./Build installdeps
 sudo ./Build install
-cd dist/darwin_arm
+cd dist/darwin_arm64
 $SCANCACHE./build.sh
-~/bin/pp_osx_codesign_fix biber-darwin_arm
+~/bin/pp_osx_codesign_fix biber-darwin_arm64
 cd $BASE
 sudo ./Build realclean
 
-cd $BINDIR/darwin_arm
-\rm -rf biber-darwin_arm.tar.gz
+cd $BINDIR/darwin_arm64
+\rm -rf biber-darwin_arm64.tar.gz
 
 if [ "$CODESIGN" = "1" ]; then
     echo "Signing binary"
     security unlock-keychain -p $(</Users/philkime/.pw) login.keychain
-    codesign --verbose --sign 45MA3H23TG --force --timestamp --options runtime biber-darwin_arm
+    codesign --verbose --sign 45MA3H23TG --force --timestamp --options runtime biber-darwin_arm64
 fi
 
-mv biber-darwin_arm biber
+mv biber-darwin_arm64 biber
 chmod +x biber
-tar cf biber-darwin_arm.tar biber
-gzip biber-darwin_arm.tar
+tar cf biber-darwin_arm64.tar biber
+gzip biber-darwin_arm64.tar
 \rm biber
 
 # Stop here if JUSTBUILD is set
@@ -61,6 +61,6 @@ if [ "$JUSTBUILD" = "1" ]; then
   exit 0;
 fi
 
-scp biber-darwin_arm.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/biblatex-biber/$RELEASE/binaries/MacOS/biber-darwin_arm.tar.gz
+scp biber-darwin_arm.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/biblatex-biber/$RELEASE/binaries/MacOS/biber-darwin_arm64.tar.gz
 
 

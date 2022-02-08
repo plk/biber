@@ -82,7 +82,7 @@ PAR_VERBATIM=1 pp \
   --addfile="/opt/local/lib/perl5/site_perl/${perlv}/Business/ISBN/RangeMessage.xml;lib/Business/ISBN/RangeMessage.xml" \
   --addfile="/opt/local/lib/perl5/site_perl/${perlv}/darwin-thread-multi-2level/auto/Unicode/LineBreak/LineBreak.bundle;lib/auto/Unicode/LineBreak/LineBreak.bundle" \
   --cachedeps=scancache \
-  --output=biber-darwin_arm \
+  --output=biber-darwin_arm64 \
   /tmp/biber-darwin
 
 \rm -f /tmp/biber-darwin
