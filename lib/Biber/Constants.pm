@@ -157,7 +157,6 @@ our %DM_DATATYPES = (
                        }
                        elsif ($f =~ /yeardivision$/) {
                          return 0 unless grep {$v eq $_} values %YEARDIVISIONS;
-#                         return 0 unless $v =~ m/(?:winter[NS]?|spring[NS]?|summer[NS]?|autumn[NS]?|Q[1234]|QD[123]|S[12])/
                        }
                        else {
                          # num() doesn't like negatives

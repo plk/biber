@@ -2916,6 +2916,7 @@ sub process_visible_names {
       if ($logger->is_trace()) { # performance shortcut
         $logger->trace("Setting visible names (cite) for key '$citekey' to '$visible_names_cite'");
         $logger->trace("Setting visible names (bib) for key '$citekey' to '$visible_names_bib'");
+        $logger->trace("Setting visible names (sort) for key '$citekey' to '$visible_names_sort'");
         $logger->trace("Setting visible names (alpha) for key '$citekey' to '$visible_names_alpha'");
       }
 
