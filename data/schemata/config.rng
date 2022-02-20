@@ -1486,6 +1486,7 @@
   <define name="sortingnamekeytemplate">
     <element name="sortingnamekeytemplate">
       <attribute name="name"/>
+      <attribute name="visibility"/>
       <oneOrMore>
         <element name="keypart">
           <attribute name="order">

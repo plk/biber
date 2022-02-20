@@ -778,7 +778,8 @@ sub parse_ctrlfile {
       }
       push $snkps->@*, $snps;
     }
-    $snss->{$sns->{name}} = $snkps;
+    $snss->{$sns->{name}}{visibility} = $sns->{visibility};
+    $snss->{$sns->{name}}{template} = $snkps;
   }
   Biber::Config->setblxoption(undef, 'sortingnamekeytemplate', $snss);
 

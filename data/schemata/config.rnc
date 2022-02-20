@@ -429,6 +429,7 @@ uniquenametemplate =
 sortingnamekeytemplate = 
   element sortingnamekeytemplate {
     attribute name { text },
+    attribute visibility { text },
     element keypart {
       attribute order { xsd:integer },
       element part {

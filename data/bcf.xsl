@@ -939,7 +939,7 @@
         <xsl:for-each select="/bcf:controlfile/bcf:sortingnamekeytemplate">
           <table>
             <thead>
-              <tr><td colspan="2"><b><xsl:value-of select="./@name"/></b></td></tr>
+              <tr><td colspan="2"><b><xsl:value-of select="./@name"/></b> (visibility: <xsl:value-of select="./@visibility"/>)</td></tr>
               <tr><td>Order</td><td>Keypart</td></tr>
             </thead>
             <tbody>
