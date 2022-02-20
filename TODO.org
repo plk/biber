@@ -158,11 +158,11 @@
 *** DONE Default position when omitted for list sources is 1
 *** DONE granular xdata doesn't work for dates
 *** DONE granular xdata at field level and below must be between same field and datatypes
-* TODO sortcites changes
-** TODO   <bcf:sortingnamekeytemplate visibility_type="cite">
-** TODO create APA template, set as default, switch refcontext for \printbibliography to normal
-** TODO Doc new \visibility option, bump .bcf version
-** TODO doc \AtBeginRefsection, just after refsection number setting
+* DONE sortcites changes
+** DONE <bcf:sortingnamekeytemplate visibility_type="cite">
+** DONE create APA template, set as default, switch refcontext for \printbibliography to normal
+** DONE Doc new \visibility option, bump .bcf version
+** DONE doc \AtBeginRefsection, just after refsection number setting
 * TODO Multiscript
 ** Documentation
 *** TODO \DeclareDatamodelMultiscriptEntryfields and \ResetDatamodelMultiscriptEntryfields
