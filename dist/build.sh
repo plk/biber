@@ -170,12 +170,12 @@ fi
 cd $DIR
 # OSX 64-bit legacy
 if [ -e $DIR/biber-darwinlegacy_x86_64.tar.gz ]; then
-  scp biber-darwinlegacy_x86_64.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/biblatex-biber/$RELEASE/binaries/OSX_Intel/biber-darwinlegacy_x86_64.tar.gz
+  scp biber-darwinlegacy_x86_64.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/biblatex-biber/$RELEASE/binaries/MacOS/biber-darwinlegacy_x86_64.tar.gz
 fi
 
 # OSX 64-bit
 if [ -e $DIR/biber-darwin_x86_64.tar.gz ]; then
-  scp biber-darwin_x86_64.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/biblatex-biber/$RELEASE/binaries/OSX_Intel/biber-darwin_x86_64.tar.gz
+  scp biber-darwin_x86_64.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/biblatex-biber/$RELEASE/binaries/MacOS/biber-darwin_x86_64.tar.gz
 fi
 
 # Windows 32-bit
