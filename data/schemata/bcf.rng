@@ -1092,6 +1092,7 @@
     <oneOrMore>
       <element name="bcf:sortingnamekeytemplate">
         <attribute name="name"/>
+        <attribute name="visibility"/>
         <oneOrMore>
           <element name="bcf:keypart">
             <attribute name="order">

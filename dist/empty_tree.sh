@@ -11,7 +11,7 @@ mkdir -p /tmp/sftree/binaries/Linux
 mkdir -p /tmp/sftree/binaries/Linux-musl
 mkdir -p /tmp/sftree/binaries/Solaris_Intel
 mkdir -p /tmp/sftree/binaries/FreeBSD
-mkdir -p /tmp/sftree/binaries/OSX_Intel
+mkdir -p /tmp/sftree/binaries/MacOS
 mkdir -p /tmp/sftree/binaries/Windows
 mkdir -p /tmp/sftree/binaries/ARM
 

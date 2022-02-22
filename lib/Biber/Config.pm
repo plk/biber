@@ -503,7 +503,8 @@ sub _config_file_set {
           }
           push $snkps->@*, $snps;
         }
-        $snss->{$sns->{name}} = $snkps;
+        $snss->{$sns->{name}}{visibility} = $sns->{visibility};
+        $snss->{$sns->{name}}{template} = $snkps;
       }
       Biber::Config->setblxoption(0, 'sortingnamekeytemplate', $snss);
     }

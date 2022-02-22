@@ -8,7 +8,7 @@ mkdir -p ${ROOT}/binaries
 mkdir -p ${ROOT}/binaries/Linux
 mkdir -p ${ROOT}/binaries/Linux-musl
 mkdir -p ${ROOT}/binaries/FreeBSD
-mkdir -p ${ROOT}/binaries/OSX_Intel
+mkdir -p ${ROOT}/binaries/MacOS
 mkdir -p ${ROOT}/binaries/Solaris_Intel
 mkdir -p ${ROOT}/binaries/Cygwin
 mkdir -p ${ROOT}/binaries/Windows
@@ -55,14 +55,21 @@ if [ ! -e $ROOT/binaries/Windows/biber-MSWIN32.zip ]; then
   [ $? -eq 0 ] || exit 1
 fi
 
-# OSX_Intel (including legacy (10.5<version<10.13))
-cd ${ROOT}/binaries/OSX_Intel
-if [ ! -e $ROOT/binaries/OSX_Intel/biber-darwinlegacy_x86_64.tar.gz ]; then
-  /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/OSX_Intel/biber-darwinlegacy_x86_64.tar.gz
+# MacOS Intel (including legacy (10.5<version<10.13))
+cd ${ROOT}/binaries/MacOS
+if [ ! -e $ROOT/binaries/MacOS/biber-darwinlegacy_x86_64.tar.gz ]; then
+  /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/MacOS/biber-darwinlegacy_x86_64.tar.gz
   [ $? -eq 0 ] || exit 1
 fi
-if [ ! -e $ROOT/binaries/OSX_Intel/biber-darwin_x86_64.tar.gz ]; then
-  /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/OSX_Intel/biber-darwin_x86_64.tar.gz
+if [ ! -e $ROOT/binaries/MacOS/biber-darwin_x86_64.tar.gz ]; then
+  /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/MacOS/biber-darwin_x86_64.tar.gz
+  [ $? -eq 0 ] || exit 1
+fi
+
+# MacOS Arm64
+cd ${ROOT}/binaries/MacOS
+if [ ! -e $ROOT/binaries/MacOS/biber-darwin_arm.tar.gz ]; then
+  /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/MacOS/biber-darwin_arm.tar.gz
   [ $? -eq 0 ] || exit 1
 fi
 
@@ -70,10 +77,6 @@ fi
 cd ${ROOT}/binaries/Solaris_Intel
 if [ ! -e $ROOT/binaries/Solaris_Intel/biber-x86_64-pc-solaris2.11.tar.xz ]; then
   /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/Solaris_Intel/biber-x86_64-pc-solaris2.11.tar.xz
-  [ $? -eq 0 ] || exit 1
-fi
-if [ ! -e $ROOT/binaries/Solaris_Intel/biber-i386-pc-solaris2.11.tar.xz ]; then
-  /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/Solaris_Intel/biber-i386-pc-solaris2.11.tar.xz
   [ $? -eq 0 ] || exit 1
 fi
 
@@ -102,12 +105,12 @@ cd ${ROOT}/source/
 
 # README
 cd ${ROOT}
-/opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/README.md
+/opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/README.md --output-document=README.md
 [ $? -eq 0 ] || exit 1
 
 # Pack and upload
 cd /tmp/biber-repack
-tar czf biber.tgz biber
+gnutar czf biber.tgz biber
 cp /tmp/biber-repack/biber.tgz ~/Dropbox/
 cd /tmp
 \rm -rf /tmp/biber-repack
@@ -115,6 +118,6 @@ cd /tmp
 # Make empty archive
 cd ~/Desktop
 echo "Please retrieve file from location in comments" > ~/Desktop/biber.txt
-tar zcf biber.tgz biber.txt
+gnutar zcf biber.tgz biber.txt
 \rm -f biber.txt
 echo "Empty archive is: ~/Desktop/biber.tgz"

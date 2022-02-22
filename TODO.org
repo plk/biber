@@ -158,6 +158,11 @@
 *** DONE Default position when omitted for list sources is 1
 *** DONE granular xdata doesn't work for dates
 *** DONE granular xdata at field level and below must be between same field and datatypes
+* DONE sortcites changes
+** DONE <bcf:sortingnamekeytemplate visibility_type="cite">
+** DONE create APA template, set as default, switch refcontext for \printbibliography to normal
+** DONE Doc new \visibility option, bump .bcf version
+** DONE doc \AtBeginRefsection, just after refsection number setting
 * TODO Multiscript
 ** TODO default mslang for field selection is global->refcontext->entry, what about field items?
 ** TODO LANGIDOPTS and how they interact with LANGID->mslang

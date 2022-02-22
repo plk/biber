@@ -445,6 +445,7 @@ uniquenametemplate =
 sortingnamekeytemplate = 
   element bcf:sortingnamekeytemplate {
     attribute name { text },
+    attribute visibility { text },
     element bcf:keypart {
      attribute order { xsd:integer },
      element bcf:part {

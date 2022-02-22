@@ -126,7 +126,10 @@ sub display_end {
   }
 
   if ($self->{warnings}) {
-    $logger->info('WARNINGS: ' . $self->{warnings});
+    foreach my $w ($self->{warnings}->@*) {
+      $logger->warn($w);
+    }
+    $logger->info('WARNINGS: ' . scalar($self->{warnings}->@*));
   }
   if ($self->{errors}) {
     $logger->info('ERRORS: ' . $self->{errors});
@@ -775,7 +778,8 @@ sub parse_ctrlfile {
       }
       push $snkps->@*, $snps;
     }
-    $snss->{$sns->{name}} = $snkps;
+    $snss->{$sns->{name}}{visibility} = $sns->{visibility};
+    $snss->{$sns->{name}}{template} = $snkps;
   }
   Biber::Config->setblxoption(undef, 'sortingnamekeytemplate', $snss);
 
@@ -2955,6 +2959,7 @@ sub process_visible_names {
         if ($logger->is_trace()) { # performance shortcut
           $logger->trace("Setting visible names (cite) for key '$citekey' to '$visible_names_cite'");
           $logger->trace("Setting visible names (bib) for key '$citekey' to '$visible_names_bib'");
+          $logger->trace("Setting visible names (sort) for key '$citekey' to '$visible_names_sort'");
           $logger->trace("Setting visible names (alpha) for key '$citekey' to '$visible_names_alpha'");
         }
 

@@ -384,17 +384,15 @@ sub check_exists {
 
 =head2 biber_warn
 
-    Wrapper around various warnings bits and pieces
-    Logs a warning, add warning to the list of .bbl warnings and optionally
-    increments warning count in Biber object, if present
+    Wrapper around various warnings bits and pieces.
+    Add warning to the list of .bbl warnings and the master list of warnings
 
 =cut
 
 sub biber_warn {
   my ($warning, $entry) = @_;
-  $logger->warn($warning);
   $entry->add_warning($warning) if $entry;
-  $Biber::MASTER->{warnings}++;
+  push $Biber::MASTER->{warnings}->@*, $warning;
   return;
 }
 

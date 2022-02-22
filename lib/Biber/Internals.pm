@@ -1511,8 +1511,6 @@ sub _namestring {
   my $names = $be->get_field($field, $form, $lang);
   my $str = '';
   my $count = $names->count;
-  # get visibility for sorting
-  my $visible = $dlist->get_visible_sort($names->get_id);
   my $useprefix = Biber::Config->getblxoption($secnum, 'useprefix', $bee, $citekey);
 
   # Get the sorting name key template for this list context
@@ -1524,17 +1522,26 @@ sub _namestring {
   # Override with any namelist scope sorting name key template option
   $snkname = $names->get_sortingnamekeytemplatename // $snkname;
 
+  # Get the sorting namekey template determined so far now that we are down to the name list
+  # scope since we need the visibility type now and this doesn't mean anything below the name list
+  # level anyway. We will select the final sorting namekey template below if there is an override
+  # at the individual name level
+  my $tmpsnk = Biber::Config->getblxoption(undef, 'sortingnamekeytemplate')->{$snkname};
+  # Now set visibility of the correct type. By default this is the standard
+  # sorting visibility but can be citation visibility as the biblatex
+  # "sortcites" option can require a different visibility for citations and
+  # so we have to generate a separate sorting list for this case
+  my $visible = $dlist->get_visible_sort($names->get_id);
+  if (defined($tmpsnk) and $tmpsnk->{visibility} eq 'cite') {
+    $visible = $dlist->get_visible_cite($names->get_id);
+  }
+
   # Name list scope useprefix option
   if (defined($names->get_useprefix)) {
     $useprefix = $names->get_useprefix;
   }
 
   my $trunc = "\x{10FFFD}";  # sort string for "et al" truncated name
-
-  # We strip nosort first otherwise normalise_string_sort damages diacritics
-  # We strip each individual component instead of the whole thing so we can use
-  # as name separators things which would otherwise be stripped. This way we
-  # guarantee that the separators are never in names
 
   foreach my $n ($names->first_n_names($visible)->@*) {
 
@@ -1544,6 +1551,9 @@ sub _namestring {
     }
 
     # Override with any name scope sorting name key template option
+    # This won't override the visibility type selection already taken from higher-level
+    # sorting namekey templates since this option only applies at name list level and higher
+    # anyway and this is individual name scope
     $snkname = $n->get_sortingnamekeytemplatename // $snkname;
 
     # Now get the actual sorting name key template
@@ -1551,7 +1561,7 @@ sub _namestring {
 
     # Get the sorting name key specification and use it to construct a sorting key for each name
     my $kpa = [];
-    foreach my $kp ($snk->@*) {
+    foreach my $kp ($snk->{template}->@*) {
       my $kps = '';
       for (my $i=0; $i<=$kp->$#*; $i++) {
         my $np = $kp->[$i];
@@ -1656,6 +1666,10 @@ sub _liststring {
   }
 
   # separate the items by a string to give some structure
+  # We strip nosort first otherwise normalise_string_sort damages diacritics
+  # We strip each individual component instead of the whole thing so we can use
+  # as name separators things which would otherwise be stripped. This way we
+  # guarantee that the separators are never in names
   if ($verbatim) { # no normalisation for verbatim/uri fields
     $str = join($lsi, map { strip_nosort($_, $field)} @items);
   }
