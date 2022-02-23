@@ -50,6 +50,7 @@ if [ "$CODESIGN" = "1" ]; then
 fi
 
 echo "Downloading x86_64 binary ... make sure it's the one you want"
+\rm -rf biber-darwin_universal.tar.gz
 \rm -rf biber-darwin_x86_64.tar.gz
 \rm -rf biber
 /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/$RELEASE/binaries/MacOS/biber-darwin_x86_64.tar.gz -O biber-darwin_x86_64.tar.gz
