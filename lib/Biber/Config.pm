@@ -300,7 +300,7 @@ sub _initopts {
 
   my $vn = $VERSION;
   $vn .= ' (beta)' if $BETA_VERSION;
-  my $tool = ' running in TOOL mode' if Biber::Config->getoption('tool');
+  my $tool = Biber::Config->getoption('tool') ? ' running in TOOL mode' : '';
 
   $logger->info("This is Biber $vn$tool") unless Biber::Config->getoption('nolog');
 
