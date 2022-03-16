@@ -223,9 +223,7 @@ sub _initopts {
 
   # cache meta markers since they are referenced in the oft-called _get_handler
   $CONFIG_META_MARKERS{annotation} = quotemeta(Biber::Config->getoption('annotation_marker'));
-
   $CONFIG_META_MARKERS{namedannotation} = quotemeta(Biber::Config->getoption('named_annotation_marker'));
-  $CONFIG_META_MARKERS{xname} = quotemeta(Biber::Config->getoption('xname_marker'));
 
   # Setting up Log::Log4perl
   my $LOGLEVEL;
@@ -965,6 +963,11 @@ sub getblxoption {
   no autovivification;
   shift; # class method so don't care about class name
   my ($secnum, $opt, $entrytype, $citekey) = @_;
+  # Set impossible defaults
+  $secnum //= "\x{10FFFD}";
+  $opt //= "\x{10FFFD}";
+  $entrytype //= "\x{10FFFD}";
+  $citekey //= "\x{10FFFD}";
   if ( defined($citekey) and
        $CONFIG_OPTSCOPE_BIBLATEX{$opt}{ENTRY} and
        defined $CONFIG->{options}{biblatex}{ENTRY}{$citekey}{$secnum}{$opt}) {
