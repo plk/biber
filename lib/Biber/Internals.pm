@@ -1504,7 +1504,7 @@ sub _namestring {
   # "sortcites" option can require a different visibility for citations and
   # so we have to generate a separate sorting list for this case
   my $visible = $dlist->get_visible_sort($names->get_id);
-  if (defined($tmpsnk) and exists($tmpsnk->{visibility}) and $tmpsnk->{visibility} eq 'cite') {
+  if (defined($tmpsnk) and $tmpsnk->{visibility} eq 'cite') {
     $visible = $dlist->get_visible_cite($names->get_id);
   }
 
