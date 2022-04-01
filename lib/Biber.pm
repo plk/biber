@@ -925,6 +925,7 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
       # "all keys"
       if ($key eq '*') {
         $bib_section->set_allkeys(1);
+        Biber::Config->set_keyorder($secnum, $key, $keyc->{order});
         if ($keyc->{nocite}) {
           $bib_section->set_allkeys_nocite(1);
         }

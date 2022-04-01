@@ -2037,6 +2037,20 @@
     <bcf:citekeycount count="1">L8</bcf:citekeycount>
     <bcf:citekeycount count="3">L9</bcf:citekeycount>
   </bcf:section>
+  <bcf:bibdata section="1">
+    <bcf:datasource type="file" datatype="bibtex">sort-order.bib</bcf:datasource>
+  </bcf:bibdata>
+  <bcf:section number="1">
+    <bcf:citekey order="1">L2</bcf:citekey>
+    <bcf:citekey order="2" nocite="1">*</bcf:citekey>
+  </bcf:section>
+  <bcf:bibdata section="2">
+    <bcf:datasource type="file" datatype="bibtex">sort-order.bib</bcf:datasource>
+  </bcf:bibdata>
+  <bcf:section number="2">
+    <bcf:citekey order="1" nocite="1">*</bcf:citekey>
+    <bcf:citekey order="2">L2</bcf:citekey>
+  </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="nty">
     <bcf:sort order="1">
@@ -2341,6 +2355,22 @@
   <!-- DATA LISTS -->
   <bcf:datalist sortingnamekeytemplatename="global"
                 section="0"
+                name="none/global//global/global"
+                sortingtemplatename="none"
+                type="entry"
+                labelprefix=""
+                uniquenametemplatename="global"
+                labelalphanametemplatename="global"/>
+  <bcf:datalist sortingnamekeytemplatename="global"
+                section="1"
+                name="none/global//global/global"
+                sortingtemplatename="none"
+                type="entry"
+                labelprefix=""
+                uniquenametemplatename="global"
+                labelalphanametemplatename="global"/>
+  <bcf:datalist sortingnamekeytemplatename="global"
+                section="2"
                 name="none/global//global/global"
                 sortingtemplatename="none"
                 type="entry"

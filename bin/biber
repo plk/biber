@@ -650,17 +650,17 @@ Don't look for a configfile.
 =item  B<--no-decode-preamble>
 
 Do not convert LaTeX macros in .bib file PREAMBLE entries to UTF-8 during
-data file parsing.
+data file parsing. Default is true.
 
 =item  B<--no-decode-comments>
 
 Do not convert LaTeX macros in .bib file COMMENT entries to UTF-8 during
-data file parsing.
+data file parsing. Default is true.
 
 =item  B<--no-decode-macros>
 
 Do not convert LaTeX macros in .bib file MACRO (STRING) entries to UTF-8
-during data file parsing.
+during data file parsing. Default is true.
 
 =item B<--no-default-datamodel>
 
