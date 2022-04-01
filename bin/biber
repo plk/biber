@@ -56,6 +56,9 @@ GetOptions(
            'namesep=s',
            'no_bblxml_schema|no-bblxml-schema',
            'no_bltxml_schema|no-bltxml-schema',
+           'no_decode_preamble|no-decode-preamble',
+           'no_decode_comments|no-decode-comments',
+           'no_decode_macros|no-decode-macros',
            'noconf',
            'no_default_datamodel|no-default-datamodel',
            'nodieonerror',
@@ -643,6 +646,21 @@ model.
 =item B<--noconf>
 
 Don't look for a configfile.
+
+=item  B<--no-decode-preamble>
+
+Do not convert LaTeX macros in .bib file PREAMBLE entries to UTF-8 during
+data file parsing.
+
+=item  B<--no-decode-comments>
+
+Do not convert LaTeX macros in .bib file COMMENT entries to UTF-8 during
+data file parsing.
+
+=item  B<--no-decode-macros>
+
+Do not convert LaTeX macros in .bib file MACRO (STRING) entries to UTF-8
+during data file parsing.
 
 =item B<--no-default-datamodel>
 
