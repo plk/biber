@@ -1728,33 +1728,18 @@ sub parse_decode {
     }
     elsif ($entry->metatype == BTE_PREAMBLE) {
       $lbuf .= '@PREAMBLE{"';
-      if (Biber::Config->getoption('no_decode_preamble')) {
-        $lbuf .= $entry->value;
-      }
-      else {
-        $lbuf .= Biber::LaTeX::Recode::latex_decode($entry->value);
-      }
+      $lbuf .= $entry->value;
       $lbuf .=  '"}' . "\n";
     }
     elsif ($entry->metatype == BTE_COMMENT) {
       $lbuf .= '@COMMENT{';
-      if (Biber::Config->getoption('no_decode_comments')) {
-        $lbuf .= $entry->value;
-      }
-      else {
-        $lbuf .= Biber::LaTeX::Recode::latex_decode($entry->value);
-      }
+      $lbuf .= $entry->value;
       $lbuf .=  '}' . "\n";
     }
     elsif ($entry->metatype == BTE_MACRODEF) {
       $lbuf .= '@STRING{';
       foreach my $f ($entry->fieldlist) {
-        if (Biber::Config->getoption('no_decode_macros')) {
-          $lbuf .= $f . ' = {' . $entry->get(encode('UTF-8', NFC($f))) . '}';
-        }
-        else {
-          $lbuf .= $f . ' = {' . Biber::LaTeX::Recode::latex_decode($entry->get(encode('UTF-8', NFC($f)))) . '}';
-        }
+        $lbuf .= $f . ' = {' . $entry->get(encode('UTF-8', NFC($f))) . '}';
       }
       $lbuf .= "}\n";
     }
