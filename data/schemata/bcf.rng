@@ -69,6 +69,7 @@
         <ref name="nohashothers"/>
         <ref name="noroman"/>
         <ref name="nosortothers"/>
+        <ref name="pluralothers"/>
         <ref name="singletitle"/>
         <ref name="skipbib"/>
         <ref name="skipbiblist"/>
@@ -1607,6 +1608,19 @@
     mininit = disambiguate with initials, only between identical lists in different entries
     minfull = disambiguate with full name or initials, only between identical lists in different entries
   -->
+  <define name="pluralothers">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>pluralothers</value>
+      </element>
+      <element name="bcf:value">
+        <data type="boolean"/>
+      </element>
+    </element>
+  </define>
   <define name="uniquename">
     <element name="bcf:option">
       <attribute name="type">
