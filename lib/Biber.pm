@@ -2894,10 +2894,7 @@ sub process_visible_names {
       # the visibility is one less than the list count. If we don't do this, extra* will be incremented
       # to disambiguate the list and this will be incorrect as biblatex.sty will detect "pluralothers"
       # and print an unambiguous list which will be disambiguated by extra* unnecessarily.
-      # The below will only apply when uniquelist=false as when uniquelist=true, this has to be done
-      # in generate_uniquelist() because the forced visibility of a singular "et al" when pluralothers=true
-      # might change uniquename and so we have to include it in uniqueness generation when uniquelist=true
-      if (Biber::Config->getblxoption(undef, 'pluralothers') and
+      if (Biber::Config->getblxoption(undef, 'pluralothers')  and
           $count-$visible_names_cite==1) {
         $visible_names_cite = $count;
       }
@@ -3868,18 +3865,6 @@ sub generate_uniquelist {
 
     if ($logger->is_trace()) {  # performance tune
       $logger->trace("Setting uniquelist for '$citekey' using " . join(',', $namelist->@*));
-    }
-
-    # If biblatex option "pluralothers" is true, then "et al" must replace more than one element
-    # in a name list. This means that uniquelist must be increased to the list length if
-    # uniquelist is one less than the list count. If we don't do this, extra* will be incremented
-    # to disambiguate the list and this will be incorrect as biblatex.sty will detect "pluralothers"
-    # and print an unambiguous list which will be disambiguated by extra* unnecessarily. We can't just
-    # apply this in process_visible_names() when uniquelist=true because the extra visibility needs to
-    # be done here because it might change uniquename in the uniqueness loop
-    if (Biber::Config->getblxoption(undef, 'pluralothers') and
-        $num_names-$ul==1) {
-      $ul = $num_names;
     }
 
     $dlist->set_uniquelist($nl, $namelist, $labelyear, $ul, $maxcn, $mincn);

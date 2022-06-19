@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 219;
+use Test::More tests => 222;
 use Test::Differences;
 unified_diff;
 
@@ -659,6 +659,7 @@ $main = $biber->datalists->get_list('nty/global//global/global');
 eq_or_diff($main->get_uniquelist($bibentries->entry('C')->get_field($bibentries->entry('C')->get_labelname_info)->get_id), '2', 'Uniquelist true/Uniquename false - 1');
 
 #############################################################################
+# Testing pluralothers without uniquelist
 
 $biber = Biber->new(noconf => 1);
 $biber->parse_ctrlfile('uniqueness7.bcf');
@@ -675,5 +676,75 @@ $bibentries = $section->bibentries;
 $main = $biber->datalists->get_list('nty/global//global/global');
 
 eq_or_diff($main->get_visible_cite($bibentries->entry('po1')->get_field($bibentries->entry('po1')->get_labelname_info)->get_id), '4', 'Pluralothers test - 1');
-ok(is_undef($main->get_extranamedata_for_key('po1')), 'Pluralothers test - 2')
+ok(is_undef($main->get_extranamedata_for_key('po1')), 'Pluralothers test - 2');
 
+#############################################################################
+# Testing pluralothers with uniquelist
+
+$biber = Biber->new(noconf => 1);
+$biber->parse_ctrlfile('uniqueness7.bcf');
+$biber->set_output_obj(Biber::Output::bbl->new());
+# Biblatex options
+Biber::Config->setblxoption(undef,'uniquelist', 'true');
+Biber::Config->setblxoption(undef,'uniquename', 'init');
+Biber::Config->setblxoption(undef,'pluralothers', 'true');
+Biber::Config->setblxoption(undef,'maxcitenames', 3);
+Biber::Config->setblxoption(undef,'mincitenames', 1);
+# Now generate the information
+$biber->prepare;
+my $out = $biber->get_output_obj;
+$section = $biber->sections->get_section(0);
+$bibentries = $section->bibentries;
+$main = $biber->datalists->get_list('nty/global//global/global');
+
+
+my $po3 = q|    \entry{po3}{book}{}
+      \name{author}{4}{ul=4}{%
+        {{un=1,uniquepart=given,hash=c2ab7e2b5663336cc4e65c8bcf1a280d}{%
+           family={Abraham},
+           familyi={A\bibinitperiod},
+           given={A.},
+           giveni={A\bibinitperiod},
+           givenun=1}}%
+        {{un=0,uniquepart=base,hash=1f4cf713d86f6083087eb3085db7815a}{%
+           family={Brown},
+           familyi={B\bibinitperiod},
+           given={B.},
+           giveni={B\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=a44def9031aa70c9f458f5b47a34c451}{%
+           family={Cuthbert},
+           familyi={C\bibinitperiod},
+           given={C.},
+           giveni={C\bibinitperiod},
+           givenun=0}}%
+        {{un=1,uniquepart=given,hash=91876a448dc35952ca94dc92cee07f89}{%
+           family={Abraham},
+           familyi={A\bibinitperiod},
+           given={D.},
+           giveni={D\bibinitperiod},
+           givenun=1}}%
+      }
+      \strng{namehash}{2f43c72e4c15c6ba3f24e7b6462e60ed}
+      \strng{fullhash}{2f43c72e4c15c6ba3f24e7b6462e60ed}
+      \strng{bibnamehash}{2f43c72e4c15c6ba3f24e7b6462e60ed}
+      \strng{authorbibnamehash}{2f43c72e4c15c6ba3f24e7b6462e60ed}
+      \strng{authornamehash}{2f43c72e4c15c6ba3f24e7b6462e60ed}
+      \strng{authorfullhash}{2f43c72e4c15c6ba3f24e7b6462e60ed}
+      \field{labelalpha}{Abr\textbf{+}22}
+      \field{sortinit}{A}
+      \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{extraalpha}{1}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Title One}
+      \field{year}{2022}
+      \field{dateera}{ce}
+    \endentry
+|;
+
+eq_or_diff($main->get_visible_cite($bibentries->entry('po3')->get_field($bibentries->entry('po3')->get_labelname_info)->get_id), '4', 'Pluralothers test - 3');
+ok(is_undef($main->get_extranamedata_for_key('po3')), 'Pluralothers test - 4');
+eq_or_diff( $out->get_output_entry('po3', $main), $po3, 'Pluralothers test - 5');
