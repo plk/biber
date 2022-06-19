@@ -925,6 +925,7 @@ sub addtoblxoption {
 sub setblxoption {
   shift; # class method so don't care about class name
   my ($secnum, $opt, $val, $scope, $scopeval) = @_;
+  $val = Biber::Utils::map_boolean($opt, $val, 'tonum');
   if (not defined($scope)) { # global is the default
     if ($CONFIG_OPTSCOPE_BIBLATEX{$opt}{GLOBAL}) {
       $CONFIG->{options}{biblatex}{GLOBAL}{$opt} = $val;

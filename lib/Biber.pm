@@ -2888,6 +2888,15 @@ sub process_visible_names {
       else { # visibility is simply the full list
         $visible_names_cite = $count;
       }
+      # If biblatex option "pluralothers" is true, then "et al" must replace more than one element
+      # in a name list. This means that the visibility must be increased to the list length if
+      # the visibility is one less than the list count. If we don't do this, extra* will be incremented
+      # to disambiguate the list and this will be incorrect as biblatex.sty will detect "pluralothers"
+      # and print an unambiguous list which will be disambiguated by extra* unnecessarily.
+      if (Biber::Config->getblxoption(undef, 'pluralothers') and
+          $count-$visible_names_cite==1) {
+        $visible_names_cite = $count;
+      }
 
       # max/minbibnames
       if ($count > $maxbn) {

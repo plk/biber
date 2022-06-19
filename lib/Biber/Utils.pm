@@ -1189,10 +1189,11 @@ sub validate_biber_xml {
 
 sub map_boolean {
   my ($bn, $bv, $dir) = @_;
-  my $b = lc($bv);
   # Ignore non-booleans
   return $bv unless exists($CONFIG_OPTTYPE_BIBLATEX{$bn});
   return $bv unless $CONFIG_OPTTYPE_BIBLATEX{$bn} eq 'boolean';
+
+  my $b = lc($bv);
 
   my %map = (true  => 1,
              false => 0,

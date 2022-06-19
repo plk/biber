@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 217;
+use Test::More tests => 219;
 use Test::Differences;
 unified_diff;
 
@@ -657,4 +657,23 @@ $bibentries = $section->bibentries;
 $main = $biber->datalists->get_list('nty/global//global/global');
 
 eq_or_diff($main->get_uniquelist($bibentries->entry('C')->get_field($bibentries->entry('C')->get_labelname_info)->get_id), '2', 'Uniquelist true/Uniquename false - 1');
+
+#############################################################################
+
+$biber = Biber->new(noconf => 1);
+$biber->parse_ctrlfile('uniqueness7.bcf');
+$biber->set_output_obj(Biber::Output::bbl->new());
+# Biblatex options
+Biber::Config->setblxoption(undef,'uniquelist', 'false');
+Biber::Config->setblxoption(undef,'pluralothers', 'true');
+Biber::Config->setblxoption(undef,'maxcitenames', 3);
+Biber::Config->setblxoption(undef,'mincitenames', 3);
+# Now generate the information
+$biber->prepare;
+$section = $biber->sections->get_section(0);
+$bibentries = $section->bibentries;
+$main = $biber->datalists->get_list('nty/global//global/global');
+
+eq_or_diff($main->get_visible_cite($bibentries->entry('po1')->get_field($bibentries->entry('po1')->get_labelname_info)->get_id), '4', 'Pluralothers test - 1');
+ok(is_undef($main->get_extranamedata_for_key('po1')), 'Pluralothers test - 2')
 
