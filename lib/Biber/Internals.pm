@@ -1101,7 +1101,7 @@ sub _dispatch_sorting {
     $code_args_ref  = $d->[1];
   }
   else { # Unknown field
-    biber_warn("Unknown field '$sortfield' found in sorting template");
+    biber_warn("Field '$sortfield' in sorting template is not a sortable field");
     return undef;
   }
 
