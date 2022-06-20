@@ -1129,7 +1129,7 @@ sub _dispatch_sorting {
     $code_args_ref  = $d->[1];
   }
   else { # Unknown field
-    biber_warn("Unknown field '$sortfield' found in sorting template");
+    biber_warn("Field '$sortfield' in sorting template is not a sortable field");
     return undef;
   }
 
@@ -1232,15 +1232,22 @@ sub _sort_citeorder {
   my ($self, $citekey, $secnum, $section, $be, $dlist, $sortelementattributes) = @_;
   # Allkeys and sorting=none means use bib order which is in orig_order_citekeys
   # However, someone might do:
-  # \cite{b,a}
+  # \cite{b}\cite{a}
   # \nocite{*}
   # in the same section which means we need to use the order attribute for those
   # keys which have one (the \cited keys) and then an orig_order_citekey index based index
   # for the nocite ones.
   my $ko = Biber::Config->get_keyorder($secnum, $citekey);# only for \cited keys
   if ($section->is_allkeys) {
-    return $ko || (Biber::Config->get_keyorder_max($secnum) +
-                   (first_index {$_ eq $citekey} $section->get_orig_order_citekeys) + 1);
+    my $biborder = (Biber::Config->get_keyorder_max($secnum) +
+                    (first_index {$_ eq $citekey} $section->get_orig_order_citekeys) + 1);
+    my $allkeysorder = Biber::Config->get_keyorder($secnum, '*');
+    if (defined($ko) and defined($allkeysorder) and $allkeysorder < $ko) {
+      return $biborder;
+    }
+    else {
+      return $ko || $biborder;
+    }
   }
   # otherwise, we need to take account of citations with simulataneous order like
   # \cite{key1, key2} so this tied sorting order can be further sorted with other fields

@@ -925,6 +925,7 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
       # "all keys"
       if ($key eq '*') {
         $bib_section->set_allkeys(1);
+        Biber::Config->set_keyorder($secnum, $key, $keyc->{order});
         if ($keyc->{nocite}) {
           $bib_section->set_allkeys_nocite(1);
         }
@@ -2930,6 +2931,16 @@ sub process_visible_names {
           $visible_names_cite = $count;
         }
 
+        # If biblatex option "pluralothers" is true, then "et al" must replace more than one element
+        # in a name list. This means that the visibility must be increased to the list length if
+        # the visibility is one less than the list count. If we don't do this, extra* will be incremented
+        # to disambiguate the list and this will be incorrect as biblatex.sty will detect "pluralothers"
+        # and print an unambiguous list which will be disambiguated by extra* unnecessarily.
+        if (Biber::Config->getblxoption(undef, 'pluralothers')  and
+            $count-$visible_names_cite==1) {
+          $visible_names_cite = $count;
+        }
+
         # max/minbibnames
         if ($count > $maxbn) {
           # Visibility to the uniquelist point if uniquelist is requested
@@ -3898,6 +3909,7 @@ sub generate_uniquelist {
     if ($logger->is_trace()) {  # performance tune
       $logger->trace("Setting uniquelist for '$citekey' using " . join(',', $namelist->@*));
     }
+
     $dlist->set_uniquelist($nl, $namelist, $labelyear, $ul, $maxcn, $mincn);
   }
   return;

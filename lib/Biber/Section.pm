@@ -429,7 +429,7 @@ sub add_everykey {
 
 sub del_everykeys {
   my $self = shift;
-  $self->{everykey} = undef
+  $self->{everykey} = undef;
   $self->{everykey_lc} = undef;
   return;
 }

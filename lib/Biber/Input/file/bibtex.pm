@@ -1771,15 +1771,19 @@ sub parse_decode {
       $lbuf .= "\n" . '}' . "\n\n";
     }
     elsif ($entry->metatype == BTE_PREAMBLE) {
-      $lbuf .= '@PREAMBLE{"' . Biber::LaTeX::Recode::latex_decode($entry->value) . '"}' . "\n";
+      $lbuf .= '@PREAMBLE{"';
+      $lbuf .= $entry->value;
+      $lbuf .=  '"}' . "\n";
     }
     elsif ($entry->metatype == BTE_COMMENT) {
-      $lbuf .= '@COMMENT{' . Biber::LaTeX::Recode::latex_decode($entry->value) . '}' . "\n";
+      $lbuf .= '@COMMENT{';
+      $lbuf .= $entry->value;
+      $lbuf .=  '}' . "\n";
     }
     elsif ($entry->metatype == BTE_MACRODEF) {
       $lbuf .= '@STRING{';
       foreach my $f ($entry->fieldlist) {
-        $lbuf .= $f . ' = {' . Biber::LaTeX::Recode::latex_decode($entry->get(encode('UTF-8', NFC($f)))) . '}';
+        $lbuf .= $f . ' = {' . $entry->get(encode('UTF-8', NFC($f))) . '}';
       }
       $lbuf .= "}\n";
     }

@@ -114,7 +114,7 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>mincitenames</bcf:key>
-      <bcf:value>1</bcf:value>
+      <bcf:value>3</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>minsortnames</bcf:key>
@@ -142,7 +142,7 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>singletitle</bcf:key>
-      <bcf:value>1</bcf:value>
+      <bcf:value>0</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>skipbib</bcf:key>
@@ -174,11 +174,11 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>uniquelist</bcf:key>
-      <bcf:value>false</bcf:value>
+      <bcf:value>true</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>uniquename</bcf:key>
-      <bcf:value>init</bcf:value>
+      <bcf:value>full</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>uniqueprimaryauthor</bcf:key>
@@ -1791,18 +1791,13 @@
       <bcf:field>journaltitle</bcf:field>
       <bcf:field>journaltitleaddon</bcf:field>
       <bcf:field>location</bcf:field>
-      <bcf:field>lista</bcf:field>
-      <bcf:field>listb</bcf:field>
-      <bcf:field>listc</bcf:field>
       <bcf:field>mainsubtitle</bcf:field>
       <bcf:field>maintitle</bcf:field>
       <bcf:field>maintitleaddon</bcf:field>
       <bcf:field>nameaddon</bcf:field>
-      <bcf:field>namea</bcf:field>
-      <bcf:field>nameb</bcf:field>
-      <bcf:field>namec</bcf:field>
       <bcf:field>note</bcf:field>
       <bcf:field>organization</bcf:field>
+      <bcf:field>origlanguage</bcf:field>
       <bcf:field>origlocation</bcf:field>
       <bcf:field>origpublisher</bcf:field>
       <bcf:field>origtitle</bcf:field>
@@ -1810,6 +1805,12 @@
       <bcf:field>publisher</bcf:field>
       <bcf:field>relatedstring</bcf:field>
       <bcf:field>series</bcf:field>
+      <bcf:field>shortauthor</bcf:field>
+      <bcf:field>shorteditor</bcf:field>
+      <bcf:field>shorthand</bcf:field>
+      <bcf:field>shortjournal</bcf:field>
+      <bcf:field>shortseries</bcf:field>
+      <bcf:field>shorttitle</bcf:field>
       <bcf:field>sortname</bcf:field>
       <bcf:field>sortshorthand</bcf:field>
       <bcf:field>sorttitle</bcf:field>
@@ -2017,7 +2018,7 @@
   </bcf:datamodel>
   <!-- SECTION 0 -->
   <bcf:bibdata section="0">
-    <bcf:datasource type="file" datatype="bibtex">encoding3.bib</bcf:datasource>
+    <bcf:datasource type="file" datatype="bibtex">uniqueness7.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
     <bcf:citekey order="0">*</bcf:citekey>

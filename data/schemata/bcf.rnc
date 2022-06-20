@@ -50,6 +50,7 @@ start =
       nohashothers,
       noroman,
       nosortothers,
+      pluralothers,
       singletitle,
       skipbib,
       skipbiblist,
@@ -663,6 +664,12 @@ nosortothers =
 # allfull = disambiguate with full name or initials, ignore maxcitenames/uniquelist
 # mininit = disambiguate with initials, only between identical lists in different entries
 # minfull = disambiguate with full name or initials, only between identical lists in different entries
+pluralothers =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "pluralothers" },
+    element bcf:value { xsd:boolean }
+  }
 uniquename =
   element bcf:option {
     attribute type { "singlevalued" },

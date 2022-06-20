@@ -234,9 +234,7 @@ sub _initopts {
 
   # cache meta markers since they are referenced in the oft-called _get_handler
   $CONFIG_META_MARKERS{annotation} = quotemeta(Biber::Config->getoption('annotation_marker'));
-
   $CONFIG_META_MARKERS{namedannotation} = quotemeta(Biber::Config->getoption('named_annotation_marker'));
-  $CONFIG_META_MARKERS{xname} = quotemeta(Biber::Config->getoption('xname_marker'));
 
   $CONFIG_META_MARKERS{mssep} = quotemeta(Biber::Config->getoption('mssep'));
   $CONFIG_META_MARKERS{outputmssep} = quotemeta(Biber::Config->getoption('output_mssep'));
@@ -316,7 +314,7 @@ sub _initopts {
 
   my $vn = $VERSION;
   $vn .= ' (beta)' if $BETA_VERSION;
-  my $tool = ' running in TOOL mode' if Biber::Config->getoption('tool');
+  my $tool = Biber::Config->getoption('tool') ? ' running in TOOL mode' : '';
 
   $logger->info("This is Biber $vn$tool") unless Biber::Config->getoption('nolog');
 
@@ -1013,6 +1011,10 @@ sub setblxoption {
   shift; # class method so don't care about class name
   my ($secnum, $opt, $val, $scope, $scopeval) = @_;
 
+  # Map booleans to 1 and 0 for consistent testing
+  $val = Biber::Utils::map_boolean($opt, $val, 'tonum');
+
+
   # mslang is sensitive and we must normalise it
   if ($opt eq 'mslang') {
     $val = fc($val)
@@ -1056,6 +1058,11 @@ sub getblxoption {
   no autovivification;
   shift; # class method so don't care about class name
   my ($secnum, $opt, $entrytype, $citekey) = @_;
+  # Set impossible defaults
+  $secnum //= "\x{10FFFD}";
+  $opt //= "\x{10FFFD}";
+  $entrytype //= "\x{10FFFD}";
+  $citekey //= "\x{10FFFD}";
   if ( defined($citekey) and
        $CONFIG_OPTSCOPE_BIBLATEX{$opt}{ENTRY} and
        defined $CONFIG->{options}{biblatex}{ENTRY}{$citekey}{$secnum}{$opt}) {

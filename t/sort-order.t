@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 16;
+use Test::More tests => 18;
 
 use Biber;
 use Biber::Output::bbl;
@@ -31,13 +31,21 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 # Options - we could set these in the control file but it's nice to see what we're
 # relying on here for tests
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
-Biber::Config->setblxoption(undef,'labeldateparts', undef);
+Biber::Config->setblxoption(undef,'labeldateparts', 0);
 Biber::Config->setblxoption(undef,'labelalpha', 0);
 
 # (re)generate information based on option settings
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
+my $section1 = $biber->sections->get_section(1);
+my $section2 = $biber->sections->get_section(2);
 my $main = $biber->datalists->get_list('none/global//global/global');
+my $main1 = $biber->datalists->get_list('none/global//global/global', 1);
+my $main2 = $biber->datalists->get_list('none/global//global/global', 2);
+
+# Testing \nocite order with sorting=none
+is_deeply($main1->get_keys, ['L2', 'L1','L1A','L1B','L3','L4','L5','L6','L7','L8','L9'], 'sorting=none and \nocite{*} second');
+is_deeply($main2->get_keys, ['L1','L1A','L1B','L2','L3','L4','L5','L6','L7','L8','L9'], 'sorting=none and \nocite{*} first');
 
 is_deeply($main->get_keys, ['L2','L3','L1B','L1','L4','L5','L1A','L7','L8','L6','L9'], 'citeorder');
 
@@ -175,4 +183,3 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 is_deeply($main->get_keys, ['L1','L1A','L1B','L2','L3','L4','L5','L6','L7','L8','L9'], 'sorting=none and allkeys');
-
