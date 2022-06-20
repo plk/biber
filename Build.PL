@@ -79,6 +79,7 @@ my $builder = $class->new(
                  'Text::Roman' => 0,
                  'IO::String' => 0,
                  'URI' => 0,
+                 'Text::Balanced' => 0,
                  'Text::BibTeX' => '0.88',
                  'LWP::UserAgent' => 0,
                  'LWP::Protocol::https' => 0,

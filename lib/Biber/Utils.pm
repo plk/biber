@@ -23,6 +23,7 @@ use Regexp::Common qw( balanced );
 use List::AllUtils qw( first );
 use Log::Log4perl qw(:no_extra_logdie_message);
 use Scalar::Util qw(looks_like_number);
+use Text::Balanced qw(extract_bracketed);
 use Text::CSV;
 use Text::Roman qw(isroman roman2int);
 use Unicode::Normalize;
@@ -667,7 +668,7 @@ sub normalise_string_hash {
   return '' unless $str; # Sanitise missing data
   $str =~ s/\\(\p{L}+)\s*/$1:/g; # remove tex macros
   $str =~ s/\\([^\p{L}])\s*/ord($1).':'/ge; # remove accent macros like \"a
-  $str =~ s/[\{\}~\.\s]+//g; # Remove brackes, ties, dots, spaces
+  $str =~ s/[\{\}~\.\s]+//g; # Remove braces, ties, dots, spaces
   return $str;
 }
 
@@ -751,7 +752,10 @@ sub reduce_array {
 
 sub remove_outer {
   my $str = shift;
-  return (0, $str) if $str =~ m/}\s*{/;
+  my @check = extract_bracketed($str, '{}');
+  if (not defined($check[0]) or $check[0] ne $str) {# Not balanced outer braces, ignore
+    return (0, $str);
+  }
   my $r = $str =~ s/^{(\X+)}$/$1/;
   return (($r ? 1 : 0), $str);
 }
