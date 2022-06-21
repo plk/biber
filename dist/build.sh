@@ -3,13 +3,14 @@
 # This version of the build script should be run on the server hosting the VMs
 # It does not build the OSX ARM release as there is no VM for that currently
 
-# build.sh <dir> <release> <branch> <justbuild> <deletescancache> <codesign>
+# build.sh <dir> <release> <branch> <binaryname> <justbuild> <deletescancache> <codesign>
 
 # Example: build.sh ~/Desktop/b development dev 1
 
 # <dir> is where the binaries are
 # <release> is a SF subdir of /home/frs/project/biblatex-biber/biblatex-biber/
 # <branch> is a git branch to checkout on the build farm servers
+# <binaryname> is the name of the biber binary to use for the release.
 # <justbuild> is a boolean which says to just build and stop without uploading
 # <deletescancache> is a boolean which says to delete the scancache
 # <codesign> is a boolean which says to not codesign OSX binary
@@ -40,10 +41,10 @@ XSLDIR=$BASE/data
 DIR=${1:-"/tmp/b"}
 RELEASE=${2:-"development"}
 BRANCH=${3:-"dev"}
-JUSTBUILD=${4:-"0"}
-DSCANCACHE=${5:-"0"}
-CODESIGN=${6:-"1"}
-BINARYNAME="biber"
+BINARYNAME=${4:-"biber"}
+JUSTBUILD=${5:-"0"}
+DSCANCACHE=${6:-"0"}
+CODESIGN=${7:-"1"}
 
 echo "** Checking out branch '$BRANCH' on farm servers **"
 echo "** If this is not correct, Ctrl-C now **"
