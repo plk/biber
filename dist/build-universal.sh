@@ -2,12 +2,13 @@
 
 # Local MacOS 64-bit ARM build and universal binary construction
 
-# build-universal.sh <release> <branch> <justbuild> <deletescancache> <codesign>
+# build-universal.sh <release> <branch> <binaryname> <justbuild> <deletescancache> <codesign>
 #
 # ./build-universal.sh development dev 0 0 1
 # 
 # <release> is a SF subdir of /home/frs/project/biblatex-biber/biblatex-biber/
 # <branch> is a git branch to checkout on the build farm servers
+# <binaryname> is the name of the biber binary to use for the release.
 # <justbuild> is a boolean which says to just build and stop without uploading
 # <deletescancache> is a boolean which says to delete the scancache
 # <codesign> is a boolean which says to not codesign OSX binary
@@ -18,10 +19,11 @@ BINDIR=$BASE/dist
 XSLDIR=$BASE/data
 RELEASE=${1:-"development"}
 BRANCH=${2:-"dev"}
-JUSTBUILD=${3:-"0"}
-DSCANCACHE=${4:-"0"}
-CODESIGN=${5:-"1"}
-BINARYNAME="biber"
+BINARYNAME=${4:-"biber"}
+JUSTBUILD=${4:-"0"}
+DSCANCACHE=${5:-"0"}
+CODESIGN=${6:-"1"}
+
 
 # Set scancache deletion if requested
 if [ "$DSCANCACHE" = "1" ]; then
