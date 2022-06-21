@@ -43,6 +43,7 @@ BRANCH=${3:-"dev"}
 JUSTBUILD=${4:-"0"}
 DSCANCACHE=${5:-"0"}
 CODESIGN=${6:-"1"}
+BINARYNAME="biber"
 
 echo "** Checking out branch '$BRANCH' on farm servers **"
 echo "** If this is not correct, Ctrl-C now **"
@@ -72,11 +73,11 @@ if [ ! -e $DIR/biber-darwinlegacy_x86_64.tar.gz ]; then
   ssh philkime@bbf-osx10.6 "\\rm -f biblatex-biber/dist/darwinlegacy_x86_64/biber-darwinlegacy_x86_64"
   vmoff osx10.6
   cd $DIR
-  mv biber-darwinlegacy_x86_64 biber
-  chmod +x biber
-  tar cf biber-darwinlegacy_x86_64.tar biber
+  mv biber-darwinlegacy_x86_64 $BINARYNAME
+  chmod +x $BINARYNAME
+  tar cf biber-darwinlegacy_x86_64.tar $BINARYNAME
   gzip biber-darwinlegacy_x86_64.tar
-  \rm biber
+  \rm $BINARYNAME
   cd $BASE
 fi
 
@@ -100,11 +101,11 @@ if [ ! -e $DIR/biber-darwin_x86_64.tar.gz ]; then
     ssh philkime@tree "\\rm -f /tmp/biber-darwin_x86_64"
     # --------------------------------------------------------------------------
   fi
-  mv biber-darwin_x86_64 biber
-  chmod +x biber
-  tar cf biber-darwin_x86_64.tar biber
+  mv biber-darwin_x86_64 $BINARYNAME
+  chmod +x $BINARYNAME
+  tar cf biber-darwin_x86_64.tar $BINARYNAME
   gzip biber-darwin_x86_64.tar
-  \rm biber
+  \rm $BINARYNAME
   cd $BASE
 fi
 
@@ -119,10 +120,10 @@ if [ ! -e $DIR/biber-MSWIN32.zip ]; then
   ssh philkime@bbf-wxp32 "\\rm -f biblatex-biber/dist/MSWIN32/biber-MSWIN32.exe"
   vmoff wxp32
   cd $DIR
-  mv biber-MSWIN32.exe biber.exe
-  chmod +x biber.exe
-  /usr/bin/zip biber-MSWIN32.zip biber.exe
-  \rm -f biber.exe
+  mv biber-MSWIN32.exe $BINARYNAME.exe
+  chmod +x $BINARYNAME.exe
+  /usr/bin/zip biber-MSWIN32.zip $BINARYNAME.exe
+  \rm -f $BINARYNAME.exe
   cd $BASE
 fi
 
@@ -137,10 +138,10 @@ if [ ! -e $DIR/biber-MSWIN64.zip ]; then
   ssh phili@bbf-w1064 "\\rm -f biblatex-biber/dist/MSWIN64/biber-MSWIN64.exe"
   vmoff w1064
   cd $DIR
-  mv biber-MSWIN64.exe biber.exe
-  chmod +x biber.exe
-  /usr/bin/zip biber-MSWIN64.zip biber.exe
-  \rm -f biber.exe
+  mv biber-MSWIN64.exe $BINARYNAME.exe
+  chmod +x $BINARYNAME.exe
+  /usr/bin/zip biber-MSWIN64.zip $BINARYNAME.exe
+  \rm -f $BINARYNAME.exe
   cd $BASE
 fi
 
@@ -153,11 +154,11 @@ if [ ! -e $DIR/biber-linux_x86_64.tar.gz ]; then
   ssh philkime@bbf-l64 "\\rm -f biblatex-biber/dist/linux_x86_64/biber-linux_x86_64"
   vmoff l64
   cd $DIR
-  mv biber-linux_x86_64 biber
-  chmod +x biber
-  tar cf biber-linux_x86_64.tar biber
+  mv biber-linux_x86_64 $BINARYNAME
+  chmod +x $BINARYNAME
+  tar cf biber-linux_x86_64.tar $BINARYNAME
   gzip biber-linux_x86_64.tar
-  \rm biber
+  \rm $BINARYNAME
   cd $BASE
 fi
 

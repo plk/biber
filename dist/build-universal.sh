@@ -21,6 +21,7 @@ BRANCH=${2:-"dev"}
 JUSTBUILD=${3:-"0"}
 DSCANCACHE=${4:-"0"}
 CODESIGN=${5:-"1"}
+BINARYNAME="biber"
 
 # Set scancache deletion if requested
 if [ "$DSCANCACHE" = "1" ]; then
@@ -52,17 +53,17 @@ fi
 echo "Downloading x86_64 binary ... make sure it's the one you want"
 \rm -rf biber-darwin_universal.tar.gz
 \rm -rf biber-darwin_x86_64.tar.gz
-\rm -rf biber
+\rm -rf $BINARYNAME
 /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/$RELEASE/binaries/MacOS/biber-darwin_x86_64.tar.gz -O biber-darwin_x86_64.tar.gz
 gnutar zxf biber-darwin_x86_64.tar.gz
-mv biber biber-darwin_x86_64
-/usr/bin/lipo -create -output biber biber-darwin_x86_64 biber-darwin_arm64
-chmod +x biber
-gnutar cf biber-darwin_universal.tar biber
+mv $BINARYNAME biber-darwin_x86_64
+/usr/bin/lipo -create -output $BINARYNAME biber-darwin_x86_64 biber-darwin_arm64
+chmod +x $BINARYNAME
+gnutar cf biber-darwin_universal.tar $BINARYNAME
 gzip biber-darwin_universal.tar
 \rm biber-darwin_arm*
 \rm biber-darwin_x86_64*
-\rm biber
+\rm $BINARYNAME
 
 # Stop here if JUSTBUILD is set
 if [ "$JUSTBUILD" = "1" ]; then
