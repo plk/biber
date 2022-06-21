@@ -63,7 +63,7 @@ fi
 
 # Create the binaries from the build farm if they don't exist
 
-# Build farm OSX 64-bit intel LECAGY (10.5<version<10.13)
+# Build farm OSX 64-bit intel LEGACY (10.5<version<10.13)
 # ntpdate is because Vbox doesn't timesync OSX and ntp never works because the
 # time difference is too great between boots
 if [ ! -e $DIR/biber-darwinlegacy_x86_64.tar.gz ]; then
