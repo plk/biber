@@ -5,6 +5,8 @@
 
 # build.sh <dir> <release> <branch> <justbuild> <deletescancache> <codesign>
 
+# Example: build.sh ~/Desktop/b development dev 1
+
 # <dir> is where the binaries are
 # <release> is a SF subdir of /home/frs/project/biblatex-biber/biblatex-biber/
 # <branch> is a git branch to checkout on the build farm servers
@@ -30,8 +32,6 @@ function vmon {
 function vmoff {
   VBoxManage controlvm bbf-$1 savestate
 }
-
-# Example: build_master.sh ~/Desktop/b development dev 1
 
 BASE="/usr/local/data/code/biblatex-biber"
 DOCDIR=$BASE/doc
