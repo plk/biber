@@ -1921,44 +1921,44 @@
     <bcf:datasource type="file" datatype="bibtex">crossrefs.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey order="1">cr1</bcf:citekey>
-    <bcf:citekey order="2">cr2</bcf:citekey>
-    <bcf:citekey order="3">cr3</bcf:citekey>
-    <bcf:citekey order="4">cr4</bcf:citekey>
-    <bcf:citekey order="5">cr6</bcf:citekey>
-    <bcf:citekey order="6">cr7</bcf:citekey>
-    <bcf:citekey order="7">cr8</bcf:citekey>
-    <bcf:citekey order="8">crt</bcf:citekey>
-    <bcf:citekey order="9">xr1</bcf:citekey>
-    <bcf:citekey order="10">xr2</bcf:citekey>
-    <bcf:citekey order="11">xr3</bcf:citekey>
-    <bcf:citekey order="12">xr4</bcf:citekey>
-    <bcf:citekey order="13">xrt</bcf:citekey>
-    <bcf:citekey order="14">mxr</bcf:citekey>
-    <bcf:citekey order="15">mcr</bcf:citekey>
-    <bcf:citekey order="16">ccr1</bcf:citekey>
-    <bcf:citekey order="17">ccr2</bcf:citekey>
-    <bcf:citekey order="18">ccr3</bcf:citekey>
-    <bcf:citekey order="19">ccr4</bcf:citekey>
-    <bcf:citekey order="20">circ1</bcf:citekey>
-    <bcf:citekey order="21">circ2</bcf:citekey>
-    <bcf:citekey order="22">circ3</bcf:citekey>
-    <bcf:citekey order="23">r1</bcf:citekey>
-    <bcf:citekey order="24">s1</bcf:citekey>
-    <bcf:citekey order="25">s2</bcf:citekey>
-    <bcf:citekey order="26">xc1</bcf:citekey>
-    <bcf:citekey order="27">b1</bcf:citekey>
-    <bcf:citekey order="28">b2</bcf:citekey>
-    <bcf:citekey order="29">sup2</bcf:citekey>
-    <bcf:citekey order="30">sup3</bcf:citekey>
-    <bcf:citekey order="31">al1</bcf:citekey>
+    <bcf:citekey order="1" intorder="1">cr1</bcf:citekey>
+    <bcf:citekey order="2" intorder="1">cr2</bcf:citekey>
+    <bcf:citekey order="3" intorder="1">cr3</bcf:citekey>
+    <bcf:citekey order="4" intorder="1">cr4</bcf:citekey>
+    <bcf:citekey order="5" intorder="1">cr6</bcf:citekey>
+    <bcf:citekey order="6" intorder="1">cr7</bcf:citekey>
+    <bcf:citekey order="7" intorder="1">cr8</bcf:citekey>
+    <bcf:citekey order="8" intorder="1">crt</bcf:citekey>
+    <bcf:citekey order="9" intorder="1">xr1</bcf:citekey>
+    <bcf:citekey order="10" intorder="1">xr2</bcf:citekey>
+    <bcf:citekey order="11" intorder="1">xr3</bcf:citekey>
+    <bcf:citekey order="12" intorder="1">xr4</bcf:citekey>
+    <bcf:citekey order="13" intorder="1">xrt</bcf:citekey>
+    <bcf:citekey order="14" intorder="1">mxr</bcf:citekey>
+    <bcf:citekey order="15" intorder="1">mcr</bcf:citekey>
+    <bcf:citekey order="16" intorder="1">ccr1</bcf:citekey>
+    <bcf:citekey order="17" intorder="1">ccr2</bcf:citekey>
+    <bcf:citekey order="18" intorder="1">ccr3</bcf:citekey>
+    <bcf:citekey order="19" intorder="1">ccr4</bcf:citekey>
+    <bcf:citekey order="20" intorder="1">circ1</bcf:citekey>
+    <bcf:citekey order="21" intorder="1">circ2</bcf:citekey>
+    <bcf:citekey order="22" intorder="1">circ3</bcf:citekey>
+    <bcf:citekey order="23" intorder="1">r1</bcf:citekey>
+    <bcf:citekey order="24" intorder="1">s1</bcf:citekey>
+    <bcf:citekey order="25" intorder="1">s2</bcf:citekey>
+    <bcf:citekey order="26" intorder="1">xc1</bcf:citekey>
+    <bcf:citekey order="27" intorder="1">b1</bcf:citekey>
+    <bcf:citekey order="28" intorder="1">b2</bcf:citekey>
+    <bcf:citekey order="29" intorder="1">sup2</bcf:citekey>
+    <bcf:citekey order="30" intorder="1">sup3</bcf:citekey>
+    <bcf:citekey order="31" intorder="1">al1</bcf:citekey>
   </bcf:section>
   <!-- SECTION 1 -->
   <bcf:bibdata section="1">
     <bcf:datasource type="file" datatype="bibtex">crossrefs.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="1">
-    <bcf:citekey order="1">cr5</bcf:citekey>
+    <bcf:citekey order="1" intorder="1">cr5</bcf:citekey>
   </bcf:section>
   <!-- SORTING SCHEME -->
   <bcf:sortingtemplate name="nty">

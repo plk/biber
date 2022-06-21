@@ -2076,14 +2076,14 @@
     <bcf:datasource type="file" datatype="bibtex">bibtex-aliases.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey order="1">alias1</bcf:citekey>
-    <bcf:citekey order="2">alias2</bcf:citekey>
-    <bcf:citekey order="3">alias3</bcf:citekey>
-    <bcf:citekey order="4">alias4</bcf:citekey>
-    <bcf:citekey order="5">alias5</bcf:citekey>
-    <bcf:citekey order="6">alias6</bcf:citekey>
-    <bcf:citekey order="7">alias7</bcf:citekey>
-    <bcf:citekey order="8">alias8</bcf:citekey>
+    <bcf:citekey order="1" intorder="1">alias1</bcf:citekey>
+    <bcf:citekey order="2" intorder="1">alias2</bcf:citekey>
+    <bcf:citekey order="3" intorder="1">alias3</bcf:citekey>
+    <bcf:citekey order="4" intorder="1">alias4</bcf:citekey>
+    <bcf:citekey order="5" intorder="1">alias5</bcf:citekey>
+    <bcf:citekey order="6" intorder="1">alias6</bcf:citekey>
+    <bcf:citekey order="7" intorder="1">alias7</bcf:citekey>
+    <bcf:citekey order="8" intorder="1">alias8</bcf:citekey>
   </bcf:section>
   <!-- SORTING SCHEME -->
   <bcf:sortingtemplate name="nty">

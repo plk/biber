@@ -2038,34 +2038,34 @@
     <bcf:datasource type="file" datatype="bibtex">examples.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey order="1">stdmodel</bcf:citekey>
-    <bcf:citekey order="2">knuth:ct</bcf:citekey>
-    <bcf:citekey order="3">angenendtsk</bcf:citekey>
-    <bcf:citekey order="4">angenendtsa</bcf:citekey>
-    <bcf:citekey order="5">stdmodel:glashow</bcf:citekey>
-    <bcf:citekey order="6">stdmodel:ps_sc</bcf:citekey>
-    <bcf:citekey order="7">murray</bcf:citekey>
-    <bcf:citekey order="8">aristotle:anima</bcf:citekey>
-    <bcf:citekey order="9">aristotle:rhetoric</bcf:citekey>
-    <bcf:citekey order="10">augustine</bcf:citekey>
-    <bcf:citekey order="11">cotton</bcf:citekey>
-    <bcf:citekey order="12">chiu</bcf:citekey>
-    <bcf:citekey order="13">moraux</bcf:citekey>
-    <bcf:citekey order="14">jaffe</bcf:citekey>
-    <bcf:citekey order="15">luzzatto</bcf:citekey>
-    <bcf:citekey order="16">hasan</bcf:citekey>
-    <bcf:citekey order="17">t1</bcf:citekey>
-    <bcf:citekey order="18">tvonb</bcf:citekey>
-    <bcf:citekey order="19">lne1</bcf:citekey>
-    <bcf:citekey order="20">labelstest</bcf:citekey>
-    <bcf:citekey order="21">sn1</bcf:citekey>
-    <bcf:citekey order="22">snk1</bcf:citekey>
-    <bcf:citekey order="23">ent1</bcf:citekey>
-    <bcf:citekey order="24">avona</bcf:citekey>
-    <bcf:citekey order="25">rvonr</bcf:citekey>
-    <bcf:citekey order="26">others1</bcf:citekey>
-    <bcf:citekey order="26">others2</bcf:citekey>
-    <bcf:citekey order="27">final</bcf:citekey>
+    <bcf:citekey order="1" intorder="1">stdmodel</bcf:citekey>
+    <bcf:citekey order="2" intorder="1">knuth:ct</bcf:citekey>
+    <bcf:citekey order="3" intorder="1">angenendtsk</bcf:citekey>
+    <bcf:citekey order="4" intorder="1">angenendtsa</bcf:citekey>
+    <bcf:citekey order="5" intorder="1">stdmodel:glashow</bcf:citekey>
+    <bcf:citekey order="6" intorder="1">stdmodel:ps_sc</bcf:citekey>
+    <bcf:citekey order="7" intorder="1">murray</bcf:citekey>
+    <bcf:citekey order="8" intorder="1">aristotle:anima</bcf:citekey>
+    <bcf:citekey order="9" intorder="1">aristotle:rhetoric</bcf:citekey>
+    <bcf:citekey order="10" intorder="1">augustine</bcf:citekey>
+    <bcf:citekey order="11" intorder="1">cotton</bcf:citekey>
+    <bcf:citekey order="12" intorder="1">chiu</bcf:citekey>
+    <bcf:citekey order="13" intorder="1">moraux</bcf:citekey>
+    <bcf:citekey order="14" intorder="1">jaffe</bcf:citekey>
+    <bcf:citekey order="15" intorder="1">luzzatto</bcf:citekey>
+    <bcf:citekey order="16" intorder="1">hasan</bcf:citekey>
+    <bcf:citekey order="17" intorder="1">t1</bcf:citekey>
+    <bcf:citekey order="18" intorder="1">tvonb</bcf:citekey>
+    <bcf:citekey order="19" intorder="1">lne1</bcf:citekey>
+    <bcf:citekey order="20" intorder="1">labelstest</bcf:citekey>
+    <bcf:citekey order="21" intorder="1">sn1</bcf:citekey>
+    <bcf:citekey order="22" intorder="1">snk1</bcf:citekey>
+    <bcf:citekey order="23" intorder="1">ent1</bcf:citekey>
+    <bcf:citekey order="24" intorder="1">avona</bcf:citekey>
+    <bcf:citekey order="25" intorder="1">rvonr</bcf:citekey>
+    <bcf:citekey order="26" intorder="1">others1</bcf:citekey>
+    <bcf:citekey order="26" intorder="1">others2</bcf:citekey>
+    <bcf:citekey order="27" intorder="1">final</bcf:citekey>
   </bcf:section>
   <!-- SORTING SCHEME -->
   <bcf:sortingtemplate name="nty">

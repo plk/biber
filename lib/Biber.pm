@@ -951,6 +951,10 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
           # Set order information - there is no order on dynamic key defs above
           # as they are a definition, not a cite
           Biber::Config->set_keyorder($secnum, $key, $keyc->{order});
+          # order of keys which have the same order so we can track order in \cite{a,b,c}
+          if ($keyc->{intorder}) {
+            Biber::Config->set_internal_keyorder($secnum, $key, $keyc->{intorder});
+          }
           push @keys, $key;
           $key_flag = 1; # There is at least one key, used for error reporting below
         }

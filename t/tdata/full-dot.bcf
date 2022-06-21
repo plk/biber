@@ -2021,28 +2021,28 @@
     <bcf:datasource type="file" datatype="bibtex">full-dot.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey order="1">cr1</bcf:citekey>
-    <bcf:citekey order="2">cr2</bcf:citekey>
-    <bcf:citekey order="3">cr3</bcf:citekey>
-    <bcf:citekey order="4">cr4</bcf:citekey>
-    <bcf:citekey order="5">cr6</bcf:citekey>
-    <bcf:citekey order="6">cr7</bcf:citekey>
-    <bcf:citekey order="7">cr8</bcf:citekey>
-    <bcf:citekey order="8">crt</bcf:citekey>
-    <bcf:citekey order="9">xr1</bcf:citekey>
-    <bcf:citekey order="10">xr2</bcf:citekey>
-    <bcf:citekey order="11">xr3</bcf:citekey>
-    <bcf:citekey order="12">xr4</bcf:citekey>
-    <bcf:citekey order="13">xrt</bcf:citekey>
-    <bcf:citekey order="14">mxr</bcf:citekey>
-    <bcf:citekey order="15">mcr</bcf:citekey>
-    <bcf:citekey order="16">ccr1</bcf:citekey>
-    <bcf:citekey order="17">ccr2</bcf:citekey>
-    <bcf:citekey order="18">ccr3</bcf:citekey>
-    <bcf:citekey order="19">ccr4</bcf:citekey>
-    <bcf:citekey order="20">r1</bcf:citekey>
-    <bcf:citekey order="21">xd1</bcf:citekey>
-    <bcf:citekey order="22">xd2</bcf:citekey>
+    <bcf:citekey order="1" intorder="1">cr1</bcf:citekey>
+    <bcf:citekey order="2" intorder="1">cr2</bcf:citekey>
+    <bcf:citekey order="3" intorder="1">cr3</bcf:citekey>
+    <bcf:citekey order="4" intorder="1">cr4</bcf:citekey>
+    <bcf:citekey order="5" intorder="1">cr6</bcf:citekey>
+    <bcf:citekey order="6" intorder="1">cr7</bcf:citekey>
+    <bcf:citekey order="7" intorder="1">cr8</bcf:citekey>
+    <bcf:citekey order="8" intorder="1">crt</bcf:citekey>
+    <bcf:citekey order="9" intorder="1">xr1</bcf:citekey>
+    <bcf:citekey order="10" intorder="1">xr2</bcf:citekey>
+    <bcf:citekey order="11" intorder="1">xr3</bcf:citekey>
+    <bcf:citekey order="12" intorder="1">xr4</bcf:citekey>
+    <bcf:citekey order="13" intorder="1">xrt</bcf:citekey>
+    <bcf:citekey order="14" intorder="1">mxr</bcf:citekey>
+    <bcf:citekey order="15" intorder="1">mcr</bcf:citekey>
+    <bcf:citekey order="16" intorder="1">ccr1</bcf:citekey>
+    <bcf:citekey order="17" intorder="1">ccr2</bcf:citekey>
+    <bcf:citekey order="18" intorder="1">ccr3</bcf:citekey>
+    <bcf:citekey order="19" intorder="1">ccr4</bcf:citekey>
+    <bcf:citekey order="20" intorder="1">r1</bcf:citekey>
+    <bcf:citekey order="21" intorder="1">xd1</bcf:citekey>
+    <bcf:citekey order="22" intorder="1">xd2</bcf:citekey>
   </bcf:section>
   <!-- SECTION 1 -->
   <bcf:bibdata section="1">
@@ -2050,13 +2050,13 @@
   </bcf:bibdata>
   <bcf:section number="1">
     <bcf:citekey type="set" members="Dynamic1,Dynamic2,Dynamic3,missing1">DynSet</bcf:citekey>
-    <bcf:citekey order="1">cr5</bcf:citekey>
-    <bcf:citekey order="2">Static1</bcf:citekey>
-    <bcf:citekey order="3">Static2</bcf:citekey>
-    <bcf:citekey order="4">Dynamic1</bcf:citekey>
-    <bcf:citekey order="5">rel1</bcf:citekey>
-    <bcf:citekey order="6">rel2</bcf:citekey>
-    <bcf:citekey order="7">rel3</bcf:citekey>
+    <bcf:citekey order="1" intorder="1">cr5</bcf:citekey>
+    <bcf:citekey order="2" intorder="1">Static1</bcf:citekey>
+    <bcf:citekey order="3" intorder="1">Static2</bcf:citekey>
+    <bcf:citekey order="4" intorder="1">Dynamic1</bcf:citekey>
+    <bcf:citekey order="5" intorder="1">rel1</bcf:citekey>
+    <bcf:citekey order="6" intorder="1">rel2</bcf:citekey>
+    <bcf:citekey order="7" intorder="1">rel3</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="nty">

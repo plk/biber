@@ -2029,17 +2029,17 @@
     <bcf:datasource type="file" datatype="bibtex">sections2.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey order="1">sect1</bcf:citekey>
-    <bcf:citekey order="2">sect2</bcf:citekey>
-    <bcf:citekey order="3">sect3</bcf:citekey>
+    <bcf:citekey order="1" intorder="1">sect1</bcf:citekey>
+    <bcf:citekey order="2" intorder="1">sect2</bcf:citekey>
+    <bcf:citekey order="3" intorder="1">sect3</bcf:citekey>
   </bcf:section>
   <!-- SECTION 1 -->
   <bcf:bibdata section="1">
     <bcf:datasource type="file" datatype="bibtex">sections3.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="1">
-    <bcf:citekey order="1">sect4</bcf:citekey>
-    <bcf:citekey order="2">sect5</bcf:citekey>
+    <bcf:citekey order="1" intorder="1">sect4</bcf:citekey>
+    <bcf:citekey order="2" intorder="1">sect5</bcf:citekey>
   </bcf:section>
   <!-- SECTION 2 -->
   <bcf:bibdata section="2">
@@ -2047,22 +2047,22 @@
     <bcf:datasource type="file" datatype="bibtex">sections1.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="2">
-    <bcf:citekey order="1">sect1</bcf:citekey>
-    <bcf:citekey order="2">sect6</bcf:citekey>
-    <bcf:citekey order="3">sect7</bcf:citekey>
-    <bcf:citekey order="4">sect3</bcf:citekey> <!-- Bad key for section 2, should be dropped in tests -->
-    <bcf:citekey order="5">sectx</bcf:citekey> <!-- Bad key for section 2, should be dropped in tests -->
+    <bcf:citekey order="1" intorder="1">sect1</bcf:citekey>
+    <bcf:citekey order="2" intorder="1">sect6</bcf:citekey>
+    <bcf:citekey order="3" intorder="1">sect7</bcf:citekey>
+    <bcf:citekey order="4" intorder="1">sect3</bcf:citekey> <!-- Bad key for section 2, should be dropped in tests -->
+    <bcf:citekey order="5" intorder="1">sectx</bcf:citekey> <!-- Bad key for section 2, should be dropped in tests -->
   </bcf:section>
   <!-- SECTION 3 -->
   <bcf:bibdata section="3">
     <bcf:datasource type="file" datatype="bibtex">sections1.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="3">
-    <bcf:citekey order="0">*</bcf:citekey>
+    <bcf:citekey order="0" intorder="1">*</bcf:citekey>
   </bcf:section>
   <!-- SECTION 0 -->
   <bcf:section number="0">
-    <bcf:citekey order="4">sect8</bcf:citekey>
+    <bcf:citekey order="4" intorder="1">sect8</bcf:citekey>
   </bcf:section>
   <!-- SORTING -->
   <bcf:sortingtemplate name="nty">

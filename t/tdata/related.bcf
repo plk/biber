@@ -2017,12 +2017,12 @@
     <bcf:datasource type="file" datatype="bibtex">related.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey order="1">key1</bcf:citekey>
-    <bcf:citekey order="2">key2</bcf:citekey>
-    <bcf:citekey order="3">c1</bcf:citekey>
-    <bcf:citekey order="4">s2</bcf:citekey>
-    <bcf:citekey order="5">kullback</bcf:citekey>
-    <bcf:citekey order="6">kullback:related</bcf:citekey>
+    <bcf:citekey order="1" intorder="1">key1</bcf:citekey>
+    <bcf:citekey order="2" intorder="1">key2</bcf:citekey>
+    <bcf:citekey order="3" intorder="1">c1</bcf:citekey>
+    <bcf:citekey order="4" intorder="1">s2</bcf:citekey>
+    <bcf:citekey order="5" intorder="1">kullback</bcf:citekey>
+    <bcf:citekey order="6" intorder="1">kullback:related</bcf:citekey>
   </bcf:section>
   <!-- SORTING -->
   <bcf:sortingtemplate name="nty">

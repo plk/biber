@@ -2121,12 +2121,12 @@
    <bcf:datasource type="file" datatype="bibtex">labelalphaname.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey order="1">lant1</bcf:citekey>
-    <bcf:citekey order="2">lant2</bcf:citekey>
-    <bcf:citekey order="3">lant3</bcf:citekey>
-    <bcf:citekey order="4">lant4</bcf:citekey>
-    <bcf:citekey order="5">lant5</bcf:citekey>
-    <bcf:citekey order="6">lant6</bcf:citekey>
+    <bcf:citekey order="1" intorder="1">lant1</bcf:citekey>
+    <bcf:citekey order="2" intorder="1">lant2</bcf:citekey>
+    <bcf:citekey order="3" intorder="1">lant3</bcf:citekey>
+    <bcf:citekey order="4" intorder="1">lant4</bcf:citekey>
+    <bcf:citekey order="5" intorder="1">lant5</bcf:citekey>
+    <bcf:citekey order="6" intorder="1">lant6</bcf:citekey>
   </bcf:section>
   <!-- SORTING -->
   <bcf:sortingtemplate name="nty">

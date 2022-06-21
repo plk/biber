@@ -2016,10 +2016,10 @@
     <bcf:datasource type="file" datatype="bibtex">sort-names.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey order="1">N1</bcf:citekey>
-    <bcf:citekey order="1">N2</bcf:citekey>
-    <bcf:citekey order="2">N3</bcf:citekey>
-    <bcf:citekey order="3">N4</bcf:citekey>
+    <bcf:citekey order="1" intorder="1">N1</bcf:citekey>
+    <bcf:citekey order="1" intorder="1">N2</bcf:citekey>
+    <bcf:citekey order="2" intorder="1">N3</bcf:citekey>
+    <bcf:citekey order="3" intorder="1">N4</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="nty">

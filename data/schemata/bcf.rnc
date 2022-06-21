@@ -517,6 +517,7 @@ secspec =
         attribute members { xsd:string {minLength="1"}},
         xsd:string {minLength="1"}) |
       ( attribute order { xsd:integer },
+        attribute intorder { xsd:integer }?,
         attribute nocite { xsd:boolean }?,
         xsd:string {minLength="1"} )
     }*,
