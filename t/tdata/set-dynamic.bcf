@@ -2021,14 +2021,14 @@
   </bcf:bibdata>
   <bcf:section number="0">
     <bcf:citekey type="set" members="Dynamic1,Dynamic2,Dynamic3alias,missing1">DynSet</bcf:citekey>
-    <bcf:citekey order="0">*</bcf:citekey>    
+    <bcf:citekey order="0" intorder="1">*</bcf:citekey>    
   </bcf:section>
   <!-- SECTION 1 -->
   <bcf:bibdata section="1">
     <bcf:datasource type="file" datatype="bibtex">sets.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="1">
-    <bcf:citekey order="1">Dynamic3</bcf:citekey>
+    <bcf:citekey order="1" intorder="1">Dynamic3</bcf:citekey>
   </bcf:section>
   <!-- SORTING -->
   <bcf:sortingtemplate name="nty">

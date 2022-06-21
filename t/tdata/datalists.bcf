@@ -2044,31 +2044,31 @@
     <bcf:datasource type="file" datatype="biblatexml">datalists.bltxml</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey order="1">K1</bcf:citekey>
-    <bcf:citekey order="2">K2</bcf:citekey>
-    <bcf:citekey order="3">K3</bcf:citekey>
-    <bcf:citekey order="4">K4</bcf:citekey>
-    <bcf:citekey order="5">K5</bcf:citekey>
-    <bcf:citekey order="6">K6</bcf:citekey>
-    <bcf:citekey order="7">K7</bcf:citekey>
-    <bcf:citekey order="8">K8</bcf:citekey>
-    <bcf:citekey order="9">K9</bcf:citekey>
-    <bcf:citekey order="10">K10</bcf:citekey>
-    <bcf:citekey order="11">K11</bcf:citekey>
-    <bcf:citekey order="12">K12</bcf:citekey>
+    <bcf:citekey order="1" intorder="1">K1</bcf:citekey>
+    <bcf:citekey order="2" intorder="1">K2</bcf:citekey>
+    <bcf:citekey order="3" intorder="1">K3</bcf:citekey>
+    <bcf:citekey order="4" intorder="1">K4</bcf:citekey>
+    <bcf:citekey order="5" intorder="1">K5</bcf:citekey>
+    <bcf:citekey order="6" intorder="1">K6</bcf:citekey>
+    <bcf:citekey order="7" intorder="1">K7</bcf:citekey>
+    <bcf:citekey order="8" intorder="1">K8</bcf:citekey>
+    <bcf:citekey order="9" intorder="1">K9</bcf:citekey>
+    <bcf:citekey order="10" intorder="1">K10</bcf:citekey>
+    <bcf:citekey order="11" intorder="1">K11</bcf:citekey>
+    <bcf:citekey order="12" intorder="1">K12</bcf:citekey>
   </bcf:section>
   <!-- SECTION 1 -->
   <bcf:bibdata section="1">
     <bcf:datasource type="file" datatype="bibtex">datalists.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="1">
-    <bcf:citekey order="1">D1</bcf:citekey>
-    <bcf:citekey order="2">D2</bcf:citekey>
-    <bcf:citekey order="3">D3</bcf:citekey>
-    <bcf:citekey order="4">D4</bcf:citekey>
-    <bcf:citekey order="5">D5</bcf:citekey>
-    <bcf:citekey order="6">D6</bcf:citekey>
-    <bcf:citekey order="7">D7</bcf:citekey>
+    <bcf:citekey order="1" intorder="1">D1</bcf:citekey>
+    <bcf:citekey order="2" intorder="1">D2</bcf:citekey>
+    <bcf:citekey order="3" intorder="1">D3</bcf:citekey>
+    <bcf:citekey order="4" intorder="1">D4</bcf:citekey>
+    <bcf:citekey order="5" intorder="1">D5</bcf:citekey>
+    <bcf:citekey order="6" intorder="1">D6</bcf:citekey>
+    <bcf:citekey order="7" intorder="1">D7</bcf:citekey>
   </bcf:section>
   <!-- SORTING -->
   <bcf:sortingtemplate name="nty">

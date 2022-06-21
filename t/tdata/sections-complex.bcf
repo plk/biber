@@ -2038,22 +2038,22 @@
     <bcf:datasource type="file" datatype="bibtex">labelalpha.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey order="1">L1</bcf:citekey>
-    <bcf:citekey order="2">L2</bcf:citekey>
-    <bcf:citekey order="3">L3</bcf:citekey>
-    <bcf:citekey order="4">L4</bcf:citekey>
-    <bcf:citekey order="5">m1</bcf:citekey>
+    <bcf:citekey order="1" intorder="1">L1</bcf:citekey>
+    <bcf:citekey order="2" intorder="1">L2</bcf:citekey>
+    <bcf:citekey order="3" intorder="1">L3</bcf:citekey>
+    <bcf:citekey order="4" intorder="1">L4</bcf:citekey>
+    <bcf:citekey order="5" intorder="1">m1</bcf:citekey>
   </bcf:section>
   <!-- SECTION 1 -->
   <bcf:bibdata section="1">
     <bcf:datasource type="file" datatype="bibtex">labelalpha.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="1">
-    <bcf:citekey order="1">L5</bcf:citekey>
-    <bcf:citekey order="2">L6</bcf:citekey>
-    <bcf:citekey order="3">L7</bcf:citekey>
-    <bcf:citekey order="4">L8</bcf:citekey>
-    <bcf:citekey order="5">m1</bcf:citekey>
+    <bcf:citekey order="1" intorder="1">L5</bcf:citekey>
+    <bcf:citekey order="2" intorder="1">L6</bcf:citekey>
+    <bcf:citekey order="3" intorder="1">L7</bcf:citekey>
+    <bcf:citekey order="4" intorder="1">L8</bcf:citekey>
+    <bcf:citekey order="5" intorder="1">m1</bcf:citekey>
   </bcf:section>
   <!-- SORTING -->
   <bcf:sortingtemplate name="nty">

@@ -2032,14 +2032,14 @@
     <bcf:datasource type="file" datatype="bibtex">skips.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey order="1">skip1</bcf:citekey>
-    <bcf:citekey order="2">skip2</bcf:citekey>
-    <bcf:citekey order="3">skip3</bcf:citekey>
-    <bcf:citekey order="4">skip4</bcf:citekey>
-    <bcf:citekey order="5">seta</bcf:citekey>
-    <bcf:citekey order="6">noseta</bcf:citekey>
-    <bcf:citekey order="7">nosetb</bcf:citekey>
-    <bcf:citekey order="8">nosetc</bcf:citekey>
+    <bcf:citekey order="1" intorder="1">skip1</bcf:citekey>
+    <bcf:citekey order="2" intorder="1">skip2</bcf:citekey>
+    <bcf:citekey order="3" intorder="1">skip3</bcf:citekey>
+    <bcf:citekey order="4" intorder="1">skip4</bcf:citekey>
+    <bcf:citekey order="5" intorder="1">seta</bcf:citekey>
+    <bcf:citekey order="6" intorder="1">noseta</bcf:citekey>
+    <bcf:citekey order="7" intorder="1">nosetb</bcf:citekey>
+    <bcf:citekey order="8" intorder="1">nosetc</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="nty">

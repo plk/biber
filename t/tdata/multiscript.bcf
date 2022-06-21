@@ -2045,9 +2045,9 @@
     <bcf:datasource type="file" datatype="biblatexml">multiscript.bltxml</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey order="1">ms1</bcf:citekey>
-    <bcf:citekey order="2">ms2</bcf:citekey>
-    <bcf:citekey order="3">bltx1</bcf:citekey>
+    <bcf:citekey order="1" intorder="1">ms1</bcf:citekey>
+    <bcf:citekey order="2" intorder="1">ms2</bcf:citekey>
+    <bcf:citekey order="3" intorder="1">bltx1</bcf:citekey>
   </bcf:section>
   <!-- SORTING -->
   <bcf:sortingtemplate name="nty">

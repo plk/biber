@@ -2032,9 +2032,9 @@
     <bcf:datasource type="file" datatype="bibtex">skipsg.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey order="1">S1</bcf:citekey>
-    <bcf:citekey order="2">S2</bcf:citekey>
-    <bcf:citekey order="3">S3</bcf:citekey>
+    <bcf:citekey order="1" intorder="1">S1</bcf:citekey>
+    <bcf:citekey order="2" intorder="1">S2</bcf:citekey>
+    <bcf:citekey order="3" intorder="1">S3</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="nty">

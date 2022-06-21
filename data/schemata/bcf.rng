@@ -1306,6 +1306,11 @@
                 <data type="integer"/>
               </attribute>
               <optional>
+                <attribute name="intorder">
+                  <data type="integer"/>
+                </attribute>
+              </optional>
+              <optional>
                 <attribute name="nocite">
                   <data type="boolean"/>
                 </attribute>

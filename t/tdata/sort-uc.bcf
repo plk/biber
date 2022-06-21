@@ -2019,12 +2019,12 @@
     <bcf:datasource type="file" datatype="bibtex">sort-uc.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey order="1">LS1</bcf:citekey>
-    <bcf:citekey order="2">LS2</bcf:citekey>
-    <bcf:citekey order="3">LS3</bcf:citekey>
-    <bcf:citekey order="4">LS4</bcf:citekey>
-    <bcf:citekey order="4">LS5</bcf:citekey>
-    <bcf:citekey order="4">LS6</bcf:citekey>
+    <bcf:citekey order="1" intorder="1">LS1</bcf:citekey>
+    <bcf:citekey order="2" intorder="1">LS2</bcf:citekey>
+    <bcf:citekey order="3" intorder="1">LS3</bcf:citekey>
+    <bcf:citekey order="4" intorder="1">LS4</bcf:citekey>
+    <bcf:citekey order="4" intorder="1">LS5</bcf:citekey>
+    <bcf:citekey order="4" intorder="1">LS6</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="nty">

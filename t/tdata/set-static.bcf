@@ -2020,17 +2020,17 @@
     <bcf:datasource type="file" datatype="bibtex">sets.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey order="1">Static2</bcf:citekey>
-    <bcf:citekey order="2">Static1</bcf:citekey>
+    <bcf:citekey order="1" intorder="1">Static2</bcf:citekey>
+    <bcf:citekey order="2" intorder="1">Static1</bcf:citekey>
   </bcf:section>
   <!-- SECTION 1 -->
   <bcf:bibdata section="1">
     <bcf:datasource type="file" datatype="bibtex">sets.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="1">
-    <bcf:citekey order="1">Static2</bcf:citekey>
-    <bcf:citekey order="2">Static3</bcf:citekey>
-    <bcf:citekey order="3">Static4</bcf:citekey>
+    <bcf:citekey order="1" intorder="1">Static2</bcf:citekey>
+    <bcf:citekey order="2" intorder="1">Static3</bcf:citekey>
+    <bcf:citekey order="3" intorder="1">Static4</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="nty">

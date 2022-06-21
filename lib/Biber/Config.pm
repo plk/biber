@@ -74,6 +74,7 @@ $CONFIG->{globalstate}{seenkeys} = {};
 # Track the order of keys as cited. Keys cited in the same \cite*{} get the same order
 # Used for sorting schemes which use \citeorder
 $CONFIG->{state}{keyorder} = {};
+$CONFIG->{state}{internalkeyorder} = {};
 
 # Location of the control file
 $CONFIG->{state}{control_file_location} = '';
@@ -1182,7 +1183,7 @@ sub is_inheritance_path {
 
 =head2 set_keyorder
 
-  Set some key order information
+  Set key order information
 
 =cut
 
@@ -1193,9 +1194,22 @@ sub set_keyorder {
   return;
 }
 
+=head2 set_internal_keyorder
+
+  Set key order information for keys with the same order
+
+=cut
+
+sub set_internal_keyorder {
+  shift; # class method so don't care about class name
+  my ($section, $key, $intkeyorder) = @_;
+  $CONFIG->{state}{internalkeyorder}{$section}{$key} = $intkeyorder;
+  return;
+}
+
 =head2 get_keyorder
 
-  Get some key order information
+  Get key order information
 
 =cut
 
@@ -1203,6 +1217,18 @@ sub get_keyorder {
   shift; # class method so don't care about class name
   my ($section, $key) = @_;
   return $CONFIG->{state}{keyorder}{$section}{$key};
+}
+
+=head2 get_internal_keyorder
+
+  Get key order information for keys with the same order
+
+=cut
+
+sub get_internal_keyorder {
+  shift; # class method so don't care about class name
+  my ($section, $key) = @_;
+  return $CONFIG->{state}{internalkeyorder}{$section}{$key};
 }
 
 

@@ -2020,16 +2020,16 @@
     <bcf:datasource type="file" datatype="bibtex">truncation.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey order="1">us1</bcf:citekey>
-    <bcf:citekey order="2">us2</bcf:citekey>
-    <bcf:citekey order="3">us3</bcf:citekey>
-    <bcf:citekey order="4">us4</bcf:citekey>
-    <bcf:citekey order="5">us5</bcf:citekey>
-    <bcf:citekey order="6">us6</bcf:citekey>
-    <bcf:citekey order="7">us7</bcf:citekey>
-    <bcf:citekey order="8">us8</bcf:citekey>
-    <bcf:citekey order="9">us9</bcf:citekey>
-    <bcf:citekey order="10">us10</bcf:citekey>
+    <bcf:citekey order="1" intorder="1">us1</bcf:citekey>
+    <bcf:citekey order="2" intorder="1">us2</bcf:citekey>
+    <bcf:citekey order="3" intorder="1">us3</bcf:citekey>
+    <bcf:citekey order="4" intorder="1">us4</bcf:citekey>
+    <bcf:citekey order="5" intorder="1">us5</bcf:citekey>
+    <bcf:citekey order="6" intorder="1">us6</bcf:citekey>
+    <bcf:citekey order="7" intorder="1">us7</bcf:citekey>
+    <bcf:citekey order="8" intorder="1">us8</bcf:citekey>
+    <bcf:citekey order="9" intorder="1">us9</bcf:citekey>
+    <bcf:citekey order="10" intorder="1">us10</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="nty">

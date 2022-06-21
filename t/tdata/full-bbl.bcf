@@ -2019,8 +2019,8 @@
     <bcf:datasource type="file" datatype="bibtex">full-bbl.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey order="1">F1a</bcf:citekey>
-    <bcf:citekey order="2">C1</bcf:citekey>
+    <bcf:citekey order="1" intorder="1">F1a</bcf:citekey>
+    <bcf:citekey order="2" intorder="1">C1</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="nty">

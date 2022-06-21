@@ -2019,9 +2019,9 @@
     <bcf:datasource type="file" datatype="bibtex">sort-case.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey order="1">CS1</bcf:citekey>
-    <bcf:citekey order="2">CS2</bcf:citekey>
-    <bcf:citekey order="3">CS3</bcf:citekey>
+    <bcf:citekey order="1" intorder="1">CS1</bcf:citekey>
+    <bcf:citekey order="2" intorder="1">CS2</bcf:citekey>
+    <bcf:citekey order="3" intorder="1">CS3</bcf:citekey>
   </bcf:section>
   <!-- SORTING -->
   <bcf:sortingtemplate name="nty">

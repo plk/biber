@@ -1038,6 +1038,7 @@ my %internal_dispatch_sorting = (
                                  'editorctype'     =>  [\&_sort_editort,       ['editorctype']],
                                  'citeorder'       =>  [\&_sort_citeorder,     []],
                                  'citecount'       =>  [\&_sort_citecount,     []],
+                                 'intciteorder'    =>  [\&_sort_intciteorder,  []],
                                  'labelalpha'      =>  [\&_sort_labelalpha,    []],
                                  'labelname'       =>  [\&_sort_labelname,     []],
                                  'labeltitle'      =>  [\&_sort_labeltitle,    []],
@@ -1306,6 +1307,11 @@ sub _sort_entrykey {
 sub _sort_entrytype {
   my ($self, $citekey, $secnum, $section, $be, $dlist, $sortelementattributes) = @_;
   return _process_sort_attributes($be->get_field('entrytype'), $sortelementattributes);
+}
+
+sub _sort_intciteorder {
+  my ($self, $citekey, $secnum, $section, $be, $dlist, $sortelementattributes) = @_;
+  return Biber::Config->get_internal_keyorder($secnum, $citekey);
 }
 
 sub _sort_labelalpha {

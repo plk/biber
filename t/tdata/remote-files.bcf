@@ -2028,7 +2028,7 @@
     <bcf:datasource type="file" datatype="bibtex">https://www.staff.science.uu.nl/~bodla101/graphs-bib/papers.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey order="1">AbdelbarH98</bcf:citekey>
+    <bcf:citekey order="1" intorder="1">AbdelbarH98</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="nty">
