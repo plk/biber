@@ -184,6 +184,9 @@
             <ref name="uniquename"/>
           </optional>
           <optional>
+            <ref name="uniqueprimaryauthor"/>
+          </optional>
+          <optional>
             <ref name="uniquetitle"/>
           </optional>
           <optional>
@@ -1259,6 +1262,17 @@
                 <choice>
                   <value>bibtex</value>
                   <value>biblatexml</value>
+                </choice>
+              </attribute>
+            </optional>
+            <optional>
+              <attribute name="encoding"/>
+            </optional>
+            <optional>
+              <attribute name="glob">
+                <choice>
+                  <value>true</value>
+                  <value>false</value>
                 </choice>
               </attribute>
             </optional>
