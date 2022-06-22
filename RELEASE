@@ -15,9 +15,9 @@
   empty_tree.sh current
 * Build binaries from release and upload to SF to new version folder using
   "current" as release 
+* scp htdocs/*.html philkime,biblatex-biber@web.sourceforge.net:htdocs/
 * Inform builders of binaries to update
 * Associate new defaults with new binaries and change labels
-* scp htdocs/*.html philkime,biblatex-biber@web.sourceforge.net:htdocs/
 * Replace test.bcf with test-dev.bcf on SF. Upload new test-dev.bcf if necessary
 * Update SF main page, news, add new README in web interface at root, if needed
 * When all builders have updated current folder in SF, run

@@ -13,7 +13,7 @@
 * DONE make namepart specs
 ** DONE named
 ** DONE selectable per sortlist
-*** TODO abx@aux@sortscheme etc. probably this needs to be generalised to mentioned refcontexts
+*** DONE abx@aux@sortscheme etc. probably this needs to be generalised to mentioned refcontexts
 ** DONE per-entry
 ** DONE per-namelist, per name
 * DONE hashes use static construction from DM name constants - problem with uniquelist
@@ -163,16 +163,3 @@
 ** DONE create APA template, set as default, switch refcontext for \printbibliography to normal
 ** DONE Doc new \visibility option, bump .bcf version
 ** DONE doc \AtBeginRefsection, just after refsection number setting
-* TODO Multiscript
-** Documentation
-*** TODO \DeclareDatamodelMultiscriptEntryfields and \ResetDatamodelMultiscriptEntryfields
-*** TODO multiscriptforms constant
-** Datamodel
-*** DONE Add valid multiscript fields to datamodel
-*** DONE Add new datamodel constant list of default forms (original, transliteration, transcription, translation)
-** Biber
-*** DONE Parsing BCP47 function
-https://tools.ietf.org/html/bcp47
-
-*** TODO Parsing field alternates function
-*** TODO annotation BCP47 tag parts override field tag part
