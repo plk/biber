@@ -101,6 +101,7 @@ start =
       sortalphaothers?,
       uniquelist?,
       uniquename?,
+      uniqueprimaryauthor?,
       uniquetitle?,
       uniquebaretitle?,
       uniquework?,
@@ -506,6 +507,8 @@ secspec =
     element bcf:datasource {
       attribute type { "file" },
       attribute datatype { "bibtex" | "biblatexml" }?,
+      attribute encoding { text }?,
+      attribute glob { "true" | "false" }?,
       xsd:anyURI
     }*
   }?,
