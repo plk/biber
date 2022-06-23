@@ -13,7 +13,7 @@
 * DONE make namepart specs
 ** DONE named
 ** DONE selectable per sortlist
-*** TODO abx@aux@sortscheme etc. probably this needs to be generalised to mentioned refcontexts
+*** DONE abx@aux@sortscheme etc. probably this needs to be generalised to mentioned refcontexts
 ** DONE per-entry
 ** DONE per-namelist, per name
 * DONE hashes use static construction from DM name constants - problem with uniquelist

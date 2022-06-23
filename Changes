@@ -1,5 +1,11 @@
 Revision history for Biber
 
+2.18   (2022-06)
+       * Added support for biblatex "pluralothers" option which allows "et
+       al" to be forced to replace more than one name.
+       * Universal x86_64/ARM64 binary
+       * Support for citation-only rules for name templates in sorting (see
+         \visibility macro in sorting name key templates in biblatex)
 2.17   (2022-01)
        * Tool mode now supports tab indentation in output as well as spaces
          (see --output-indent)
