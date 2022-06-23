@@ -4,7 +4,7 @@
 
 # build-universal.sh <release> <branch> <binaryname> <justbuild> <deletescancache> <codesign>
 #
-# ./build-universal.sh development dev 0 0 1
+# ./build-universal.sh development dev biber 0 0 1
 # 
 # <release> is a SF subdir of /home/frs/project/biblatex-biber/biblatex-biber/
 # <branch> is a git branch to checkout on the build farm servers
@@ -19,7 +19,7 @@ BINDIR=$BASE/dist
 XSLDIR=$BASE/data
 RELEASE=${1:-"development"}
 BRANCH=${2:-"dev"}
-BINARYNAME=${4:-"biber"}
+BINARYNAME=${3:-"biber"}
 JUSTBUILD=${4:-"0"}
 DSCANCACHE=${5:-"0"}
 CODESIGN=${6:-"1"}
