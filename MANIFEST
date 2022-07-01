@@ -40,6 +40,7 @@ lib/Biber/UCollate.pm
 lib/Biber/Utils.pm
 MANIFEST
 README.md
+BUILDERS.README
 TODO.org
 t/annotations.t
 t/basic-misc.t
