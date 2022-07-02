@@ -72,8 +72,8 @@ The name of the package should be:
 
 biber-<platform>
 
-The upload should consist of an archive (zip, tar.gz  etc.) containing only the follow
-structure and items:
+The upload should consist of an archive (zip, tar.gz  etc.) with exactly
+the following structure:
 
 * biber-<platform>/README                                
 * biber-<platform>/biber-<version>-<platform>.<extension>
