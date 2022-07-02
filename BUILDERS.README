@@ -80,6 +80,8 @@ structure and items:
 
 where:
 
+*** The top-level "biber-<platform>" directory should be lower-case ***
+
 <version> is the biber version being built
 <platform> is the platform name and has no particular format requirements
            as long as it is clear
@@ -103,7 +105,7 @@ biber-linux_x86_64.tar.gz
          -> biber
 
 biber-MSWIN64.zip
-  -> biber-MSWIN64/
+  -> biber-mswin64/
        README.txt
        biber-2.18-MSWIN64.zip
          -> biber.exe
@@ -122,7 +124,7 @@ biber-linux_x86_64.tar.gz
          -> biber
 
 biber-MSWIN64.zip
-  -> biber-MSWIN64/
+  -> biber-mswin64/
        README.txt
        biber-2.18-2-MSWIN64.zip
          -> biber.exe

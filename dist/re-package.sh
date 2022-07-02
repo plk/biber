@@ -23,16 +23,18 @@ EOF
 # Binaries
 for i in "${!PLATFORMS[@]}"; do
     PLATFORM=${PLATFORMS[i]}
+    # CTAN requires top-level dir in lowercase
+    LCPLATFORM=$(echo "$PLATFORM" | tr '[:upper:]' '[:lower:]')
     SFPLATFORM=${SFPLATFORMS[i]}
     EXT=${EXTS[i]}
     if [ ! -e biber-$PLATFORM.tgz ]; then
       echo -n "Packaging $PLATFORM ... "
-      mkdir biber-$PLATFORM 2>/dev/null
-      /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/$RELEASE/binaries/$SFPLATFORM/biber-$PLATFORM.$EXT -O biber-$PLATFORM/biber-$VER-$PLATFORM.tar.gz >/dev/null 2>&1
+      mkdir biber-$LCPLATFORM 2>/dev/null
+      /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/$RELEASE/binaries/$SFPLATFORM/biber-$PLATFORM.$EXT -O biber-$LCPLATFORM/biber-$VER-$PLATFORM.tar.gz >/dev/null 2>&1
       [ $? -eq 0 ] || exit 1
-      create-readme $PLATFORM biber-$PLATFORM/README
-      tar zcf biber-$PLATFORM.tgz biber-$PLATFORM
-      \rm -rf biber-$PLATFORM
+      create-readme $PLATFORM biber-$LCPLATFORM/README
+      tar zcf biber-$PLATFORM.tgz biber-$LCPLATFORM
+      \rm -rf biber-$LCPLATFORM
       echo "done"
   fi
 done
