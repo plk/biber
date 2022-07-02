@@ -56,7 +56,7 @@ already doing this
 
 
 The biber maintainers will make a new release from a new version tag when
-a new biber version is releases. Please subscribe to new releases of
+a new biber version is released. Please subscribe to new releases of
 
 https://github.com/plk/biber
 
@@ -72,21 +72,17 @@ The name of the package should be:
 
 biber-<platform>
 
-The upload should consist of an archive containing only the following:
+The upload should consist of an archive (zip, tar.gz  etc.) containing only the follow
+structure and items:
 
-* A README
-* A single binary called "biber" ("biber.exe" for Windows platforms)
-
-The archive should be named as follows:
-
-biber-<version>-<platform>.<extension>
+* biber-<platform>/README                                
+* biber-<platform>/biber-<version>-<platform>.<extension>
 
 where:
 
 <version> is the biber version being built
 <platform> is the platform name and has no particular format requirements
            as long as it is clear
-
 <extension> is the archive format extension and you are free to use any
             commonly recognised format, e.g:
 
@@ -95,11 +91,22 @@ where:
 .tar.xz
 .zip
 
+The archive containing biber itself should contain only a single binary
+called "biber" ("biber.exe" for Windows platforms)
+
 For example:
 
-biber-2.18-darwin_x86_64.tar.gz
-biber-2.18-linux_x86_64.tar.xz
-biber-2.18-MSWIN64.zip
+biber-linux_x86_64.tar.gz
+  -> biber-linux_x86_64/
+       README
+       biber-2.18-linux_x86_64.tar.gz
+         -> biber
+
+biber-MSWIN64.zip
+  -> biber-MSWIN64/
+       README.txt
+       biber-2.18-MSWIN64.zip
+         -> biber.exe
 
 Note: If it necessary to push a fix for a particular platform in between
 biber releases, in a case for example where there is an issue with the
@@ -108,9 +115,17 @@ followed by a montonically increasing integer so that it is clear that the
 release is the same biber version but is a later version of the build for
 that platform, e.g:
 
-biber-2.18-1-darwin_x86_64.tar.gz
-biber-2.18-2-linux_x86_64.tar.gz
-biber-2.18-3-MSWIN64.zip
+biber-linux_x86_64.tar.gz
+  -> biber-linux_x86_64/
+       README
+       biber-2.18-1-linux_x86_64.tar.gz
+         -> biber
+
+biber-MSWIN64.zip
+  -> biber-MSWIN64/
+       README.txt
+       biber-2.18-2-MSWIN64.zip
+         -> biber.exe
 
 ** DO NOT change the name of the binary inside the archive - it should
    always be "biber" or "biber.exe"
@@ -118,7 +133,7 @@ biber-2.18-3-MSWIN64.zip
 This makes it clear that the biber version remains the same and all that is
 changed is some aspect of the binary cache infrastructure for the platform.
 
-The README should simple contain the following where <platform> is as
+The README should simply contain the following where <platform> is as
 described above:
 
 ------
