@@ -42,8 +42,8 @@ done
 # base
 if [ ! -e biber-base.tgz ]; then
   echo -n "Packaging base ... "
-  mkdir biber-base 2>/dev/null
-  cd biber-base
+  mkdir biber 2>/dev/null
+  cd biber
   mkdir source
   mkdir documentation
   /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/$RELEASE/biblatex-biber.tar.gz -O source/biblatex-biber.tar.gz >/dev/null 2>&1
@@ -56,7 +56,7 @@ if [ ! -e biber-base.tgz ]; then
   [ $? -eq 0 ] || exit 1
   /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/README.md -O README.md >/dev/null 2>&1
   cd ..
-  tar zcf biber-base.tgz biber-base
-  \rm -rf biber-base
+  tar zcf biber-base.tgz biber
+  \rm -rf biber
   echo "done"
 fi
