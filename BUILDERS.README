@@ -70,21 +70,30 @@ https://ctan.org/upload
 
 The name of the package should be:
 
-biber-<platform>
+biber-<metaplatform>
 
 The upload should consist of an archive (zip, tar.gz  etc.) with exactly
 the following structure:
 
-* biber-<platform>/README                                
-* biber-<platform>/biber-<version>-<platform>.<extension>
+* biber-<metaplatform>/README                                
+* biber-<metaplatform>/biber-<version>-<platform1>.<extension>
+  .
+  .
+  .
+  biber-<metaplatform>/biber-<version>-<platformn>.<extension>
+
 
 where:
 
-*** The top-level "biber-<platform>" directory should be lower-case ***
+*** The top-level "biber-<metaplatform>" directory should be lower-case ***
 
 <version> is the biber version being built
-<platform> is the platform name and has no particular format requirements
-           as long as it is clear
+<metaplatform> is the generic platform name used for the location in CTAN
+               /biblio/biber/<metaplatform> e.g. "windows", "linux",
+               "macos" etc.
+<platform> is the specific platform name and has no particular format requirements
+           as long as it is clear e.g. "MSWIN64", "linux_x86_64",
+           "darwin_universal" etc.
 <extension> is the archive format extension and you are free to use any
             commonly recognised format, e.g:
 
@@ -99,14 +108,18 @@ called "biber" ("biber.exe" for Windows platforms)
 For example:
 
 biber-linux_x86_64.tar.gz
-  -> biber-linux_x86_64/
+  -> biber-linux/
        README
+       biber-2.18-linux_x86_32.tar.gz
+         -> biber
        biber-2.18-linux_x86_64.tar.gz
          -> biber
 
 biber-MSWIN64.zip
-  -> biber-mswin64/
+  -> biber-windows/
        README.txt
+       biber-2.18-MSWIN32.zip
+         -> biber.exe
        biber-2.18-MSWIN64.zip
          -> biber.exe
 
@@ -118,19 +131,26 @@ release is the same biber version but is a later version of the build for
 that platform, e.g:
 
 biber-linux_x86_64.tar.gz
-  -> biber-linux_x86_64/
+  -> biber-linux/
        README
+       biber-2.18-1-linux_x86_32.tar.gz
+         -> biber
        biber-2.18-1-linux_x86_64.tar.gz
          -> biber
 
 biber-MSWIN64.zip
-  -> biber-mswin64/
+  -> biber-windows/
        README.txt
+       biber-2.18-2-MSWIN32.zip
+         -> biber.exe
        biber-2.18-2-MSWIN64.zip
          -> biber.exe
 
 ** DO NOT change the name of the binary inside the archive - it should
    always be "biber" or "biber.exe"
+
+** A package update should always contain all platforms (e.g. 32 and 64
+   bit) **
 
 This makes it clear that the biber version remains the same and all that is
 changed is some aspect of the binary cache infrastructure for the platform.
