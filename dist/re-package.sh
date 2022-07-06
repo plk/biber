@@ -33,7 +33,7 @@ for i in "${!PLATFORMS[@]}"; do
       mkdir biber-$METAPLATFORM 2>/dev/null
       /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/$RELEASE/binaries/$SFPLATFORM/biber-$PLATFORM.$EXT -O biber-$METAPLATFORM/biber-$VER-$PLATFORM.$EXT >/dev/null 2>&1
       [ $? -eq 0 ] || exit 1
-      create-readme $PLATFORM biber-$METAPLATFORM/README
+      create-readme $METAPLATFORM biber-$METAPLATFORM/README
       echo "done"
     fi
 done

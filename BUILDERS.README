@@ -107,7 +107,7 @@ called "biber" ("biber.exe" for Windows platforms)
 
 For example:
 
-biber-linux_x86_64.tar.gz
+biber-linux.tar.gz
   -> biber-linux/
        README
        biber-2.18-linux_x86_32.tar.gz
@@ -115,7 +115,7 @@ biber-linux_x86_64.tar.gz
        biber-2.18-linux_x86_64.tar.gz
          -> biber
 
-biber-MSWIN64.zip
+biber-windows.tar.gz
   -> biber-windows/
        README.txt
        biber-2.18-MSWIN32.zip
@@ -130,7 +130,7 @@ followed by a montonically increasing integer so that it is clear that the
 release is the same biber version but is a later version of the build for
 that platform, e.g:
 
-biber-linux_x86_64.tar.gz
+biber-linux.tar.gz
   -> biber-linux/
        README
        biber-2.18-1-linux_x86_32.tar.gz
@@ -138,7 +138,7 @@ biber-linux_x86_64.tar.gz
        biber-2.18-1-linux_x86_64.tar.gz
          -> biber
 
-biber-MSWIN64.zip
+biber-windows.tar.gz
   -> biber-windows/
        README.txt
        biber-2.18-2-MSWIN32.zip
@@ -159,7 +159,7 @@ The README should simply contain the following where <platform> is as
 described above:
 
 ------
-These are biber binaries for the <platform> platform(s).
+These are biber binaries for the <metaplatform> platform(s).
 See https://ctan.org/pkg/biber for documentation, sources, and all else.
 ------
 
