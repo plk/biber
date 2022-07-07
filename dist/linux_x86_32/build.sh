@@ -32,8 +32,8 @@
 # by looking to see if there is a site_perl directory for the module. If there is, we use that
 # version.
 
-declare -r perlpath="/usr/local/perl5320"
-declare -r perlv='5.32.0'
+declare -r perlpath="/usr/local/perl"
+declare -r perlv='5.32.1'
 declare ucpath="${perlpath}/lib/${perlv}/Unicode/Collate"
 
 # Unicode::Collate has a site_perl version so has been updated since this
@@ -69,12 +69,12 @@ PAR_VERBATIM=1 ${perlpath}/bin/pp \
   --module=Text::CSV_XS \
   --module=DateTime \
   --link=/usr/local/perl/lib/libbtparse.so \
-  --link=/usr/lib/libxml2.so \
-  --link=/usr/lib/libz.so \
-  --link=/usr/lib/libxslt.so \
-  --link=/usr/lib/libexslt.so \
-  --link=/usr/lib/libssl.so \
-  --link=/usr/lib/libcrypto.so \
+  --link=/usr/lib/i386-linux-gnu/libxml2.so \
+  --link=/usr/lib/i386-linux-gnu/libz.so \
+  --link=/usr/lib/i386-linux-gnu/libxslt.so \
+  --link=/usr/lib/i386-linux-gnu/libexslt.so \
+  --link=/usr/lib/i386-linux-gnu/libssl.so \
+  --link=/usr/lib/i386-linux-gnu/libcrypto.so \
   --addfile="../../data/biber-tool.conf;lib/Biber/biber-tool.conf" \
   --addfile="../../data/schemata/config.rnc;lib/Biber/config.rnc" \
   --addfile="../../data/schemata/config.rng;lib/Biber/config.rng" \
@@ -93,3 +93,4 @@ PAR_VERBATIM=1 ${perlpath}/bin/pp \
   --cachedeps=scancache \
   --output=biber-linux_x86_32 \
   ${perlpath}/bin/biber
+
