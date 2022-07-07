@@ -16,7 +16,9 @@ declare EXTS=("tar.gz" "zip" "zip" "tar.gz" "tar.gz")
 
 function create-readme {
   cat <<EOF>$2
-These are biber binaries for the $1 platform(s).
+These are biber binaries for the $1 platform(s), released under:
+Perl Artistic License, version 2
+
 See https://ctan.org/pkg/biber for documentation, sources, and all else.
 EOF
 }
