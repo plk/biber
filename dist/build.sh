@@ -146,7 +146,25 @@ if [ ! -e $DIR/biber-MSWIN64.zip ]; then
   cd $BASE
 fi
 
-# Build farm Linux 64
+
+# Build farm Linux 32-bit (built on Ubuntu 14.04.6)
+if [ ! -e $DIR/biber-linux_x86_32.tar.gz ]; then
+  vmon l32
+  sleep 10
+  ssh philkime@bbf-l32 "sudo ntpdate ch.pool.ntp.org;cd biblatex-biber;git checkout $BRANCH;git pull;/usr/local/perl/bin/perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/linux_x86_32;$SCANCACHE./build.sh;cd ~/biblatex-biber;sudo ./Build realclean"
+  scp philkime@bbf-l32:biblatex-biber/dist/linux_x86_32/biber-linux_x86_32 $DIR/
+  ssh philkime@bbf-l32 "\\rm -f biblatex-biber/dist/linux_x86_32/biber-linux_x86_32"
+  vmoff l32
+  cd $DIR
+  mv biber-linux_x86_632 $BINARYNAME
+  chmod +x $BINARYNAME
+  tar cf biber-linux_x86_32.tar $BINARYNAME
+  gzip biber-linux_x86_32.tar
+  \rm $BINARYNAME
+  cd $BASE
+fi
+
+# Build farm Linux 64-bit (built on Ubuntu 10.10)
 if [ ! -e $DIR/biber-linux_x86_64.tar.gz ]; then
   vmon l64
   sleep 10
@@ -188,6 +206,11 @@ fi
 # Windows 64-bit
 if [ -e $DIR/biber-MSWIN64.zip ]; then
   scp biber-MSWIN64.zip philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/biblatex-biber/$RELEASE/binaries/Windows/biber-MSWIN64.zip
+fi
+
+# Linux 32-bit
+if [ -e $DIR/biber-linux_x86_32.tar.gz ]; then
+  scp biber-linux_x86_32.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/biblatex-biber/$RELEASE/binaries/Linux/biber-linux_x86_32.tar.gz
 fi
 
 # Linux 64-bit
