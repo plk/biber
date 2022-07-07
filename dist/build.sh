@@ -156,7 +156,7 @@ if [ ! -e $DIR/biber-linux_x86_32.tar.gz ]; then
   ssh philkime@bbf-l32 "\\rm -f biblatex-biber/dist/linux_x86_32/biber-linux_x86_32"
   vmoff l32
   cd $DIR
-  mv biber-linux_x86_632 $BINARYNAME
+  mv biber-linux_x86_32 $BINARYNAME
   chmod +x $BINARYNAME
   tar cf biber-linux_x86_32.tar $BINARYNAME
   gzip biber-linux_x86_32.tar
