@@ -987,7 +987,12 @@ Schema validate the F<.bcf> biblatex control file.
 
 =item B<--validate-datamodel|-V>
 
-Validate the data against a data model.
+Validate the data against a data model. By default, the data model used is
+the one in the F<.bcf> file (normal mode) or in the default config file
+whose path can be shown with the C<--tool-config> option (tool mode). Use
+C<--no-default-datamodel> to ignore the default data model completely if
+you are using a complete data model via your own config file
+(with C<--configfile>).
 
 =item B<--version|-v>
 
