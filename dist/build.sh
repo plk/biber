@@ -34,17 +34,18 @@ function vmoff {
   VBoxManage controlvm bbf-$1 savestate
 }
 
-BASE="/usr/local/data/code/biblatex-biber"
-DOCDIR=$BASE/doc
-BINDIR=$BASE/dist
-XSLDIR=$BASE/data
-DIR=${1:-"/tmp/b"}
-RELEASE=${2:-"development"}
-BRANCH=${3:-"dev"}
-BINARYNAME=${4:-"biber"}
-JUSTBUILD=${5:-"0"}
-DSCANCACHE=${6:-"0"}
-CODESIGN=${7:-"1"}
+declare BASE="/usr/local/data/code/biblatex-biber"
+declare DOCDIR=$BASE/doc
+declare BINDIR=$BASE/dist
+declare XSLDIR=$BASE/data
+declare DIR=${1:-"/tmp/b"}
+declare RELEASE=${2:-"development"}
+declare BRANCH=${3:-"dev"}
+declare PACAKGEEXT=$(perl -ne "print \$1 if m/^our \\\$PACKAGEEXT\\s*=\\s*'([^']+)';/;" $BASE/lib/Biber/Config.pm)
+declare BINARYNAME=${4:-"biber$PACKAGEEXT"}
+declare JUSTBUILD=${5:-"0"}
+declare DSCANCACHE=${6:-"0"}
+declare CODESIGN=${7:-"1"}
 
 echo "** Checking out branch '$BRANCH' on farm servers **"
 echo "** If this is not correct, Ctrl-C now **"

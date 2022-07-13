@@ -41,19 +41,19 @@ sub new {
 
   $self->{output_data}{HEAD} = <<~EOF;
     % \$ biblatex auxiliary file \$
-    % \$ biblatex bbl format version $Biber::Config::BBL_VERSION \$
+    % \$ biblatex bbl format version $Biber::Constants::BBL_VERSION \$
     % Do not modify the above lines!
     %
-    % This is an auxiliary file used by the 'biblatex' package.
+    % This is an auxiliary file used by the 'biblatex$Biber::Config::PACKAGEEXT' package.
     % This file may safely be deleted. It will be recreated by
-    % biber as required.
+    % biber$Biber::Config::PACKAGEEXT as required.
     %
     \\begingroup
     \\makeatletter
-    \\\@ifundefined{ver\@biblatex.sty}
+    \\\@ifundefined{ver\@biblatex$Biber::Config::PACKAGEEXT.sty}
       {\\\@latex\@error
-         {Missing 'biblatex' package}
-         {The bibliography requires the 'biblatex' package.}
+         {Missing 'biblatex$Biber::Config::PACKAGEEXT' package}
+         {The bibliography requires the 'biblatex$Biber::Config::PACKAGEEXT' package.}
           \\aftergroup\\endinput}
       {}
     \\endgroup

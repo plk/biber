@@ -24,7 +24,10 @@ __PACKAGE__->follow_best_practice;
 
 our $VERSION = '4.0';
 our $BETA_VERSION = 1; # Is this a beta version?
-
+# Extension for biblatex files and biber binary to allow for parallel installations. Usually empty unless we are
+# experimenting with major changes and need a parallel version called biblatex-<something> and biber-<something>
+# in CTAN in order to have a wider audience for the changes for a while.
+our $PACKAGEEXT = '-ms';
 our $logger  = Log::Log4perl::get_logger('main');
 our $screen  = Log::Log4perl::get_logger('screen');
 our $logfile = Log::Log4perl::get_logger('logfile');
