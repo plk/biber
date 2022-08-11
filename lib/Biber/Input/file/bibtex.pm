@@ -1103,9 +1103,9 @@ sub _literal {
   if ($fc eq 'month') {
     return _hack_month($value);
   }
-  # Rationalise any bcp47 style langids into babel/polyglossia names
-  # biblatex will convert these back again when loading .lbx files
-  # We need this until babel/polyglossia support proper bcp47 language/locales
+  # Rationalise any BCP47 style langids into babel/polyglossia names
+  # We need this until babel/polyglossia support proper BCP47 language/locales and then
+  # biblatex needs to be changed as currently .lbx filenames are not BCP47 compliant
   elsif ($fc eq 'langid' and my $map = $LOCALE_MAP_R{$value}) {
     return $map;
   }
