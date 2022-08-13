@@ -275,6 +275,125 @@ sub name_part_to_bltxml {
   }
 }
 
+
+=head2 name_to_bibjson {
+
+    Create bibjson data for a name
+
+=cut
+
+sub name_to_bibjson {
+  my ($self, $out, $json, $key, $namefield, $count) = @_;
+  my $dm = Biber::Config->get_dm;
+  my %attrs;
+
+
+  # Add per-name options
+  foreach my $no (keys $CONFIG_SCOPEOPT_BIBLATEX{NAME}->%*) {
+    if (defined($self->${\"get_$no"})) {
+      my $nov = $self->${\"get_$no"};
+
+      if ($CONFIG_BIBLATEX_OPTIONS{NAME}{$no}{OUTPUT}) {
+        $attrs{$no} = Biber::Utils::map_boolean($no, $nov, 'tostring');
+      }
+    }
+  }
+
+  # gender
+  if (my $g = $self->get_gender) {
+    $attrs{gender} = $g;
+  }
+
+  # name scope annotation
+  if (my $ann = Biber::Annotation->get_annotation('item', $key, $namefield, $count)) {
+    $attrs{annotation} = $ann;
+  }
+
+  $json->start_property('name');
+  $json->start_object();
+
+  while (my ($option, $val) = each %attrs) {
+    $json->add_property($option => NFC($val));
+  }
+
+  foreach my $np ($dm->get_constant_value('nameparts')) {# list type so returns list
+    $self->name_part_to_bibjson($json, $key, $namefield, $np, $count);
+  }
+
+  $json->end_object();
+  $json->end_property();
+}
+
+=head2 name_part_to_bibjson
+
+    Return bibjson data for a name
+
+=cut
+
+sub name_part_to_bibjson {
+  my ($self, $json, $key, $namefield, $npn, $count) = @_;
+  my $np = $self->get_namepart($npn);
+  my $nip = $self->get_namepart_initial($npn);
+  if ($np) {
+    my $parts = [split(/[\s~]/, $np)];
+    my %attrs;
+
+    # namepart scope annotation
+    if (my $ann = Biber::Annotation->get_annotation('part', $key, $namefield, $count, $npn)) {
+      $attrs{annotation} = $ann;
+    }
+
+    $json->start_property('namepart');
+    $json->start_object();
+
+    # Compound name part
+    if ($parts->$#* > 0) {
+      $json->add_property('type' => $npn);
+
+      while (my ($option, $val) = each %attrs) {
+        $json->add_property($option => NFC($val));
+      }
+
+      for (my $i=0;$i <= $parts->$#*;$i++) {
+
+        $json->start_property('namepart');
+        $json->start_object();
+        if (my $init = $nip->[$i]) {
+          $json->add_property('initial' => $init);
+        }
+        $json->add_property('value' => NFC($parts->[$i]));
+        $json->end_object(); # namepart
+      }
+      $json->end_object(); # namepart
+      $json->end_property(); # namepart
+    }
+    else { # simple name part
+      if (my $init = $nip->[0]) {
+
+        $json->start_property('namepart');
+        $json->start_object();
+        $json->add_property('type' => $npn);
+        $json->add_property('initial' => $init);
+
+        while (my ($option, $val) = each %attrs) {
+          $json->add_property($option => NFC($val));
+        }
+      }
+      else {
+        $json->start_property('namepart');
+        $json->start_object();
+      }
+
+      $json->add_property('value' => NFC($parts->[0]));
+      $json->end_object(); # namepart
+      $json->end_property(); # namepart
+    }
+
+    $json->end_object();
+    $json->end_property();
+  }
+}
+
 =head2 name_to_bbl
 
     Return bbl data for a name

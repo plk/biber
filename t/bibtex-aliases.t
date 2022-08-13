@@ -48,13 +48,13 @@ $biber->prepare;
 my $section = $biber->sections->get_section(0);
 my $bibentries = $section->bibentries;
 
-my $w1 = ["Datamodel: Entry 'alias2' (bibtex-aliases.bib): Field 'school' invalid in data model - ignoring",
-          "Datamodel: Entry 'alias2' (bibtex-aliases.bib): Invalid entry type 'thing' - defaulting to 'misc'",
-          "Datamodel: Entry 'alias2' (bibtex-aliases.bib): Invalid field 'institution' for entrytype 'misc'",
+my $w1 = ["Datamodel: thing entry 'alias2' (bibtex-aliases.bib): Field 'school' invalid in data model - ignoring",
+          "Datamodel: thing entry 'alias2' (bibtex-aliases.bib): Invalid entry type 'thing' - defaulting to 'misc'",
+          "Datamodel: thing entry 'alias2' (bibtex-aliases.bib): Invalid field 'institution' for entrytype 'misc'",
 ];
 
-my $w2 = ["Datamodel: Entry 'alias4' (bibtex-aliases.bib): Invalid field 'author' for entrytype 'customa'",
-          "Datamodel: Entry 'alias4' (bibtex-aliases.bib): Invalid field 'title' for entrytype 'customa'",
+my $w2 = ["Datamodel: customa entry 'alias4' (bibtex-aliases.bib): Invalid field 'author' for entrytype 'customa'",
+          "Datamodel: customa entry 'alias4' (bibtex-aliases.bib): Invalid field 'title' for entrytype 'customa'",
 ];
 
 eq_or_diff($bibentries->entry('alias1')->get_field('entrytype'), 'thesis', 'Alias - 1' );

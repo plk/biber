@@ -86,7 +86,7 @@ my $xd1 = q|    \entry{xd1}{book}{}
       \field{note}{A Note}
       \field{year}{2007}
       \field{dateera}{ce}
-      \warn{\item Entry 'xd1' references XDATA entry 'missingxd' which does not exist, not resolving (section 0)}
+      \warn{\item book entry 'xd1' references XDATA entry 'missingxd' which does not exist, not resolving (section 0)}
     \endentry
 |;
 
@@ -188,13 +188,13 @@ my $gxd1 = q|    \entry{gxd1}{book}{}
       \field{addendum}{xdata=missing}
       \field{note}{xdata=gxd2-note}
       \field{title}{Some title}
-      \warn{\item Entry 'gxd1' has XDATA reference from field 'publisher' that contains no source field (section 0)}
-      \warn{\\item Entry 'gxd1' has XDATA reference from field 'addendum' that contains no source field (section 0)}
-      \warn{\item Field 'note' in entry 'gxd1' references XDATA field 'note' in entry 'gxd2' and this field does not exist, not resolving (section 0)}
-      \warn{\item Field 'translator' in entry 'gxd1' references field 'author' position 3 in entry 'gxd2' and this position does not exist, not resolving (section 0)}
-      \warn{\item Field 'lista' in entry 'gxd1' references field 'location' position 5 in entry 'gxd3' and this position does not exist, not resolving (section 0)}
-      \warn{\item Field 'organization' in entry 'gxd1' which xdata references field 'author' in entry 'gxd2' are not the same types, not resolving (section 0)}
-      \warn{\item Entry 'gxd1' references XDATA entry 'lxd1' which is not an XDATA entry, not resolving (section 0)}
+      \warn{\item book entry 'gxd1' has XDATA reference from field 'publisher' that contains no source field (section 0)}
+      \warn{\\item book entry 'gxd1' has XDATA reference from field 'addendum' that contains no source field (section 0)}
+      \warn{\item Field 'note' in book entry 'gxd1' references XDATA field 'note' in entry 'gxd2' and this field does not exist, not resolving (section 0)}
+      \warn{\item Field 'translator' in book entry 'gxd1' references field 'author' position 3 in entry 'gxd2' and this position does not exist, not resolving (section 0)}
+      \warn{\item Field 'lista' in book entry 'gxd1' references field 'location' position 5 in entry 'gxd3' and this position does not exist, not resolving (section 0)}
+      \warn{\item Field 'organization' in book entry 'gxd1' which xdata references field 'author' in entry 'gxd2' are not the same types, not resolving (section 0)}
+      \warn{\item book entry 'gxd1' references XDATA entry 'lxd1' which is not an XDATA entry, not resolving (section 0)}
     \endentry
 |;
 
@@ -267,13 +267,13 @@ my $gxd1g = q|    \entry{gxd1g}{book}{}
       \field{addendum}{xdata=missing}
       \field{note}{xdata=gxd2-note}
       \field{title}{Some title}
-      \warn{\item Entry 'gxd1g' has XDATA reference from field 'publisher' that contains no source field (section 0)}
-      \warn{\item Entry 'gxd1g' has XDATA reference from field 'addendum' that contains no source field (section 0)}
-      \warn{\item Field 'note' in entry 'gxd1g' references XDATA field 'note' in entry 'gxd2' and this field does not exist, not resolving (section 0)}
-      \warn{\item Field 'translator' in entry 'gxd1g' references field 'author' position 3 in entry 'gxd2' and this position does not exist, not resolving (section 0)}
-      \warn{\item Field 'lista' in entry 'gxd1g' references field 'location' position 5 in entry 'gxd3' and this position does not exist, not resolving (section 0)}
-      \warn{\item Field 'organization' in entry 'gxd1g' which xdata references field 'author' in entry 'gxd2' are not the same types, not resolving (section 0)}
-      \warn{\item Entry 'gxd1g' references XDATA entry 'lxd1' which is not an XDATA entry, not resolving (section 0)}
+      \warn{\item book entry 'gxd1g' has XDATA reference from field 'publisher' that contains no source field (section 0)}
+      \warn{\item book entry 'gxd1g' has XDATA reference from field 'addendum' that contains no source field (section 0)}
+      \warn{\item Field 'note' in book entry 'gxd1g' references XDATA field 'note' in entry 'gxd2' and this field does not exist, not resolving (section 0)}
+      \warn{\item Field 'translator' in book entry 'gxd1g' references field 'author' position 3 in entry 'gxd2' and this position does not exist, not resolving (section 0)}
+      \warn{\item Field 'lista' in book entry 'gxd1g' references field 'location' position 5 in entry 'gxd3' and this position does not exist, not resolving (section 0)}
+      \warn{\item Field 'organization' in book entry 'gxd1g' which xdata references field 'author' in entry 'gxd2' are not the same types, not resolving (section 0)}
+      \warn{\item book entry 'gxd1g' references XDATA entry 'lxd1' which is not an XDATA entry, not resolving (section 0)}
     \endentry
 |;
 
@@ -333,12 +333,12 @@ my $bltxgxd1 = q|    \entry{bltxgxd1}{book}{}
       \field{addendum}{xdata=missing}
       \field{note}{xdata=bltxgxd2-note}
       \field{title}{Some title}
-      \warn{\item Entry 'bltxgxd1' has XDATA reference from field 'publisher' that contains no source field (section 0)}
-      \warn{\item Entry 'bltxgxd1' has XDATA reference from field 'addendum' that contains no source field (section 0)}
-      \warn{\item Field 'translator' in entry 'bltxgxd1' references field 'author' position 3 in entry 'bltxgxd2' and this position does not exist, not resolving (section 0)}
-      \warn{\item Field 'lista' in entry 'bltxgxd1' references field 'location' position 5 in entry 'bltxgxd3' and this position does not exist, not resolving (section 0)}
-      \warn{\item Field 'organization' in entry 'bltxgxd1' which xdata references field 'author' in entry 'bltxgxd2' are not the same types, not resolving (section 0)}
-      \warn{\item Field 'note' in entry 'bltxgxd1' references XDATA field 'note' in entry 'bltxgxd2' and this field does not exist, not resolving (section 0)}
+      \warn{\item book entry 'bltxgxd1' has XDATA reference from field 'publisher' that contains no source field (section 0)}
+      \warn{\item book entry 'bltxgxd1' has XDATA reference from field 'addendum' that contains no source field (section 0)}
+      \warn{\item Field 'translator' in book entry 'bltxgxd1' references field 'author' position 3 in entry 'bltxgxd2' and this position does not exist, not resolving (section 0)}
+      \warn{\item Field 'lista' in book entry 'bltxgxd1' references field 'location' position 5 in entry 'bltxgxd3' and this position does not exist, not resolving (section 0)}
+      \warn{\item Field 'organization' in book entry 'bltxgxd1' which xdata references field 'author' in entry 'bltxgxd2' are not the same types, not resolving (section 0)}
+      \warn{\item Field 'note' in book entry 'bltxgxd1' references XDATA field 'note' in entry 'bltxgxd2' and this field does not exist, not resolving (section 0)}
     \endentry
 |;
 
@@ -357,21 +357,21 @@ ok((first {$_ eq "ERROR - Circular XDATA inheritance between 'lxd4:loop'<->'lxd4
 ok((first {$_ eq "ERROR - Circular XDATA inheritance between 'loop'<->'loop:3'"} split("\n",$stderr)), 'Cyclic xdata error check - 3');
 
 # granular warnings
-my $w1 = [ "Entry 'gxd1' has XDATA reference from field 'publisher' that contains no source field (section 0)",
-          "Entry 'gxd1' has XDATA reference from field 'addendum' that contains no source field (section 0)",
-          "Field 'note' in entry 'gxd1' references XDATA field 'note' in entry 'gxd2' and this field does not exist, not resolving (section 0)",
-          "Field 'translator' in entry 'gxd1' references field 'author' position 3 in entry 'gxd2' and this position does not exist, not resolving (section 0)",
-          "Field 'lista' in entry 'gxd1' references field 'location' position 5 in entry 'gxd3' and this position does not exist, not resolving (section 0)",
-           "Field 'organization' in entry 'gxd1' which xdata references field 'author' in entry 'gxd2' are not the same types, not resolving (section 0)",
-           "Entry 'gxd1' references XDATA entry 'lxd1' which is not an XDATA entry, not resolving (section 0)"];
+my $w1 = [ "book entry 'gxd1' has XDATA reference from field 'publisher' that contains no source field (section 0)",
+          "book entry 'gxd1' has XDATA reference from field 'addendum' that contains no source field (section 0)",
+          "Field 'note' in book entry 'gxd1' references XDATA field 'note' in entry 'gxd2' and this field does not exist, not resolving (section 0)",
+          "Field 'translator' in book entry 'gxd1' references field 'author' position 3 in entry 'gxd2' and this position does not exist, not resolving (section 0)",
+          "Field 'lista' in book entry 'gxd1' references field 'location' position 5 in entry 'gxd3' and this position does not exist, not resolving (section 0)",
+           "Field 'organization' in book entry 'gxd1' which xdata references field 'author' in entry 'gxd2' are not the same types, not resolving (section 0)",
+           "book entry 'gxd1' references XDATA entry 'lxd1' which is not an XDATA entry, not resolving (section 0)"];
 is_deeply($bibentries->entry('gxd1')->get_field('warnings'), $w1, 'Granular XDATA resolution warnings - bibtex' );
 
-my $w2 = [ "Entry 'bltxgxd1' has XDATA reference from field 'publisher' that contains no source field (section 0)",
-           "Entry 'bltxgxd1' has XDATA reference from field 'addendum' that contains no source field (section 0)",
-           "Field 'translator' in entry 'bltxgxd1' references field 'author' position 3 in entry 'bltxgxd2' and this position does not exist, not resolving (section 0)",
-           "Field 'lista' in entry 'bltxgxd1' references field 'location' position 5 in entry 'bltxgxd3' and this position does not exist, not resolving (section 0)",
-           "Field 'organization' in entry 'bltxgxd1' which xdata references field 'author' in entry 'bltxgxd2' are not the same types, not resolving (section 0)",
-           "Field 'note' in entry 'bltxgxd1' references XDATA field 'note' in entry 'bltxgxd2' and this field does not exist, not resolving (section 0)"];
+my $w2 = [ "book entry 'bltxgxd1' has XDATA reference from field 'publisher' that contains no source field (section 0)",
+           "book entry 'bltxgxd1' has XDATA reference from field 'addendum' that contains no source field (section 0)",
+           "Field 'translator' in book entry 'bltxgxd1' references field 'author' position 3 in entry 'bltxgxd2' and this position does not exist, not resolving (section 0)",
+           "Field 'lista' in book entry 'bltxgxd1' references field 'location' position 5 in entry 'bltxgxd3' and this position does not exist, not resolving (section 0)",
+           "Field 'organization' in book entry 'bltxgxd1' which xdata references field 'author' in entry 'bltxgxd2' are not the same types, not resolving (section 0)",
+           "Field 'note' in book entry 'bltxgxd1' references XDATA field 'note' in entry 'bltxgxd2' and this field does not exist, not resolving (section 0)"];
 is_deeply($bibentries->entry('bltxgxd1')->get_field('warnings'), $w2, 'Granular XDATA resolution warnings - biblatexml' );
 # print $stdout;
 # print $stderr;

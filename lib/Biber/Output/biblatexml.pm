@@ -20,7 +20,7 @@ my $logger = Log::Log4perl::get_logger('main');
 
 =head1 NAME
 
-Biber::Output::biblatexml - class for biblatexml output of tool mode
+Biber::Output::biblatexml - class for biblatexml output
 
 =cut
 
@@ -111,7 +111,7 @@ sub set_output_entry {
 
   $xml->startTag([$xml_prefix, 'entry'], id => NFC($key), entrytype => NFC($bee));
 
-  # Filter aliases which point to this key an insert them
+  # Filter aliases which point to this key and insert them
   if (my @ids = sort grep {$section->get_citekey_alias($_) eq $key} $section->get_citekey_aliases) {
     $xml->startTag([$xml_prefix, 'ids']);
     $xml->startTag([$xml_prefix, 'list']);
@@ -239,7 +239,6 @@ sub set_output_entry {
 
       for (my $i = 0; $i <= $lf->$#*; $i++) {
         my $f = $lf->[$i];
-        my @lattrs;
 
         # XDATA is special
         if (not Biber::Config->getoption('output_resolve_xdata') or
@@ -250,7 +249,7 @@ sub set_output_entry {
           }
         }
 
-        $xml->dataElement([$xml_prefix, 'item'], NFC($f), @lattrs);
+        $xml->dataElement([$xml_prefix, 'item'], NFC($f));
       }
       $xml->endTag();           # list
       $xml->endTag();           # listfield
@@ -619,7 +618,7 @@ sub create_output_section {
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
 
-  # We rely on the order of this array for the order of the .bbl
+  # We rely on the order of this array for the order of the output
   foreach my $k ($section->get_citekeys) {
     # Regular entry
     my $be = $section->bibentry($k) or biber_error("Cannot find entry with key '$k' to output");

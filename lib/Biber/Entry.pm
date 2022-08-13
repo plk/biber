@@ -241,8 +241,9 @@ sub add_xdata_ref {
       my ($xe, $xf, $xfp) = $xdataref =~ m/^([^$xdatasep]+)$xdatasep([^$xdatasep]+)(?:$xdatasep(\d+))?$/x;
       unless ($xf) { # There must be a field in a granular XDATA ref
         my $entry_key = $self->get_field('citekey');
+        my $bee = $self->get_field('entrytype');
         my $secnum = $Biber::MASTER->get_current_section;
-        biber_warn("Entry '$entry_key' has XDATA reference from field '$reffield' that contains no source field (section $secnum)", $self);
+        biber_warn("$bee entry '$entry_key' has XDATA reference from field '$reffield' that contains no source field (section $secnum)", $self);
         return 0;
       }
       push $self->{xdatarefs}->@*, {# field pointing to XDATA
@@ -712,6 +713,7 @@ sub resolve_xdata {
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $entry_key = $self->get_field('citekey');
+  my $bee = $self->get_field('entrytype');
   my $dm = Biber::Config->get_dm;
 
   # $xdata =
@@ -742,13 +744,13 @@ sub resolve_xdata {
   foreach my $xdatum ($xdata->@*) {
     foreach my $xdref ($xdatum->{xdataentries}->@*) {
       unless (my $xdataentry = $section->bibentry($xdref)) {
-        biber_warn("Entry '$entry_key' references XDATA entry '$xdref' which does not exist, not resolving (section $secnum)", $self);
+        biber_warn("$bee entry '$entry_key' references XDATA entry '$xdref' which does not exist, not resolving (section $secnum)", $self);
         $xdatum->{resolved} = 0;
         next;
       }
       else {
         unless ($xdataentry->get_field('entrytype') eq 'xdata') {
-          biber_warn("Entry '$entry_key' references XDATA entry '$xdref' which is not an XDATA entry, not resolving (section $secnum)", $self);
+          biber_warn("$bee entry '$entry_key' references XDATA entry '$xdref' which is not an XDATA entry, not resolving (section $secnum)", $self);
           $xdatum->{resolved} = 0;
           next;
         }
@@ -786,13 +788,13 @@ sub resolve_xdata {
 
             unless ($reffielddm->{fieldtype} eq $xdatafielddm->{fieldtype} and
                     $reffielddm->{datatype} eq $xdatafielddm->{datatype}) {
-              biber_warn("Field '$reffield' in entry '$entry_key' which xdata references field '$xdatafield' in entry '$xdref' are not the same types, not resolving (section $secnum)", $self);
+              biber_warn("Field '$reffield' in $bee entry '$entry_key' which xdata references field '$xdatafield' in entry '$xdref' are not the same types, not resolving (section $secnum)", $self);
               $xdatum->{resolved} = 0;
               next;
             }
 
             unless ($xdataentry->get_field($xdatafield)) {
-              biber_warn("Field '$reffield' in entry '$entry_key' references XDATA field '$xdatafield' in entry '$xdref' and this field does not exist, not resolving (section $secnum)", $self);
+              biber_warn("Field '$reffield' in $bee entry '$entry_key' references XDATA field '$xdatafield' in entry '$xdref' and this field does not exist, not resolving (section $secnum)", $self);
               $xdatum->{resolved} = 0;
               next;
             }
@@ -809,7 +811,7 @@ sub resolve_xdata {
               }
               else {
                 unless ($xdataentry->get_field($xdatafield)->is_nth_name($xdataposition)) {
-                  biber_warn("Field '$reffield' in entry '$entry_key' references field '$xdatafield' position $xdataposition in entry '$xdref' and this position does not exist, not resolving (section $secnum)", $self);
+                  biber_warn("Field '$reffield' in $bee entry '$entry_key' references field '$xdatafield' position $xdataposition in entry '$xdref' and this position does not exist, not resolving (section $secnum)", $self);
                   $xdatum->{resolved} = 0;
                   next;
                 }
@@ -833,7 +835,7 @@ sub resolve_xdata {
               }
               else {
                 unless ($xdataentry->get_field($xdatafield)->[$xdataposition-1]) {
-                  biber_warn("Field '$reffield' in entry '$entry_key' references field '$xdatafield' position $xdataposition in entry '$xdref' and this position does not exist, not resolving (section $secnum)", $self);
+                  biber_warn("Field '$reffield' in $bee entry '$entry_key' references field '$xdatafield' position $xdataposition in entry '$xdref' and this position does not exist, not resolving (section $secnum)", $self);
                   $xdatum->{resolved} = 0;
                   next;
                 }
@@ -898,7 +900,8 @@ sub inherit_from {
     biber_error("Circular inheritance between '$source_key'<->'$target_key'");
   }
 
-  my $type        = $self->get_field('entrytype');
+  my $bee         = $self->get_field('entrytype');
+  my $tbee         = $self->get_field('entrytype');
   my $parenttype  = $parent->get_field('entrytype');
   my $inheritance = Biber::Config->getblxoption(undef, 'inheritance');
   my %processed;
@@ -912,7 +915,7 @@ sub inherit_from {
   # override with type_pair specific defaults if they exist ...
   foreach my $type_pair ($defaults->{type_pair}->@*) {
     if (($type_pair->{source} eq '*' or $type_pair->{source} eq $parenttype) and
-        ($type_pair->{target} eq '*' or $type_pair->{target} eq $type)) {
+        ($type_pair->{target} eq '*' or $type_pair->{target} eq $bee)) {
       $inherit_all = $type_pair->{inherit_all} if $type_pair->{inherit_all};
       $override_target = $type_pair->{override_target} if $type_pair->{override_target};
       $dignore = $type_pair->{ignore} if defined($type_pair->{ignore});
@@ -924,7 +927,7 @@ sub inherit_from {
     # Match for this combination of entry and crossref parent?
     foreach my $type_pair ($inherit->{type_pair}->@*) {
       if (($type_pair->{source} eq '*' or $type_pair->{source} eq $parenttype) and
-          ($type_pair->{target} eq '*' or $type_pair->{target} eq $type)) {
+          ($type_pair->{target} eq '*' or $type_pair->{target} eq $bee)) {
         foreach my $field ($inherit->{field}->@*) {
           # Skip for fields in the per-entry noinerit datafield set
           if (my $niset = Biber::Config->getblxoption($secnum, 'noinherit', undef, $target_key) and
@@ -945,7 +948,7 @@ sub inherit_from {
           elsif (not $self->field_exists($field->{target}) or
                  $field_override_target eq 'true') {
             if ($logger->is_debug()) {# performance tune
-              $logger->debug("Entry '$target_key' is inheriting field '" .
+              $logger->debug("$bee entry '$target_key' is inheriting field '" .
                              $field->{source}.
                              "' as '" .
                              $field->{target} .
@@ -1034,7 +1037,7 @@ sub inherit_from {
       # Set the field if it doesn't exist or override is requested
       if (not $self->field_exists($field) or $override_target eq 'true') {
         if ($logger->is_debug()) { # performance tune
-          $logger->debug("Entry '$target_key' is inheriting field '$field' from entry '$source_key'");
+          $logger->debug("$tbee entry '$target_key' is inheriting field '$field' from $bee entry '$source_key'");
         }
 
         $self->set_datafield($field, $parent->get_field($field));

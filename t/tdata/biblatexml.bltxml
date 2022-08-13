@@ -40,13 +40,13 @@
     </bltx:names>
     <bltx:names type="translator">
       <bltx:name gender="sm">
-        <bltx:namepart type="given">John </bltx:namepart>
+        <bltx:namepart type="given">John</bltx:namepart>
         <bltx:namepart type="family">Brown</bltx:namepart>
       </bltx:name>
     </bltx:names>
     <bltx:names type="afterword">
       <bltx:name gender="sm">
-        <bltx:namepart type="given">John </bltx:namepart>
+        <bltx:namepart type="given">John</bltx:namepart>
         <bltx:namepart type="family">Brown</bltx:namepart>
       </bltx:name>
     </bltx:names>

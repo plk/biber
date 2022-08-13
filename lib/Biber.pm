@@ -1670,13 +1670,14 @@ sub validate_datamodel {
     my $dmwe = Biber::Config->getoption('dieondatamodel') ? \&biber_error : \&biber_warn;
     foreach my $citekey ($section->get_citekeys) {
       my $be = $section->bibentry($citekey);
+      my $bee = $be->get_field('entrytype');
       my $citekey = $be->get_field('citekey');
       my $et = $be->get_field('entrytype');
       my $ds = $section->get_keytods($citekey);
 
       # default entrytype to MISC type if not a known type
       unless ($dm->is_entrytype($et)) {
-        $dmwe->("Datamodel: Entry '$citekey' ($ds): Invalid entry type '" . $be->get_field('entrytype') . "' - defaulting to 'misc'", $be);
+        $dmwe->("Datamodel: $bee entry '$citekey' ($ds): Invalid entry type '" . $be->get_field('entrytype') . "' - defaulting to 'misc'", $be);
         $be->set_field('entrytype', 'misc');
         $et = 'misc';           # reset this too
       }
@@ -1689,7 +1690,7 @@ sub validate_datamodel {
       unless ($et eq 'xdata' or $et eq 'set') { # XDATA/SET are generic containers for any field
         foreach my $ef ($be->datafields) {
           unless ($dm->is_field_for_entrytype($et, $ef)) {
-            $dmwe->("Datamodel: Entry '$citekey' ($ds): Invalid field '$ef' for entrytype '$et'", $be);
+            $dmwe->("Datamodel: $bee entry '$citekey' ($ds): Invalid field '$ef' for entrytype '$et'", $be);
           }
         }
       }
@@ -4665,6 +4666,7 @@ sub get_dependents {
     else {
       # This must exist for all but dynamic sets
       my $be = $section->bibentry($citekey);
+      my $bee = $be->get_field('entrytype');
 
       # xdata
       if (my $xdata = $be->get_xdata_refs) {
@@ -4673,7 +4675,7 @@ sub get_dependents {
             # skip looking for dependent if it's already there (loop suppression)
             push $new_deps->@*, $xdref unless $section->bibentry($xdref);
             if ($logger->is_debug()) { # performance tune
-              $logger->debug("Entry '$citekey' has xdata '$xdref'");
+              $logger->debug("$bee entry '$citekey' has xdata '$xdref'");
             }
             push $keyswithdeps->@*, $citekey unless first {$citekey eq $_} $keyswithdeps->@*;
           }
@@ -4685,7 +4687,7 @@ sub get_dependents {
         # skip looking for dependent if it's already there (loop suppression)
         push $new_deps->@*, $refkey unless $section->bibentry($refkey);
         if ($logger->is_debug()) {# performance tune
-          $logger->debug("Entry '$citekey' has xref '$refkey'");
+          $logger->debug("$bee entry '$citekey' has xref '$refkey'");
         }
         push $keyswithdeps->@*, $citekey unless first {$citekey eq $_} $keyswithdeps->@*;
       }

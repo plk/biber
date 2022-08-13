@@ -955,6 +955,7 @@ sub _create_entry {
   $bibentry->set_field('rawdata', $e->print_s);
 
   my $entrytype = $e->type;
+  $bibentry->set_field('entrytype', fc($entrytype));
 
   # We put all the fields we find modulo field aliases into the object
   # validation happens later and is not datasource dependent
@@ -987,11 +988,10 @@ sub _create_entry {
       }
     }
     elsif (Biber::Config->getoption('validate_datamodel')) {
-      biber_warn("Datamodel: Entry '$k' ($ds): Field '$f' invalid in data model - ignoring", $bibentry);
+      biber_warn("Datamodel: $entrytype entry '$k' ($ds): Field '$f' invalid in data model - ignoring", $bibentry);
     }
   }
 
-  $bibentry->set_field('entrytype', fc($entrytype));
   $bibentry->set_field('datatype', 'bibtex');
   if ($logger->is_debug()) {# performance tune
     $logger->debug("Adding entry with key '$k' to entry list");
@@ -1306,6 +1306,7 @@ sub _datetime {
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $ds = $section->get_keytods($key);
+  my $bee = $bibentry->get_field('entrytype');
 
   my ($sdate, $edate, $sep, $unspec) = parse_date_range($bibentry, $datetype, $date);
 
@@ -1388,7 +1389,7 @@ sub _datetime {
     if ($sep) {
       if (defined($edate)) { # End date was successfully parsed
         if ($edate) { # End date is an object not "0"
-          # Did this entry get its datepart fields from splitting an EDTF date field?
+          # Did this entry get its datepart fields from splitting an ISO8601-2 date field?
           $bibentry->set_field("${datetype}datesplit", 1);
 
           unless ($CONFIG_DATE_PARSERS{end}->missing('year')) {
@@ -1430,12 +1431,12 @@ sub _datetime {
         }
       }
       else {
-        biber_warn("Entry '$key' ($ds): Invalid format '$date' of end date field '$field' - ignoring", $bibentry);
+        biber_warn("$bee entry '$key' ($ds): Invalid format '$date' of end date field '$field' - ignoring", $bibentry);
       }
     }
   }
   else {
-    biber_warn("Entry '$key' ($ds): Invalid format '$date' of date field '$field' - ignoring", $bibentry);
+    biber_warn("$bee entry '$key' ($ds): Invalid format '$date' of date field '$field' - ignoring", $bibentry);
   }
   return;
 }

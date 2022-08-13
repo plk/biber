@@ -79,7 +79,7 @@ my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
         {{hash=a7a73749ea467229221b7e9cbf870988}{%
            family={Brown},
            familyi={B\\bibinitperiod},
-           given={John\\bibnamedelimb },
+           given={John},
            giveni={J\\bibinitperiod}}}%
       }
       \name{translator}{1}{}{%

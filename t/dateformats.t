@@ -50,18 +50,18 @@ my $section = $biber->sections->get_section(0);
 my $main = $biber->datalists->get_list('nty/global//global/global');
 
 my $bibentries = $section->bibentries;
-my $l1 = [ "Entry 'L1' (dateformats.bib): Invalid format '1985-1030' of date field 'origdate' - ignoring",
-           "Entry 'L1' (dateformats.bib): Invalid format '1.5.1998' of date field 'urldate' - ignoring",
-           "Datamodel: Entry 'L1' (dateformats.bib): Invalid value of field 'year' must be datatype 'datepart' - ignoring field"];
-my $l2 = [ "Entry 'L2' (dateformats.bib): Invalid format '1995-1230' of date field 'origdate' - ignoring" ];
-my $l3 = [ "Entry 'L3' (dateformats.bib): Invalid format '1.5.1988' of date field 'urldate' - ignoring" ];
-my $l4 = [ "Entry 'L4' (dateformats.bib): Invalid format '1995-1-04' of date field 'date' - ignoring",
-           "Datamodel: Entry 'L4' (dateformats.bib): Missing mandatory field - one of 'date, year' must be defined" ];
-my $l5 = [ "Entry 'L5' (dateformats.bib): Invalid format '1995-10-4' of date field 'date' - ignoring",
-           "Datamodel: Entry 'L5' (dateformats.bib): Missing mandatory field - one of 'date, year' must be defined" ];
-my $l6 = [ "Entry 'L6' (dateformats.bib): Invalid format '1996-13-03' of date field 'date' - ignoring",
-           "Datamodel: Entry 'L6' (dateformats.bib): Missing mandatory field - one of 'date, year' must be defined"];
-my $l7 = [ "Entry 'L7' (dateformats.bib): Invalid format '1996-10-35' of date field 'eventdate' - ignoring" ];
+my $l1 = [ "article entry 'L1' (dateformats.bib): Invalid format '1985-1030' of date field 'origdate' - ignoring",
+           "article entry 'L1' (dateformats.bib): Invalid format '1.5.1998' of date field 'urldate' - ignoring",
+           "Datamodel: article entry 'L1' (dateformats.bib): Invalid value of field 'year' must be datatype 'datepart' - ignoring field"];
+my $l2 = [ "book entry 'L2' (dateformats.bib): Invalid format '1995-1230' of date field 'origdate' - ignoring" ];
+my $l3 = [ "book entry 'L3' (dateformats.bib): Invalid format '1.5.1988' of date field 'urldate' - ignoring" ];
+my $l4 = [ "book entry 'L4' (dateformats.bib): Invalid format '1995-1-04' of date field 'date' - ignoring",
+           "Datamodel: book entry 'L4' (dateformats.bib): Missing mandatory field - one of 'date, year' must be defined" ];
+my $l5 = [ "book entry 'L5' (dateformats.bib): Invalid format '1995-10-4' of date field 'date' - ignoring",
+           "Datamodel: book entry 'L5' (dateformats.bib): Missing mandatory field - one of 'date, year' must be defined" ];
+my $l6 = [ "book entry 'L6' (dateformats.bib): Invalid format '1996-13-03' of date field 'date' - ignoring",
+           "Datamodel: book entry 'L6' (dateformats.bib): Missing mandatory field - one of 'date, year' must be defined"];
+my $l7 = [ "proceedings entry 'L7' (dateformats.bib): Invalid format '1996-10-35' of date field 'eventdate' - ignoring" ];
 my $l11 = [ "Overwriting field 'year' with year value from field 'date' for entry 'L11'"];
 my $l12 = [ "Overwriting field 'month' with month value from field 'date' for entry 'L12'" ];
 
@@ -174,7 +174,7 @@ my $l15 = q|    \entry{L15}{book}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{Title 2}
-      \warn{\item Datamodel: Entry 'L15' (dateformats.bib): Missing mandatory field - one of 'date, year' must be defined}
+      \warn{\item Datamodel: book entry 'L15' (dateformats.bib): Missing mandatory field - one of 'date, year' must be defined}
     \endentry
 |;
 
@@ -213,7 +213,7 @@ my $l16 = q|    \entry{L16}{proceedings}{}
       \field{eventyear}{1996}
       \field{title}{Title 2}
       \field{eventdateera}{ce}
-      \warn{\item Datamodel: Entry 'L16' (dateformats.bib): Missing mandatory field - one of 'date, year' must be defined}
+      \warn{\item Datamodel: proceedings entry 'L16' (dateformats.bib): Missing mandatory field - one of 'date, year' must be defined}
     \endentry
 |;
 
