@@ -309,9 +309,6 @@ sub name_to_bibjson {
     $attrs{annotation} = $ann;
   }
 
-  $json->start_property('name');
-  $json->start_object();
-
   while (my ($option, $val) = each %attrs) {
     $json->add_property($option => NFC($val));
   }
@@ -319,9 +316,6 @@ sub name_to_bibjson {
   foreach my $np ($dm->get_constant_value('nameparts')) {# list type so returns list
     $self->name_part_to_bibjson($json, $key, $namefield, $np, $count);
   }
-
-  $json->end_object();
-  $json->end_property();
 }
 
 =head2 name_part_to_bibjson
@@ -345,17 +339,16 @@ sub name_part_to_bibjson {
 
     $json->start_property('namepart');
     $json->start_object();
+    $json->add_property('type' => $npn);
 
     # Compound name part
     if ($parts->$#* > 0) {
-      $json->add_property('type' => $npn);
 
       while (my ($option, $val) = each %attrs) {
         $json->add_property($option => NFC($val));
       }
 
       for (my $i=0;$i <= $parts->$#*;$i++) {
-
         $json->start_property('namepart');
         $json->start_object();
         if (my $init = $nip->[$i]) {
@@ -363,16 +356,14 @@ sub name_part_to_bibjson {
         }
         $json->add_property('value' => NFC($parts->[$i]));
         $json->end_object(); # namepart
+        $json->end_property();
       }
-      $json->end_object(); # namepart
-      $json->end_property(); # namepart
     }
     else { # simple name part
       if (my $init = $nip->[0]) {
 
         $json->start_property('namepart');
         $json->start_object();
-        $json->add_property('type' => $npn);
         $json->add_property('initial' => $init);
 
         while (my ($option, $val) = each %attrs) {
