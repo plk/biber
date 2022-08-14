@@ -347,13 +347,13 @@ if (Biber::Config->getoption('output_file')) {
 else {
   if (Biber::Config->getoption('tool')) {
     if (Biber::Config->getoption('output_format') eq 'bibtex') { # tool .bib output
-      $outfile = $ARGV[0] =~ s/\..+$/_bibertool.bib/r;
+      $outfile = $ARGV[0] =~ s/\.[^.]+$/_bibertool.bib/r;
     }
     elsif (Biber::Config->getoption('output_format') eq 'biblatexml') { # tool .blxtxml output
-      $outfile = $ARGV[0] =~ s/\..+$/_bibertool.bltxml/r;
+      $outfile = $ARGV[0] =~ s/\.[^.]+$/_bibertool.bltxml/r;
     }
     elsif (Biber::Config->getoption('output_format') eq 'bibjson') { # bibjson output
-      $outfile = $ARGV[0] =~ s/\..+$/_bibertool.json/r;
+      $outfile = $ARGV[0] =~ s/\.[^.]+$/_bibertool.json/r;
     }
   }
   else {
@@ -777,7 +777,7 @@ filename only). F<file> can be absolute if B<--output-directory> is not
 set. F<file> can be '-' to output directly to STDOUT. The legacy option
 B<--outfile> is supported as an alias.
 
-=item B<--output-format=dot|bibtex|biblatexml|bbl|bblxml>
+=item B<--output-format=dot|bibtex|biblatexml|bbl|bblxml|bibjson>
 
 Biber output format. Default if not specified is of course, F<bbl>. Use F<dot>
 to output a GraphViz DOT file instead of F<.bbl>. This is a directed graph of
