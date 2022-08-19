@@ -27,6 +27,7 @@ use Biber::UCollate;
 use Biber::Utils;
 use Carp;
 use Data::Dump;
+use Digest::MD5 qw( md5_hex );
 use Data::Compare;
 use Encode;
 use File::Copy;
@@ -2212,7 +2213,7 @@ sub process_workuniqueness {
 
 =head2 process_extradate
 
-    Track labelname/date parts combination for generation of extradate
+    Track labelname/labeltitle+date parts combination for generation of extradate
 
 =cut
 
@@ -2224,10 +2225,10 @@ sub process_extradate {
   my $bee = $be->get_field('entrytype');
 
   # Generate labelname/year combination for tracking extradate
-  # * If there is no labelname to use, use empty string
+  # * If there is no labelname/labeltitle to use, use empty string
   # * If there is no date information to use, try year
-  # * Don't increment the seen_namedateparts count if the name string is empty
-  #   (see code in incr_seen_namedateparts method).
+  # * Don't increment the seen_nametitledateparts count if the name/title string is empty
+  #   (see code in incr_seen_nametitledateparts method).
   # * Don't increment if skiplab is set
 
   if (Biber::Config->getblxoption(undef, 'labeldateparts', $bee, $citekey)) {
@@ -2239,9 +2240,9 @@ sub process_extradate {
       $logger->trace("Creating extradate information for '$citekey'");
     }
 
-    my $namehash = '';
+    my $nametitlehash = '';
     if (my $lni = $be->get_labelname_info) {
-      $namehash = $self->_getnamehash_u($citekey, $be->get_field($lni), $dlist);
+      $nametitlehash = $self->_getnamehash_u($citekey, $be->get_field($lni), $dlist);
     }
 
     my $datestring = ''; # Need a default empty string
@@ -2259,11 +2260,19 @@ sub process_extradate {
       }
     }
 
-    my $tracking_string = "$namehash,$datestring";
+    # Fallback to labeltitle if no labelname as titles can appear in name position (and in citations) if there
+    # is no labelname in authoryear type styles. In such cases, we want extradate based on labeltitle.
+    unless ($nametitlehash) { # no labelname
+      if (my $lt = $be->get_field('labeltitle')) {
+        $nametitlehash = md5_hex(encode_utf8(NFC(normalise_string_hash($lt))));
+      }
+    }
+
+    my $tracking_string = "$nametitlehash,$datestring";
 
     $be->set_field('extradatescope', $edscope);
-    $dlist->set_entryfield($citekey, 'namedateparts', $tracking_string);
-    $dlist->incr_seen_namedateparts($namehash, $datestring);
+    $dlist->set_entryfield($citekey, 'nametitledateparts', $tracking_string);
+    $dlist->incr_seen_nametitledateparts($nametitlehash, $datestring);
   }
 
   return;
@@ -3933,12 +3942,12 @@ sub generate_contextdata {
       }
       # extradate
       if (Biber::Config->getblxoption(undef, 'labeldateparts', $bee, $key)) {
-        my $namedateparts = $dlist->get_entryfield($key, 'namedateparts');
-        if ($dlist->get_seen_namedateparts($namedateparts) > 1) {
+        my $nametitledateparts = $dlist->get_entryfield($key, 'nametitledateparts');
+        if ($dlist->get_seen_nametitledateparts($nametitledateparts) > 1) {
           if ($logger->is_trace()) {# performance tune
-            $logger->trace("namedateparts for '$namedateparts': " . $dlist->get_seen_namedateparts($namedateparts));
+            $logger->trace("nametitledateparts for '$nametitledateparts': " . $dlist->get_seen_nametitledateparts($nametitledateparts));
           }
-          my $v = $dlist->incr_seen_extradate($namedateparts);
+          my $v = $dlist->incr_seen_extradate($nametitledateparts);
           $dlist->set_extradatedata_for_key($key, $v);
         }
       }
