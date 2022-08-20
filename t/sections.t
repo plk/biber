@@ -75,16 +75,16 @@ my $head = qq|% \$ biblatex auxiliary file \$
 % \$ biblatex bbl format version $BBL_VERSION \$
 % Do not modify the above lines!
 %
-% This is an auxiliary file used by the 'biblatex' package.
+% This is an auxiliary file used by the 'biblatex-ms' package.
 % This file may safely be deleted. It will be recreated by
-% biber as required.
+% biber-ms as required.
 %
 \\begingroup
 \\makeatletter
-\\\@ifundefined{ver\@biblatex.sty}
+\\\@ifundefined{ver\@biblatex-ms.sty}
   {\\\@latex\@error
-     {Missing 'biblatex' package}
-     {The bibliography requires the 'biblatex' package.}
+     {Missing 'biblatex-ms' package}
+     {The bibliography requires the 'biblatex-ms' package.}
       \\aftergroup\\endinput}
   {}
 \\endgroup

@@ -48,6 +48,7 @@
           <value>global</value>
         </attribute>
         <ref name="alphaothers"/>
+        <ref name="extradatecontext"/>
         <ref name="labelalpha"/>
         <ref name="labelnamespec"/>
         <ref name="labeltitle"/>
@@ -99,6 +100,9 @@
           <attribute name="type"/>
           <optional>
             <ref name="alphaothers"/>
+          </optional>
+          <optional>
+            <ref name="extradatecontext"/>
           </optional>
           <optional>
             <ref name="labelalpha"/>
@@ -1378,6 +1382,24 @@
     option definitions
     use<name> options are dynamically determined from data model
   -->
+  <define name="extradatecontext">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>multivalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>extradatecontext</value>
+      </element>
+      <oneOrMore>
+        <element name="bcf:value">
+          <attribute name="order">
+            <data type="integer"/>
+          </attribute>
+          <text/>
+        </element>
+      </oneOrMore>
+    </element>
+  </define>
   <define name="usenames">
     <oneOrMore>
       <element name="bcf:option">

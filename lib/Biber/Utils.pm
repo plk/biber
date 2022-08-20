@@ -1433,7 +1433,7 @@ sub parse_date_end {
 
 =head2 parse_date
 
-  Parse of EDTF dates
+  Parse of iso8601-2 dates
 
 =cut
 

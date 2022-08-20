@@ -28,6 +28,7 @@ start =
       attribute component { "biblatex" },
       attribute type { "global" },
       alphaothers,
+      extradatecontext,
       labelalpha,
       labelnamespec,
       labeltitle,
@@ -74,6 +75,7 @@ start =
       attribute component { "biblatex" },
       attribute type { text },
       alphaothers?,
+      extradatecontext?,
       labelalpha?,
       labelnamespec?,
       labeltitle?,
@@ -547,6 +549,15 @@ filter = element bcf:filter {
 
 # option definitions
 # use<name> options are dynamically determined from data model
+extradatecontext =
+  element bcf:option {
+    attribute type { "multivalued" },
+    element bcf:key { "extradatecontext" },
+    element bcf:value {
+      attribute order { xsd:integer },
+      text
+    }+
+  }
 usenames =
   element bcf:option {
     attribute type { "singlevalued" },

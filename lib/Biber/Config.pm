@@ -225,7 +225,8 @@ sub _initopts {
 
   # prepend output directory for log, if specified
   if (my $outdir = Biber::Config->getoption('output_directory')) {
-    $biberlog = File::Spec->catfile($outdir, $biberlog);
+    my (undef, undef, $biberlogfile) = File::Spec->splitpath($biberlog);
+    $biberlog = File::Spec->catfile($outdir, $biberlogfile);
   }
 
   # Parse output-field-replace into something easier to use

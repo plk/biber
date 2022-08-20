@@ -88,7 +88,7 @@ my $dl1 = q|    \entry{AbdelbarH98}{article}{}
       \field{sortinit}{A}
       \strng{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
       \field{extradatescope}{labelyear}
-      \field{labeldatesource}{year}
+      \field{labeldatesource}{}
       \fieldmssource{labelname}{author}{default}{en-us}
       \fieldmssource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{journaltitle}{Artificial Intelligence}

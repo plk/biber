@@ -799,7 +799,7 @@ sub reset_seen_extra {
   $self->{state}{seen_extratitle} = {};
   $self->{state}{seen_extratitleyear} = {};
   $self->{state}{seen_extraalpha} = {};
-  $self->{state}{seen_namedateparts} = {};
+  $self->{state}{seen_nametitledateparts} = {};
   $self->{state}{seen_labelname} = {};
   $self->{state}{seen_nametitle} = {};
   $self->{state}{seen_titleyear} = {};
@@ -874,7 +874,7 @@ sub incr_seen_extraalpha {
 }
 
 
-=head2 get_seen_namedateparts
+=head2 get_seen_nametitledateparts
 
     Get the count of an labelname/dateparts combination for tracking
     extradate. It uses labelyear plus name as we need to disambiguate
@@ -883,37 +883,37 @@ sub incr_seen_extraalpha {
 
 =cut
 
-sub get_seen_namedateparts {
+sub get_seen_nametitledateparts {
   my ($self, $ny) = @_;
-  return $self->{state}{seen_namedateparts}{$ny} // 0;
+  return $self->{state}{seen_nametitledateparts}{$ny} // 0;
 }
 
-=head2 incr_seen_namedateparts
+=head2 incr_seen_nametitledateparts
 
-    Increment the count of an labelname/dateparts combination for extradate
+    Increment the count of an labelname/labeltitle+dateparts combination for extradate
 
-    We pass in the name and date strings separately as we have to
+    We pass in the name/title and date strings separately as we have to
     be careful and only increment this counter beyond 1 if there is
-    a name component. Otherwise, extradate gets defined for all
-    entries with no name but the same year etc.
+    a name/title component. Otherwise, extradate gets defined for all
+    entries with no name/title but the same year etc.
 
 =cut
 
-sub incr_seen_namedateparts {
+sub incr_seen_nametitledateparts {
   my ($self, $ns, $ys) = @_;
   my $tmp = "$ns,$ys";
   # We can always increment this to 1
-  unless (exists($self->{state}{seen_namedateparts}{$tmp})) {
-    $self->{state}{seen_namedateparts}{$tmp}++;
+  unless (exists($self->{state}{seen_nametitledateparts}{$tmp})) {
+    $self->{state}{seen_nametitledateparts}{$tmp}++;
   }
-  # But beyond that only if we have a labelname in the entry since
+  # But beyond that only if we have a labelname/labeltitle in the entry since
   # this counter is used to create extradate which doesn't mean anything for
-  # entries with no name
+  # entries with no name or title
   # We allow empty year so that we generate extradate for the same name with no year
   # so we can do things like "n.d.-a", "n.d.-b" etc.
   else {
     if ($ns) {
-      $self->{state}{seen_namedateparts}{$tmp}++;
+      $self->{state}{seen_nametitledateparts}{$tmp}++;
     }
   }
   return;

@@ -1,0 +1,203 @@
+Notes for builders of biber binaries for distribution via CTAN and TeXLive
+==========================================================================
+
+INTRODUCTION
+------------
+
+Biber is a perl program which is "packed" into a stand-alone executable
+using the perl "pp" program which is part of the PAR::Packer module. The
+resulting binary is a completely self-contained perl installation including
+all modules and libraries needed. No perl installation is needed to run
+biber. On the first run, biber unpacks itself into a cache into a temporary
+platform-dependent location. This takes a little longer than a normal run
+as the one-time cache unpacking operation has some overhead. The location
+of the cache can be viewed by running, after the initial unpack run:
+
+biber --cache
+
+This cache can safely be deleted and biber will simply unpack itself again
+on the next run.
+
+For developers and the more adventurous, Biber can be run as a raw perl
+program from the github source and this requires perl to be installed.
+After fetching the github sources, run "perl Build.PL" and then "Build
+installdeps" to check the minimum perl requirements and install all
+required modules. You will also need to install the perl "PAR::Packer"
+module in order to build a binary version.
+
+BUILDING A biber EXECUTABLE
+---------------------------
+In the dist/ directory of the source tree, you will find subdirectories
+named after various platforms. The directories each contain a "build.sh"
+bash script which is used to build a biber binary using "pp". To build
+biber for a new platform, simply copy an existing script and adopt it to
+your platform. The script basically just calls "pp" with various arguments
+which are mostly there to force the inclusion of modules and libraries
+which are not automatically detected by Module::ScanDeps for various
+reasons (usually, because the modules/libs are implicitly rather than
+explicitly mentioned in the code).
+
+See the biber documentation in the doc/ directory for details on the build
+process.
+
+RELEASING BIBER on CTAN
+-----------------------
+
+*****
+PLEASE open a ticket in the biber githib repo:
+
+https://github.com/plk/biber/issues
+
+if you wish to provide a binary to CTAN/TexLive to make sure someone isn't
+already doing this
+*****
+
+
+
+
+The biber maintainers will make a new release from a new version tag when
+a new biber version is released. Please subscribe to new releases of
+
+https://github.com/plk/biber
+
+to be notified when a new biber release is made so that you can build your
+binaries from the release tag. New releases are usually only made a few
+times per year.
+
+Builders can then upload their binaries directly to CTAN at:
+
+https://ctan.org/upload
+
+The name of the package should be:
+
+biber-<metaplatform>
+
+The upload should consist of an archive (zip, tar.gz  etc.) with exactly
+the following structure:
+
+* biber-<metaplatform>/README                                
+* biber-<metaplatform>/biber-<version>-<platform1>.<extension>
+  .
+  .
+  .
+  biber-<metaplatform>/biber-<version>-<platformn>.<extension>
+
+
+where:
+
+*** The top-level "biber-<metaplatform>" directory should be lower-case ***
+
+<version> is the biber version being built
+<metaplatform> is the generic platform name used for the location in CTAN
+               /biblio/biber/<metaplatform> e.g. "windows", "linux",
+               "macos" etc.
+<platform> is the specific platform name and has no particular format requirements
+           as long as it is clear e.g. "MSWIN64", "linux_x86_64",
+           "darwin_universal" etc.
+<extension> is the archive format extension and you are free to use any
+            commonly recognised format, e.g:
+
+.tar.gz
+.tgz
+.tar.xz
+.zip
+
+The archive containing biber itself should contain only a single binary
+called "biber" ("biber.exe" for Windows platforms)
+
+For example:
+
+biber-linux.tar.gz
+  -> biber-linux/
+       README
+       biber-2.18-linux_x86_32.tar.gz
+         -> biber
+       biber-2.18-linux_x86_64.tar.gz
+         -> biber
+
+biber-windows.tar.gz
+  -> biber-windows/
+       README.txt
+       biber-2.18-MSWIN32.zip
+         -> biber.exe
+       biber-2.18-MSWIN64.zip
+         -> biber.exe
+
+Note: If it necessary to push a fix for a particular platform in between
+biber releases, in a case for example where there is an issue with the
+build but there is no change in biber, you should append a dash "-"
+followed by a montonically increasing integer so that it is clear that the
+release is the same biber version but is a later version of the build for
+that platform, e.g:
+
+biber-linux.tar.gz
+  -> biber-linux/
+       README
+       biber-2.18-1-linux_x86_32.tar.gz
+         -> biber
+       biber-2.18-1-linux_x86_64.tar.gz
+         -> biber
+
+biber-windows.tar.gz
+  -> biber-windows/
+       README.txt
+       biber-2.18-2-MSWIN32.zip
+         -> biber.exe
+       biber-2.18-2-MSWIN64.zip
+         -> biber.exe
+
+** DO NOT change the name of the binary inside the archive - it should
+   always be "biber" or "biber.exe"
+
+** A package update should always contain all platforms (e.g. 32 and 64
+   bit) **
+
+This makes it clear that the biber version remains the same and all that is
+changed is some aspect of the binary cache infrastructure for the platform.
+
+The README should simply contain the following where <platform> is as
+described above:
+
+------
+These are biber binaries for the <metaplatform> platform(s).
+See https://ctan.org/pkg/biber for documentation, sources, and all else.
+------
+
+When uploading to CTAN, use the biber version as the version number (with
+any platform-specific addition as mentioned above), e.g:
+
+2.18
+2.18-2
+
+The "Suggested CTAN directory" should be a subdir of biblio/biber, e.g:
+
+biblio/biber/biber-linux
+biblio/biber/biber-linux-musl
+biblio/biber/biber-macosx
+biblio/biber/biber-solaris-intel
+biblio/biber/biber-windows
+biblio/biber/biber-cygwin
+
+Again, the directory name is not particularly important, as long it
+describes the platform specifically enough. Please re-use the directory for
+all future releases to make things easier for the CTAN maintainers.
+
+Builders are free to upload binary releases in between biber releases to
+fix binary issues but should not release new biber version binaries until a
+new biber version release has been made on github. TO be notified of new
+releases, you can subscribe to release notifications on github for biber.
+
+
+BINARIES ALSO AVAILABLE ON SOURCEFORGE
+--------------------------------------
+Binaries can and usually are also uploaded to Sourceforge as people have
+historically obtained them from there manually when required:
+
+https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/
+
+Please open a ticket in the biber github repo if you require permissions to
+do this.
+
+The biber maintainers regularly upload a development binary version of biber to
+Sourceforge so that people can try out fixes ahead of releases.
+

@@ -46,9 +46,10 @@ More information, bugfix releases, forums and bug tracker are available at:
 
 ## BUILDING
 
-If you wish to build you own binary, see the main biber PDF documentation.
-There is a section there on how to do this. The PDF documentation is in the
-`documentation` folder for the release on Sourceforge.
+If you wish to build you own binary, see the main biber PDF documentation
+and particularly the included BUILDERS.README file
+The PDF documentation is in the `documentation` folder for the release on
+Sourceforge.
 
 ## LICENCE
 

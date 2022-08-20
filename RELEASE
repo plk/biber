@@ -9,6 +9,8 @@
 * "perl Build.PL" and "Build dist" to update YAML/JSON
 * Run test suite and make sure it passes cleanly
 * Commit and tag with version number
+* Create new github release so that builders can subscribe to know when a
+  new release is made
 * Move "current" to version number on SF
 * Create "current" folder using SF GUI
 * Create a new empty version tree for new version, use the dist/empty_tree.sh script:
@@ -20,7 +22,13 @@
 * Associate new defaults with new binaries and change labels
 * Replace test.bcf with test-dev.bcf on SF. Upload new test-dev.bcf if necessary
 * Update SF main page, news, add new README in web interface at root, if needed
-* When all builders have updated current folder in SF, run
-* dist/re-package.sh, and then go to Dropbox,
-  get the URL and CTAN biber dir as usual (https://ctan.org/pkg/biber) upload the empty zip (~/Desktop/biber.tgz)
-  and put the Dropbox URL in the comments.
+* run dist/re-package.sh which creates the files needed for CTAN release
+  * upload biber source archive to /biblio/biber/base
+  * upload platform binary archives to
+    biblio/biber/biber-linux
+    biblio/biber/biber-macos
+    biblio/biber/biber-windows
+
+
+    
+  

@@ -265,8 +265,8 @@ if (exists($opts->{tool}) and
 # Check output-format value
 if (exists($opts->{tool}) and
     exists($opts->{output_format}) and
-    $opts->{output_format} !~ /\A(?:bibtex|biblatexml)\z/xms) {
-    say STDERR "Biber: Output format in tool mode must be one of 'bibtex' or 'biblatexml'";
+    $opts->{output_format} !~ /\A(?:bibtex|biblatexml|bibjson)\z/xms) {
+    say STDERR "Biber: Output format in tool mode must be one of 'bibtex', 'biblatexml' or 'bibjson'";
     exit EXIT_ERROR;
 }
 
@@ -329,10 +329,13 @@ if (Biber::Config->getoption('output_file')) {
 else {
   if (Biber::Config->getoption('tool')) {
     if (Biber::Config->getoption('output_format') eq 'bibtex') { # tool .bib output
-      $outfile = $ARGV[0] =~ s/\..+$/_bibertool.bib/r;
+      $outfile = $ARGV[0] =~ s/\.[^.]+$/_bibertool.bib/r;
     }
     elsif (Biber::Config->getoption('output_format') eq 'biblatexml') { # tool .blxtxml output
-      $outfile = $ARGV[0] =~ s/\..+$/_bibertool.bltxml/r;
+      $outfile = $ARGV[0] =~ s/\.[^.]+$/_bibertool.bltxml/r;
+    }
+    elsif (Biber::Config->getoption('output_format') eq 'bibjson') { # bibjson output
+      $outfile = $ARGV[0] =~ s/\.[^.]+$/_bibertool.json/r;
     }
   }
   else {
@@ -951,7 +954,12 @@ Schema validate the F<.bcf> biblatex control file.
 
 =item B<--validate-datamodel|-V>
 
-Validate the data against a data model.
+Validate the data against a data model. By default, the data model used is
+the one in the F<.bcf> file (normal mode) or in the default config file
+whose path can be shown with the C<--tool-config> option (tool mode). Use
+C<--no-default-datamodel> to ignore the default data model completely if
+you are using a complete data model via your own config file
+(with C<--configfile>).
 
 =item B<--version|-v>
 

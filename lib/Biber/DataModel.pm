@@ -735,7 +735,7 @@ sub check_mandatory_constraints {
   my $et = $be->get_field('entrytype');
   my $key = $be->get_field('citekey');
   my $ds = $section->get_keytods($key);
-# ["title", ["OR", "url", "doi", "eprint"]]
+  # ["title", ["OR", "url", "doi", "eprint"]]
   foreach my $c ($self->{entrytypesbyname}{$et}{constraints}{mandatory}->@*) {
     if (ref($c) eq 'ARRAY') {
       # Exactly one of a set is mandatory
@@ -748,7 +748,7 @@ sub check_mandatory_constraints {
               # ignore date field if it has been split into parts
               not ($of eq 'date' and $be->get_field('datesplit'))) {
             if ($xorflag) {
-              push @warnings, "Datamodel: Entry '$key' ($ds): Mandatory fields - only one of '" . join(', ', @fs) . "' must be defined - ignoring field '$of'";
+              push @warnings, "Datamodel: $et entry '$key' ($ds): Mandatory fields - only one of '" . join(', ', @fs) . "' must be defined - ignoring field '$of'";
               $be->del_field($of);
             }
             $flag = 1;
@@ -756,7 +756,7 @@ sub check_mandatory_constraints {
           }
         }
         unless ($flag) {
-          push @warnings, "Datamodel: Entry '$key' ($ds): Missing mandatory field - one of '" . join(', ', @fs) . "' must be defined";
+          push @warnings, "Datamodel: $et entry '$key' ($ds): Missing mandatory field - one of '" . join(', ', @fs) . "' must be defined";
         }
       }
       # One or more of a set is mandatory
@@ -770,14 +770,14 @@ sub check_mandatory_constraints {
           }
         }
         unless ($flag) {
-          push @warnings, "Datamodel: Entry '$key' ($ds): Missing mandatory field - one of '" . join(', ', @fs) . "' must be defined";
+          push @warnings, "Datamodel: $et entry '$key' ($ds): Missing mandatory field - one of '" . join(', ', @fs) . "' must be defined";
         }
       }
     }
     # Simple mandatory field
     else {
       unless ($be->field_exists($c)) {
-        push @warnings, "Datamodel: Entry '$key' ($ds): Missing mandatory field '$c'";
+        push @warnings, "Datamodel: $et entry '$key' ($ds): Missing mandatory field '$c'";
       }
     }
   }
@@ -822,14 +822,14 @@ sub check_conditional_constraints {
     my @actual_cfs = (grep {$be->field_exists($_)} $cfs->@*);
     if ($cq eq 'all') {
       unless ($cfs->$#* == $#actual_cfs) { # ? -> ALL not satisfied
-        push @warnings, "Datamodel: Entry '$key' ($ds): Constraint violation - $cq of fields (" .
+        push @warnings, "Datamodel: $et entry '$key' ($ds): Constraint violation - $cq of fields (" .
           join(', ', $cfs->@*) .
             ") must exist when $aq of fields (" . join(', ', $afs->@*). ") exist";
       }
     }
     elsif ($cq eq 'none') {
       if (@actual_cfs) {        # ? -> NONE not satisfied
-        push @warnings, "Datamodel: Entry '$key' ($ds): Constraint violation - $cq of fields (" .
+        push @warnings, "Datamodel: $et entry '$key' ($ds): Constraint violation - $cq of fields (" .
           join(', ', @actual_cfs) .
             ") must exist when $aq of fields (" . join(', ', $afs->@*). ") exist. Ignoring them.";
         # delete the offending fields
@@ -840,7 +840,7 @@ sub check_conditional_constraints {
     }
     elsif ($cq eq 'one') {
       unless (@actual_cfs) {    # ? -> ONE not satisfied
-        push @warnings, "Datamodel: Entry '$key' ($ds): Constraint violation - $cq of fields (" .
+        push @warnings, "Datamodel: $et entry '$key' ($ds): Constraint violation - $cq of fields (" .
           join(', ', $cfs->@*) .
             ") must exist when $aq of fields (" . join(', ', $afs->@*). ") exist";
       }
@@ -878,7 +878,7 @@ sub check_data_constraints {
           }
           foreach ($fv->@*) {
             if (not $DM_DATATYPES{isbn}->($_, $f)) {
-              push @warnings, "Datamodel: Entry '$key' ($ds): Invalid ISBN in value of field '$f'";
+              push @warnings, "Datamodel: $et entry '$key' ($ds): Invalid ISBN in value of field '$f'";
             }
           }
         }
@@ -894,7 +894,7 @@ sub check_data_constraints {
           }
           foreach ($fv->@*) {
             if (not $DM_DATATYPES{issn}->($_)) {
-            push @warnings, "Datamodel: Entry '$key' ($ds): Invalid ISSN in value of field '$f'";
+            push @warnings, "Datamodel: $et entry '$key' ($ds): Invalid ISSN in value of field '$f'";
             }
           }
         }
@@ -910,7 +910,7 @@ sub check_data_constraints {
           }
           foreach ($fv->@*) {
             if (not $DM_DATATYPES{ismn}->($_)) {
-              push @warnings, "Datamodel: Entry '$key' ($ds): Invalid ISMN in value of field '$f'";
+              push @warnings, "Datamodel: $et entry '$key' ($ds): Invalid ISMN in value of field '$f'";
             }
           }
         }
@@ -922,14 +922,14 @@ sub check_data_constraints {
         if (my $fv = $be->get_field($f)) {
           if (my $fmin = $c->{rangemin}) {
             unless ($fv >= $fmin) {
-              push @warnings, "Datamodel: Entry '$key' ($ds): Invalid value of field '$f' must be '>=$fmin' - ignoring field";
+              push @warnings, "Datamodel: $et entry '$key' ($ds): Invalid value of field '$f' must be '>=$fmin' - ignoring field";
               $be->del_field($f);
               next;
             }
           }
           if (my $fmax = $c->{rangemax}) {
             unless ($fv <= $fmax) {
-              push @warnings, "Datamodel: Entry '$key' ($ds): Invalid value of field '$f' must be '<=$fmax' - ignoring field";
+              push @warnings, "Datamodel: $et entry '$key' ($ds): Invalid value of field '$f' must be '<=$fmax' - ignoring field";
               $be->del_field($f);
               next;
             }
@@ -949,7 +949,7 @@ sub check_data_constraints {
           my $lang = $alts->{lang} // '';
 
           unless (imatch($fv, $patt)) {
-            push @warnings, "Datamodel: Entry '$key' ($ds): Invalid value (pattern match fails) for field '$f/$form/$lang'";
+            push @warnings, "Datamodel: $et entry '$key' ($ds): Invalid value (pattern match fails) for field '$f/$form/$lang'";
           }
         }
       }
@@ -996,7 +996,7 @@ sub check_datatypes {
     }
 
     unless ($dt->($fv, $f)) {
-      push @warnings, "Datamodel: Entry '$key' ($ds): Invalid value of field '$f' must be datatype '$fdt' - ignoring field";
+      push @warnings, "Datamodel: $et entry '$key' ($ds): Invalid value of field '$f' must be datatype '$fdt' - ignoring field";
       $be->del_field($f);
     }
   }

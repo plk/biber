@@ -872,6 +872,8 @@ sub create_entry {
       $logger->debug("Creating entry with key '$k'");
     }
 
+    $bibentry->set_field('entrytype', $e->getAttribute('entrytype'));
+
     # We put all the fields we find modulo field aliases into the object.
     # Validation happens later and is not datasource dependent
     foreach my $f (uniq map { if (_norm($_->nodeName) eq 'names') { $_->getAttribute('type') }
@@ -892,7 +894,6 @@ sub create_entry {
       }
     }
 
-    $bibentry->set_field('entrytype', $e->getAttribute('entrytype'));
     $bibentry->set_field('datatype', 'biblatexml');
     $bibentries->add_entry($k, $bibentry);
   }
@@ -1163,6 +1164,7 @@ sub _datetime {
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $ds = $section->get_keytods($key);
+  my $bee = $bibentry->get_field('entrytype');
 
   foreach my $node ($entry->findnodes("./$f")) {
 
@@ -1187,7 +1189,7 @@ sub _datetime {
         # Save uncertain date information
         $bibentry->set_field($datetype . 'dateuncertain', 1) if $CONFIG_DATE_PARSERS{start}->uncertain;
 
-        # Date had EDTF 5.2.2 unspecified format
+        # Date had ISO8601-2 unspecified format
         # This does not differ for *enddate components as these are split into ranges
         # from non-ranges only
         if ($unspec) {
@@ -1222,7 +1224,7 @@ sub _datetime {
         }
       }
       else {
-        biber_warn("Datamodel: Entry '$key' ($ds): Invalid format '" . $start->get_node(1)->textContent() . "' of date field '$f' range start - ignoring", $bibentry);
+        biber_warn("Datamodel: $bee entry '$key' ($ds): Invalid format '" . $start->get_node(1)->textContent() . "' of date field '$f' range start - ignoring", $bibentry);
       }
 
       # End of range
@@ -1271,7 +1273,7 @@ sub _datetime {
         }
       }
       else {
-        biber_warn("Entry '$key' ($ds): Invalid format '" . $end->get_node(1)->textContent() . "' of date field '$f' range end - ignoring", $bibentry);
+        biber_warn("$bee entry '$key' ($ds): Invalid format '" . $end->get_node(1)->textContent() . "' of date field '$f' range end - ignoring", $bibentry);
       }
     }
     else { # Simple date
@@ -1288,7 +1290,7 @@ sub _datetime {
         # Save uncertain date information
         $bibentry->set_field($datetype . 'dateuncertain', 1) if $CONFIG_DATE_PARSERS{start}->uncertain;
 
-        # Date had EDTF 5.2.2 unspecified format
+        # Date had ISO8601-2 unspecified format
         # This does not differ for *enddate components as these are split into ranges
         # from non-ranges only
         if ($unspec) {
@@ -1323,7 +1325,7 @@ sub _datetime {
         }
       }
       else {
-        biber_warn("Entry '$key' ($ds): Invalid format '" . $node->textContent() . "' of date field '$f' - ignoring", $bibentry);
+        biber_warn("$bee entry '$key' ($ds): Invalid format '" . $node->textContent() . "' of date field '$f' - ignoring", $bibentry);
       }
     }
   }

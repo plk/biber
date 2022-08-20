@@ -36,16 +36,16 @@ my $encode1 = q|% $ biblatex auxiliary file $
 % $ biblatex bbl format version 4.0 $
 % Do not modify the above lines!
 %
-% This is an auxiliary file used by the 'biblatex' package.
+% This is an auxiliary file used by the 'biblatex-ms' package.
 % This file may safely be deleted. It will be recreated by
-% biber as required.
+% biber-ms as required.
 %
 \begingroup
 \makeatletter
-\@ifundefined{ver@biblatex.sty}
+\@ifundefined{ver@biblatex-ms.sty}
   {\@latex@error
-     {Missing 'biblatex' package}
-     {The bibliography requires the 'biblatex' package.}
+     {Missing 'biblatex-ms' package}
+     {The bibliography requires the 'biblatex-ms' package.}
       \aftergroup\endinput}
   {}
 \endgroup
@@ -84,7 +84,7 @@ my $encode1 = q|% $ biblatex auxiliary file $
       \field{sortinit}{E}
       \strng{sortinithash}{8da8a182d344d5b9047633dfc0cc9131}
       \field{extradatescope}{labelyear}
-      \field{labeldatesource}{year}
+      \field{labeldatesource}{}
       \true{singletitle}
       \fieldmssource{labelname}{author}{default}{en-us}
       \fieldmssource{labeltitle}{title}{default}{en-us}
@@ -105,16 +105,16 @@ my $encode2 = q|% $ biblatex auxiliary file $
 % $ biblatex bbl format version 4.0 $
 % Do not modify the above lines!
 %
-% This is an auxiliary file used by the 'biblatex' package.
+% This is an auxiliary file used by the 'biblatex-ms' package.
 % This file may safely be deleted. It will be recreated by
-% biber as required.
+% biber-ms as required.
 %
 \begingroup
 \makeatletter
-\@ifundefined{ver@biblatex.sty}
+\@ifundefined{ver@biblatex-ms.sty}
   {\@latex@error
-     {Missing 'biblatex' package}
-     {The bibliography requires the 'biblatex' package.}
+     {Missing 'biblatex-ms' package}
+     {The bibliography requires the 'biblatex-ms' package.}
       \aftergroup\endinput}
   {}
 \endgroup
@@ -153,7 +153,7 @@ my $encode2 = q|% $ biblatex auxiliary file $
       \field{sortinit}{E}
       \strng{sortinithash}{8da8a182d344d5b9047633dfc0cc9131}
       \field{extradatescope}{labelyear}
-      \field{labeldatesource}{year}
+      \field{labeldatesource}{}
       \true{singletitle}
       \fieldmssource{labelname}{author}{default}{en-us}
       \fieldmssource{labeltitle}{title}{default}{en-us}
@@ -174,16 +174,16 @@ my $encode3 = q|% $ biblatex auxiliary file $
 % $ biblatex bbl format version 4.0 $
 % Do not modify the above lines!
 %
-% This is an auxiliary file used by the 'biblatex' package.
+% This is an auxiliary file used by the 'biblatex-ms' package.
 % This file may safely be deleted. It will be recreated by
-% biber as required.
+% biber-ms as required.
 %
 \begingroup
 \makeatletter
-\@ifundefined{ver@biblatex.sty}
+\@ifundefined{ver@biblatex-ms.sty}
   {\@latex@error
-     {Missing 'biblatex' package}
-     {The bibliography requires the 'biblatex' package.}
+     {Missing 'biblatex-ms' package}
+     {The bibliography requires the 'biblatex-ms' package.}
       \aftergroup\endinput}
   {}
 \endgroup
@@ -222,7 +222,7 @@ my $encode3 = q|% $ biblatex auxiliary file $
       \field{sortinit}{E}
       \strng{sortinithash}{8da8a182d344d5b9047633dfc0cc9131}
       \field{extradatescope}{labelyear}
-      \field{labeldatesource}{year}
+      \field{labeldatesource}{}
       \true{singletitle}
       \fieldmssource{labelname}{author}{default}{en-us}
       \fieldmssource{labeltitle}{title}{default}{en-us}
@@ -243,16 +243,16 @@ my $encode5 = q|% $ biblatex auxiliary file $
 % $ biblatex bbl format version 4.0 $
 % Do not modify the above lines!
 %
-% This is an auxiliary file used by the 'biblatex' package.
+% This is an auxiliary file used by the 'biblatex-ms' package.
 % This file may safely be deleted. It will be recreated by
-% biber as required.
+% biber-ms as required.
 %
 \begingroup
 \makeatletter
-\@ifundefined{ver@biblatex.sty}
+\@ifundefined{ver@biblatex-ms.sty}
   {\@latex@error
-     {Missing 'biblatex' package}
-     {The bibliography requires the 'biblatex' package.}
+     {Missing 'biblatex-ms' package}
+     {The bibliography requires the 'biblatex-ms' package.}
       \aftergroup\endinput}
   {}
 \endgroup
@@ -291,7 +291,7 @@ my $encode5 = q|% $ biblatex auxiliary file $
       \field{sortinit}{E}
       \strng{sortinithash}{8da8a182d344d5b9047633dfc0cc9131}
       \field{extradatescope}{labelyear}
-      \field{labeldatesource}{year}
+      \field{labeldatesource}{}
       \true{singletitle}
       \fieldmssource{labelname}{author}{default}{en-us}
       \fieldmssource{labeltitle}{title}{default}{en-us}
@@ -312,16 +312,16 @@ my $encode6 = q|% $ biblatex auxiliary file $
 % $ biblatex bbl format version 4.0 $
 % Do not modify the above lines!
 %
-% This is an auxiliary file used by the 'biblatex' package.
+% This is an auxiliary file used by the 'biblatex-ms' package.
 % This file may safely be deleted. It will be recreated by
-% biber as required.
+% biber-ms as required.
 %
 \begingroup
 \makeatletter
-\@ifundefined{ver@biblatex.sty}
+\@ifundefined{ver@biblatex-ms.sty}
   {\@latex@error
-     {Missing 'biblatex' package}
-     {The bibliography requires the 'biblatex' package.}
+     {Missing 'biblatex-ms' package}
+     {The bibliography requires the 'biblatex-ms' package.}
       \aftergroup\endinput}
   {}
 \endgroup
@@ -360,7 +360,7 @@ my $encode6 = q|% $ biblatex auxiliary file $
       \field{sortinit}{E}
       \strng{sortinithash}{8da8a182d344d5b9047633dfc0cc9131}
       \field{extradatescope}{labelyear}
-      \field{labeldatesource}{year}
+      \field{labeldatesource}{}
       \true{singletitle}
       \fieldmssource{labelname}{author}{default}{en-us}
       \fieldmssource{labeltitle}{title}{default}{en-us}
@@ -381,16 +381,16 @@ my $encode7 = q|% $ biblatex auxiliary file $
 % $ biblatex bbl format version 4.0 $
 % Do not modify the above lines!
 %
-% This is an auxiliary file used by the 'biblatex' package.
+% This is an auxiliary file used by the 'biblatex-ms' package.
 % This file may safely be deleted. It will be recreated by
-% biber as required.
+% biber-ms as required.
 %
 \begingroup
 \makeatletter
-\@ifundefined{ver@biblatex.sty}
+\@ifundefined{ver@biblatex-ms.sty}
   {\@latex@error
-     {Missing 'biblatex' package}
-     {The bibliography requires the 'biblatex' package.}
+     {Missing 'biblatex-ms' package}
+     {The bibliography requires the 'biblatex-ms' package.}
       \aftergroup\endinput}
   {}
 \endgroup
@@ -429,7 +429,7 @@ my $encode7 = q|% $ biblatex auxiliary file $
       \field{sortinit}{E}
       \strng{sortinithash}{8da8a182d344d5b9047633dfc0cc9131}
       \field{extradatescope}{labelyear}
-      \field{labeldatesource}{year}
+      \field{labeldatesource}{}
       \true{singletitle}
       \fieldmssource{labelname}{author}{default}{en-us}
       \fieldmssource{labeltitle}{title}{default}{en-us}

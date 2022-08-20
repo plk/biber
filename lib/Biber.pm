@@ -27,6 +27,7 @@ use Biber::UCollate;
 use Biber::Utils;
 use Carp;
 use Data::Dump;
+use Digest::MD5 qw( md5_hex );
 use Data::Compare;
 use Encode;
 use File::Copy;
@@ -1686,13 +1687,14 @@ sub validate_datamodel {
     my $dmwe = Biber::Config->getoption('dieondatamodel') ? \&biber_error : \&biber_warn;
     foreach my $citekey ($section->get_citekeys) {
       my $be = $section->bibentry($citekey);
+      my $bee = $be->get_field('entrytype');
       my $citekey = $be->get_field('citekey');
       my $et = $be->get_field('entrytype');
       my $ds = $section->get_keytods($citekey);
 
       # default entrytype to MISC type if not a known type
       unless ($dm->is_entrytype($et)) {
-        $dmwe->("Datamodel: Entry '$citekey' ($ds): Invalid entry type '" . $be->get_field('entrytype') . "' - defaulting to 'misc'", $be);
+        $dmwe->("Datamodel: $bee entry '$citekey' ($ds): Invalid entry type '" . $be->get_field('entrytype') . "' - defaulting to 'misc'", $be);
         $be->set_field('entrytype', 'misc');
         $et = 'misc';           # reset this too
       }
@@ -1705,7 +1707,7 @@ sub validate_datamodel {
       unless ($et eq 'xdata' or $et eq 'set') { # XDATA/SET are generic containers for any field
         foreach my $ef ($be->datafields) {
           unless ($dm->is_field_for_entrytype($et, $ef)) {
-            $dmwe->("Datamodel: Entry '$citekey' ($ds): Invalid field '$ef' for entrytype '$et'", $be);
+            $dmwe->("Datamodel: $bee entry '$citekey' ($ds): Invalid field '$ef' for entrytype '$et'", $be);
           }
         }
       }
@@ -2231,7 +2233,7 @@ sub process_workuniqueness {
 
 =head2 process_extradate
 
-    Track labelname/date parts combination for generation of extradate
+    Track labelname/labeltitle+date parts combination for generation of extradate
 
 =cut
 
@@ -2241,12 +2243,12 @@ sub process_extradate {
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
+  my $dm = Biber::Config->get_dm;
 
   # Generate labelname/year combination for tracking extradate
-  # * If there is no labelname to use, use empty string
-  # * If there is no date information to use, try year
-  # * Don't increment the seen_namedateparts count if the name string is empty
-  #   (see code in incr_seen_namedateparts method).
+  # * If there is no labelname/labeltitle to use, use empty string
+  # * Don't increment the seen_nametitledateparts count if the name/title string is empty
+  #   (see code in incr_seen_nametitledateparts method).
   # * Don't increment if skiplab is set
 
   if (Biber::Config->getblxoption(undef, 'labeldateparts', $bee, $citekey)) {
@@ -2258,9 +2260,28 @@ sub process_extradate {
       $logger->trace("Creating extradate information for '$citekey'");
     }
 
-    my $namehash = '';
-    if (my ($lni, $lnf, $lnl) = $be->get_labelname_info->@*) {
-      $namehash = $self->_getnamehash_u($citekey, $be->get_field($lni, $lnf, $lnl), $dlist);
+    my $contexthash = '';
+    my $edc = Biber::Config->getblxoption(undef, 'extradatecontext');
+    foreach my $field ($edc->@*) {
+      my $fieldc = $field->{content};
+      my $fieldf;
+      my $fieldl;
+      if ($fieldc =~ m/^label.+/) {
+        my $method = "get_${fieldc}_info";
+        ($fieldc, $fieldf, $fieldl) = $be->$method->@*;
+      }
+      if (my $fv = $be->get_field($fieldc, $fieldf, $fieldl)) {
+        if ($dm->field_is_datatype('name', $fieldc)) {
+          $contexthash = $self->_getnamehash_u($citekey, $fv, $dlist);
+        }
+        elsif ($dm->field_is_fieldtype('list', $fieldc)) {
+          $contexthash = md5_hex(encode_utf8(NFC(normalise_string_hash(join('', $fv->@*)))));
+        }
+        else {
+          $contexthash = md5_hex(encode_utf8(NFC(normalise_string_hash($fv))));
+        }
+        last;
+      }
     }
 
     my $datestring = ''; # Need a default empty string
@@ -2278,11 +2299,11 @@ sub process_extradate {
       }
     }
 
-    my $tracking_string = "$namehash,$datestring";
+    my $tracking_string = "$contexthash,$datestring";
 
     $be->set_field('extradatescope', $edscope);
-    $dlist->set_entryfield($citekey, 'namedateparts', $tracking_string);
-    $dlist->incr_seen_namedateparts($namehash, $datestring);
+    $dlist->set_entryfield($citekey, 'nametitledateparts', $tracking_string);
+    $dlist->incr_seen_nametitledateparts($contexthash, $datestring);
   }
 
   return;
@@ -2591,11 +2612,15 @@ sub process_labeldate {
   my $dm = Biber::Config->get_dm;
 
   if (Biber::Config->getblxoption(undef, 'labeldateparts', $bee, $citekey)) {
+    if (Biber::Config->getblxoption($secnum, 'skiplab', $bee, $citekey)) {
+      return;
+    }
+
     my $ldatespec = Biber::Config->getblxoption(undef, 'labeldatespec', $bee);
     foreach my $lds ($ldatespec->@*) {
       my $pseudodate;
       my $ld = $lds->{content};
-      if ($lds->{'type'} eq 'field') { # labeldate field
+      if ($lds->{'type'} eq 'field') { # labeldate/year field
 
         my $ldy;
         my $ldey;
@@ -2605,12 +2630,13 @@ sub process_labeldate {
         my $ldmin;
         my $ldsec;
         my $ldtz;
-        my $datetype;
+        my $datetype = '';
 
-        # resolve dates
-        $datetype = $ld =~ s/date\z//xmsr;
-        if ($dm->field_is_datatype('date', $ld) and
-            $be->get_field("${datetype}datesplit")) { # real ISO8601 dates
+        # This effectively loses the distinction between DATE and YEAR fields
+        # which is what we want
+        $ldy = $ld;
+        if ($dm->field_is_datatype('date', $ld)) {
+          $datetype = $ld =~ s/date\z//xmsr;
           $ldy    = $datetype . 'year';
           $ldey   = $datetype . 'endyear';
           $ldm    = $datetype . 'month';
@@ -2620,8 +2646,7 @@ sub process_labeldate {
           $ldsec  = $datetype . 'second';
           $ldtz   = $datetype . 'timezone';
         }
-        else { # non-ISO8601 split date field so make a pseudo-year
-          $ldy = $ld;
+        else { # non-iso8601-2 split date field so make a pseudo-year
           $pseudodate = 1;
         }
 
@@ -2652,13 +2677,13 @@ sub process_labeldate {
     if (my $ldi = $be->get_labeldate_info) {
       if (my $df = $ldi->{field}) { # set labelyear to a field value
         my $pseudodate = $df->{pseudodate};
-        $be->set_field('labelyear', $be->get_field($df->{year}));
-        $be->set_field('labelmonth', $be->get_field($df->{month})) if $df->{month};
-        $be->set_field('labelday', $be->get_field($df->{day})) if $df->{day};
-        $be->set_field('labelhour', $be->get_field($df->{hour})) if $df->{hour};
-        $be->set_field('labelminute', $be->get_field($df->{minute})) if $df->{minute};
-        $be->set_field('labelsecond', $be->get_field($df->{second})) if $df->{second};
-        $be->set_field('labeltimezone', $be->get_field($df->{timezone})) if $df->{timezone};
+        $be->set_field('labelyear',       $be->get_field($df->{year}));
+        $be->set_field('labelmonth',      $be->get_field($df->{month}))    if $df->{month};
+        $be->set_field('labelday',        $be->get_field($df->{day}))      if $df->{day};
+        $be->set_field('labelhour',       $be->get_field($df->{hour}))     if $df->{hour};
+        $be->set_field('labelminute',     $be->get_field($df->{minute}))   if $df->{minute};
+        $be->set_field('labelsecond',     $be->get_field($df->{second}))   if $df->{second};
+        $be->set_field('labeltimezone',   $be->get_field($df->{timezone})) if $df->{timezone};
         $be->set_field('labeldatesource', $df->{source});
 
         # ignore endyear if it's the same as year
@@ -2671,40 +2696,38 @@ sub process_labeldate {
           $be->set_field('labelyear',
                          ($be->get_field('labelyear') // ''). '\bibdatedash ' . $be->get_field($ytype . 'endyear'));
         }
-        # construct labelmonth from start/end month field
-        if (not $pseudodate and
-            $be->get_field($ytype . 'endmonth')
-            and (($be->get_field($df->{month}) // '') ne $be->get_field($ytype . 'endmonth'))) {
-          $be->set_field('labelmonth',
-                         ($be->get_field('labelmonth') // '') . '\bibdatedash ' . $be->get_field($ytype . 'endmonth'));
-        }
-        # construct labelday from start/end month field
-        if (not $pseudodate and
-            $be->get_field($ytype . 'endday')
-            and (($be->get_field($df->{day}) // '') ne $be->get_field($ytype . 'endday'))) {
-          $be->set_field('labelday',
-                         ($be->get_field('labelday') // '') . '\bibdatedash ' . $be->get_field($ytype . 'endday'));
-        }
-        # construct labelhour from start/end hour field
-        if (not $pseudodate and
-            $be->get_field($ytype . 'endhour')
-            and (($be->get_field($df->{hour}) // '') ne $be->get_field($ytype . 'endhour'))) {
-          $be->set_field('labelhour',
-                         ($be->get_field('labelhour') // '') . '\bibdatedash ' . $be->get_field($ytype . 'endhour'));
-        }
-        # construct labelminute from start/end minute field
-        if (not $pseudodate and
-            $be->get_field($ytype . 'endminute')
-            and (($be->get_field($df->{minute}) // '') ne $be->get_field($ytype . 'endminute'))) {
-          $be->set_field('labelminute',
-                         ($be->get_field('labelminute') // '') . '\bibdatedash ' . $be->get_field($ytype . 'endminute'));
-        }
-        # construct labelsecond from start/end second field
-        if (not $pseudodate and
-            $be->get_field($ytype . 'endsecond')
-            and (($be->get_field($df->{second}) // '') ne $be->get_field($ytype . 'endsecond'))) {
-          $be->set_field('labelsecond',
-                         ($be->get_field('labelsecond') // '') . '\bibdatedash ' . $be->get_field($ytype . 'endsecond'));
+
+        if (not $pseudodate) {
+          # construct labelmonth from start/end month field
+          if ($be->get_field($ytype . 'endmonth')
+              and (($be->get_field($df->{month}) // '') ne $be->get_field($ytype . 'endmonth'))) {
+            $be->set_field('labelmonth',
+                           ($be->get_field('labelmonth') // '') . '\bibdatedash ' . $be->get_field($ytype . 'endmonth'));
+          }
+          # construct labelday from start/end month field
+          if ($be->get_field($ytype . 'endday')
+              and (($be->get_field($df->{day}) // '') ne $be->get_field($ytype . 'endday'))) {
+            $be->set_field('labelday',
+                           ($be->get_field('labelday') // '') . '\bibdatedash ' . $be->get_field($ytype . 'endday'));
+          }
+          # construct labelhour from start/end hour field
+          if ($be->get_field($ytype . 'endhour')
+              and (($be->get_field($df->{hour}) // '') ne $be->get_field($ytype . 'endhour'))) {
+            $be->set_field('labelhour',
+                           ($be->get_field('labelhour') // '') . '\bibdatedash ' . $be->get_field($ytype . 'endhour'));
+          }
+          # construct labelminute from start/end minute field
+          if ($be->get_field($ytype . 'endminute')
+              and (($be->get_field($df->{minute}) // '') ne $be->get_field($ytype . 'endminute'))) {
+            $be->set_field('labelminute',
+                           ($be->get_field('labelminute') // '') . '\bibdatedash ' . $be->get_field($ytype . 'endminute'));
+          }
+          # construct labelsecond from start/end second field
+          if ($be->get_field($ytype . 'endsecond')
+              and (($be->get_field($df->{second}) // '') ne $be->get_field($ytype . 'endsecond'))) {
+            $be->set_field('labelsecond',
+                           ($be->get_field('labelsecond') // '') . '\bibdatedash ' . $be->get_field($ytype . 'endsecond'));
+          }
         }
       }
       elsif (my $ys = $ldi->{string}) { # set labeldatesource to a fallback string
@@ -3976,12 +3999,12 @@ sub generate_contextdata {
       }
       # extradate
       if (Biber::Config->getblxoption(undef, 'labeldateparts', $bee, $key)) {
-        my $namedateparts = $dlist->get_entryfield($key, 'namedateparts');
-        if ($dlist->get_seen_namedateparts($namedateparts) > 1) {
+        my $nametitledateparts = $dlist->get_entryfield($key, 'nametitledateparts');
+        if ($dlist->get_seen_nametitledateparts($nametitledateparts) > 1) {
           if ($logger->is_trace()) {# performance tune
-            $logger->trace("namedateparts for '$namedateparts': " . $dlist->get_seen_namedateparts($namedateparts));
+            $logger->trace("nametitledateparts for '$nametitledateparts': " . $dlist->get_seen_nametitledateparts($nametitledateparts));
           }
-          my $v = $dlist->incr_seen_extradate($namedateparts);
+          my $v = $dlist->incr_seen_extradate($nametitledateparts);
           $dlist->set_extradatedata_for_key($key, $v);
         }
       }
@@ -4710,6 +4733,7 @@ sub get_dependents {
     else {
       # This must exist for all but dynamic sets
       my $be = $section->bibentry($citekey);
+      my $bee = $be->get_field('entrytype');
 
       # xdata
       if (my $xdata = $be->get_xdata_refs) {
@@ -4718,7 +4742,7 @@ sub get_dependents {
             # skip looking for dependent if it's already there (loop suppression)
             push $new_deps->@*, $xdref unless $section->bibentry($xdref);
             if ($logger->is_debug()) { # performance tune
-              $logger->debug("Entry '$citekey' has xdata '$xdref'");
+              $logger->debug("$bee entry '$citekey' has xdata '$xdref'");
             }
             push $keyswithdeps->@*, $citekey unless first {$citekey eq $_} $keyswithdeps->@*;
           }
@@ -4730,7 +4754,7 @@ sub get_dependents {
         # skip looking for dependent if it's already there (loop suppression)
         push $new_deps->@*, $refkey unless $section->bibentry($refkey);
         if ($logger->is_debug()) {# performance tune
-          $logger->debug("Entry '$citekey' has xref '$refkey'");
+          $logger->debug("$bee entry '$citekey' has xref '$refkey'");
         }
         push $keyswithdeps->@*, $citekey unless first {$citekey eq $_} $keyswithdeps->@*;
       }
