@@ -75,7 +75,7 @@ my $encode1 = q|% $ biblatex auxiliary file $
       \field{sortinit}{E}
       \field{sortinithash}{8da8a182d344d5b9047633dfc0cc9131}
       \field{extradatescope}{labelyear}
-      \field{labeldatesource}{year}
+      \field{labeldatesource}{}
       \true{singletitle}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -131,7 +131,7 @@ my $encode2 = q|% $ biblatex auxiliary file $
       \field{sortinit}{E}
       \field{sortinithash}{8da8a182d344d5b9047633dfc0cc9131}
       \field{extradatescope}{labelyear}
-      \field{labeldatesource}{year}
+      \field{labeldatesource}{}
       \true{singletitle}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -187,7 +187,7 @@ my $encode3 = q|% $ biblatex auxiliary file $
       \field{sortinit}{E}
       \field{sortinithash}{8da8a182d344d5b9047633dfc0cc9131}
       \field{extradatescope}{labelyear}
-      \field{labeldatesource}{year}
+      \field{labeldatesource}{}
       \true{singletitle}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -243,7 +243,7 @@ my $encode5 = q|% $ biblatex auxiliary file $
       \field{sortinit}{E}
       \field{sortinithash}{8da8a182d344d5b9047633dfc0cc9131}
       \field{extradatescope}{labelyear}
-      \field{labeldatesource}{year}
+      \field{labeldatesource}{}
       \true{singletitle}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -299,7 +299,7 @@ my $encode6 = q|% $ biblatex auxiliary file $
       \field{sortinit}{E}
       \field{sortinithash}{8da8a182d344d5b9047633dfc0cc9131}
       \field{extradatescope}{labelyear}
-      \field{labeldatesource}{year}
+      \field{labeldatesource}{}
       \true{singletitle}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -355,7 +355,7 @@ my $encode7 = q|% $ biblatex auxiliary file $
       \field{sortinit}{E}
       \field{sortinithash}{8da8a182d344d5b9047633dfc0cc9131}
       \field{extradatescope}{labelyear}
-      \field{labeldatesource}{year}
+      \field{labeldatesource}{}
       \true{singletitle}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}

@@ -128,9 +128,6 @@ my $kck1 = q|    \entry{c2add694bf942dc77b376592d9c862cd}{article}{skipbib=true,
       \strng{authorbibnamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authornamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authorfullhash}{a517747c3d12f99244ae598910d979c5}
-      \field{labeldatesource}{}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
       \field{clonesourcekey}{key1}
       \field{journaltitle}{Journal Title}
       \field{number}{5}
@@ -164,9 +161,6 @@ my $kck2 = q|    \entry{78f825aaa0103319aaa1a30bf4fe3ada}{inbook}{skipbib=true,s
       \strng{authorbibnamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authornamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authorfullhash}{a517747c3d12f99244ae598910d979c5}
-      \field{labeldatesource}{}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
       \field{clonesourcekey}{key2}
       \field{booktitle}{Booktitle}
       \field{month}{2}
@@ -201,9 +195,6 @@ my $kck3 = q|    \entry{3631578538a2d6ba5879b31a9a42f290}{inbook}{skipbib=true,s
       \strng{authorbibnamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authornamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authorfullhash}{a517747c3d12f99244ae598910d979c5}
-      \field{labeldatesource}{}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
       \field{clonesourcekey}{key3}
       \field{booktitle}{Booktitle}
       \field{month}{1}
@@ -237,9 +228,6 @@ my $kck4 = q|    \entry{caf8e34be07426ae7127c1b4829983c1}{inbook}{skipbib=true,s
       \strng{authorbibnamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authornamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authorfullhash}{a517747c3d12f99244ae598910d979c5}
-      \field{labeldatesource}{}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
       \field{clonesourcekey}{key4}
       \field{booktitle}{Booktitle}
       \field{shorthand}{RK4}
@@ -283,8 +271,6 @@ my $s1 = q|    \entry{8ddf878039b70767c4a5bcf4f0c4f65e}{book}{skipbib=false,skip
       \strng{authorbibnamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authornamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authorfullhash}{a517747c3d12f99244ae598910d979c5}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
       \field{clonesourcekey}{s1}
       \field{title}{Title 1}
     \endentry
@@ -342,7 +328,8 @@ my $un1 = q|    \entry{kullback}{book}{}
       \field{extraname}{1}
       \field{sortinit}{5}
       \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
-      \field{extradatescope}{year}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{langid}{english}
@@ -376,7 +363,8 @@ my $un2 = q|    \entry{kullback:related}{book}{}
       \field{extraname}{2}
       \field{sortinit}{6}
       \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
-      \field{extradatescope}{year}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{annotation}{A reprint of the \texttt{kullback} entry. Note the format of the \texttt{related} and \texttt{relatedtype} fields}

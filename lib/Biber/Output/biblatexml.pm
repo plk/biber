@@ -403,7 +403,7 @@ sub set_output_entry {
                             'S1'      => 40,
                             'S2'      => 41 );
 
-      # Did the date fields come from interpreting an EDTF 5.2.2 unspecified date?
+      # Did the date fields come from interpreting an iso8601-2 unspecified date?
       # If so, do the reverse of Biber::Utils::parse_date_unspecified()
       if (my $unspec = $be->get_field("${d}dateunspecified")) {
 
@@ -442,7 +442,7 @@ sub set_output_entry {
         }
       }
 
-      # Seasons derived from EDTF dates
+      # Seasons derived from iso8601 dates
       if (my $s = $be->get_field("${d}yeardivision")) {
         $overridem = $yeardivisions{$s};
       }

@@ -203,7 +203,7 @@ my $l16 = q|    \entry{L16}{proceedings}{}
       \field{extraname}{13}
       \field{sortinit}{D}
       \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
-      \field{extradate}{7}
+      \field{extradate}{5}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{event}
       \field{labelnamesource}{editor}
