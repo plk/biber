@@ -2262,19 +2262,19 @@ sub process_extradate {
 
     my $contexthash = '';
     my $edc = Biber::Config->getblxoption(undef, 'extradatecontext');
-    foreach my $field ($edc->@*) {
-      my $fieldc = $field->{content};
-      my $fieldf;
-      my $fieldl;
-      if ($fieldc =~ m/^label.+/) {
-        my $method = "get_${fieldc}_info";
-        ($fieldc, $fieldf, $fieldl) = $be->$method->@*;
+    foreach my $h_edc ($edc->@*) {
+      my $field = $h_edc->{content};
+      my $form = $h_edc->{form};
+      my $lang = $h_edc->{lang};
+      if ($field =~ m/^label.+/) {
+        my $method = "get_${field}_info";
+        ($field, $form, $lang) = $be->$method->@*;
       }
-      if (my $fv = $be->get_field($fieldc, $fieldf, $fieldl)) {
-        if ($dm->field_is_datatype('name', $fieldc)) {
+      if (my $fv = $be->get_field($field, $form, $lang)) {
+        if ($dm->field_is_datatype('name', $field)) {
           $contexthash = $self->_getnamehash_u($citekey, $fv, $dlist);
         }
-        elsif ($dm->field_is_fieldtype('list', $fieldc)) {
+        elsif ($dm->field_is_fieldtype('list', $field)) {
           $contexthash = md5_hex(encode_utf8(NFC(normalise_string_hash(join('', $fv->@*)))));
         }
         else {
