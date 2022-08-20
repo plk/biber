@@ -2223,6 +2223,7 @@ sub process_extradate {
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
+  my $dm = Biber::Config->get_dm;
 
   # Generate labelname/year combination for tracking extradate
   # * If there is no labelname/labeltitle to use, use empty string
@@ -2239,9 +2240,26 @@ sub process_extradate {
       $logger->trace("Creating extradate information for '$citekey'");
     }
 
-    my $nametitlehash = '';
-    if (my $lni = $be->get_labelname_info) {
-      $nametitlehash = $self->_getnamehash_u($citekey, $be->get_field($lni), $dlist);
+    my $contexthash = '';
+    my $edc = Biber::Config->getblxoption(undef, 'extradatecontext');
+    foreach my $field ($edc->@*) {
+      my $fieldc = $field->{content};
+      if ($fieldc =~ m/^label.+/) {
+        my $method = "get_${fieldc}_info";
+        $fieldc = $be->$method;
+      }
+      if (my $fv = $be->get_field($fieldc)) {
+        if ($dm->field_is_datatype('name', $fieldc)) {
+          $contexthash = $self->_getnamehash_u($citekey, $fv, $dlist);
+        }
+        elsif ($dm->field_is_fieldtype('list', $fieldc)) {
+          $contexthash = md5_hex(encode_utf8(NFC(normalise_string_hash(join('', $fv->@*)))));
+        }
+        else {
+          $contexthash = md5_hex(encode_utf8(NFC(normalise_string_hash($fv))));
+        }
+        last;
+      }
     }
 
     my $datestring = ''; # Need a default empty string
@@ -2259,19 +2277,11 @@ sub process_extradate {
       }
     }
 
-    # Fallback to labeltitle if no labelname as titles can appear in name position (and in citations) if there
-    # is no labelname in authoryear type styles. In such cases, we want extradate based on labeltitle.
-    unless ($nametitlehash) { # no labelname
-      if (my $lt = $be->get_field('labeltitle')) {
-        $nametitlehash = md5_hex(encode_utf8(NFC(normalise_string_hash($lt))));
-      }
-    }
-
-    my $tracking_string = "$nametitlehash,$datestring";
+    my $tracking_string = "$contexthash,$datestring";
 
     $be->set_field('extradatescope', $edscope);
     $dlist->set_entryfield($citekey, 'nametitledateparts', $tracking_string);
-    $dlist->incr_seen_nametitledateparts($nametitlehash, $datestring);
+    $dlist->incr_seen_nametitledateparts($contexthash, $datestring);
   }
 
   return;
