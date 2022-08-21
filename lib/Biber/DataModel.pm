@@ -333,7 +333,7 @@ sub new {
   # Mapping of sorting fields to Sort::Key sort data types which are not 'str'
   $self->{sortdataschema} = sub {
     my $f = shift;
-    if (first {$f eq $_} ('citeorder', 'citecount', $self->{helpers}{integers}->@*)) {
+    if (first {$f eq $_} ('intciteorder', 'citeorder', 'citecount', $self->{helpers}{integers}->@*)) {
       return 'int';
     }
     else {
