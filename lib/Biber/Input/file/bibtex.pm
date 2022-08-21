@@ -1104,6 +1104,7 @@ sub _annotation {
 # Literal fields
 sub _literal {
   my ($bibentry, $entry, $value, $tbfield, $field, $form, $lang, $key) = @_;
+  my $fc = fc($field); # Casefolded field which is what we need internally
 
   # Record any XDATA and skip if we did
   if ($bibentry->add_xdata_ref($field, $form, $lang, $value)) {
@@ -1113,24 +1114,21 @@ sub _literal {
   # If we have already split some date fields into literal fields
   # like date -> year/month/day, don't overwrite them with explicit
   # year/month
-  elsif ($field eq 'year') {
+  if ($fc eq 'year') {
     return if $bibentry->get_datafield('year');
     if ($value and not looks_like_number(num($value))) {
       biber_warn("legacy year field '$value' in entry '$key' is not an integer - this will probably not sort properly.");
     }
-    return $value;
   }
-  elsif ($field eq 'month') {
+  if ($fc eq 'month') {
     return if $bibentry->get_datafield('month');
     if ($value and not looks_like_number(num($value))) {
       biber_warn("legacy month field '$value' in entry '$key' is not an integer - this will probably not sort properly.");
     }
-
-    # Try to sanitise months to biblatex requirements
-    return _hack_month($value);
   }
+
   # Deal with ISBN options
-  elsif ($field eq 'isbn') {
+  if ($fc eq 'isbn') {
     require Business::ISBN;
     my ($vol, $dir, undef) = File::Spec->splitpath( $INC{"Business/ISBN.pm"} );
     $dir =~ s/\/$//;            # splitpath sometimes leaves a trailing '/'
@@ -1161,7 +1159,17 @@ sub _literal {
     if (Biber::Config->getoption('isbn_normalise')) {
       $value = $isbn->as_string;
     }
+  }
 
+  # Try to sanitise months to biblatex requirements
+  if ($fc eq 'month') {
+    return _hack_month($value);
+  }
+  # Rationalise any bcp47 style langids into babel/polyglossia names
+  # biblatex will convert these back again when loading .lbx files
+  # We need this until babel/polyglossia support proper bcp47 language/locales
+  elsif ($fc eq 'langid' and my $map = $LOCALE_MAP_R{$value}) {
+    return $map;
   }
   else {
     return $value;
