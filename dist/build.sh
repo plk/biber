@@ -41,7 +41,7 @@ declare XSLDIR=$BASE/data
 declare DIR=${1:-"/tmp/b"}
 declare RELEASE=${2:-"development"}
 declare BRANCH=${3:-"dev"}
-declare PACAKGEEXT=$(perl -ne "print \$1 if m/^our \\\$PACKAGEEXT\\s*=\\s*'([^']+)';/;" $BASE/lib/Biber/Config.pm)
+declare PACKAGEEXT=$(perl -ne "print \$1 if m/^our \\\$PACKAGEEXT\\s*=\\s*'([^']+)';/;" $BASE/lib/Biber/Config.pm)
 declare BINARYNAME=${4:-"biber$PACKAGEEXT"}
 declare JUSTBUILD=${5:-"0"}
 declare DSCANCACHE=${6:-"0"}
