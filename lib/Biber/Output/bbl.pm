@@ -439,11 +439,8 @@ sub set_output_entry {
     if (my $edscope = $be->get_field('extradatescope')) {
       $acc .= "      \\field{extradatescope}{$edscope}\n";
     }
-    # Don't add labelsources if skiplab is set for entry
-    unless (Biber::Config->getblxoption($secnum, 'skiplab', $bee, $key)) {
-      if ($be->field_exists('labeldatesource')) {
-        $acc .= "      \\field{labeldatesource}{" . $be->get_field('labeldatesource') .  "}\n";
-      }
+    if ($be->field_exists('labeldatesource')) {
+      $acc .= "      \\field{labeldatesource}{" . $be->get_field('labeldatesource') .  "}\n";
     }
   }
 
@@ -482,20 +479,18 @@ sub set_output_entry {
   $acc .= "      <BDS>UNIQUEWORK</BDS>\n";
   $acc .= "      <BDS>UNIQUEPRIMARYAUTHOR</BDS>\n";
 
-  unless (Biber::Config->getblxoption($secnum, 'skiplab', $bee, $key)) {
-    # The source field for labelname
-    if ($lni) {
-      my $fl = "{$lnf}{$lnl}";
-      $fl = "{}{}" unless $dm->is_multiscript($lni);
-      $acc .= "      \\fieldmssource{labelname}{$lni}$fl\n";
-    }
+  # The source field for labelname
+  if ($lni) {
+    my $fl = "{$lnf}{$lnl}";
+    $fl = "{}{}" unless $dm->is_multiscript($lni);
+    $acc .= "      \\fieldmssource{labelname}{$lni}$fl\n";
+  }
 
-    # The source field for labeltitle
-    if (my ($lti, $ltf, $ltl) = $be->get_labeltitle_info->@*) {
-      my $fl = "{$ltf}{$ltl}";
-      $fl = "{}{}" unless $dm->is_multiscript($lti);
-      $acc .= "      \\fieldmssource{labeltitle}{$lti}$fl\n";
-    }
+  # The source field for labeltitle
+  if (my ($lti, $ltf, $ltl) = $be->get_labeltitle_info->@*) {
+    my $fl = "{$ltf}{$ltl}";
+    $fl = "{}{}" unless $dm->is_multiscript($lti);
+    $acc .= "      \\fieldmssource{labeltitle}{$lti}$fl\n";
   }
 
   if (my $ck = $be->get_field('clonesourcekey')) {

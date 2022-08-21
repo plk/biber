@@ -75,6 +75,9 @@ my $string2 = q|    \entry{Static2}{book}{skipbib=true,skipbiblist=true,skiplab=
       \strng{authordefaulten-usfullhash}{43874d80d7ce68027102819f16c47df1}
       \field{sortinit}{B}
       \strng{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{labeldatesource}{}
+      \fieldmssource{labelname}{author}{default}{en-us}
+      \fieldmssource{labeltitle}{title}{default}{en-us}
       \field{annotation}{Some Blessed Note}
       \field[default][en-us]{title}{Blessed Brains}
       \field{year}{2001}
@@ -104,6 +107,9 @@ my $string3 = q|    \entry{Static3}{book}{skipbib=true,skipbiblist=true,skiplab=
       \strng{authordefaulten-usfullhash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
       \field{sortinit}{D}
       \strng{sortinithash}{6f385f66841fb5e82009dc833c761848}
+      \field{labeldatesource}{}
+      \fieldmssource{labelname}{author}{default}{en-us}
+      \fieldmssource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{title}{Castles and Crime}
       \field{year}{2002}
     \endentry
@@ -132,6 +138,9 @@ my $string4 = q|    \entry{Static4}{book}{skipbib=true,skipbiblist=true,skiplab=
       \strng{authordefaulten-usfullhash}{da80091c8cd89e5269bd55af1bd5d2fa}
       \field{sortinit}{C}
       \strng{sortinithash}{4d103a86280481745c9c897c925753c0}
+      \field{labeldatesource}{}
+      \fieldmssource{labelname}{author}{default}{en-us}
+      \fieldmssource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{title}{Dungeons, Dark and Dangerous}
       \field{year}{2005}
     \endentry

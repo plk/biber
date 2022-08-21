@@ -183,6 +183,9 @@ my $S3 = q|    \entry{S3}{book}{}
       \strng{authordefaulten-usfullhash}{8c77336299b25bdada7bf8038f46722f}
       \field{sortinit}{D}
       \strng{sortinithash}{6f385f66841fb5e82009dc833c761848}
+      \field{labeldatesource}{}
+      \fieldmssource{labelname}{author}{default}{en-us}
+      \fieldmssource{labeltitle}{title}{default}{en-us}
       \field[default][en-us]{title}{Title 3}
       \field{year}{1995}
     \endentry

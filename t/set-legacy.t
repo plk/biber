@@ -70,6 +70,9 @@ my $string2 = q|    \entry{Elias1955a}{article}{skipbib=true,skipbiblist=true,sk
       \strng{authordefaulten-usbibnamehash}{68f587f427e068e26043d54745351d58}
       \strng{authordefaulten-usnamehash}{68f587f427e068e26043d54745351d58}
       \strng{authordefaulten-usfullhash}{68f587f427e068e26043d54745351d58}
+      \field{labeldatesource}{}
+      \fieldmssource{labelname}{author}{default}{en-us}
+      \fieldmssource{labeltitle}{title}{default}{en-us}
       \field{issn}{0096-1000}
       \field[default][en-us]{journaltitle}{IRE Transactions on Information Theory}
       \field{month}{3}
@@ -107,6 +110,9 @@ my $string3 = q|    \entry{Elias1955b}{article}{skipbib=true,skipbiblist=true,sk
       \strng{authordefaulten-usbibnamehash}{68f587f427e068e26043d54745351d58}
       \strng{authordefaulten-usnamehash}{68f587f427e068e26043d54745351d58}
       \strng{authordefaulten-usfullhash}{68f587f427e068e26043d54745351d58}
+      \field{labeldatesource}{}
+      \fieldmssource{labelname}{author}{default}{en-us}
+      \fieldmssource{labeltitle}{title}{default}{en-us}
       \field{issn}{0096-1000}
       \field[default][en-us]{journaltitle}{IRE Transactions on Information Theory}
       \field{month}{3}
