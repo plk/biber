@@ -71,6 +71,9 @@ my $set2 = q|    \entry{set:membera}{book}{skipbib=true,skipbiblist=true,skiplab
       \strng{authorfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{sortinit}{D}
       \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field{title}{Set Member A}
       \field{year}{2010}
       \field{dateera}{ce}
@@ -95,6 +98,9 @@ my $set3 = q|    \entry{set:memberb}{book}{skipbib=true,skipbiblist=true,skiplab
       \strng{authorfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{sortinit}{D}
       \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field{title}{Set Member B}
       \field{year}{2010}
       \field{dateera}{ce}
@@ -118,6 +124,9 @@ my $set4 = q|    \entry{set:memberc}{book}{skipbib=true,skipbiblist=true,skiplab
       \strng{authorfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{sortinit}{D}
       \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field{title}{Set Member C}
       \field{year}{2010}
       \field{dateera}{ce}
@@ -236,6 +245,9 @@ my $sk4 = q|    \entry{skip4}{article}{skipbib=true,skipbiblist=true,skiplab=tru
       \strng{authorfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{sortinit}{D}
       \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field{shorthand}{AWS}
       \field{title}{Algorithms Which Sort}
       \field{year}{1932}
@@ -247,10 +259,10 @@ is_deeply($bibentries->entry('skip1')->get_field('options'), ['skipbib'], 'Passi
 eq_or_diff($main->get_entryfield('skip2', 'labelalpha'), 'SA', 'Normal labelalpha');
 eq_or_diff($bibentries->entry('skip2')->get_field($bibentries->entry('skip2')->get_labeldate_info->{field}{year}), '1995', 'Normal labelyear');
 ok(is_undef($bibentries->entry('skip3')->get_field('labelalpha')), 'skiplab - no labelalpha');
-ok(is_undef($bibentries->entry('skip3')->get_field('labelyear')), 'skiplab - no labelyear');
+eq_or_diff($bibentries->entry('skip3')->get_labeldate_info->{field}{source}, '', 'skiplab - no labelyear');
 ok(is_undef($bibentries->entry('skip4')->get_field('labelalpha')), 'dataonly - no labelalpha');
 eq_or_diff($out->get_output_entry('skip4', $main), $sk4, 'dataonly - checking output');
-ok(is_undef($bibentries->entry('skip4')->get_field('labelyear')), 'dataonly - no labelyear');
+eq_or_diff($bibentries->entry('skip4')->get_labeldate_info->{field}{source}, '', 'dataonly - no labelyear');
 eq_or_diff($out->get_output_entry('seta', $main), $set1, 'Set parent - with labels');
 eq_or_diff($out->get_output_entry('set:membera', $main), $set2, 'Set member - no labels 1');
 eq_or_diff($out->get_output_entry('set:memberb', $main), $set3, 'Set member - no labels 2');

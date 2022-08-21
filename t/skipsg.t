@@ -138,6 +138,9 @@ my $S3 = q|    \entry{S3}{book}{}
       \strng{authorfullhash}{8c77336299b25bdada7bf8038f46722f}
       \field{sortinit}{D}
       \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field{title}{Title 3}
       \field{year}{1995}
     \endentry

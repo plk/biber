@@ -2585,9 +2585,6 @@ sub process_labeldate {
   my $dm = Biber::Config->get_dm;
 
   if (Biber::Config->getblxoption(undef, 'labeldateparts', $bee, $citekey)) {
-    if (Biber::Config->getblxoption($secnum, 'skiplab', $bee, $citekey)) {
-      return;
-    }
 
     my $ldatespec = Biber::Config->getblxoption(undef, 'labeldatespec', $bee);
     foreach my $lds ($ldatespec->@*) {
