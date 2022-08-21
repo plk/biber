@@ -5,7 +5,7 @@
 
 # build.sh <dir> <release> <branch> <binaryname> <justbuild> <deletescancache> <codesign>
 
-# Example: build.sh ~/Desktop/b development dev 1
+# Example: build.sh ~/Desktop/b development dev biber 1
 
 # <dir> is where the binaries are
 # <release> is a SF subdir of /home/frs/project/biblatex-biber/biblatex-biber/
