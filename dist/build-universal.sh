@@ -13,17 +13,17 @@
 # <deletescancache> is a boolean which says to delete the scancache
 # <codesign> is a boolean which says to not codesign OSX binary
 
-BASE=~/extcode/biber
-DOCDIR=$BASE/doc
-BINDIR=$BASE/dist
-XSLDIR=$BASE/data
-RELEASE=${1:-"development"}
-BRANCH=${2:-"dev"}
-BINARYNAME=${3:-"biber"}
-JUSTBUILD=${4:-"0"}
-DSCANCACHE=${5:-"0"}
-CODESIGN=${6:-"1"}
-
+declare BASE=~/extcode/biber
+declare DOCDIR=$BASE/doc
+declare BINDIR=$BASE/dist
+declare XSLDIR=$BASE/data
+declare RELEASE=${1:-"development"}
+declare BRANCH=${2:-"dev"}
+declare PACKAGEEXT=$(perl -ne "print \$1 if m/^our \\\$PACKAGEEXT\\s*=\\s*'([^']+)';/;" $BASE/lib/Biber/Config.pm)
+declare BINARYNAME=${3:-"biber$PACKAGEEXT"}
+declare JUSTBUILD=${4:-"0"}
+declare DSCANCACHE=${5:-"0"}
+declare CODESIGN=${6:-"1"}
 
 # Set scancache deletion if requested
 if [ "$DSCANCACHE" = "1" ]; then
