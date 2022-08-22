@@ -5,19 +5,24 @@
 
 declare -r ROOT='/tmp/biber-repack'
 
+function realpath { echo $(cd $(dirname $1); pwd)/$(basename $1); }
+
 mkdir -p ${ROOT}
-cd ${ROOT}
+declare BASE="$( realpath $(dirname -- "$BASH_SOURCE";))";
+
 declare VER=$1
-declare RELEASE=${2:-"current"}
-declare PACKAGEEXT=""
+declare RELEASE=${2:-"multiscript"}
+declare PACKAGEEXT=$(perl -ne "print \$1 if m/^our \\\$PACKAGEEXT\\s*=\\s*'([^']+)';/;" $BASE/../lib/Biber/Config.pm)
 declare PLATFORMS=("linux_x86_32" "linux_x86_64" "MSWIN64" "MSWIN32" "darwinlegacy_x86_64" "darwin_universal")
 declare METAPLATFORMS=("linux" "linux" "windows" "windows" "macos" "macos")
 declare SFPLATFORMS=("Linux" "Linux" "Windows" "Windows" "MacOS" "MacOS")
 declare EXTS=("tar.gz" "tar.gz" "zip" "zip" "tar.gz" "tar.gz")
 
+cd ${ROOT}
+
 function create-readme {
   cat <<EOF>$2
-These are biber binaries for the $1 platform(s), released under:
+These are biber (multiscript version) binaries for the $1 platform(s), released under:
 Perl Artistic License, version 2
 
 See https://ctan.org/pkg/biber for documentation, sources, and all else.
@@ -34,7 +39,7 @@ for i in "${!PLATFORMS[@]}"; do
     if [ ! -e biber$PACKAGEEXT-$PLATFORM.tgz ]; then
       echo -n "Retrieving $PLATFORM ... "
       mkdir biber$PACKAGEEXT-$METAPLATFORM 2>/dev/null
-      /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/$RELEASE/binaries/$SFPLATFORM/biber$PACKAGEEXT-$PLATFORM.$EXT -O biber$PACKAGEEXT-$METAPLATFORM/biber$PACKAGEEXT-$VER-$PLATFORM.$EXT >/dev/null 2>&1
+      /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/$RELEASE/binaries/$SFPLATFORM/biber-$PLATFORM.$EXT -O biber$PACKAGEEXT-$METAPLATFORM/biber$PACKAGEEXT-$VER-$PLATFORM.$EXT >/dev/null 2>&1
       [ $? -eq 0 ] || exit 1
       create-readme $METAPLATFORM biber$PACKAGEEXT-$METAPLATFORM/README
       echo "done"
