@@ -50,7 +50,7 @@ SMETAPLATFORMS=($(printf "%s\n" "${METAPLATFORMS[@]}" | sort -u))
 for i in "${!SMETAPLATFORMS[@]}"; do
   SMETAPLATFORM=${SMETAPLATFORMS[i]}
   echo -n "Packaging $SMETAPLATFORM ... "
-  tar zcf biber$PACKAGEEXT-$SMETAPLATFORM.tgz biber-$SMETAPLATFORM
+  tar zcf biber$PACKAGEEXT-$SMETAPLATFORM.tgz biber$PACKAGEEXT-$SMETAPLATFORM
   \rm -rf biber$PACKAGEEXT-$SMETAPLATFORM
   echo "done"
 done
@@ -72,7 +72,7 @@ if [ ! -e biber$PACKAGEEXT-base.tgz ]; then
   [ $? -eq 0 ] || exit 1
   /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/README.md -O README.md >/dev/null 2>&1
   cd ..
-  tar zcf biber$PACKAGEEXT-base.tgz biber
+  tar zcf biber$PACKAGEEXT-base.tgz biber$PACKAGEEXT
   \rm -rf biber$PACKAGEEXT
   echo "done"
 fi
