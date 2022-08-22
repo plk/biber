@@ -36,7 +36,7 @@ for i in "${!PLATFORMS[@]}"; do
     # CTAN requires top-level dir in lowercase
     SFPLATFORM=${SFPLATFORMS[i]}
     EXT=${EXTS[i]}
-    if [ ! -e biber$PACKAGEEXT-$PLATFORM.tgz ]; then
+    if [ ! -e biber$PACKAGEEXT-$METAPLATFORM/biber$PACKAGEEXT-$VER-$PLATFORM.$EXT ]; then
       echo -n "Retrieving $PLATFORM ... "
       mkdir biber$PACKAGEEXT-$METAPLATFORM 2>/dev/null
       /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/$RELEASE/binaries/$SFPLATFORM/biber-$PLATFORM.$EXT -O biber$PACKAGEEXT-$METAPLATFORM/biber$PACKAGEEXT-$VER-$PLATFORM.$EXT >/dev/null 2>&1
