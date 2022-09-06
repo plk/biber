@@ -101,6 +101,7 @@ start =
     element output_file          { text }? &
     element output_format        { "bibtex" | "bbl" | "biblatexml" | "dot" }? &
     element output_indent        { xsd:unsignedByte }? &
+    element output_legacy_dates  { "0" | "1" }? &
     element output_listsep       { text }? &
     element output_namesep       { text }? &
     element output_no_macrodefs  { "0" | "1" }? &
