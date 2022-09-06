@@ -358,6 +358,14 @@
           </element>
         </optional>
         <optional>
+          <element name="output_legacy_dates">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </element>
+        </optional>
+        <optional>
           <element name="output_listsep">
             <text/>
           </element>
