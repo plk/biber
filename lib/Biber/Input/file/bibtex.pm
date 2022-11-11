@@ -1523,23 +1523,22 @@ sub cache_data {
       push $cache->{preamble}{$filename}->@*, $entry->value;
       next;
     }
-
     # Save comments for output in tool mode unless comment stripping is requested
-    if ( $entry->metatype == BTE_COMMENT ) {
+    elsif ( $entry->metatype == BTE_COMMENT ) {
       if (Biber::Config->getoption('tool') and not
           Biber::Config->getoption('strip_comments') ) {
         push $cache->{comments}{$filename}->@*, process_comment($entry->value);
       }
       next;
     }
-
     # Record macros in T::B so we can output then properly in tool mode
-    if ($entry->metatype == BTE_MACRODEF) {
+    elsif ($entry->metatype == BTE_MACRODEF) {
       foreach my $f ($entry->fieldlist) {
         $RSTRINGS{$entry->get($f)} = $f;
       }
       next;
     }
+
 
     # Ignore misc BibTeX entry types we don't care about
     next if ( $entry->metatype == BTE_UNKNOWN );
