@@ -15,7 +15,7 @@
 # by looking to see if there is a site_perl directory for the module. If there is, we use that
 # version.
 
-declare -r perlv='5.32'
+declare -r perlv='5.36'
 declare ucpath="/opt/local/lib/perl5/${perlv}/Unicode/Collate"
 export PATH=/opt/local/libexec/perl${perlv}/sitebin:$PATH
 
