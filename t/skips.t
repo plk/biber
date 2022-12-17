@@ -51,6 +51,7 @@ my $set1 = q|    \entry{seta}{set}{}
       \field{extraalpha}{1}
       \field{sortinit}{D}
       \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
+      \keyw{key1,key2}
     \endentry
 |;
 
