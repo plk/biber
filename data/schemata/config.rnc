@@ -45,6 +45,7 @@ start =
     datamodel? &
     element decodecharsset      { text }? &
     element debug               { "0" | "1" }? &
+    element dieondatamodel      { "0" | "1" }? &
     element fastsort            { "0" | "1" }? &
     element fixinits            { "0" | "1" }? &
     # Would never want this in the config file

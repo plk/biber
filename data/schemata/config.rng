@@ -147,6 +147,14 @@
           </element>
         </optional>
         <optional>
+          <element name="dieondatamodel">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </element>
+        </optional>
+        <optional>
           <element name="fastsort">
             <choice>
               <value>0</value>
