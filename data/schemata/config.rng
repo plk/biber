@@ -663,23 +663,25 @@
   </start>
   <define name="datamodel">
     <element name="datamodel">
-      <!-- Constants -->
-      <element name="constants">
-        <oneOrMore>
-          <element name="constant">
-            <optional>
-              <attribute name="type">
-                <choice>
-                  <value>string</value>
-                  <value>list</value>
-                </choice>
-              </attribute>
-            </optional>
-            <attribute name="name"/>
-            <text/>
-          </element>
-        </oneOrMore>
-      </element>
+      <optional>
+        <!-- Constants -->
+        <element name="constants">
+          <oneOrMore>
+            <element name="constant">
+              <optional>
+                <attribute name="type">
+                  <choice>
+                    <value>string</value>
+                    <value>list</value>
+                  </choice>
+                </attribute>
+              </optional>
+              <attribute name="name"/>
+              <text/>
+            </element>
+          </oneOrMore>
+        </element>
+      </optional>
       <!-- Valid entrytypes -->
       <element name="entrytypes">
         <oneOrMore>
@@ -760,15 +762,17 @@
           </oneOrMore>
         </element>
       </oneOrMore>
-      <!-- Allowable multiscript fields which can have alternate form/languages -->
-      <element name="multiscriptfields">
-        <oneOrMore>
-          <element name="field">
-            <text/>
-          </element>
-        </oneOrMore>
-      </element>
-      <oneOrMore>
+      <optional>
+        <!-- Allowable multiscript fields which can have alternate form/languages -->
+        <element name="multiscriptfields">
+          <oneOrMore>
+            <element name="field">
+              <text/>
+            </element>
+          </oneOrMore>
+        </element>
+      </optional>
+      <optional>
         <!-- Constraints on field (co-)existence and format -->
         <element name="constraints">
           <zeroOrMore>
@@ -781,7 +785,7 @@
               <text/>
             </element>
           </zeroOrMore>
-          <zeroOrMore>
+          <oneOrMore>
             <!-- A constraint specification -->
             <element name="constraint">
               <choice>
@@ -903,9 +907,9 @@
                 </group>
               </choice>
             </element>
-          </zeroOrMore>
+          </oneOrMore>
         </element>
-      </oneOrMore>
+      </optional>
     </element>
   </define>
   <define name="translit">
