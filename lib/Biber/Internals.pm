@@ -205,16 +205,16 @@ sub _genpnhash {
 # or dm fields which need special treatment. Technically users could remove such fields
 # from the dm but it would be very strange.
 my %internal_dispatch_label = (
-                'label'             =>  [\&_label_basic,            ['label', 'nostrip']],
-                'shorthand'         =>  [\&_label_basic,            ['shorthand', 'nostrip']],
-                'sortkey'           =>  [\&_label_basic,            ['sortkey', 'nostrip']],
-                'citekey'           =>  [\&_label_citekey,          []],
-                'entrykey'          =>  [\&_label_citekey,          []],
-                'labelname'         =>  [\&_label_name,             ['labelname']],
-                'labeltitle'        =>  [\&_label_basic,            ['labeltitle']],
-                'labelmonth'        =>  [\&_label_basic,            ['labelmonth']],
-                'labelday'          =>  [\&_label_basic,            ['labelday']],
-                'labelyear'         =>  [\&_label_basic,            ['labelyear']]);
+                'label'      =>  [\&_label_basic,   ['label', 'nostrip']],
+                'shorthand'  =>  [\&_label_basic,   ['shorthand', 'nostrip']],
+                'sortkey'    =>  [\&_label_basic,   ['sortkey', 'nostrip']],
+                'citekey'    =>  [\&_label_citekey, []],
+                'entrykey'   =>  [\&_label_citekey, []],
+                'labelname'  =>  [\&_label_name,    ['labelname']],
+                'labeltitle' =>  [\&_label_basic,   ['labeltitle']],
+                'labelmonth' =>  [\&_label_basic,   ['labelmonth']],
+                'labelday'   =>  [\&_label_basic,   ['labelday']],
+                'labelyear'  =>  [\&_label_basic,   ['labelyear']]);
 
 sub _dispatch_table_label {
   my ($field, $dm) = @_;
@@ -356,7 +356,7 @@ sub _dispatch_label {
 
 sub _label_citekey {
   my ($self, $citekey, $secnum, $section, $be, $args, $labelattrs, $dlist) = @_;
-  my $k = _process_label_attributes($self, $citekey, $dlist, [[$citekey,undef]], $labelattrs, $args->[0]);
+  my $k = _process_label_attributes($self, $citekey, $dlist, [[$citekey, undef]], $labelattrs, $args->[0]);
   return [$k, unescape_label($k)];
 }
 
