@@ -269,7 +269,7 @@ datamodel =
           )
         )
       }+
-    }?
+    }+
   }
 
 translit =
