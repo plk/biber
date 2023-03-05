@@ -21,7 +21,6 @@
 * scp htdocs/*.html philkime,biblatex-biber@web.sourceforge.net:htdocs/
 * Inform builders of binaries to update
 * Associate new defaults with new binaries and change labels
-* Replace test.bcf with test-dev.bcf on SF. Upload new test-dev.bcf if necessary
 * Update SF main page, news, add new README in web interface at root, if needed
 * run dist/re-package.sh which creates the files needed for CTAN release
   * upload biber source archive to /biblio/biber/base
