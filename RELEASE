@@ -10,8 +10,8 @@
 * "perl Build.PL" and "Build dist" to update YAML/JSON
 * Run test suite and make sure it passes cleanly
 * Commit and tag with version number
-* Create new github release so that builders can subscribe to know when a
-  new release is made
+* Create new github release from tag so that builders can subscribe to know when a
+  new release is made (no need to attach artefacts, it automatically does this)
 * Move "current" to version number on SF
 * Create "current" folder using SF GUI
 * Create a new empty version tree for new version, use the dist/empty_tree.sh script:
