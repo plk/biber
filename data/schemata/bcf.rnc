@@ -397,7 +397,7 @@ start =
                 )+
               )
             )
-          }*
+          }+
         }+
       }?,
       # Section specifications

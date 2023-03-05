@@ -2,6 +2,7 @@
 * Change content, if necessary, of README.md
 * Change version string in and content of "Changes" file
 * Change version strings in doc and update volatile doc info (e.g. compat matrix)
+* Update testfiles/*
 * Update main html page 
 * Update "TODO" file
 * Change version string and beta flag in "Config.pm"

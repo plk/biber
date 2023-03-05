@@ -826,7 +826,7 @@
                   <text/>
                 </element>
               </zeroOrMore>
-              <zeroOrMore>
+              <oneOrMore>
                 <!-- A constraint specification -->
                 <element name="bcf:constraint">
                   <choice>
@@ -948,7 +948,7 @@
                     </group>
                   </choice>
                 </element>
-              </zeroOrMore>
+              </oneOrMore>
             </element>
           </oneOrMore>
         </element>

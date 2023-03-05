@@ -27,8 +27,8 @@
 \newcommand*{\biblatex}{Biblatex\xspace}
 \MakeAutoQuote{«}{»}
 
-\gdef\biberversion{2.18}    % BIBER VERSION
-\gdef\biblatexversion{3.18}   % BIBLATEX VERSION
+\gdef\biberversion{2.19}    % BIBER VERSION
+\gdef\biblatexversion{3.19}   % BIBLATEX VERSION
 
 % colour for tables
 \definecolor{Gray}{gray}{0.85}
@@ -273,6 +273,7 @@ compatibility matrix for the recent versions.
 \toprule
 \biber\ version & \biblatex\ version\\
 \midrule
+2.19 & 3.19\\
 2.18 & 3.18\\
 2.17 & 3.17\\
 2.16 & 3.16\\
@@ -3045,9 +3046,8 @@ binary\footnote{\url{http://par.perl.org/wiki/FAQ}, section entitled «My
 You can test a binary that you have created by copying it to a machine
 which preferably doesn't have \verb+perl+ at all on it. Running the binary with no
 arguments will unpack it in the background and display the help. To really
-test it without having \latex\ available, get the two quick test files from
-SourceForge\footnote{\url{https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/testfiles}},
-put them in a directory and run \biber\ in that directory like this:
+test it without having \latex\ available, change directory the \verb+testfiles+
+directory and simply run \biber\ e.g:
 
 \begin{verbatim}
 biber --validate-control --convert-control test
@@ -3062,7 +3062,7 @@ of \biber\ version and locale of course but there should be no errors
 or warnings).
 
 \begin{verbatim}
-INFO - This is Biber 2.18
+INFO - This is Biber 2.19
 INFO - Logfile is 'test.blg'
 INFO - BibLaTeX control file 'test.bcf' validates
 INFO - Converted BibLaTeX control file 'test.bcf' to 'test.bcf.html'

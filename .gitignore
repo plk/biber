@@ -14,6 +14,9 @@ META.json
 dist/*/biber-*
 dist/*/scancache
 t/tdata/*.rng
+testfiles/test.bcf.html
+testfiles/test.blg
+testfiles/test.bbl
 dist/build-env-cmds
 *_flymake*
 *~
