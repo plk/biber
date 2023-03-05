@@ -8,7 +8,7 @@
 # Example: build.sh ~/Desktop/b development dev biber 1
 
 # <dir> is where the binaries are
-# <release> is a SF subdir of /home/frs/project/biblatex-biber/biblatex-biber/
+# <release> is a SF subdir of /home/frs/project/biblatex-biber/
 # <branch> is a git branch to checkout on the build farm servers
 # <binaryname> is the name of the biber binary to use for the release.
 # <justbuild> is a boolean which says to just build and stop without uploading
@@ -225,10 +225,10 @@ lualatex -interaction=batchmode biber.tex
 lualatex -interaction=batchmode biber.tex
 \rm *.{aux,bbl,bcf,blg,log,run.xml,toc,out,lot,synctex} 2>/dev/null
 cd $BASE
-scp $DOCDIR/biber.pdf philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/biblatex-biber/$RELEASE/documentation/biber.pdf
+scp $DOCDIR/biber.pdf philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/$RELEASE/documentation/biber.pdf
 
 # Changes file
-scp $BASE/Changes philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/biblatex-biber/$RELEASE/Changes
+scp $BASE/Changes philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/$RELEASE/Changes
 
 # Unicode <-> LaTeX macro mapping doc
 perl $BINDIR/xsl-transform.pl $BASE/lib/Biber/LaTeX/recode_data.xml $XSLDIR/texmap.xsl
