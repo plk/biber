@@ -190,32 +190,32 @@ fi
 cd $DIR
 # OSX 64-bit legacy
 if [ -e $DIR/biber-darwinlegacy_x86_64.tar.gz ]; then
-  scp biber-darwinlegacy_x86_64.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/biblatex-biber/$RELEASE/binaries/MacOS/biber-darwinlegacy_x86_64.tar.gz
+  scp biber-darwinlegacy_x86_64.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/$RELEASE/binaries/MacOS/biber-darwinlegacy_x86_64.tar.gz
 fi
 
 # OSX 64-bit
 if [ -e $DIR/biber-darwin_x86_64.tar.gz ]; then
-  scp biber-darwin_x86_64.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/biblatex-biber/$RELEASE/binaries/MacOS/biber-darwin_x86_64.tar.gz
+  scp biber-darwin_x86_64.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/$RELEASE/binaries/MacOS/biber-darwin_x86_64.tar.gz
 fi
 
 # Windows 32-bit
 if [ -e $DIR/biber-MSWIN32.zip ]; then
-  scp biber-MSWIN32.zip philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/biblatex-biber/$RELEASE/binaries/Windows/biber-MSWIN32.zip
+  scp biber-MSWIN32.zip philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/$RELEASE/binaries/Windows/biber-MSWIN32.zip
 fi
 
 # Windows 64-bit
 if [ -e $DIR/biber-MSWIN64.zip ]; then
-  scp biber-MSWIN64.zip philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/biblatex-biber/$RELEASE/binaries/Windows/biber-MSWIN64.zip
+  scp biber-MSWIN64.zip philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/$RELEASE/binaries/Windows/biber-MSWIN64.zip
 fi
 
 # Linux 32-bit
 if [ -e $DIR/biber-linux_x86_32.tar.gz ]; then
-  scp biber-linux_x86_32.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/biblatex-biber/$RELEASE/binaries/Linux/biber-linux_x86_32.tar.gz
+  scp biber-linux_x86_32.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/$RELEASE/binaries/Linux/biber-linux_x86_32.tar.gz
 fi
 
 # Linux 64-bit
 if [ -e $DIR/biber-linux_x86_64.tar.gz ]; then
-  scp biber-linux_x86_64.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/biblatex-biber/$RELEASE/binaries/Linux/biber-linux_x86_64.tar.gz
+  scp biber-linux_x86_64.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/$RELEASE/binaries/Linux/biber-linux_x86_64.tar.gz
 fi
 
 # Doc
@@ -232,13 +232,13 @@ scp $BASE/Changes philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/
 
 # Unicode <-> LaTeX macro mapping doc
 perl $BINDIR/xsl-transform.pl $BASE/lib/Biber/LaTeX/recode_data.xml $XSLDIR/texmap.xsl
-scp $BASE/lib/Biber/LaTeX/recode_data.xml.html philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/biblatex-biber/$RELEASE/documentation/utf8-macro-map.html
+scp $BASE/lib/Biber/LaTeX/recode_data.xml.html philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/$RELEASE/documentation/utf8-macro-map.html
 \rm -f $BASE/lib/Biber/LaTeX/recode_data.xml.html
 
 # source
 cd $BASE
 ./Build dist
-scp $BASE/biblatex-biber-*.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/biblatex-biber/$RELEASE/biblatex-biber.tar.gz
+scp $BASE/biblatex-biber-*.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/$RELEASE/biblatex-biber.tar.gz
 \rm -f $BASE/biblatex-biber-*.tar.gz
 
 cd $BASE
