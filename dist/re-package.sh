@@ -2,6 +2,8 @@
 
 # Collect all binaries and re-package for CTAN
 # re-package.sh <biber version> <releasefolder>
+#
+# ./re-package.sh 2.19 current
 
 declare -r ROOT='/tmp/biber-repack'
 
@@ -14,6 +16,11 @@ declare PLATFORMS=("linux_x86_32" "linux_x86_64" "MSWIN64" "MSWIN32" "darwinlega
 declare METAPLATFORMS=("linux" "linux" "windows" "windows" "macos" "macos")
 declare SFPLATFORMS=("Linux" "Linux" "Windows" "Windows" "MacOS" "MacOS")
 declare EXTS=("tar.gz" "tar.gz" "zip" "zip" "tar.gz" "tar.gz")
+
+if [ -z "$VER" ]; then
+  echo "Must provide a version e.g. 're-package.sh 2.19'"
+  exit 1
+fi
 
 function create-readme {
   cat <<EOF>$2

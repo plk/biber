@@ -24,11 +24,7 @@
 * Update SF main page, news, add new README in web interface at root, if needed
 * run dist/re-package.sh which creates the files needed for CTAN release
   * upload biber source archive to /biblio/biber/base
-  * upload platform binary archives to
+  * Upload platform binary archives to
     biblio/biber/biber-linux
     biblio/biber/biber-macos
     biblio/biber/biber-windows
-
-
-    
-  

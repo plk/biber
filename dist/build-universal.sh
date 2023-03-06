@@ -56,7 +56,7 @@ echo "Downloading x86_64 binary ... make sure it's the one you want"
 \rm -rf biber-darwin_universal.tar.gz
 \rm -rf biber-darwin_x86_64.tar.gz
 \rm -rf $BINARYNAME
-/opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/$RELEASE/binaries/MacOS/biber-darwin_x86_64.tar.gz -O biber-darwin_x86_64.tar.gz
+/opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/$RELEASE/binaries/MacOS/biber-darwin_x86_64.tar.gz -O biber-darwin_x86_64.tar.gz
 gnutar zxf biber-darwin_x86_64.tar.gz
 mv $BINARYNAME biber-darwin_x86_64
 /usr/bin/lipo -create -output $BINARYNAME biber-darwin_x86_64 biber-darwin_arm64
@@ -73,4 +73,4 @@ if [ "$JUSTBUILD" = "1" ]; then
   exit 0;
 fi
 
-scp biber-darwin_universal.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/$RELEASE/binaries/MacOS/biber-darwin_universal.tar.gz
+scp biber-darwin_universal.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/biblatex-biber/$RELEASE/binaries/MacOS/biber-darwin_universal.tar.gz
