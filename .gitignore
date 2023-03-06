@@ -11,9 +11,14 @@ MYMETA.yml
 MYMETA.json
 META.yml
 META.json
+Build
+blib/
+_build/
 dist/*/biber-*
 dist/*/scancache
 t/tdata/*.rng
+t/tdata/*.bbl
+t/tdata/*.blg
 testfiles/test.bcf.html
 testfiles/test.blg
 testfiles/test.bbl
