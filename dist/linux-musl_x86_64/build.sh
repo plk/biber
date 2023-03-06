@@ -35,8 +35,8 @@
 # by looking to see if there is a site_perl directory for the module. If there is, we use that
 # version.
 
-declare -r perlv='5.32.0'
-declare ucpath="/usr/local/lib/perl5/site_perl/Unicode/Collate"
+declare -r perlv='5.36.0'
+declare ucpath="/usr/share/perl5/core_perl/Unicode/Collate"
 
 # Unicode::Collate has a site_perl version so has been updated since this
 # perl was released
@@ -71,15 +71,15 @@ PAR_VERBATIM=1 /usr/local/bin/pp \
   --module=Text::CSV_XS \
   --module=DateTime \
   --link=/usr/local/lib/libbtparse.so \
-  --link=/usr/lib/libxml2.so.2 \
-  --link=/lib/libz.so.1 \
-  --link=/usr/lib/liblzma.so.5 \
-  --link=/usr/lib/libxslt.so.1 \
-  --link=/usr/lib/libexslt.so.0 \
-  --link=/usr/lib/libssl.so.1.1 \
-  --link=/usr/lib/libcrypto.so.1.1 \
-  --link=/usr/lib/libgcrypt.so.20 \
-  --link=/usr/lib/libgpg-error.so.0 \
+  --link=/usr/lib/libxml2.so \
+  --link=/lib/libz.so \
+  --link=/usr/lib/liblzma.so \
+  --link=/usr/lib/libxslt.so \
+  --link=/usr/lib/libexslt.so \
+  --link=/usr/lib/libssl.so \
+  --link=/usr/lib/libcrypto.so \
+  --link=/usr/lib/libgcrypt.so \
+  --link=/usr/lib/libgpg-error.so \
   --addfile="../../data/biber-tool.conf;lib/Biber/biber-tool.conf" \
   --addfile="../../data/schemata/config.rnc;lib/Biber/config.rnc" \
   --addfile="../../data/schemata/config.rng;lib/Biber/config.rng"\
