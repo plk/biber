@@ -142,6 +142,14 @@
           </element>
         </optional>
         <optional>
+          <element name="dieondatamodel">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </element>
+        </optional>
+        <optional>
           <element name="fastsort">
             <choice>
               <value>0</value>
@@ -665,23 +673,25 @@
   </start>
   <define name="datamodel">
     <element name="datamodel">
-      <!-- Constants -->
-      <element name="constants">
-        <oneOrMore>
-          <element name="constant">
-            <optional>
-              <attribute name="type">
-                <choice>
-                  <value>string</value>
-                  <value>list</value>
-                </choice>
-              </attribute>
-            </optional>
-            <attribute name="name"/>
-            <text/>
-          </element>
-        </oneOrMore>
-      </element>
+      <optional>
+        <!-- Constants -->
+        <element name="constants">
+          <oneOrMore>
+            <element name="constant">
+              <optional>
+                <attribute name="type">
+                  <choice>
+                    <value>string</value>
+                    <value>list</value>
+                  </choice>
+                </attribute>
+              </optional>
+              <attribute name="name"/>
+              <text/>
+            </element>
+          </oneOrMore>
+        </element>
+      </optional>
       <!-- Valid entrytypes -->
       <element name="entrytypes">
         <oneOrMore>
@@ -762,14 +772,16 @@
           </oneOrMore>
         </element>
       </oneOrMore>
-      <!-- Allowable multiscript fields which can have alternate form/languages -->
-      <element name="multiscriptfields">
-        <oneOrMore>
-          <element name="field">
-            <text/>
-          </element>
-        </oneOrMore>
-      </element>
+      <optional>
+        <!-- Allowable multiscript fields which can have alternate form/languages -->
+        <element name="multiscriptfields">
+          <oneOrMore>
+            <element name="field">
+              <text/>
+            </element>
+          </oneOrMore>
+        </element>
+      </optional>
       <oneOrMore>
         <!-- Constraints on field (co-)existence and format -->
         <element name="constraints">
@@ -783,7 +795,7 @@
               <text/>
             </element>
           </zeroOrMore>
-          <zeroOrMore>
+          <oneOrMore>
             <!-- A constraint specification -->
             <element name="constraint">
               <choice>
@@ -905,7 +917,7 @@
                 </group>
               </choice>
             </element>
-          </zeroOrMore>
+          </oneOrMore>
         </element>
       </oneOrMore>
     </element>
@@ -1725,7 +1737,7 @@
     </choice>
   </define>
 </grammar>
-<!-- Copyright 2012-2022 Philip Kime, all rights reserved. -->
+<!-- Copyright 2012-2023 Philip Kime, all rights reserved. -->
 <!--
   This code is free software.  You can redistribute it and/or
   modify it under the terms of the Artistic License 2.0.

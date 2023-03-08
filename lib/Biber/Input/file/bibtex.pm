@@ -1575,23 +1575,22 @@ sub cache_data {
       push $cache->{preamble}{$filename}->@*, $entry->value;
       next;
     }
-
     # Save comments for output in tool mode unless comment stripping is requested
-    if ( $entry->metatype == BTE_COMMENT ) {
+    elsif ( $entry->metatype == BTE_COMMENT ) {
       if (Biber::Config->getoption('tool') and not
           Biber::Config->getoption('strip_comments') ) {
         push $cache->{comments}{$filename}->@*, process_comment($entry->value);
       }
       next;
     }
-
     # Record macros in T::B so we can output then properly in tool mode
-    if ($entry->metatype == BTE_MACRODEF) {
+    elsif ($entry->metatype == BTE_MACRODEF) {
       foreach my $f ($entry->fieldlist) {
         $RSTRINGS{$entry->get($f)} = $f;
       }
       next;
     }
+
 
     # Ignore misc BibTeX entry types we don't care about
     next if ( $entry->metatype == BTE_UNKNOWN );
@@ -2108,7 +2107,7 @@ L<https://github.com/plk/biber/issues>.
 =head1 COPYRIGHT & LICENSE
 
 Copyright 2009-2012 François Charette and Philip Kime, all rights reserved.
-Copyright 2012-2022 Philip Kime, all rights reserved.
+Copyright 2012-2023 Philip Kime, all rights reserved.
 
 This module is free software.  You can redistribute it and/or
 modify it under the terms of the Artistic License 2.0.

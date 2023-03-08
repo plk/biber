@@ -15,7 +15,7 @@
 # by looking to see if there is a site_perl directory for the module. If there is, we use that
 # version.
 
-declare -r perlv='5.32'
+declare -r perlv='5.36'
 declare ucpath="/opt/local/lib/perl5/${perlv}/Unicode/Collate"
 export PATH=/opt/local/libexec/perl${perlv}/sitebin:$PATH
 
@@ -64,9 +64,9 @@ PAR_VERBATIM=1 pp \
   --link=/opt/local/lib/libcrypto.3.dylib \
   --link=/opt/local/lib/liblzma.5.dylib \
   --link=/opt/local/lib/libintl.8.dylib \
-  --link=/opt/local/lib/libicui18n.67.dylib \
-  --link=/opt/local/lib/libicuuc.67.dylib \
-  --link=/opt/local/lib/libicudata.67.dylib \
+  --link=/opt/local/lib/libicui18n.71.dylib \
+  --link=/opt/local/lib/libicuuc.71.dylib \
+  --link=/opt/local/lib/libicudata.71.dylib \
   --addfile="../../data/biber-tool.conf;lib/Biber/biber-tool.conf" \
   --addfile="../../data/schemata/config.rnc;lib/Biber/config.rnc" \
   --addfile="../../data/schemata/config.rng;lib/Biber/config.rng" \

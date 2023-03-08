@@ -1,8 +1,10 @@
 Revision history for Biber
 
+2.19   (2023-03)
+       * Misc bug fixes
 2.18   (2022-06)
        * Added support for biblatex "pluralothers" option which allows "et
-       al" to be forced to replace more than one name.
+         al" to be forced to replace more than one name.
        * Universal x86_64/ARM64 binary
        * Support for citation-only rules for name templates in sorting (see
          \visibility macro in sorting name key templates in biblatex)

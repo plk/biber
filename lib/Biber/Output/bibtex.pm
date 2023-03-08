@@ -84,11 +84,12 @@ sub set_output_macro {
   my $self = shift;
   my $macro = shift;
   my $acc = '';
-
   # Only output used macros unless we are asked to output all
   unless (Biber::Config->getoption('output_all_macrodefs')) {
     return unless $USEDSTRINGS{$macro};
   }
+
+
 
   # Make the right casing function
   my $casing;
@@ -105,7 +106,7 @@ sub set_output_macro {
 
   $acc .= '@';
   $acc .= $casing->('string');
-  $acc .= '{' . $casing->($macro) . ' = "' . Text::BibTeX::macro_text($macro) . "\"}\n";
+  $acc .= '{' . $casing->($macro) . ' = "' . NFD(decode('UTF-8', Text::BibTeX::macro_text($macro))) . "\"}\n";
 
   push $self->{output_data}{MACROS}->@*, $acc;
   return;
@@ -587,8 +588,11 @@ sub bibfield {
       $casing = sub {ucfirst(shift)};
     }
 
+    $USEDSTRINGS{$m} = $value;
+
+    # Now value is the macro name, not the value
     $value = $casing->($m);
-    $USEDSTRINGS{$m} = 1;
+
   }
 
   # Don't wrap fields which should be macros in braces - we can only deal with macros
@@ -868,7 +872,7 @@ L<https://github.com/plk/biber/issues>.
 =head1 COPYRIGHT & LICENSE
 
 Copyright 2009-2012 François Charette and Philip Kime, all rights reserved.
-Copyright 2012-2022 Philip Kime, all rights reserved.
+Copyright 2012-2023 Philip Kime, all rights reserved.
 
 This module is free software.  You can redistribute it and/or
 modify it under the terms of the Artistic License 2.0.

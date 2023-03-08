@@ -2,6 +2,7 @@
 * Change content, if necessary, of README.md
 * Change version string in and content of "Changes" file
 * Change version strings in doc and update volatile doc info (e.g. compat matrix)
+* Update testfiles/*
 * Update main html page 
 * Update "TODO" file
 * Change version string and beta flag in "Config.pm"
@@ -9,8 +10,8 @@
 * "perl Build.PL" and "Build dist" to update YAML/JSON
 * Run test suite and make sure it passes cleanly
 * Commit and tag with version number
-* Create new github release so that builders can subscribe to know when a
-  new release is made
+* Create new github release from tag so that builders can subscribe to know when a
+  new release is made (no need to attach artefacts, it automatically does this)
 * Move "current" to version number on SF
 * Create "current" folder using SF GUI
 * Create a new empty version tree for new version, use the dist/empty_tree.sh script:
@@ -20,15 +21,10 @@
 * scp htdocs/*.html philkime,biblatex-biber@web.sourceforge.net:htdocs/
 * Inform builders of binaries to update
 * Associate new defaults with new binaries and change labels
-* Replace test.bcf with test-dev.bcf on SF. Upload new test-dev.bcf if necessary
 * Update SF main page, news, add new README in web interface at root, if needed
 * run dist/re-package.sh which creates the files needed for CTAN release
   * upload biber source archive to /biblio/biber/base
-  * upload platform binary archives to
+  * Upload platform binary archives to
     biblio/biber/biber-linux
     biblio/biber/biber-macos
     biblio/biber/biber-windows
-
-
-    
-  

@@ -262,6 +262,7 @@ compatibility matrix for the recent versions.
 \toprule
 \biber\ version & \biblatex\ version\\
 \midrule
+2.19 & 3.19\\
 2.18 & 3.18\\
 2.17 & 3.17\\
 2.16 & 3.16\\
@@ -2297,6 +2298,38 @@ drivers are:
 \item \verb+biblatexml+ --- Experimental \biblatex\ XML format
 \end{itemize}
 \bigskip
+\subsection{The Data Model}\label{ref:datamodel}
+The data model used by \biblatex to describe the allowable entry types,
+entry fields and their types is passed in the \file{.bcf} from \biblatex
+and is defined via macros which can be used to extend or change the data
+model. You may want to use a modified data model more generally and in this
+case you can define the datamodel or changes to the default data model in
+the \biber config file. Essentially, instead of changing the datamodel on a
+per-document basis using \TeX\ macros in your document, you define the
+datamodel changes in XML in the \biber config file. This is a matter of
+choice and/or convenience since the datamodel \TeX\ macro interface simply
+results in XML definitions in the \opt{.bcf} anyway and these latter are
+overriden by the XML definitions in the \biber config file. For example, to
+add a new name list field \bibfield{DIRECTOR} to \bibfield{VIDEO} entry
+types, you can either use the \biblatex macros \cmd{DeclareDatamodelFields}
+and \cmd{DeclareDatamodelEntryfields} in your document or put the following
+\opt{datamodel} section in your config file:
+in your \biber config file:
+\begin{lstlisting}[language=xml]
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+  <datamodel>
+    <fields>
+      <field fieldtype="list" datatype="name">director</field>
+    </fields>
+    <entryfields>
+      <entrytype>video</entrytype>
+      <field>director</field>
+    </entryfields>
+  </datamodel>
+</config>
+\end{lstlisting}
+\bigskip
 \subsection{Tool Mode}\label{ref:tool}
 \biber\ can run in «tool» mode which is enabled with the \opt{--tool}
 command-line only option. In this mode, \biber is called: \opt{biber --tool
@@ -2306,7 +2339,7 @@ not read a \file{.bcf} but instead, it reads all entries from the file
 «datasource», applies any changes specified in the command-line options and
 \biber\ config file and writes the resulting datasource out to a new file,
 defaulting to a \bibtex file called «\file{<datasource>\_bibertool.bib}» if
-the options \opt{output-file} and \opt{output-format} are not specified.
+the options \opt{--output-file} and \opt{--output-format} are not specified.
 
 Tool mode is useful if you need to programatically change your datasource
 using the semantics provided by \biber or if you would like to convert your
@@ -2639,7 +2672,9 @@ section in your config file will be read, taking precedence over the
 default settings. There is no need to include a complete data model in your
 own config file--the \file{biber-tool.conf} provides a base. Naturally, for
 complex changes to the the default data model, then you may wish to include
-a complete data model in your config file.
+a complete data model in your config file. Use the \opt{--tool-config}
+option to show the location of the default tool mode config file which
+includes the definition of the complete data model.
 
 \subsubsection{Customising Tool Mode Inheritance Resolution}
 The default \file{biber-tool.conf} contains, as mentioned above, the
@@ -2897,9 +2932,8 @@ binary\footnote{\url{http://par.perl.org/wiki/FAQ}, section entitled «My
 You can test a binary that you have created by copying it to a machine
 which preferably doesn't have \verb+perl+ at all on it. Running the binary with no
 arguments will unpack it in the background and display the help. To really
-test it without having \latex\ available, get the two quick test files from
-SourceForge\footnote{\url{https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/testfiles}},
-put them in a directory and run \biber\ in that directory like this:
+test it without having \latex\ available, change directory the \verb+testfiles+
+directory and simply run \biber\ e.g:
 
 \begin{verbatim}
 biber --validate-control --convert-control test
@@ -2914,7 +2948,7 @@ of \biber\ version and locale of course but there should be no errors
 or warnings).
 
 \begin{verbatim}
-INFO - This is Biber 2.18
+INFO - This is Biber 2.19
 INFO - Logfile is 'test.blg'
 INFO - BibLaTeX control file 'test.bcf' validates
 INFO - Converted BibLaTeX control file 'test.bcf' to 'test.bcf.html'
@@ -2982,3 +3016,7 @@ danish     & \texttt{da\_DK}  & lao         & \texttt{lo\_LA}  & samin          
 \end{tabular}
 \end{center}
 \end{document}
+
+% Local Variables:
+% TeX-engine: luatex
+% End:

@@ -325,6 +325,12 @@ sub latex_decode {
     $text =~ s/\x{f}/{/g;
     $text =~ s/\x{e}/}/g;
 
+    # SPECIAL CASES
+    # These are special cases that people/LaTeX complains about
+    # Replace decomposed i+' diacritic with single grapheme as the decomposed form confuses LaTeX sometimes
+    # NFC() does not do this as letter+diacritic is often a valid composed form
+    $text =~ s/ı́/í/g;
+
     if ($logger->is_trace()) {# performance tune
       $logger->trace("String in latex_decode() now -> '$text'");
     }
@@ -430,7 +436,7 @@ L<https://github.com/plk/biber/issues>.
 =head1 COPYRIGHT & LICENSE
 
 Copyright 2009-2012 François Charette and Philip Kime, all rights reserved.
-Copyright 2012-2022 Philip Kime, all rights reserved.
+Copyright 2012-2023 Philip Kime, all rights reserved.
 
 This module is free software.  You can redistribute it and/or
 modify it under the terms of the Artistic License 2.0.

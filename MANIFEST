@@ -206,6 +206,8 @@ t/tdata/uniqueness-nameparts.bib
 t/tdata/xdata.bcf
 t/tdata/xdata.bib
 t/tdata/xdata.bltxml
+testfiles/test.bcf
+testfiles/test.bib
 visual.pl
 META.yml
 META.json

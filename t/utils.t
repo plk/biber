@@ -92,8 +92,8 @@ eq_or_diff(latex_encode(NFD('{Ðandđandć, H.}')), '{\\DH{}and\\dj{}and\\\'{c},
 Biber::LaTeX::Recode->init_sets('full', 'full'); # Need to do this to reset
 eq_or_diff(NFC(latex_decode('{\"{U}}ber {\"{U}}berlegungen zur \"{U}berwindung des \"{U}bels')), 'Über Überlegungen zur Überwindung des Übels', 'latex decode 4 (with 2 explicit brace protections)');
 eq_or_diff(latex_decode('\alpha'), 'α', 'latex decode 4a'); # greek decoding with "full"
-eq_or_diff(NFC(latex_decode("\\'\\i")), 'ı́', 'latex decode 5'); # checking i/j with accents
-eq_or_diff(NFC(latex_decode("{\\'\\i}")), 'ı́', 'latex decode 5a (with redundant explicit brace protection)'); # checking i/j with accents
+eq_or_diff(NFC(latex_decode("\\'\\i")), 'í', 'latex decode 5'); # checking i/j with accents
+eq_or_diff(NFC(latex_decode("{\\'\\i}")), 'í', 'latex decode 5a (with redundant explicit brace protection)'); # checking i/j with accents
 eq_or_diff(NFC(latex_decode("\\^{\\j}")), 'ȷ̂', 'latex decode 6'); # checking i/j with accents
 eq_or_diff(NFC(latex_decode("\\u{\\i}")), 'ı̆', 'latex decode 7'); # checking i/j with accents
 eq_or_diff(NFC(latex_decode("\\u\\i")), 'ı̆', 'latex decode 8'); # checking i/j with accents

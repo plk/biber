@@ -8,7 +8,7 @@
 # Example: build.sh ~/Desktop/b development dev biber 1
 
 # <dir> is where the binaries are
-# <release> is a SF subdir of /home/frs/project/biblatex-biber/biblatex-biber/
+# <release> is a SF subdir of /home/frs/project/biblatex-biber/
 # <branch> is a git branch to checkout on the build farm servers
 # <binaryname> is the name of the biber binary to use for the release.
 # <justbuild> is a boolean which says to just build and stop without uploading

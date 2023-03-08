@@ -53,7 +53,7 @@ Sourceforge.
 
 ## LICENCE
 
-Copyright 2009-2022 François Charette and Philip Kime, all rights reserved.
+Copyright 2009-2023 François Charette and Philip Kime, all rights reserved.
 
 This module is free software.  You can redistribute it and/or
 modify it under the terms of the Artistic License 2.0.
