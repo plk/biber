@@ -128,7 +128,7 @@ sub display_end {
 
   if ($self->{warnings}) {
     foreach my $w ($self->{warnings}->@*) {
-      $logger->warn($w);
+      $logger->warn(NFC($w)); # NFC boundary
     }
     $logger->info('WARNINGS: ' . scalar($self->{warnings}->@*));
   }
