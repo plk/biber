@@ -457,7 +457,7 @@ my $un7 = q|    \entry{un7}{article}{}
     \endentry
 |;
 
-my $main = $biber->datalists->get_list('nty/global//global/global');
+my $main = $biber->datalists->get_list('nty/global//global/global/global');
 my $main1 = $biber->datalists->get_list('nty/global//test1/global');
 my $main2 = $biber->datalists->get_list('nty/global//test2/global');
 

@@ -49,7 +49,7 @@ Biber::Config->setoption('nodieonerror', 1); # because the remote bibs might be 
 $biber->prepare;
 my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
-my $main = $biber->datalists->get_list('nty/global//global/global');
+my $main = $biber->datalists->get_list('nty/global//global/global/global');
 my $bibentries = $section->bibentries;
 
 my $dl1 = q|    \entry{AbdelbarH98}{article}{}

@@ -47,7 +47,7 @@ Biber::Config->setblxoption(undef,'uniquelist', 'true');
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
 my $bibentries = $section->bibentries;
-my $main = $biber->datalists->get_list('nty/global//global/global');
+my $main = $biber->datalists->get_list('nty/global//global/global/global');
 
 # Basic uniquename and hash testing
 eq_or_diff($main->get_unsummary($bibentries->entry('un1')->get_field($bibentries->entry('un1')->get_labelname_info)->get_id,$bibentries->entry('un1')->get_field($bibentries->entry('un1')->get_labelname_info)->nth_name(1)->get_id), '2', 'Uniquename requiring full name expansion - 1');
@@ -94,7 +94,7 @@ Biber::Config->setblxoption(undef,'uniquelist', 'true');
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 $bibentries = $section->bibentries;
-$main = $biber->datalists->get_list('nty/global//global/global');
+$main = $biber->datalists->get_list('nty/global//global/global/global');
 
 eq_or_diff($main->get_unsummary($bibentries->entry('unt1')->get_field($bibentries->entry('unt1')->get_labelname_info)->get_id,$bibentries->entry('unt1')->get_field($bibentries->entry('unt1')->get_labelname_info)->nth_name(2)->get_id), '1', 'Uniquename with inits and repeat - 1');
 eq_or_diff($main->get_unsummary($bibentries->entry('unt2')->get_field($bibentries->entry('unt2')->get_labelname_info)->get_id,$bibentries->entry('unt2')->get_field($bibentries->entry('unt2')->get_labelname_info)->nth_name(2)->get_id), '1', 'Uniquename with inits and repeat - 2');
@@ -120,7 +120,7 @@ Biber::Config->setblxoption(undef,'uniquelist', 'true');
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 $bibentries = $section->bibentries;
-$main = $biber->datalists->get_list('nty/global//global/global');
+$main = $biber->datalists->get_list('nty/global//global/global/global');
 
 # Hashes the same as uniquelist expansion expands to the whole list
 eq_or_diff($main->get_entryfield('unall3', 'namehash'), 'f1c5973adbc2e674fa4d98164c9ba5d5', 'Namehash and fullhash - 5');
@@ -143,7 +143,7 @@ Biber::Config->setblxoption(undef,'uniquelist', 'false');
 # Now generate the information
 $biber->prepare;
 $bibentries = $biber->sections->get_section('0')->bibentries;
-$main = $biber->datalists->get_list('nty/global//global/global');
+$main = $biber->datalists->get_list('nty/global//global/global/global');
 
 ok(is_undef($main->get_unsummary($bibentries->entry('test2')->get_field($bibentries->entry('test2')->get_labelname_info)->get_id,$bibentries->entry('test2')->get_field($bibentries->entry('test2')->get_labelname_info)->nth_name(1)->get_id)), 'Uniquename 0 due to mincitenames truncation');
 
@@ -162,7 +162,7 @@ Biber::Config->setblxoption(undef,'mincitenames', 1);
 # Now generate the information
 $biber->prepare;
 $bibentries = $biber->sections->get_section('0')->bibentries;
-$main = $biber->datalists->get_list('nty/global//global/global');
+$main = $biber->datalists->get_list('nty/global//global/global/global');
 
 eq_or_diff($main->get_unsummary($bibentries->entry('un8')->get_field($bibentries->entry('un8')->get_labelname_info)->get_id,$bibentries->entry('un8')->get_field($bibentries->entry('un8')->get_labelname_info)->nth_name(1)->get_id), '0', 'Uniquename - 1');
 eq_or_diff($main->get_unsummary($bibentries->entry('un8')->get_field($bibentries->entry('un8')->get_labelname_info)->get_id,$bibentries->entry('un8')->get_field($bibentries->entry('un8')->get_labelname_info)->nth_name(2)->get_id), '0', 'Uniquename - 2');
@@ -223,7 +223,7 @@ Biber::Config->setblxoption(undef,'uniquelist', 'true');
 # Now generate the information
 $biber->prepare;
 $bibentries = $biber->sections->get_section('0')->bibentries;
-$main = $biber->datalists->get_list('nty/global//global/global');
+$main = $biber->datalists->get_list('nty/global//global/global/global');
 
 eq_or_diff($main->get_uniquelist($bibentries->entry('test3')->get_field($bibentries->entry('test3')->get_labelname_info)->get_id), '2', 'Uniquelist - 19');
 eq_or_diff($main->get_unsummary($bibentries->entry('test3')->get_field($bibentries->entry('test3')->get_labelname_info)->get_id,$bibentries->entry('test3')->get_field($bibentries->entry('test3')->get_labelname_info)->nth_name(1)->get_id), '0', 'Uniquename - 9');
@@ -255,7 +255,7 @@ Biber::Config->setblxoption(undef,'labeldatespec', [ {content => 'date', type =>
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 $bibentries = $section->bibentries;
-$main = $biber->datalists->get_list('nty/global//global/global');
+$main = $biber->datalists->get_list('nty/global//global/global/global');
 
 eq_or_diff($main->get_unsummary($bibentries->entry('us1')->get_field($bibentries->entry('us1')->get_labelname_info)->get_id,$bibentries->entry('us1')->get_field($bibentries->entry('us1')->get_labelname_info)->nth_name(1)->get_id), '0', 'Uniquename sparse - 1');
 eq_or_diff($main->get_unsummary($bibentries->entry('us1')->get_field($bibentries->entry('us1')->get_labelname_info)->get_id,$bibentries->entry('us1')->get_field($bibentries->entry('us1')->get_labelname_info)->nth_name(2)->get_id), '0', 'Uniquename sparse - 2');
@@ -324,7 +324,7 @@ Biber::Config->setblxoption(undef,'labeldatespec', [ {content => 'date', type =>
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 $bibentries = $section->bibentries;
-$main = $biber->datalists->get_list('nty/global//global/global');
+$main = $biber->datalists->get_list('nty/global//global/global/global');
 
 # maxcitenames/mincitenames = 3/1 so these will not truncate to the same list (since
 # us15 would not be truncated at all) and they therefore would not need disambiguating with
@@ -362,7 +362,7 @@ Biber::Config->setblxoption(undef,'labeldatespec', [ {content => 'date', type =>
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 $bibentries = $section->bibentries;
-$main = $biber->datalists->get_list('nty/global//global/global');
+$main = $biber->datalists->get_list('nty/global//global/global/global');
 
 # maxcitenames/mincitenames = 2/1 so list are the same and need disambiguating but only in the first
 # name as the others are not visible
@@ -397,7 +397,7 @@ Biber::Config->setblxoption(undef,'labeldatespec', [ {content => 'date', type =>
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 $bibentries = $section->bibentries;
-$main = $biber->datalists->get_list('nty/global//global/global');
+$main = $biber->datalists->get_list('nty/global//global/global/global');
 
 ok(is_undef($main->get_uniquelist($bibentries->entry('uls1')->get_field($bibentries->entry('uls1')->get_labelname_info)->get_id)), 'Uniquelist strict - 1');
 ok(is_undef($main->get_uniquelist($bibentries->entry('uls2')->get_field($bibentries->entry('uls2')->get_labelname_info)->get_id)), 'Uniquelist strict - 2');
@@ -426,7 +426,7 @@ Biber::Config->setblxoption(undef,'labeldatespec', [ {content => 'date', type =>
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 $bibentries = $section->bibentries;
-$main = $biber->datalists->get_list('nty/global//global/global');
+$main = $biber->datalists->get_list('nty/global//global/global/global');
 
 eq_or_diff($main->get_uniquelist($bibentries->entry('ulmy1')->get_field($bibentries->entry('ulmy1')->get_labelname_info)->get_id), '2', 'Uniquelist minyear - 1');
 eq_or_diff($main->get_uniquelist($bibentries->entry('ulmy2')->get_field($bibentries->entry('ulmy2')->get_labelname_info)->get_id), '2', 'Uniquelist minyear - 2');
@@ -450,7 +450,7 @@ Biber::Config->setblxoption(undef,'labeldatespec', [ {content => 'date', type =>
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 $bibentries = $section->bibentries;
-$main = $biber->datalists->get_list('nty/global//global/global');
+$main = $biber->datalists->get_list('nty/global//global/global/global');
 
 ok(is_undef($main->get_uniquelist($bibentries->entry('uls8')->get_field($bibentries->entry('uls8')->get_labelname_info)->get_id)), 'Uniquelist strict - 8');
 ok(is_undef($main->get_uniquelist($bibentries->entry('uls9')->get_field($bibentries->entry('uls9')->get_labelname_info)->get_id)),'Uniquelist strict - 9');
@@ -476,7 +476,7 @@ Biber::Config->setblxoption(undef,'labeldatespec', [ {content => 'date', type =>
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 $bibentries = $section->bibentries;
-$main = $biber->datalists->get_list('nty/global//global/global');
+$main = $biber->datalists->get_list('nty/global//global/global/global');
 
 eq_or_diff($main->get_extradatedata_for_key('ey1'), '1', 'Extrayear - 1');
 eq_or_diff($main->get_extradatedata_for_key('ey2'), '2', 'Extrayear - 2');
@@ -504,7 +504,7 @@ Biber::Config->setblxoption(undef,'labeldatespec', [ {content => 'date', type =>
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 $bibentries = $section->bibentries;
-$main = $biber->datalists->get_list('nty/global//global/global');
+$main = $biber->datalists->get_list('nty/global//global/global/global');
 
 ok(is_undef($main->get_extradatedata_for_key('ey1')), 'Extrayear - 7');
 ok(is_undef($main->get_extradatedata_for_key('ey2')), 'Extrayear - 8');
@@ -556,7 +556,7 @@ Biber::Config->setblxoption(undef,'labeldatespec', [ {content => 'date', type =>
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 $bibentries = $section->bibentries;
-$main = $biber->datalists->get_list('nty/global//global/global');
+$main = $biber->datalists->get_list('nty/global//global/global/global');
 
 eq_or_diff($main->get_extradatedata_for_key('ey1'), '1', 'Extrayear - 13');
 eq_or_diff($main->get_extradatedata_for_key('ey2'), '2', 'Extrayear - 14');
@@ -580,7 +580,7 @@ Biber::Config->setblxoption(undef,'uniquelist', 'true');
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 $bibentries = $section->bibentries;
-$main = $biber->datalists->get_list('nty/global//global/global');
+$main = $biber->datalists->get_list('nty/global//global/global/global');
 
 eq_or_diff($main->get_unsummary($bibentries->entry('un8')->get_field($bibentries->entry('un8')->get_labelname_info)->get_id,$bibentries->entry('un8')->get_field($bibentries->entry('un8')->get_labelname_info)->nth_name(1)->get_id), '0', 'Forced init expansion - 1');
 eq_or_diff($main->get_unsummary($bibentries->entry('un8')->get_field($bibentries->entry('un8')->get_labelname_info)->get_id,$bibentries->entry('un8')->get_field($bibentries->entry('un8')->get_labelname_info)->nth_name(2)->get_id), '0', 'Forced init expansion - 2');
@@ -606,7 +606,7 @@ Biber::Config->setblxoption(undef,'uniquelist', 'true');
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 $bibentries = $section->bibentries;
-$main = $biber->datalists->get_list('nty/global//global/global');
+$main = $biber->datalists->get_list('nty/global//global/global/global');
 
 eq_or_diff($main->get_unsummary($bibentries->entry('un8')->get_field($bibentries->entry('un8')->get_labelname_info)->get_id,$bibentries->entry('un8')->get_field($bibentries->entry('un8')->get_labelname_info)->nth_name(1)->get_id), '2', 'Forced name expansion - 1');
 eq_or_diff($main->get_unsummary($bibentries->entry('un8')->get_field($bibentries->entry('un8')->get_labelname_info)->get_id,$bibentries->entry('un8')->get_field($bibentries->entry('un8')->get_labelname_info)->nth_name(2)->get_id), '0', 'Forced name expansion - 2');
@@ -630,7 +630,7 @@ Biber::Config->setblxoption(undef,'uniquelist', 'true');
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 $bibentries = $section->bibentries;
-$main = $biber->datalists->get_list('nty/global//global/global');
+$main = $biber->datalists->get_list('nty/global//global/global/global');
 
 eq_or_diff($main->get_uniquelist($bibentries->entry('entry1a')->get_field($bibentries->entry('entry1a')->get_labelname_info)->get_id), '2', 'Uniquelist duplicates - 1');
 eq_or_diff($main->get_uniquelist($bibentries->entry('entry1b')->get_field($bibentries->entry('entry1b')->get_labelname_info)->get_id), '2', 'Uniquelist duplicates - 2');
@@ -654,7 +654,7 @@ Biber::Config->setblxoption(undef,'uniquename', 'false');
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 $bibentries = $section->bibentries;
-$main = $biber->datalists->get_list('nty/global//global/global');
+$main = $biber->datalists->get_list('nty/global//global/global/global');
 
 eq_or_diff($main->get_uniquelist($bibentries->entry('C')->get_field($bibentries->entry('C')->get_labelname_info)->get_id), '2', 'Uniquelist true/Uniquename false - 1');
 
@@ -673,7 +673,7 @@ Biber::Config->setblxoption(undef,'mincitenames', 3);
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 $bibentries = $section->bibentries;
-$main = $biber->datalists->get_list('nty/global//global/global');
+$main = $biber->datalists->get_list('nty/global//global/global/global');
 
 eq_or_diff($main->get_visible_cite($bibentries->entry('po1')->get_field($bibentries->entry('po1')->get_labelname_info)->get_id), '4', 'Pluralothers test - 1');
 ok(is_undef($main->get_extranamedata_for_key('po1')), 'Pluralothers test - 2');
@@ -695,7 +695,7 @@ $biber->prepare;
 my $out = $biber->get_output_obj;
 $section = $biber->sections->get_section(0);
 $bibentries = $section->bibentries;
-$main = $biber->datalists->get_list('nty/global//global/global');
+$main = $biber->datalists->get_list('nty/global//global/global/global');
 
 
 my $po3 = q|    \entry{po3}{book}{}

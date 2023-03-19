@@ -671,6 +671,10 @@
         <ref name="uniquenametemplate"/>
       </oneOrMore>
       <oneOrMore>
+        <!-- Name hash template -->
+        <ref name="namehashtemplate"/>
+      </oneOrMore>
+      <oneOrMore>
         <!-- Sorting name key specification -->
         <ref name="sortingnamekeytemplate"/>
       </oneOrMore>
@@ -996,6 +1000,9 @@
         <attribute name="labelalphanametemplatename">
           <data type="string"/>
         </attribute>
+        <attribute name="namehashtemplatename">
+          <data type="string"/>
+        </attribute>
         <!-- name is only needed for list types -->
         <attribute name="name">
           <data type="string">
@@ -1084,6 +1091,29 @@
               </choice>
             </attribute>
           </optional>
+          <text/>
+        </element>
+      </oneOrMore>
+    </element>
+  </define>
+  <define name="namehashtemplate">
+    <element name="bcf:namehashtemplate">
+      <attribute name="name">
+        <data type="string">
+          <param name="minLength">1</param>
+        </data>
+      </attribute>
+      <oneOrMore>
+        <element name="bcf:namepart">
+          <attribute name="order">
+            <data type="integer"/>
+          </attribute>
+          <attribute name="hashscope">
+            <choice>
+              <value>init</value>
+              <value>full</value>
+            </choice>
+          </attribute>
           <text/>
         </element>
       </oneOrMore>

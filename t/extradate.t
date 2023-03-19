@@ -45,7 +45,7 @@ Biber::Config->setblxoption(undef,'maxsortnames', 1);
 # Now generate the information
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
-my $main = $biber->datalists->get_list('custom/global//global/global');
+my $main = $biber->datalists->get_list('custom/global//global/global/global');
 my $bibentries = $section->bibentries;
 
 eq_or_diff($main->get_extradatedata_for_key('L1'), '1', 'Entry L1 - one name, first in 1995');
@@ -86,7 +86,7 @@ ok(is_undef($main->get_extradatedata_for_key('ed8')), 'labelyear scope - 4');
 # Switch to a month-in-year scope for extradate tracking
 Biber::Config->setblxoption(undef,'extradatespec', [['labelyear', 'year'],['labelmonth']]);
 $biber->prepare;
-$main = $biber->datalists->get_list('custom/global//global/global');
+$main = $biber->datalists->get_list('custom/global//global/global/global');
 
 # Now extradate should be unset as the months differ
 ok(is_undef($main->get_extradatedata_for_key('ed1')), 'labelmonth scope - 1');
@@ -104,7 +104,7 @@ Biber::Config->setblxoption(undef,'extradatespec', [['labelyear', 'year'],
                                               ['labelhour'],
                                               ['labelminute']]);
 $biber->prepare;
-$main = $biber->datalists->get_list('custom/global//global/global');
+$main = $biber->datalists->get_list('custom/global//global/global/global');
 
 # extradate should be set as the minutes are the same
 eq_or_diff($main->get_extradatedata_for_key('ed5'), '1', 'labelminute scope - 1');
@@ -118,7 +118,7 @@ ok(is_undef($main->get_extradatedata_for_key('ed2')), 'labelminute scope - 4');
 # considered
 Biber::Config->setblxoption(undef,'extradatespec', [['year']]);
 $biber->prepare;
-$main = $biber->datalists->get_list('custom/global//global/global');
+$main = $biber->datalists->get_list('custom/global//global/global/global');
 eq_or_diff($main->get_extradatedata_for_key('ed7'), '1', 'year scope - 1');
 eq_or_diff($main->get_extradatedata_for_key('ed8'), '2', 'year scope - 2');
 

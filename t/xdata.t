@@ -53,7 +53,7 @@ my ($stdout, $stderr) = capture { $biber->prepare };
 #my ($stdout, $stderr); $biber->prepare; # For debugging
 my $section = $biber->sections->get_section(0);
 my $bibentries = $section->bibentries;
-my $main = $biber->datalists->get_list('nty/global//global/global');
+my $main = $biber->datalists->get_list('nty/global//global/global/global');
 my $out = $biber->get_output_obj;
 
 my $xd1 = q|    \entry{xd1}{book}{}

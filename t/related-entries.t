@@ -39,8 +39,8 @@ Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 # Now generate the information
 $biber->prepare;
 my $out = $biber->get_output_obj;
-my $main = $biber->datalists->get_list('none/global//global/global');
-my $shs = $biber->datalists->get_list('shorthand/global//global/global', 0, 'list');
+my $main = $biber->datalists->get_list('none/global//global/global/global');
+my $shs = $biber->datalists->get_list('shorthand/global//global/global/global', 0, 'list');
 
 my $k1 = q|    \entry{key1}{article}{}
       \name{author}{1}{}{%

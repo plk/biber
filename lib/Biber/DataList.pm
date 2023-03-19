@@ -1176,7 +1176,8 @@ sub get_attrs {
                     $self->{sortingnamekeytemplatename},
                     $self->{labelprefix},
                     $self->{uniquenametemplatename},
-                    $self->{labelalphanametemplatename}));
+                    $self->{labelalphanametemplatename},
+                    $self->{namehashtemplatename}));
 }
 
 =head2 get_sortingtemplatename
@@ -1261,6 +1262,31 @@ sub get_labelalphanametemplatename {
   my $self = shift;
   return $self->{labelalphanametemplatename};
 }
+
+=head2 set_namehashtemplatename
+
+    Sets the namehashtemplate name of a data list
+
+=cut
+
+sub set_namehashtemplatename {
+  my $self = shift;
+  my $nhtn = shift;
+  $self->{namehashtemplatename} = lc($nhtn);
+  return;
+}
+
+=head2 get_namehashtemplatename
+
+    Gets the namehashtemplate name of a data list
+
+=cut
+
+sub get_namehashtemplatename {
+  my $self = shift;
+  return $self->{namehashtemplatename};
+}
+
 
 =head2 set_sortinit_collator
 

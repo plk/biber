@@ -4,7 +4,7 @@
 
 <bbl:refsections xmlns:bbl="https://sourceforge.net/projects/biblatex/bblxml">
   <bbl:refsection id="0">
-    <bbl:datalist type="entry" id="custom/global//global/global">
+    <bbl:datalist type="entry" id="custom/global//global/global/global">
       <bbl:entry key="set:aksin" type="article" singletitle="true">
         <bbl:inset>
           <bbl:member>set</bbl:member>
@@ -383,7 +383,7 @@
         <bbl:warning>Field 'entryset' is no longer needed in set member entries in Biber - ignoring in entry 'stdmodel:weinberg'</bbl:warning>
       </bbl:entry>
     </bbl:datalist>
-    <bbl:datalist type="entry" id="nty/global//global/global">
+    <bbl:datalist type="entry" id="nty/global//global/global/global">
       <bbl:entry key="set:aksin" type="article" singletitle="true">
         <bbl:inset>
           <bbl:member>set</bbl:member>

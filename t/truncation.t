@@ -43,7 +43,7 @@ Biber::Config->setblxoption(undef, 'uniquelist', 'false');
 # Now generate the information
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
-my $main = $biber->datalists->get_list('nty/global//global/global');
+my $main = $biber->datalists->get_list('nty/global//global/global/global');
 my $out = $biber->get_output_obj;
 
 my $us1 = q|    \entry{us1}{book}{}
@@ -411,7 +411,7 @@ Biber::Config->setblxoption(undef,'nohashothers', 0, 'ENTRYTYPE', 'misc');
 
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-$main = $biber->datalists->get_list('nty/global//global/global');
+$main = $biber->datalists->get_list('nty/global//global/global/global');
 $out = $biber->get_output_obj;
 
 # namehash now the same as us1 and us3 respectively with (nohashothers=true)
@@ -431,7 +431,7 @@ eq_or_diff( $out->get_output_entry('us9', $main), $us9, 'Truncation - 10') ;
 # Testing nosortothers
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-$main = $biber->datalists->get_list('nty/global//global/global');
+$main = $biber->datalists->get_list('nty/global//global/global/global');
 $out = $biber->get_output_obj;
 
 # Sorting with nosortothers=false
@@ -440,7 +440,7 @@ is_deeply($main->get_keys, ['us1', 'us2','us6', 'us7', 'us8', 'us9', 'us10','us3
 Biber::Config->setblxoption(undef,'nosortothers', 1);
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-$main = $biber->datalists->get_list('nty/global//global/global');
+$main = $biber->datalists->get_list('nty/global//global/global/global');
 $out = $biber->get_output_obj;
 
 # Sorting with nosortothers=true

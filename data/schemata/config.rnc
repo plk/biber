@@ -122,6 +122,7 @@ start =
     labelalphanametemplate* &
     labelalphatemplate? &
     uniquenametemplate* &
+    namehashtemplate* &
     sortingnamekeytemplate? &
     sortingtemplate? &
     # presort default strings for different entry types
@@ -420,10 +421,20 @@ uniquenametemplate =
   element uniquenametemplate {
     attribute name { xsd:string {minLength="1"} },
     element namepart {
-     attribute order { xsd:integer },
+      attribute order { xsd:integer },
       attribute use { "0" | "1" }?,
       attribute base { "0" | "1" }?,
       attribute context { "none" | "init" | "initorfull" | "full" }?,
+      text
+    }+
+  }
+
+namehashtemplate = 
+  element namehashtemplate {
+    attribute name { xsd:string {minLength="1"} },
+    element namepart {
+      attribute order { xsd:integer },
+      attribute hashscope { "init" | "full" },
       text
     }+
   }

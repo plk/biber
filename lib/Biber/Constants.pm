@@ -46,9 +46,9 @@ our @EXPORT = qw{
 
 # Version of biblatex control file which this release expects. Matched against version
 # passed in control file. Used when checking the .bcf
-our $BCF_VERSION = '3.10';
+our $BCF_VERSION = '3.11';
 # Format version of the .bbl. Used when writing the .bbl
-our $BBL_VERSION = '3.2';
+our $BBL_VERSION = '3.3';
 
 # Global flags needed for sorting
 our $BIBER_SORT_FINAL;

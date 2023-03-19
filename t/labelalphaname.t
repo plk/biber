@@ -41,9 +41,9 @@ Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 # Now generate the information, saving per-entry options or they are deleted
 $biber->prepare;
 
-my $main = $biber->datalists->get_list('custom/global//global/global');
-my $main1 = $biber->datalists->get_list('custom/global//global/test1');
-my $main2 = $biber->datalists->get_list('custom/global//global/test5');
+my $main = $biber->datalists->get_list('custom/global//global/global/global');
+my $main1 = $biber->datalists->get_list('custom/global//global/test1/global');
+my $main2 = $biber->datalists->get_list('custom/global//global/test5/global');
 
 eq_or_diff($main->get_labelalphadata_for_key('lant1'), 'Smi', 'labelalphaname global template');
 eq_or_diff($main1->get_labelalphadata_for_key('lant1'), 'AS', 'labelalphaname dlist template');

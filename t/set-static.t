@@ -39,8 +39,8 @@ Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 # Now generate the information
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
-my $main = $biber->datalists->get_list('nty/global//global/global');
-my $main1 = $biber->datalists->get_list('none/global//global/global', 1);
+my $main = $biber->datalists->get_list('nty/global//global/global/global');
+my $main1 = $biber->datalists->get_list('none/global//global/global/global', 1);
 my $out = $biber->get_output_obj;
 
 # Notes that \set is in nty order due to sortsets=true in .bcf

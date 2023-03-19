@@ -50,10 +50,25 @@ sub _getnamehash {
   my $dm = Biber::Config->get_dm;
   my @nps = $dm->get_constant_value('nameparts');
 
+  # refcontext or per-entry namehashtemplate
+  my $nhtname = Biber::Config->getblxoption($secnum, 'namehashtemplatename', undef, $citekey) // $dlist->get_namehashtemplatename;
+
+  # Per-namelist namehashtemplate
+  if (defined($names->get_namehashtemplatename)) {
+    $nhtname = $names->get_namehashtemplatename;
+  }
+
   # namehash obeys list truncations but not uniquename
   foreach my $n ($names->first_n_names($visible)->@*) {
+
+    # Per-name namehashtemplate
+    if (defined($n->get_namehashtemplatename)) {
+      $nhtname = $n->get_namehashtemplatename;
+    }
+
     foreach my $nt (@nps) {# list type so returns list
-      if (my $np = $n->get_namepart($nt)) {
+    if (my $np = $n->get_hash_namepart($nt,
+                                       Biber::Config->getblxoption($secnum, 'namehashtemplate')->{$nhtname})) {
         $hashkey .= $np;
       }
     }
@@ -100,7 +115,7 @@ sub _getfullhash {
   return md5_hex(encode_utf8(NFC(normalise_string_hash($hashkey))));
 }
 
-# Same as _getnamehash but takes account of uniquename setting for firstname
+# Same as _getnamehash but takes account of uniquename template
 # It's used for extra* tracking only
 sub _getnamehash_u {
   my ($self, $citekey, $names, $dlist) = @_;
@@ -127,6 +142,7 @@ sub _getnamehash_u {
   # namehash obeys list truncations
   foreach my $n ($names->first_n_names($visible)->@*) {
     my $nid = $n->get_id;
+
     # Per-name uniquenametemplate
     if (defined($n->get_uniquenametemplatename)) {
       $untname = $n->get_uniquenametemplatename;
@@ -178,13 +194,28 @@ sub _getnamehash_u {
 
 # Special hash to track per-name information
 sub _genpnhash {
-  my ($self, $citekey, $n) = @_;
+  my ($self, $citekey, $names, $n, $dlist) = @_;
   my $hashkey = '';
+  my $secnum = $self->get_current_section;
   my $dm = Biber::Config->get_dm;
   my @nps = $dm->get_constant_value('nameparts');
 
+  # refcontext or per-entry namehashtemplate
+  my $nhtname = Biber::Config->getblxoption($secnum, 'namehashtemplatename', undef, $citekey) // $dlist->get_namehashtemplatename;
+
+  # Per-namelist namehashtemplate
+  if (defined($names->get_namehashtemplatename)) {
+    $nhtname = $names->get_namehashtemplatename;
+  }
+
+  # Per-name namehashtemplate
+  if (defined($n->get_namehashtemplatename)) {
+    $nhtname = $n->get_namehashtemplatename;
+  }
+
   foreach my $nt (@nps) {# list type so returns list
-    if (my $np = $n->get_namepart($nt)) {
+    if (my $np = $n->get_hash_namepart($nt,
+                                       Biber::Config->getblxoption($secnum, 'namehashtemplate')->{$nhtname})) {
       $hashkey .= $np;
     }
   }

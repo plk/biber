@@ -64,7 +64,7 @@ $biber->tool_mode_setup;
 $biber->prepare_tool;
 $out->output;
 my $main = $biber->datalists->get_lists_by_attrs(section                    => 99999,
-                                       name                       => 'tool/global//global/global',
+                                       name                       => 'tool/global//global/global/global',
                                        type                       => 'entry',
                                        sortingtemplatename             => 'tool',
                                        sortingnamekeytemplatename      => 'global',

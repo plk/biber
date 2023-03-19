@@ -53,8 +53,8 @@ Biber::Config->setblxoption(undef,'labeldateparts', 0);
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
 my $bibentries = $section->bibentries;
-my $main = $biber->datalists->get_list('nyt/global//global/global');
-my $shs = $biber->datalists->get_list('shorthand/global//global/global', 0, 'list');
+my $main = $biber->datalists->get_list('nyt/global//global/global/global');
+my $shs = $biber->datalists->get_list('shorthand/global//global/global/global', 0, 'list');
 
 my $out = $biber->get_output_obj;
 
@@ -287,7 +287,7 @@ $section->del_everykeys;
 Biber::Input::file::bibtex->init_cache;
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-$shs = $biber->datalists->get_list('shorthand/global//global/global', 0, 'list');
+$shs = $biber->datalists->get_list('shorthand/global//global/global/global', 0, 'list');
 
 # Sort by shorthand
 is_deeply($shs->get_keys, ['L1', 'L2', 'L3', 'L4', 'L5'], 'sortorder - 3');

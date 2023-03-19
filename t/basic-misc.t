@@ -55,7 +55,7 @@ Biber::Config->setblxoption(undef,'uniquework', 1);
 $biber->prepare;
 my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
-my $main = $biber->datalists->get_list('nty/global//global/global');
+my $main = $biber->datalists->get_list('nty/global//global/global/global');
 
 my @keys = sort $section->get_citekeys;
 my @citedkeys = sort qw{ alias1 alias2 alias5 anon1 anon2 matches1 matches2 matches3 murray t1 kant:ku kant:kpv t2 shore u1 u2 us1 list1 isbn1 isbn2 markey ent1 verb1 over1 recurse1};
@@ -118,7 +118,7 @@ eq_or_diff( $out->get_output_entry('u1', $main), $u1, 'uniquelist 1' ) ;
 
 is_deeply( \@keys, \@citedkeys, 'citekeys 1') ;
 
-is_deeply($biber->datalists->get_list('shorthand/global//global/global')->get_keys, [ 'kant:kpv', 'kant:ku' ], 'shorthands' ) ;
+is_deeply($biber->datalists->get_list('shorthand/global//global/global/global')->get_keys, [ 'kant:kpv', 'kant:ku' ], 'shorthands' ) ;
 
 # reset some options and re-generate information
 
@@ -593,7 +593,7 @@ $section->del_everykeys;
 Biber::Input::file::bibtex->init_cache;
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-$main = $biber->datalists->get_list('nty/global//global/global');
+$main = $biber->datalists->get_list('nty/global//global/global/global');
 
 $out = $biber->get_output_obj;
 
@@ -649,7 +649,7 @@ $section->del_everykeys;
 Biber::Input::file::bibtex->init_cache;
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-$main = $biber->datalists->get_list('nty/global//global/global');
+$main = $biber->datalists->get_list('nty/global//global/global/global');
 
 eq_or_diff($main->get_visible_cite($bibentries->entry('tmn1')->get_field($bibentries->entry('tmn1')->get_labelname_info)->get_id), '1', 'per_type maxcitenames - 1');
 eq_or_diff($main->get_visible_cite($bibentries->entry('tmn2')->get_field($bibentries->entry('tmn2')->get_labelname_info)->get_id), '3', 'per_type maxcitenames - 2');

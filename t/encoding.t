@@ -33,7 +33,7 @@ Log::Log4perl->init(\$l4pconf);
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 
 my $encode1 = q|% $ biblatex auxiliary file $
-% $ biblatex bbl format version 3.2 $
+% $ biblatex bbl format version 3.3 $
 % Do not modify the above lines!
 %
 % This is an auxiliary file used by the 'biblatex' package.
@@ -52,7 +52,7 @@ my $encode1 = q|% $ biblatex auxiliary file $
 
 
 \refsection{0}
-  \datalist[entry]{nty/global//global/global}
+  \datalist[entry]{nty/global//global/global/global}
     \entry{testŠ}{book}{}
       \name{author}{1}{}{%
         {{un=0,uniquepart=base,hash=06a47edae2e847800cfd78323a0e6be8}{%
@@ -89,7 +89,7 @@ my $encode1 = q|% $ biblatex auxiliary file $
 |;
 
 my $encode2 = q|% $ biblatex auxiliary file $
-% $ biblatex bbl format version 3.2 $
+% $ biblatex bbl format version 3.3 $
 % Do not modify the above lines!
 %
 % This is an auxiliary file used by the 'biblatex' package.
@@ -108,7 +108,7 @@ my $encode2 = q|% $ biblatex auxiliary file $
 
 
 \refsection{0}
-  \datalist[entry]{nty/global//global/global}
+  \datalist[entry]{nty/global//global/global/global}
     \entry{test1}{book}{}
       \name{author}{1}{}{%
         {{un=0,uniquepart=base,hash=06a47edae2e847800cfd78323a0e6be8}{%
@@ -145,7 +145,7 @@ my $encode2 = q|% $ biblatex auxiliary file $
 |;
 
 my $encode3 = q|% $ biblatex auxiliary file $
-% $ biblatex bbl format version 3.2 $
+% $ biblatex bbl format version 3.3 $
 % Do not modify the above lines!
 %
 % This is an auxiliary file used by the 'biblatex' package.
@@ -164,7 +164,7 @@ my $encode3 = q|% $ biblatex auxiliary file $
 
 
 \refsection{0}
-  \datalist[entry]{nty/global//global/global}
+  \datalist[entry]{nty/global//global/global/global}
     \entry{test1}{book}{}
       \name{author}{1}{}{%
         {{un=0,uniquepart=base,hash=06a47edae2e847800cfd78323a0e6be8}{%
@@ -201,7 +201,7 @@ my $encode3 = q|% $ biblatex auxiliary file $
 |;
 
 my $encode5 = q|% $ biblatex auxiliary file $
-% $ biblatex bbl format version 3.2 $
+% $ biblatex bbl format version 3.3 $
 % Do not modify the above lines!
 %
 % This is an auxiliary file used by the 'biblatex' package.
@@ -220,7 +220,7 @@ my $encode5 = q|% $ biblatex auxiliary file $
 
 
 \refsection{0}
-  \datalist[entry]{nty/global//global/global}
+  \datalist[entry]{nty/global//global/global/global}
     \entry{test}{book}{}
       \name{author}{1}{}{%
         {{un=0,uniquepart=base,hash=06a47edae2e847800cfd78323a0e6be8}{%
@@ -257,7 +257,7 @@ my $encode5 = q|% $ biblatex auxiliary file $
 |;
 
 my $encode6 = q|% $ biblatex auxiliary file $
-% $ biblatex bbl format version 3.2 $
+% $ biblatex bbl format version 3.3 $
 % Do not modify the above lines!
 %
 % This is an auxiliary file used by the 'biblatex' package.
@@ -276,7 +276,7 @@ my $encode6 = q|% $ biblatex auxiliary file $
 
 
 \refsection{0}
-  \datalist[entry]{nty/global//global/global}
+  \datalist[entry]{nty/global//global/global/global}
     \entry{test}{book}{}
       \name{author}{1}{}{%
         {{un=0,uniquepart=base,hash=06a47edae2e847800cfd78323a0e6be8}{%
@@ -313,7 +313,7 @@ my $encode6 = q|% $ biblatex auxiliary file $
 |;
 
 my $encode7 = q|% $ biblatex auxiliary file $
-% $ biblatex bbl format version 3.2 $
+% $ biblatex bbl format version 3.3 $
 % Do not modify the above lines!
 %
 % This is an auxiliary file used by the 'biblatex' package.
@@ -332,7 +332,7 @@ my $encode7 = q|% $ biblatex auxiliary file $
 
 
 \refsection{0}
-  \datalist[entry]{nty/global//global/global}
+  \datalist[entry]{nty/global//global/global/global}
     \entry{test}{book}{}
       \name{author}{1}{}{%
         {{un=0,uniquepart=base,hash=06a47edae2e847800cfd78323a0e6be8}{%

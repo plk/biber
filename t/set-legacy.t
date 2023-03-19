@@ -39,7 +39,7 @@ Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 # Now generate the information
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
-my $main = $biber->datalists->get_list('none/global//global/global');
+my $main = $biber->datalists->get_list('none/global//global/global/global');
 my $out = $biber->get_output_obj;
 
 my $string1 = q|    \entry{Elias1955}{set}{}

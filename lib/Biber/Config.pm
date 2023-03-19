@@ -364,6 +364,7 @@ sub _config_file_set {
                                                             qr/\Alabelalpha(?:name)?template\z/,
                                                             qr/\Asortitem\z/,
                                                             qr/\Auniquenametemplate\z/,
+                                                            qr/\Anamehashtemplate\z/,
                                                             qr/\Apresort\z/,
                                                             qr/\Aoptionscope\z/,
                                                             qr/\Asortingnamekeytemplate\z/,
@@ -464,6 +465,18 @@ sub _config_file_set {
         $unts->{$unt->{name}} = $untval;
       }
       Biber::Config->setblxoption(0, 'uniquenametemplate', $unts);
+    }
+    elsif (lc($k) eq 'namehashtemplate') {
+      my $nhts;
+      foreach my $nht ($v->@*) {
+        my $nhtval = [];
+        foreach my $np (sort {$a->{order} <=> $b->{order}} $nht->{namepart}->@*) {
+          push $nhtval->@*, {namepart        => $np->{content},
+                             hashscope       => $np->{hashscope}};
+        }
+        $nhts->{$nht->{name}} = $nhtval;
+      }
+      Biber::Config->setblxoption(0, 'namehashtemplate', $nhts);
     }
     elsif (lc($k) eq 'sortingnamekeytemplate') {
       my $snss;

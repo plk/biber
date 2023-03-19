@@ -44,7 +44,7 @@ Biber::Config->setblxoption(undef,'maxbibnames', 1);
 # Now generate the information
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
-my $main = $biber->datalists->get_list('custom/global//global/global');
+my $main = $biber->datalists->get_list('custom/global//global/global/global');
 
 my $bibentries = $section->bibentries;
 

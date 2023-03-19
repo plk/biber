@@ -150,7 +150,7 @@ my $S3 = q|    \entry{S3}{book}{}
 $biber->prepare;
 my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
-my $main = $biber->datalists->get_list('custom/global//global/global');
+my $main = $biber->datalists->get_list('custom/global//global/global/global');
 # labels as per-entry dataonly=false
 eq_or_diff( $out->get_output_entry('S1', $main), $S1, 'Global skips with entry override - 1') ;
 # labels as per-entry skpiplab=false
