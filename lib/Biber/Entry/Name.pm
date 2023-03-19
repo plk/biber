@@ -145,7 +145,6 @@ sub get_hash_namepart {
         else {
           return '';
         }
-        return 
       }
       elsif (fc($np->{hashscope}) eq 'full') {
         return $self->{nameparts}{$namepart}{string} || '';
