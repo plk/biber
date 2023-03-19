@@ -765,6 +765,7 @@ sub parse_ctrlfile {
     }
     $nhts->{$nht->{name}} = $nhtval;
   }
+
   Biber::Config->setblxoption(undef, 'namehashtemplate', $nhts);
 
   # SORTING NAME KEY

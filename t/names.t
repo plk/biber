@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 73;
+use Test::More tests => 74;
 use Test::Differences;
 unified_diff;
 
@@ -47,6 +47,7 @@ $biber->prepare;
 my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
 my $main = $biber->datalists->get_list('custom/global//global/global/global');
+my $nhtest = $biber->datalists->get_list('custom/global//global/global/test');
 my $bibentries = $section->bibentries;
 
 my $name1 =
@@ -192,6 +193,26 @@ my $l1 = q|    \entry{L1}{book}{}
       \strng{bibnamehash}{72287a68c1714cb1b9f4ab9e03a88b96}
       \strng{authorbibnamehash}{72287a68c1714cb1b9f4ab9e03a88b96}
       \strng{authornamehash}{72287a68c1714cb1b9f4ab9e03a88b96}
+      \strng{authorfullhash}{72287a68c1714cb1b9f4ab9e03a88b96}
+      \field{sortinit}{A}
+      \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
+      \field{labelnamesource}{author}
+    \endentry
+|;
+
+my $l1h = q|    \entry{L1}{book}{}
+      \name{author}{1}{}{%
+        {{hash=a4e132fab651ba62e051557227672cda}{%
+           family={Adler},
+           familyi={A\bibinitperiod},
+           given={Alfred},
+           giveni={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{a4e132fab651ba62e051557227672cda}
+      \strng{fullhash}{72287a68c1714cb1b9f4ab9e03a88b96}
+      \strng{bibnamehash}{a4e132fab651ba62e051557227672cda}
+      \strng{authorbibnamehash}{a4e132fab651ba62e051557227672cda}
+      \strng{authornamehash}{a4e132fab651ba62e051557227672cda}
       \strng{authorfullhash}{72287a68c1714cb1b9f4ab9e03a88b96}
       \field{sortinit}{A}
       \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
@@ -925,6 +946,7 @@ is_deeply(Biber::Input::file::bibtex::parsename_x($section,'family=Smithers Jone
 
 # Full entry tests
 eq_or_diff( $out->get_output_entry('L1', $main), $l1, 'First Last') ;
+eq_or_diff( $out->get_output_entry('L1', $nhtest), $l1h, 'Name hashing - given initials'); # testing custom name hash templates
 eq_or_diff( $out->get_output_entry('L2', $main), $l2, 'First Initial. Last') ;
 eq_or_diff( $out->get_output_entry('L3', $main), $l3, 'Initial. Initial. Last') ;
 eq_or_diff( $out->get_output_entry('L4', $main), $l4, 'First Initial Last') ;
@@ -989,4 +1011,3 @@ eq_or_diff($main->get_entryfield('upa1', 'uniqueprimaryauthor'), 1, 'Unique prim
 ok(is_undef($main->get_entryfield('upa2', 'uniqueprimaryauthor')), 'Unique primary author - 2');
 ok(is_undef($main->get_entryfield('upa3', 'uniqueprimaryauthor')), 'Unique primary author - 3');
 eq_or_diff($main->get_entryfield('upa4', 'uniqueprimaryauthor'), 1, 'Unique primary author - 4');
-

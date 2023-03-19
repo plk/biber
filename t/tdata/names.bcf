@@ -745,6 +745,12 @@
     <bcf:namepart order="3" hashscope="full">prefix</bcf:namepart>
     <bcf:namepart order="4" hashscope="full">suffix</bcf:namepart>
   </bcf:namehashtemplate>
+  <bcf:namehashtemplate name="test">
+    <bcf:namepart order="1" hashscope="full">family</bcf:namepart>
+    <bcf:namepart order="2" hashscope="init">given</bcf:namepart>
+    <bcf:namepart order="3" hashscope="full">prefix</bcf:namepart>
+    <bcf:namepart order="4" hashscope="full">suffix</bcf:namepart>
+  </bcf:namehashtemplate>
   <!-- SORTING NAME KEY TEMPLATE -->
   <bcf:sortingnamekeytemplate name="global" visibility="sort">
     <bcf:keypart order="1">
@@ -2118,5 +2124,14 @@
                 uniquenametemplatename="global"
                 labelalphanametemplatename="global"
                 namehashtemplatename="global"/>
+  <bcf:datalist sortingnamekeytemplatename="global"
+                section="0"
+                name="custom/global//global/global/test"
+                sortingtemplatename="custom"
+                type="entry"
+                labelprefix=""
+                uniquenametemplatename="global"
+                labelalphanametemplatename="global"
+                namehashtemplatename="test"/>
 </bcf:controlfile>
 
