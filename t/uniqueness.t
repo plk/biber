@@ -57,11 +57,11 @@ ok(is_undef($main->get_unsummary($bibentries->entry('un3')->get_field($bibentrie
 eq_or_diff($main->get_unsummary($bibentries->entry('un4')->get_field($bibentries->entry('un4')->get_labelname_info)->get_id,$bibentries->entry('un4')->get_field($bibentries->entry('un4')->get_labelname_info)->nth_name(1)->get_id), '1', 'Uniquename requiring initials name expansion - 2');
 ok(is_undef($main->get_unsummary($bibentries->entry('un4a')->get_field($bibentries->entry('un4a')->get_labelname_info)->get_id,$bibentries->entry('un4a')->get_field($bibentries->entry('un4a')->get_labelname_info)->nth_name(1)->get_id)), 'per-entry uniquename');
 eq_or_diff($main->get_entryfield('un6', 'namehash'), 'f8169a157f8d9209961157b8d23902db', 'Namehash and fullhash - 1');
-eq_or_diff($bibentries->entry('un6')->get_field('fullhash'), 'f8169a157f8d9209961157b8d23902db', 'Namehash and fullhash - 2');
+eq_or_diff($main->get_entryfield('un6', 'fullhash'), 'f8169a157f8d9209961157b8d23902db', 'Namehash and fullhash - 2');
 eq_or_diff($main->get_entryfield('un7', 'namehash'), 'b33fbd3f3349d1536dbcc14664f2cbbd', 'Fullnamehash ignores SHORT* names - 1');
-eq_or_diff($bibentries->entry('un7')->get_field('fullhash'), 'f8169a157f8d9209961157b8d23902db', 'Fullnamehash ignores SHORT* names - 2');
+eq_or_diff($main->get_entryfield('un7', 'fullhash'), 'f8169a157f8d9209961157b8d23902db', 'Fullnamehash ignores SHORT* names - 2');
 eq_or_diff($main->get_entryfield('test1', 'namehash'), '07df5c892ba1452776abee0a867591f2', 'Namehash and fullhash - 3');
-eq_or_diff($bibentries->entry('test1')->get_field('fullhash'), '637292dd2997a74c91847f1ec5081a46', 'Namehash and fullhash - 4');
+eq_or_diff($main->get_entryfield('test1', 'fullhash'), '637292dd2997a74c91847f1ec5081a46', 'Namehash and fullhash - 4');
 eq_or_diff($main->get_unsummary($bibentries->entry('untf1')->get_field($bibentries->entry('untf1')->get_labelname_info)->get_id,$bibentries->entry('untf1')->get_field($bibentries->entry('untf1')->get_labelname_info)->nth_name(2)->get_id), '2', 'Uniquename with full and repeat - 1');
 eq_or_diff($main->get_unsummary($bibentries->entry('untf2')->get_field($bibentries->entry('untf2')->get_labelname_info)->get_id,$bibentries->entry('untf2')->get_field($bibentries->entry('untf2')->get_labelname_info)->nth_name(2)->get_id), '2', 'Uniquename with full and repeat - 2');
 eq_or_diff($main->get_unsummary($bibentries->entry('untf3')->get_field($bibentries->entry('untf3')->get_labelname_info)->get_id,$bibentries->entry('untf3')->get_field($bibentries->entry('untf3')->get_labelname_info)->nth_name(2)->get_id), '2', 'Uniquename with full and repeat - 3');
@@ -124,7 +124,7 @@ $main = $biber->datalists->get_list('nty/global//global/global/global');
 
 # Hashes the same as uniquelist expansion expands to the whole list
 eq_or_diff($main->get_entryfield('unall3', 'namehash'), 'f1c5973adbc2e674fa4d98164c9ba5d5', 'Namehash and fullhash - 5');
-eq_or_diff($bibentries->entry('unall3')->get_field('fullhash'), 'f1c5973adbc2e674fa4d98164c9ba5d5', 'Namehash and fullhash - 6');
+eq_or_diff($main->get_entryfield('unall3', 'fullhash'), 'f1c5973adbc2e674fa4d98164c9ba5d5', 'Namehash and fullhash - 6');
 ok(is_undef($main->get_uniquelist($bibentries->entry('unall3')->get_field($bibentries->entry('unall3')->get_labelname_info)->get_id)), 'Uniquelist edgecase - 1');
 eq_or_diff($main->get_uniquelist($bibentries->entry('unall4')->get_field($bibentries->entry('unall4')->get_labelname_info)->get_id), '6', 'Uniquelist edgecase - 2');
 
@@ -727,10 +727,12 @@ my $po3 = q|    \entry{po3}{book}{}
       }
       \strng{namehash}{2f43c72e4c15c6ba3f24e7b6462e60ed}
       \strng{fullhash}{2f43c72e4c15c6ba3f24e7b6462e60ed}
+      \strng{fullhashraw}{2f43c72e4c15c6ba3f24e7b6462e60ed}
       \strng{bibnamehash}{2f43c72e4c15c6ba3f24e7b6462e60ed}
       \strng{authorbibnamehash}{2f43c72e4c15c6ba3f24e7b6462e60ed}
       \strng{authornamehash}{2f43c72e4c15c6ba3f24e7b6462e60ed}
       \strng{authorfullhash}{2f43c72e4c15c6ba3f24e7b6462e60ed}
+      \strng{authorfullhashraw}{2f43c72e4c15c6ba3f24e7b6462e60ed}
       \field{labelalpha}{Abr\textbf{+}22}
       \field{sortinit}{A}
       \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}

@@ -96,10 +96,12 @@ my $u1 = q|    \entry{u1}{misc}{}
       }
       \strng{namehash}{b78abdc838d79b6576f2ed0021642766}
       \strng{fullhash}{b78abdc838d79b6576f2ed0021642766}
+      \strng{fullhashraw}{b78abdc838d79b6576f2ed0021642766}
       \strng{bibnamehash}{b78abdc838d79b6576f2ed0021642766}
       \strng{authorbibnamehash}{b78abdc838d79b6576f2ed0021642766}
       \strng{authornamehash}{b78abdc838d79b6576f2ed0021642766}
       \strng{authorfullhash}{b78abdc838d79b6576f2ed0021642766}
+      \strng{authorfullhashraw}{b78abdc838d79b6576f2ed0021642766}
       \field{labelalpha}{AAA\textbf{+}00}
       \field{sortinit}{A}
       \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
@@ -230,10 +232,12 @@ my $murray1 = q|    \entry{murray}{article}{}
       }
       \strng{namehash}{0c2086c92b65b24b0fb04b9462cf6c00}
       \strng{fullhash}{1572cc3fd324f560e5e71d041a6bd764}
+      \strng{fullhashraw}{1572cc3fd324f560e5e71d041a6bd764}
       \strng{bibnamehash}{132c55db0f03fae26126bc20d94cd834}
       \strng{authorbibnamehash}{132c55db0f03fae26126bc20d94cd834}
       \strng{authornamehash}{0c2086c92b65b24b0fb04b9462cf6c00}
       \strng{authorfullhash}{1572cc3fd324f560e5e71d041a6bd764}
+      \strng{authorfullhashraw}{1572cc3fd324f560e5e71d041a6bd764}
       \field{labelalpha}{Hos\textbf{+}98}
       \field{sortinit}{H}
       \field{sortinithash}{23a3aa7c24e56cfa16945d55545109b5}
@@ -347,10 +351,12 @@ my $murray2 = q|    \entry{murray}{article}{}
       }
       \strng{namehash}{0c2086c92b65b24b0fb04b9462cf6c00}
       \strng{fullhash}{1572cc3fd324f560e5e71d041a6bd764}
+      \strng{fullhashraw}{1572cc3fd324f560e5e71d041a6bd764}
       \strng{bibnamehash}{132c55db0f03fae26126bc20d94cd834}
       \strng{authorbibnamehash}{132c55db0f03fae26126bc20d94cd834}
       \strng{authornamehash}{0c2086c92b65b24b0fb04b9462cf6c00}
       \strng{authorfullhash}{1572cc3fd324f560e5e71d041a6bd764}
+      \strng{authorfullhashraw}{1572cc3fd324f560e5e71d041a6bd764}
       \field{labelalpha}{Hos98}
       \field{sortinit}{H}
       \field{sortinithash}{23a3aa7c24e56cfa16945d55545109b5}
@@ -387,10 +393,12 @@ my $t1 = q+    \entry{t1}{misc}{}
       }
       \strng{namehash}{858fcf9483ec29b7707a7dda2dde7a6f}
       \strng{fullhash}{858fcf9483ec29b7707a7dda2dde7a6f}
+      \strng{fullhashraw}{858fcf9483ec29b7707a7dda2dde7a6f}
       \strng{bibnamehash}{858fcf9483ec29b7707a7dda2dde7a6f}
       \strng{authorbibnamehash}{858fcf9483ec29b7707a7dda2dde7a6f}
       \strng{authornamehash}{858fcf9483ec29b7707a7dda2dde7a6f}
       \strng{authorfullhash}{858fcf9483ec29b7707a7dda2dde7a6f}
+      \strng{authorfullhashraw}{858fcf9483ec29b7707a7dda2dde7a6f}
       \field{extraname}{1}
       \field{labelalpha}{Bro92}
       \field{sortinit}{B}
@@ -417,10 +425,12 @@ my $t2 = q|    \entry{t2}{misc}{}
       }
       \strng{namehash}{858fcf9483ec29b7707a7dda2dde7a6f}
       \strng{fullhash}{858fcf9483ec29b7707a7dda2dde7a6f}
+      \strng{fullhashraw}{858fcf9483ec29b7707a7dda2dde7a6f}
       \strng{bibnamehash}{858fcf9483ec29b7707a7dda2dde7a6f}
       \strng{authorbibnamehash}{858fcf9483ec29b7707a7dda2dde7a6f}
       \strng{authornamehash}{858fcf9483ec29b7707a7dda2dde7a6f}
       \strng{authorfullhash}{858fcf9483ec29b7707a7dda2dde7a6f}
+      \strng{authorfullhashraw}{858fcf9483ec29b7707a7dda2dde7a6f}
       \field{extraname}{2}
       \field{labelalpha}{Bro94}
       \field{sortinit}{B}
@@ -448,13 +458,16 @@ my $anon1 = q|    \entry{anon1}{unpublished}{}
       }
       \strng{namehash}{9873a6cc65c553faa2b21aaad626fe4b}
       \strng{fullhash}{a66f357fe2fd356fe49959173522a651}
+      \strng{fullhashraw}{a66f357fe2fd356fe49959173522a651}
       \strng{bibnamehash}{9873a6cc65c553faa2b21aaad626fe4b}
       \strng{authorbibnamehash}{a66f357fe2fd356fe49959173522a651}
       \strng{authornamehash}{a66f357fe2fd356fe49959173522a651}
       \strng{authorfullhash}{a66f357fe2fd356fe49959173522a651}
+      \strng{authorfullhashraw}{a66f357fe2fd356fe49959173522a651}
       \strng{shortauthorbibnamehash}{9873a6cc65c553faa2b21aaad626fe4b}
       \strng{shortauthornamehash}{9873a6cc65c553faa2b21aaad626fe4b}
       \strng{shortauthorfullhash}{9873a6cc65c553faa2b21aaad626fe4b}
+      \strng{shortauthorfullhashraw}{9873a6cc65c553faa2b21aaad626fe4b}
       \field{labelalpha}{XAn35}
       \field{sortinit}{A}
       \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
@@ -487,13 +500,16 @@ my $anon2 = q|    \entry{anon2}{unpublished}{}
       }
       \strng{namehash}{f64c29e89ea49402b997956610b58ef6}
       \strng{fullhash}{a0bccee4041bc840e14c06e5ba7f083c}
+      \strng{fullhashraw}{a0bccee4041bc840e14c06e5ba7f083c}
       \strng{bibnamehash}{f64c29e89ea49402b997956610b58ef6}
       \strng{authorbibnamehash}{a0bccee4041bc840e14c06e5ba7f083c}
       \strng{authornamehash}{a0bccee4041bc840e14c06e5ba7f083c}
       \strng{authorfullhash}{a0bccee4041bc840e14c06e5ba7f083c}
+      \strng{authorfullhashraw}{a0bccee4041bc840e14c06e5ba7f083c}
       \strng{shortauthorbibnamehash}{f64c29e89ea49402b997956610b58ef6}
       \strng{shortauthornamehash}{f64c29e89ea49402b997956610b58ef6}
       \strng{shortauthorfullhash}{f64c29e89ea49402b997956610b58ef6}
+      \strng{shortauthorfullhashraw}{f64c29e89ea49402b997956610b58ef6}
       \field{labelalpha}{YAn39}
       \field{sortinit}{A}
       \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
@@ -524,10 +540,12 @@ my $url1 = q|    \entry{url1}{misc}{}
       }
       \strng{namehash}{b2106a3dda6c5a4879a0cab37e9cca55}
       \strng{fullhash}{b2106a3dda6c5a4879a0cab37e9cca55}
+      \strng{fullhashraw}{b2106a3dda6c5a4879a0cab37e9cca55}
       \strng{bibnamehash}{b2106a3dda6c5a4879a0cab37e9cca55}
       \strng{authorbibnamehash}{b2106a3dda6c5a4879a0cab37e9cca55}
       \strng{authornamehash}{b2106a3dda6c5a4879a0cab37e9cca55}
       \strng{authorfullhash}{b2106a3dda6c5a4879a0cab37e9cca55}
+      \strng{authorfullhashraw}{b2106a3dda6c5a4879a0cab37e9cca55}
       \field{extraname}{4}
       \field{labelalpha}{Ali05}
       \field{sortinit}{A}
@@ -708,10 +726,12 @@ my $isbn1 = q|    \entry{isbn1}{misc}{}
       }
       \strng{namehash}{f6595ccb9db5f634e7bb242a3f78e5f9}
       \strng{fullhash}{f6595ccb9db5f634e7bb242a3f78e5f9}
+      \strng{fullhashraw}{f6595ccb9db5f634e7bb242a3f78e5f9}
       \strng{bibnamehash}{f6595ccb9db5f634e7bb242a3f78e5f9}
       \strng{authorbibnamehash}{f6595ccb9db5f634e7bb242a3f78e5f9}
       \strng{authornamehash}{f6595ccb9db5f634e7bb242a3f78e5f9}
       \strng{authorfullhash}{f6595ccb9db5f634e7bb242a3f78e5f9}
+      \strng{authorfullhashraw}{f6595ccb9db5f634e7bb242a3f78e5f9}
       \field{extraname}{1}
       \field{labelalpha}{Flu}
       \field{sortinit}{F}
@@ -733,10 +753,12 @@ my $isbn2 = q|    \entry{isbn2}{misc}{}
       }
       \strng{namehash}{f6595ccb9db5f634e7bb242a3f78e5f9}
       \strng{fullhash}{f6595ccb9db5f634e7bb242a3f78e5f9}
+      \strng{fullhashraw}{f6595ccb9db5f634e7bb242a3f78e5f9}
       \strng{bibnamehash}{f6595ccb9db5f634e7bb242a3f78e5f9}
       \strng{authorbibnamehash}{f6595ccb9db5f634e7bb242a3f78e5f9}
       \strng{authornamehash}{f6595ccb9db5f634e7bb242a3f78e5f9}
       \strng{authorfullhash}{f6595ccb9db5f634e7bb242a3f78e5f9}
+      \strng{authorfullhashraw}{f6595ccb9db5f634e7bb242a3f78e5f9}
       \field{extraname}{2}
       \field{labelalpha}{Flu}
       \field{sortinit}{F}
@@ -776,10 +798,12 @@ my $clone1 = q|    \entry{snk1}{book}{}
       }
       \strng{namehash}{83330b0520b5d4ea57529a23b404d43d}
       \strng{fullhash}{83330b0520b5d4ea57529a23b404d43d}
+      \strng{fullhashraw}{83330b0520b5d4ea57529a23b404d43d}
       \strng{bibnamehash}{83330b0520b5d4ea57529a23b404d43d}
       \strng{authorbibnamehash}{83330b0520b5d4ea57529a23b404d43d}
       \strng{authornamehash}{83330b0520b5d4ea57529a23b404d43d}
       \strng{authorfullhash}{83330b0520b5d4ea57529a23b404d43d}
+      \strng{authorfullhashraw}{83330b0520b5d4ea57529a23b404d43d}
       \field{extraname}{2}
       \field{labelalpha}{vDoe}
       \field{sortinit}{v}
@@ -805,10 +829,12 @@ my $clone2 = q|    \entry{clone-snk1}{book}{}
       }
       \strng{namehash}{83330b0520b5d4ea57529a23b404d43d}
       \strng{fullhash}{83330b0520b5d4ea57529a23b404d43d}
+      \strng{fullhashraw}{83330b0520b5d4ea57529a23b404d43d}
       \strng{bibnamehash}{83330b0520b5d4ea57529a23b404d43d}
       \strng{authorbibnamehash}{83330b0520b5d4ea57529a23b404d43d}
       \strng{authornamehash}{83330b0520b5d4ea57529a23b404d43d}
       \strng{authorfullhash}{83330b0520b5d4ea57529a23b404d43d}
+      \strng{authorfullhashraw}{83330b0520b5d4ea57529a23b404d43d}
       \field{extraname}{1}
       \field{labelalpha}{vDoe}
       \field{sortinit}{v}
@@ -838,10 +864,12 @@ my $ent1 = q|    \entry{ent1}{book}{}
       }
       \strng{namehash}{b2536a425d549b46de5f21c4d468050a}
       \strng{fullhash}{b2536a425d549b46de5f21c4d468050a}
+      \strng{fullhashraw}{b2536a425d549b46de5f21c4d468050a}
       \strng{bibnamehash}{b2536a425d549b46de5f21c4d468050a}
       \strng{authorbibnamehash}{b2536a425d549b46de5f21c4d468050a}
       \strng{authornamehash}{b2536a425d549b46de5f21c4d468050a}
       \strng{authorfullhash}{b2536a425d549b46de5f21c4d468050a}
+      \strng{authorfullhashraw}{b2536a425d549b46de5f21c4d468050a}
       \field{labelalpha}{SdB}
       \field{sortinit}{S}
       \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
@@ -861,10 +889,12 @@ my $verb1 = q|    \entry{verb1}{book}{}
       }
       \strng{namehash}{cac5a25f503e71f5ef28f474e14007b6}
       \strng{fullhash}{cac5a25f503e71f5ef28f474e14007b6}
+      \strng{fullhashraw}{cac5a25f503e71f5ef28f474e14007b6}
       \strng{bibnamehash}{cac5a25f503e71f5ef28f474e14007b6}
       \strng{authorbibnamehash}{cac5a25f503e71f5ef28f474e14007b6}
       \strng{authornamehash}{cac5a25f503e71f5ef28f474e14007b6}
       \strng{authorfullhash}{cac5a25f503e71f5ef28f474e14007b6}
+      \strng{authorfullhashraw}{cac5a25f503e71f5ef28f474e14007b6}
       \field{labelalpha}{All}
       \field{sortinit}{A}
       \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}

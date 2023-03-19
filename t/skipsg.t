@@ -58,10 +58,12 @@ my $S1 = q|    \entry{S1}{book}{skipbib=false,skipbiblist=false,skiplab=false}
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{fullhashraw}{8c77336299b25bdada7bf8038f46722f}
       \strng{bibnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{authorbibnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{authornamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{authorfullhash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{authorfullhashraw}{8c77336299b25bdada7bf8038f46722f}
       \field{extraname}{1}
       \field{labelalpha}{DA95}
       \field{sortinit}{D}
@@ -95,10 +97,12 @@ my $S2 = q|    \entry{S2}{book}{skipbib=false,skiplab=false}
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{fullhashraw}{8c77336299b25bdada7bf8038f46722f}
       \strng{bibnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{authorbibnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{authornamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{authorfullhash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{authorfullhashraw}{8c77336299b25bdada7bf8038f46722f}
       \field{extraname}{2}
       \field{labelalpha}{DA95}
       \field{sortinit}{D}
@@ -132,10 +136,12 @@ my $S3 = q|    \entry{S3}{book}{}
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{fullhashraw}{8c77336299b25bdada7bf8038f46722f}
       \strng{bibnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{authorbibnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{authornamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{authorfullhash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{authorfullhashraw}{8c77336299b25bdada7bf8038f46722f}
       \field{sortinit}{D}
       \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
       \field{labeldatesource}{}

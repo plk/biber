@@ -83,10 +83,12 @@ my $l13c = q|    \entry{L13}{book}{}
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{fullhashraw}{8c77336299b25bdada7bf8038f46722f}
       \strng{bibnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{authorbibnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{authornamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{authorfullhash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{authorfullhashraw}{8c77336299b25bdada7bf8038f46722f}
       \field{extraname}{3}
       \field{sortinit}{D}
       \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
@@ -121,10 +123,12 @@ my $l14 = q|    \entry{L14}{book}{}
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{fullhashraw}{8c77336299b25bdada7bf8038f46722f}
       \strng{bibnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{authorbibnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{authornamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{authorfullhash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{authorfullhashraw}{8c77336299b25bdada7bf8038f46722f}
       \field{extraname}{4}
       \field{sortinit}{D}
       \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
@@ -163,10 +167,12 @@ my $l15 = q|    \entry{L15}{book}{}
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{fullhashraw}{8c77336299b25bdada7bf8038f46722f}
       \strng{bibnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{authorbibnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{authornamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{authorfullhash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{authorfullhashraw}{8c77336299b25bdada7bf8038f46722f}
       \field{extraname}{12}
       \field{sortinit}{D}
       \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
@@ -196,10 +202,12 @@ my $l16 = q|    \entry{L16}{proceedings}{}
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{fullhashraw}{8c77336299b25bdada7bf8038f46722f}
       \strng{bibnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{editorbibnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{editornamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{editorfullhash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{editorfullhashraw}{8c77336299b25bdada7bf8038f46722f}
       \field{extraname}{13}
       \field{sortinit}{D}
       \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
@@ -235,10 +243,12 @@ my $l17 = q|    \entry{L17}{proceedings}{}
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{fullhashraw}{8c77336299b25bdada7bf8038f46722f}
       \strng{bibnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{editorbibnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{editornamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{editorfullhash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{editorfullhashraw}{8c77336299b25bdada7bf8038f46722f}
       \field{extraname}{5}
       \field{sortinit}{D}
       \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
@@ -294,10 +304,12 @@ my $l17c = q|    \entry{L17}{proceedings}{}
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{fullhashraw}{8c77336299b25bdada7bf8038f46722f}
       \strng{bibnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{editorbibnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{editornamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{editorfullhash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{editorfullhashraw}{8c77336299b25bdada7bf8038f46722f}
       \field{extraname}{5}
       \field{sortinit}{D}
       \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
@@ -352,10 +364,12 @@ my $l17e = q|    \entry{L17}{proceedings}{}
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{fullhashraw}{8c77336299b25bdada7bf8038f46722f}
       \strng{bibnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{editorbibnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{editornamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{editorfullhash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{editorfullhashraw}{8c77336299b25bdada7bf8038f46722f}
       \field{extraname}{5}
       \field{sortinit}{D}
       \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
@@ -474,10 +488,12 @@ my $era1 = q|    \entry{era1}{article}{}
       }
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{fullhashraw}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{bibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authorbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authornamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authorfullhashraw}{556c8dba145b472e6a8598d506f7cbe2}
       \field{extraname}{9}
       \field{sortinit}{S}
       \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
@@ -507,10 +523,12 @@ my $era2 = q|    \entry{era2}{inproceedings}{}
       }
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{fullhashraw}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{bibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authorbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authornamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authorfullhashraw}{556c8dba145b472e6a8598d506f7cbe2}
       \field{extraname}{10}
       \field{sortinit}{S}
       \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
@@ -541,10 +559,12 @@ my $era3 = q|    \entry{era3}{inproceedings}{}
       }
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{fullhashraw}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{bibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authorbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authornamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authorfullhashraw}{556c8dba145b472e6a8598d506f7cbe2}
       \field{extraname}{11}
       \field{sortinit}{S}
       \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
@@ -575,10 +595,12 @@ my $era4 = q|    \entry{era4}{inproceedings}{}
       }
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{fullhashraw}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{bibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authorbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authornamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authorfullhashraw}{556c8dba145b472e6a8598d506f7cbe2}
       \field{extraname}{6}
       \field{sortinit}{S}
       \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
@@ -617,10 +639,12 @@ my $time1 = q|    \entry{time1}{article}{}
       }
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{fullhashraw}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{bibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authorbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authornamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authorfullhashraw}{556c8dba145b472e6a8598d506f7cbe2}
       \field{extraname}{2}
       \field{sortinit}{S}
       \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
@@ -666,10 +690,12 @@ my $range1 = q|    \entry{range1}{inproceedings}{}
       }
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{fullhashraw}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{bibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authorbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authornamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authorfullhashraw}{556c8dba145b472e6a8598d506f7cbe2}
       \field{extraname}{7}
       \field{sortinit}{S}
       \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
@@ -707,10 +733,12 @@ my $range2 = q|    \entry{range2}{inproceedings}{}
       }
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{fullhashraw}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{bibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authorbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authornamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authorfullhashraw}{556c8dba145b472e6a8598d506f7cbe2}
       \field{extraname}{8}
       \field{sortinit}{S}
       \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
@@ -748,10 +776,12 @@ my $season1 = q|    \entry{season1}{inproceedings}{}
       }
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{fullhashraw}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{bibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authorbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authornamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authorfullhashraw}{556c8dba145b472e6a8598d506f7cbe2}
       \field{extraname}{1}
       \field{sortinit}{S}
       \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
@@ -780,10 +810,12 @@ my $unspec1 = q|    \entry{unspec1}{inproceedings}{}
       }
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{fullhashraw}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{bibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authorbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authornamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authorfullhashraw}{556c8dba145b472e6a8598d506f7cbe2}
       \field{extraname}{4}
       \field{sortinit}{S}
       \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
@@ -833,10 +865,12 @@ my $unspec2 = q|    \entry{unspec2}{article}{}
       }
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{fullhashraw}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{bibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authorbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authornamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authorfullhashraw}{556c8dba145b472e6a8598d506f7cbe2}
       \field{extraname}{3}
       \field{sortinit}{S}
       \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}

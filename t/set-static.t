@@ -63,10 +63,12 @@ my $string2 = q|    \entry{Static2}{book}{skipbib=true,skipbiblist=true,skiplab=
       }
       \strng{namehash}{43874d80d7ce68027102819f16c47df1}
       \strng{fullhash}{43874d80d7ce68027102819f16c47df1}
+      \strng{fullhashraw}{43874d80d7ce68027102819f16c47df1}
       \strng{bibnamehash}{43874d80d7ce68027102819f16c47df1}
       \strng{authorbibnamehash}{43874d80d7ce68027102819f16c47df1}
       \strng{authornamehash}{43874d80d7ce68027102819f16c47df1}
       \strng{authorfullhash}{43874d80d7ce68027102819f16c47df1}
+      \strng{authorfullhashraw}{43874d80d7ce68027102819f16c47df1}
       \field{sortinit}{B}
       \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
       \field{labeldatesource}{}
@@ -89,10 +91,12 @@ my $string3 = q|    \entry{Static3}{book}{skipbib=true,skipbiblist=true,skiplab=
       }
       \strng{namehash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
       \strng{fullhash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
+      \strng{fullhashraw}{22dafa5cd57bb5dd7f3e3bab98fd539c}
       \strng{bibnamehash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
       \strng{authorbibnamehash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
       \strng{authornamehash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
       \strng{authorfullhash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
+      \strng{authorfullhashraw}{22dafa5cd57bb5dd7f3e3bab98fd539c}
       \field{sortinit}{D}
       \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
       \field{labeldatesource}{}
@@ -114,10 +118,12 @@ my $string4 = q|    \entry{Static4}{book}{skipbib=true,skipbiblist=true,skiplab=
       }
       \strng{namehash}{da80091c8cd89e5269bd55af1bd5d2fa}
       \strng{fullhash}{da80091c8cd89e5269bd55af1bd5d2fa}
+      \strng{fullhashraw}{da80091c8cd89e5269bd55af1bd5d2fa}
       \strng{bibnamehash}{da80091c8cd89e5269bd55af1bd5d2fa}
       \strng{authorbibnamehash}{da80091c8cd89e5269bd55af1bd5d2fa}
       \strng{authornamehash}{da80091c8cd89e5269bd55af1bd5d2fa}
       \strng{authorfullhash}{da80091c8cd89e5269bd55af1bd5d2fa}
+      \strng{authorfullhashraw}{da80091c8cd89e5269bd55af1bd5d2fa}
       \field{sortinit}{C}
       \field{sortinithash}{4d103a86280481745c9c897c925753c0}
       \field{labeldatesource}{}
@@ -140,10 +146,12 @@ my $string5 = q|    \entry{Static2}{book}{}
       }
       \strng{namehash}{43874d80d7ce68027102819f16c47df1}
       \strng{fullhash}{43874d80d7ce68027102819f16c47df1}
+      \strng{fullhashraw}{43874d80d7ce68027102819f16c47df1}
       \strng{bibnamehash}{43874d80d7ce68027102819f16c47df1}
       \strng{authorbibnamehash}{43874d80d7ce68027102819f16c47df1}
       \strng{authornamehash}{43874d80d7ce68027102819f16c47df1}
       \strng{authorfullhash}{43874d80d7ce68027102819f16c47df1}
+      \strng{authorfullhashraw}{43874d80d7ce68027102819f16c47df1}
       \field{sortinit}{1}
       \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
       \field{extradatescope}{labelyear}

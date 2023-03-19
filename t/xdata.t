@@ -73,10 +73,12 @@ my $xd1 = q|    \entry{xd1}{book}{}
       }
       \strng{namehash}{51db4bfd331cba22959ce2d224c517cd}
       \strng{fullhash}{51db4bfd331cba22959ce2d224c517cd}
+      \strng{fullhashraw}{51db4bfd331cba22959ce2d224c517cd}
       \strng{bibnamehash}{51db4bfd331cba22959ce2d224c517cd}
       \strng{authorbibnamehash}{51db4bfd331cba22959ce2d224c517cd}
       \strng{authornamehash}{51db4bfd331cba22959ce2d224c517cd}
       \strng{authorfullhash}{51db4bfd331cba22959ce2d224c517cd}
+      \strng{authorfullhashraw}{51db4bfd331cba22959ce2d224c517cd}
       \field{extraname}{2}
       \field{sortinit}{E}
       \field{sortinithash}{8da8a182d344d5b9047633dfc0cc9131}
@@ -107,10 +109,12 @@ my $xd2 = q|    \entry{xd2}{book}{}
       }
       \strng{namehash}{68539e0ce4922cc4957c6cabf35e6fc8}
       \strng{fullhash}{68539e0ce4922cc4957c6cabf35e6fc8}
+      \strng{fullhashraw}{68539e0ce4922cc4957c6cabf35e6fc8}
       \strng{bibnamehash}{68539e0ce4922cc4957c6cabf35e6fc8}
       \strng{authorbibnamehash}{68539e0ce4922cc4957c6cabf35e6fc8}
       \strng{authornamehash}{68539e0ce4922cc4957c6cabf35e6fc8}
       \strng{authorfullhash}{68539e0ce4922cc4957c6cabf35e6fc8}
+      \strng{authorfullhashraw}{68539e0ce4922cc4957c6cabf35e6fc8}
       \field{sortinit}{P}
       \field{sortinithash}{ff3bcf24f47321b42cb156c2cc8a8422}
       \field{extradatescope}{labelyear}
@@ -168,19 +172,24 @@ my $gxd1 = q|    \entry{gxd1}{book}{}
       }
       \strng{namehash}{167d3a67f6ee19fe4d131fc34dcd9ede}
       \strng{fullhash}{167d3a67f6ee19fe4d131fc34dcd9ede}
+      \strng{fullhashraw}{167d3a67f6ee19fe4d131fc34dcd9ede}
       \strng{bibnamehash}{167d3a67f6ee19fe4d131fc34dcd9ede}
       \strng{authorbibnamehash}{167d3a67f6ee19fe4d131fc34dcd9ede}
       \strng{authornamehash}{167d3a67f6ee19fe4d131fc34dcd9ede}
       \strng{authorfullhash}{167d3a67f6ee19fe4d131fc34dcd9ede}
+      \strng{authorfullhashraw}{167d3a67f6ee19fe4d131fc34dcd9ede}
       \strng{editorbibnamehash}{6238b302317c6baeba56035f2c4998c9}
       \strng{editornamehash}{6238b302317c6baeba56035f2c4998c9}
       \strng{editorfullhash}{6238b302317c6baeba56035f2c4998c9}
+      \strng{editorfullhashraw}{6238b302317c6baeba56035f2c4998c9}
       \strng{nameabibnamehash}{d41d8cd98f00b204e9800998ecf8427e}
       \strng{nameanamehash}{d41d8cd98f00b204e9800998ecf8427e}
       \strng{nameafullhash}{d41d8cd98f00b204e9800998ecf8427e}
+      \strng{nameafullhashraw}{d41d8cd98f00b204e9800998ecf8427e}
       \strng{translatorbibnamehash}{d41d8cd98f00b204e9800998ecf8427e}
       \strng{translatornamehash}{d41d8cd98f00b204e9800998ecf8427e}
       \strng{translatorfullhash}{d41d8cd98f00b204e9800998ecf8427e}
+      \strng{translatorfullhashraw}{d41d8cd98f00b204e9800998ecf8427e}
       \field{sortinit}{S}
       \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
       \field{labelnamesource}{author}
@@ -247,19 +256,24 @@ my $gxd1g = q|    \entry{gxd1g}{book}{}
       }
       \strng{namehash}{9fd3d5e0bec66ae3baacf58cf747485a}
       \strng{fullhash}{9fd3d5e0bec66ae3baacf58cf747485a}
+      \strng{fullhashraw}{9fd3d5e0bec66ae3baacf58cf747485a}
       \strng{bibnamehash}{9fd3d5e0bec66ae3baacf58cf747485a}
       \strng{authorbibnamehash}{9fd3d5e0bec66ae3baacf58cf747485a}
       \strng{authornamehash}{9fd3d5e0bec66ae3baacf58cf747485a}
       \strng{authorfullhash}{9fd3d5e0bec66ae3baacf58cf747485a}
+      \strng{authorfullhashraw}{9fd3d5e0bec66ae3baacf58cf747485a}
       \strng{editorbibnamehash}{6238b302317c6baeba56035f2c4998c9}
       \strng{editornamehash}{6238b302317c6baeba56035f2c4998c9}
       \strng{editorfullhash}{6238b302317c6baeba56035f2c4998c9}
+      \strng{editorfullhashraw}{6238b302317c6baeba56035f2c4998c9}
       \strng{nameabibnamehash}{d41d8cd98f00b204e9800998ecf8427e}
       \strng{nameanamehash}{d41d8cd98f00b204e9800998ecf8427e}
       \strng{nameafullhash}{d41d8cd98f00b204e9800998ecf8427e}
+      \strng{nameafullhashraw}{d41d8cd98f00b204e9800998ecf8427e}
       \strng{translatorbibnamehash}{d41d8cd98f00b204e9800998ecf8427e}
       \strng{translatornamehash}{d41d8cd98f00b204e9800998ecf8427e}
       \strng{translatorfullhash}{d41d8cd98f00b204e9800998ecf8427e}
+      \strng{translatorfullhashraw}{d41d8cd98f00b204e9800998ecf8427e}
       \field{sortinit}{S}
       \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
       \field{labelnamesource}{author}
@@ -316,16 +330,20 @@ my $bltxgxd1 = q|    \entry{bltxgxd1}{book}{}
       }
       \strng{namehash}{f3cbd0df6512c5a3653f60e9e9849c69}
       \strng{fullhash}{f3cbd0df6512c5a3653f60e9e9849c69}
+      \strng{fullhashraw}{f3cbd0df6512c5a3653f60e9e9849c69}
       \strng{bibnamehash}{f3cbd0df6512c5a3653f60e9e9849c69}
       \strng{authorbibnamehash}{f3cbd0df6512c5a3653f60e9e9849c69}
       \strng{authornamehash}{f3cbd0df6512c5a3653f60e9e9849c69}
       \strng{authorfullhash}{f3cbd0df6512c5a3653f60e9e9849c69}
+      \strng{authorfullhashraw}{f3cbd0df6512c5a3653f60e9e9849c69}
       \strng{editorbibnamehash}{c8eb0270ad4e434f36dca28e219e81a8}
       \strng{editornamehash}{c8eb0270ad4e434f36dca28e219e81a8}
       \strng{editorfullhash}{c8eb0270ad4e434f36dca28e219e81a8}
+      \strng{editorfullhashraw}{c8eb0270ad4e434f36dca28e219e81a8}
       \strng{translatorbibnamehash}{d41d8cd98f00b204e9800998ecf8427e}
       \strng{translatornamehash}{d41d8cd98f00b204e9800998ecf8427e}
       \strng{translatorfullhash}{d41d8cd98f00b204e9800998ecf8427e}
+      \strng{translatorfullhashraw}{d41d8cd98f00b204e9800998ecf8427e}
       \field{sortinit}{B}
       \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
       \field{labelnamesource}{author}

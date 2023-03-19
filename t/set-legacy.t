@@ -60,10 +60,12 @@ my $string2 = q|    \entry{Elias1955a}{article}{skipbib=true,skipbiblist=true,sk
       }
       \strng{namehash}{68f587f427e068e26043d54745351d58}
       \strng{fullhash}{68f587f427e068e26043d54745351d58}
+      \strng{fullhashraw}{68f587f427e068e26043d54745351d58}
       \strng{bibnamehash}{68f587f427e068e26043d54745351d58}
       \strng{authorbibnamehash}{68f587f427e068e26043d54745351d58}
       \strng{authornamehash}{68f587f427e068e26043d54745351d58}
       \strng{authorfullhash}{68f587f427e068e26043d54745351d58}
+      \strng{authorfullhashraw}{68f587f427e068e26043d54745351d58}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -94,10 +96,12 @@ my $string3 = q|    \entry{Elias1955b}{article}{skipbib=true,skipbiblist=true,sk
       }
       \strng{namehash}{68f587f427e068e26043d54745351d58}
       \strng{fullhash}{68f587f427e068e26043d54745351d58}
+      \strng{fullhashraw}{68f587f427e068e26043d54745351d58}
       \strng{bibnamehash}{68f587f427e068e26043d54745351d58}
       \strng{authorbibnamehash}{68f587f427e068e26043d54745351d58}
       \strng{authornamehash}{68f587f427e068e26043d54745351d58}
       \strng{authorfullhash}{68f587f427e068e26043d54745351d58}
+      \strng{authorfullhashraw}{68f587f427e068e26043d54745351d58}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}

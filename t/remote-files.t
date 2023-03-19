@@ -69,10 +69,12 @@ my $dl1 = q|    \entry{AbdelbarH98}{article}{}
       }
       \strng{namehash}{bb887c5d0458bfb1f3f7e6afc8d1def4}
       \strng{fullhash}{bb887c5d0458bfb1f3f7e6afc8d1def4}
+      \strng{fullhashraw}{bb887c5d0458bfb1f3f7e6afc8d1def4}
       \strng{bibnamehash}{bb887c5d0458bfb1f3f7e6afc8d1def4}
       \strng{authorbibnamehash}{bb887c5d0458bfb1f3f7e6afc8d1def4}
       \strng{authornamehash}{bb887c5d0458bfb1f3f7e6afc8d1def4}
       \strng{authorfullhash}{bb887c5d0458bfb1f3f7e6afc8d1def4}
+      \strng{authorfullhashraw}{bb887c5d0458bfb1f3f7e6afc8d1def4}
       \field{sortinit}{A}
       \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
       \field{extradatescope}{labelyear}

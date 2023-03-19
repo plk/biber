@@ -1967,9 +1967,6 @@ sub process_entries_static {
     # generate labeltitle name
     $self->process_labeltitle($citekey);
 
-    # generate fullhash
-    $self->process_fullhash($citekey);
-
     # push entry-specific presort fields into the presort state
     $self->process_presort($citekey);
   }
@@ -2040,6 +2037,9 @@ sub process_entries_post {
     $logger->debug("Postprocessing entries in section $secnum (after uniqueness)");
   }
   foreach my $citekey ( $section->get_citekeys ) {
+
+    # generate fullhashes
+    $self->process_fullhash($citekey, $dlist);
 
     # generate labelalpha information
     $self->process_labelalpha($citekey, $dlist);
@@ -2178,7 +2178,7 @@ sub process_workuniqueness {
   # Don't generate information for entries with no labelname or labeltitle
   # Use fullhash as this is not a test of uniqueness of only visible information
   if ($lni and Biber::Config->getblxoption(undef, 'singletitle', $bee, $citekey)) {
-    $identifier = $self->_getfullhash($citekey, $be->get_field($lni));
+    $identifier = $self->_getfullhash($citekey, $be->get_field($lni), $dlist);
 
     # Skip due to ignore settings?
     # Don't count towards singletitle being false if both labelname and labeltitle
@@ -2220,7 +2220,7 @@ sub process_workuniqueness {
   # Don't generate information for entries with no labelname and labeltitle
   # Should use fullhash this is not a test of uniqueness of only visible information
   if ($lni and $lti and Biber::Config->getblxoption(undef, 'uniquework', $bee, $citekey)) {
-    $identifier = $self->_getfullhash($citekey, $be->get_field($lni)) . $be->get_field($lti);
+    $identifier = $self->_getfullhash($citekey, $be->get_field($lni), $dlist) . $be->get_field($lti);
 
     # Skip due to ignore settings?
     unless (first {fc($lni) eq fc($_)} $ignore->{uniquework}->@* and
@@ -2561,8 +2561,7 @@ sub process_labelname {
   }
 
   # Then we loop again to set the labelname name for the fullhash generation code
-  # This is because fullhash generation ignores SHORT* fields (section 4.2.4.1, BibLaTeX
-  # manual)
+  # This is because fullhash generation ignores SHORT* fields
   foreach my $h_ln ($lnamespec->@*) {
     my $ln = $h_ln->{content};
     if ( $ln =~ /\Ashort(.+)\z/xms ) {
@@ -2775,8 +2774,7 @@ sub process_labeltitle {
 =cut
 
 sub process_fullhash {
-  my $self = shift;
-  my $citekey = shift;
+  my ($self, $citekey, $dlist) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
@@ -2788,14 +2786,16 @@ sub process_fullhash {
   # and also SHORT* fields etc.
   if (my $lnfhi = $be->get_labelnamefh_info) {
     if (my $lnfh = $be->get_field($lnfhi)) {
-      $be->set_field('fullhash', $self->_getfullhash($citekey, $lnfh));
+      $dlist->set_entryfield($citekey, 'fullhash', $self->_getfullhash($citekey, $lnfh, $dlist));
+      $dlist->set_entryfield($citekey, 'fullhashraw', $self->_getfullhash_s($citekey, $lnfh, $dlist));
     }
   }
 
   # Generate fullhash for all other name fields
   foreach my $n ($dmh->{namelistsall}->@*) {
     next unless my $nv = $be->get_field($n);
-    $be->set_field("${n}fullhash", $self->_getfullhash($citekey, $nv));
+    $dlist->set_entryfield($citekey, "${n}fullhash", $self->_getfullhash($citekey, $nv, $dlist));
+    $dlist->set_entryfield($citekey, "${n}fullhashraw", $self->_getfullhash_s($citekey, $nv, $dlist));
   }
 
   return;

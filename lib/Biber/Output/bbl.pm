@@ -340,19 +340,17 @@ sub set_output_entry {
 
   # Output labelname hashes
   $acc .= "      <BDS>NAMEHASH</BDS>\n";
-  my $fullhash = $be->get_field('fullhash');
-  $acc .= "      \\strng{fullhash}{$fullhash}\n" if $fullhash;
+  $acc .= "      <BDS>FULLHASH</BDS>\n";
+  $acc .= "      <BDS>FULLHASHRAW</BDS>\n";
   $acc .= "      <BDS>BIBNAMEHASH</BDS>\n";
-
 
   # Output namelist hashes
   foreach my $namefield ($dmh->{namelists}->@*) {
     next unless $be->get_field($namefield);
     $acc .= "      <BDS>${namefield}BIBNAMEHASH</BDS>\n";
     $acc .= "      <BDS>${namefield}NAMEHASH</BDS>\n";
-    if (my $fullhash = $be->get_field("${namefield}fullhash")) {
-      $acc .= "      \\strng{${namefield}fullhash}{$fullhash}\n";
-    }
+    $acc .= "      <BDS>${namefield}FULLHASH</BDS>\n";
+    $acc .= "      <BDS>${namefield}FULLHASHRAW</BDS>\n";
   }
 
   # Output extraname if there is a labelname

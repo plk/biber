@@ -1936,8 +1936,32 @@ sub instantiate_entry {
       if (my $e = $self->get_entryfield($key, "${namefield}namehash")) {
         my $str = "\\strng{${namefield}namehash}{$e}";
         $entry_string =~ s|<BDS>${namefield}NAMEHASH</BDS>|$str|gxms;
-
       }
+
+      # per-namelist fullhash
+      if (my $e = $self->get_entryfield($key, "${namefield}fullhash")) {
+        my $str = "\\strng{${namefield}fullhash}{$e}";
+        $entry_string =~ s|<BDS>${namefield}FULLHASH</BDS>|$str|gxms;
+      }
+
+      # per-namelist fullhashraw
+      if (my $e = $self->get_entryfield($key, "${namefield}fullhashraw")) {
+        my $str = "\\strng{${namefield}fullhashraw}{$e}";
+        $entry_string =~ s|<BDS>${namefield}FULLHASHRAW</BDS>|$str|gxms;
+      }
+
+    }
+
+    # fullhash
+    if (my $e = $self->get_entryfield($key, 'fullhash')) {
+      my $str = "\\strng{fullhash}{$e}";
+      $entry_string =~ s|<BDS>FULLHASH</BDS>|$str|gxms;
+    }
+
+    # fullhashraw
+    if (my $e = $self->get_entryfield($key, 'fullhashraw')) {
+      my $str = "\\strng{fullhashraw}{$e}";
+      $entry_string =~ s|<BDS>FULLHASHRAW</BDS>|$str|gxms;
     }
 
     # bibnamehash

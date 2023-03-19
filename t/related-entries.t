@@ -50,10 +50,12 @@ my $k1 = q|    \entry{key1}{article}{}
       }
       \strng{namehash}{a517747c3d12f99244ae598910d979c5}
       \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
+      \strng{fullhashraw}{a517747c3d12f99244ae598910d979c5}
       \strng{bibnamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authorbibnamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authornamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authorfullhash}{a517747c3d12f99244ae598910d979c5}
+      \strng{authorfullhashraw}{a517747c3d12f99244ae598910d979c5}
       \field{extraname}{1}
       \field{sortinit}{1}
       \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
@@ -89,10 +91,12 @@ my $k2 = q|    \entry{key2}{inbook}{}
       }
       \strng{namehash}{a517747c3d12f99244ae598910d979c5}
       \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
+      \strng{fullhashraw}{a517747c3d12f99244ae598910d979c5}
       \strng{bibnamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authorbibnamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authornamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authorfullhash}{a517747c3d12f99244ae598910d979c5}
+      \strng{authorfullhashraw}{a517747c3d12f99244ae598910d979c5}
       \field{extraname}{2}
       \field{sortinit}{2}
       \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
@@ -124,10 +128,12 @@ my $kck1 = q|    \entry{c2add694bf942dc77b376592d9c862cd}{article}{skipbib=true,
       }
       \strng{namehash}{a517747c3d12f99244ae598910d979c5}
       \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
+      \strng{fullhashraw}{a517747c3d12f99244ae598910d979c5}
       \strng{bibnamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authorbibnamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authornamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authorfullhash}{a517747c3d12f99244ae598910d979c5}
+      \strng{authorfullhashraw}{a517747c3d12f99244ae598910d979c5}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -160,10 +166,12 @@ my $kck2 = q|    \entry{78f825aaa0103319aaa1a30bf4fe3ada}{inbook}{skipbib=true,s
       }
       \strng{namehash}{a517747c3d12f99244ae598910d979c5}
       \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
+      \strng{fullhashraw}{a517747c3d12f99244ae598910d979c5}
       \strng{bibnamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authorbibnamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authornamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authorfullhash}{a517747c3d12f99244ae598910d979c5}
+      \strng{authorfullhashraw}{a517747c3d12f99244ae598910d979c5}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -197,10 +205,12 @@ my $kck3 = q|    \entry{3631578538a2d6ba5879b31a9a42f290}{inbook}{skipbib=true,s
       }
       \strng{namehash}{a517747c3d12f99244ae598910d979c5}
       \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
+      \strng{fullhashraw}{a517747c3d12f99244ae598910d979c5}
       \strng{bibnamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authorbibnamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authornamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authorfullhash}{a517747c3d12f99244ae598910d979c5}
+      \strng{authorfullhashraw}{a517747c3d12f99244ae598910d979c5}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -233,10 +243,12 @@ my $kck4 = q|    \entry{caf8e34be07426ae7127c1b4829983c1}{inbook}{skipbib=true,s
       }
       \strng{namehash}{a517747c3d12f99244ae598910d979c5}
       \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
+      \strng{fullhashraw}{a517747c3d12f99244ae598910d979c5}
       \strng{bibnamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authorbibnamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authornamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authorfullhash}{a517747c3d12f99244ae598910d979c5}
+      \strng{authorfullhashraw}{a517747c3d12f99244ae598910d979c5}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -279,10 +291,12 @@ my $s1 = q|    \entry{8ddf878039b70767c4a5bcf4f0c4f65e}{book}{skipbib=false,skip
       }
       \strng{namehash}{a517747c3d12f99244ae598910d979c5}
       \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
+      \strng{fullhashraw}{a517747c3d12f99244ae598910d979c5}
       \strng{bibnamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authorbibnamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authornamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authorfullhash}{a517747c3d12f99244ae598910d979c5}
+      \strng{authorfullhashraw}{a517747c3d12f99244ae598910d979c5}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{clonesourcekey}{s1}
@@ -335,10 +349,12 @@ my $un1 = q|    \entry{kullback}{book}{}
       }
       \strng{namehash}{34c5bbf9876c37127c3abe4e7d7a7198}
       \strng{fullhash}{34c5bbf9876c37127c3abe4e7d7a7198}
+      \strng{fullhashraw}{34c5bbf9876c37127c3abe4e7d7a7198}
       \strng{bibnamehash}{34c5bbf9876c37127c3abe4e7d7a7198}
       \strng{authorbibnamehash}{34c5bbf9876c37127c3abe4e7d7a7198}
       \strng{authornamehash}{34c5bbf9876c37127c3abe4e7d7a7198}
       \strng{authorfullhash}{34c5bbf9876c37127c3abe4e7d7a7198}
+      \strng{authorfullhashraw}{34c5bbf9876c37127c3abe4e7d7a7198}
       \field{extraname}{1}
       \field{sortinit}{5}
       \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
@@ -370,10 +386,12 @@ my $un2 = q|    \entry{kullback:related}{book}{}
       }
       \strng{namehash}{34c5bbf9876c37127c3abe4e7d7a7198}
       \strng{fullhash}{34c5bbf9876c37127c3abe4e7d7a7198}
+      \strng{fullhashraw}{34c5bbf9876c37127c3abe4e7d7a7198}
       \strng{bibnamehash}{34c5bbf9876c37127c3abe4e7d7a7198}
       \strng{authorbibnamehash}{34c5bbf9876c37127c3abe4e7d7a7198}
       \strng{authornamehash}{34c5bbf9876c37127c3abe4e7d7a7198}
       \strng{authorfullhash}{34c5bbf9876c37127c3abe4e7d7a7198}
+      \strng{authorfullhashraw}{34c5bbf9876c37127c3abe4e7d7a7198}
       \field{extraname}{2}
       \field{sortinit}{6}
       \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}

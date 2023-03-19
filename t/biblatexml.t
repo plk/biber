@@ -100,16 +100,20 @@ my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
       }
       \strng{namehash}{3400c73d7bf3e361d36350deb4832ad7}
       \strng{fullhash}{3400c73d7bf3e361d36350deb4832ad7}
+      \strng{fullhashraw}{3400c73d7bf3e361d36350deb4832ad7}
       \strng{bibnamehash}{3400c73d7bf3e361d36350deb4832ad7}
       \strng{authorbibnamehash}{3400c73d7bf3e361d36350deb4832ad7}
       \strng{authornamehash}{3400c73d7bf3e361d36350deb4832ad7}
       \strng{authorfullhash}{3400c73d7bf3e361d36350deb4832ad7}
+      \strng{authorfullhashraw}{3400c73d7bf3e361d36350deb4832ad7}
       \strng{forewordbibnamehash}{88354d4ba914f2ded2574386a2493996}
       \strng{forewordnamehash}{88354d4ba914f2ded2574386a2493996}
-      \strng{forewordfullhash}{a7a73749ea467229221b7e9cbf870988}
+      \strng{forewordfullhash}{88354d4ba914f2ded2574386a2493996}
+      \strng{forewordfullhashraw}{a7a73749ea467229221b7e9cbf870988}
       \strng{translatorbibnamehash}{b44eba830fe9817fbe8e53c82f1cbe04}
       \strng{translatornamehash}{b44eba830fe9817fbe8e53c82f1cbe04}
       \strng{translatorfullhash}{b44eba830fe9817fbe8e53c82f1cbe04}
+      \strng{translatorfullhashraw}{b44eba830fe9817fbe8e53c82f1cbe04}
       \field{sortinit}{v}
       \field{sortinithash}{afb52128e5b4dc4b843768c0113d673b}
       \field{extradatescope}{labelyear}

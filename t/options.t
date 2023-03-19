@@ -95,10 +95,12 @@ my $l1 = q|    \entry{L1}{book}{}
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{fullhashraw}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{bibnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{authorbibnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{authornamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{authorfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authorfullhashraw}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{sortinit}{D}
       \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
       \field{extradatescope}{labelyear}
@@ -132,10 +134,12 @@ my $l2 = q|    \entry{L2}{book}{maxalphanames=10,maxbibnames=3,maxcitenames=3,ma
       }
       \strng{namehash}{19eec87c959944d6d9c72434a42856ba}
       \strng{fullhash}{19eec87c959944d6d9c72434a42856ba}
+      \strng{fullhashraw}{19eec87c959944d6d9c72434a42856ba}
       \strng{bibnamehash}{19eec87c959944d6d9c72434a42856ba}
       \strng{authorbibnamehash}{19eec87c959944d6d9c72434a42856ba}
       \strng{authornamehash}{19eec87c959944d6d9c72434a42856ba}
       \strng{authorfullhash}{19eec87c959944d6d9c72434a42856ba}
+      \strng{authorfullhashraw}{19eec87c959944d6d9c72434a42856ba}
       \field{sortinit}{E}
       \field{sortinithash}{8da8a182d344d5b9047633dfc0cc9131}
       \field{extradatescope}{labelyear}
@@ -164,10 +168,12 @@ my $l3 = q|    \entry{L3}{book}{blah=10}
       }
       \strng{namehash}{490250da1f3b92580d97563dc96c6c84}
       \strng{fullhash}{490250da1f3b92580d97563dc96c6c84}
+      \strng{fullhashraw}{490250da1f3b92580d97563dc96c6c84}
       \strng{bibnamehash}{490250da1f3b92580d97563dc96c6c84}
       \strng{authorbibnamehash}{490250da1f3b92580d97563dc96c6c84}
       \strng{authornamehash}{490250da1f3b92580d97563dc96c6c84}
       \strng{authorfullhash}{490250da1f3b92580d97563dc96c6c84}
+      \strng{authorfullhashraw}{490250da1f3b92580d97563dc96c6c84}
       \field{sortinit}{B}
       \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
       \field{extradatescope}{labelyear}

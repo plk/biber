@@ -99,8 +99,56 @@ sub _getnamehash {
 }
 
 sub _getfullhash {
-  my ($self, $citekey, $names) = @_;
+  my ($self, $citekey, $names, $dlist) = @_;
   my $hashkey = '';
+  my $secnum = $self->get_current_section;
+  my $dm = Biber::Config->get_dm;
+  my @nps = $dm->get_constant_value('nameparts');
+
+  # refcontext or per-entry namehashtemplate
+  my $nhtname = Biber::Config->getblxoption($secnum, 'namehashtemplatename', undef, $citekey) // $dlist->get_namehashtemplatename;
+
+  # Per-namelist namehashtemplate
+  if (defined($names->get_namehashtemplatename)) {
+    $nhtname = $names->get_namehashtemplatename;
+  }
+
+  foreach my $n ($names->names->@*) {
+
+    # use user-defined hashid for hash generation if present
+    if (my $hid = $n->get_hashid) {
+      $hashkey .= $hid;
+      next;
+    }
+
+    # Per-name namehashtemplate
+    if (defined($n->get_namehashtemplatename)) {
+      $nhtname = $n->get_namehashtemplatename;
+    }
+
+    foreach my $nt (@nps) {# list type so returns list
+      if (my $np = $n->get_hash_namepart($nt,
+                                         Biber::Config->getblxoption($secnum, 'namehashtemplate')->{$nhtname})) {
+        $hashkey .= strip_nonamestring($np, $names->get_type);
+      }
+    }
+  }
+
+  # If we had an "and others"
+  if ($names->get_morenames) {
+    $hashkey .= '+'
+  }
+
+  # Digest::MD5 can't deal with straight UTF8 so encode it first (via NFC as this is "output")
+  return md5_hex(encode_utf8(NFC(normalise_string_hash($hashkey))));
+}
+
+# fullhash without any namehashtemplate. Basically a hash of all full nameparts present in the .bib,
+# after any sourcemaps, naturally
+sub _getfullhash_s {
+  my ($self, $citekey, $names, $dlist) = @_;
+  my $hashkey = '';
+  my $secnum = $self->get_current_section;
   my $dm = Biber::Config->get_dm;
   my @nps = $dm->get_constant_value('nameparts');
 

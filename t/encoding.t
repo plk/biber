@@ -67,10 +67,12 @@ my $encode1 = q|% $ biblatex auxiliary file $
       }
       \strng{namehash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
+      \strng{fullhashraw}{06a47edae2e847800cfd78323a0e6be8}
       \strng{bibnamehash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{authorbibnamehash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{authornamehash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{authorfullhash}{06a47edae2e847800cfd78323a0e6be8}
+      \strng{authorfullhashraw}{06a47edae2e847800cfd78323a0e6be8}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
       \field{sortinithash}{8da8a182d344d5b9047633dfc0cc9131}
@@ -123,10 +125,12 @@ my $encode2 = q|% $ biblatex auxiliary file $
       }
       \strng{namehash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
+      \strng{fullhashraw}{06a47edae2e847800cfd78323a0e6be8}
       \strng{bibnamehash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{authorbibnamehash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{authornamehash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{authorfullhash}{06a47edae2e847800cfd78323a0e6be8}
+      \strng{authorfullhashraw}{06a47edae2e847800cfd78323a0e6be8}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
       \field{sortinithash}{8da8a182d344d5b9047633dfc0cc9131}
@@ -179,10 +183,12 @@ my $encode3 = q|% $ biblatex auxiliary file $
       }
       \strng{namehash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
+      \strng{fullhashraw}{06a47edae2e847800cfd78323a0e6be8}
       \strng{bibnamehash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{authorbibnamehash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{authornamehash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{authorfullhash}{06a47edae2e847800cfd78323a0e6be8}
+      \strng{authorfullhashraw}{06a47edae2e847800cfd78323a0e6be8}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
       \field{sortinithash}{8da8a182d344d5b9047633dfc0cc9131}
@@ -235,10 +241,12 @@ my $encode5 = q|% $ biblatex auxiliary file $
       }
       \strng{namehash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
+      \strng{fullhashraw}{06a47edae2e847800cfd78323a0e6be8}
       \strng{bibnamehash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{authorbibnamehash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{authornamehash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{authorfullhash}{06a47edae2e847800cfd78323a0e6be8}
+      \strng{authorfullhashraw}{06a47edae2e847800cfd78323a0e6be8}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
       \field{sortinithash}{8da8a182d344d5b9047633dfc0cc9131}
@@ -291,10 +299,12 @@ my $encode6 = q|% $ biblatex auxiliary file $
       }
       \strng{namehash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
+      \strng{fullhashraw}{06a47edae2e847800cfd78323a0e6be8}
       \strng{bibnamehash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{authorbibnamehash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{authornamehash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{authorfullhash}{06a47edae2e847800cfd78323a0e6be8}
+      \strng{authorfullhashraw}{06a47edae2e847800cfd78323a0e6be8}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
       \field{sortinithash}{8da8a182d344d5b9047633dfc0cc9131}
@@ -347,10 +357,12 @@ my $encode7 = q|% $ biblatex auxiliary file $
       }
       \strng{namehash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
+      \strng{fullhashraw}{06a47edae2e847800cfd78323a0e6be8}
       \strng{bibnamehash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{authorbibnamehash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{authornamehash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{authorfullhash}{06a47edae2e847800cfd78323a0e6be8}
+      \strng{authorfullhashraw}{06a47edae2e847800cfd78323a0e6be8}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
       \field{sortinithash}{8da8a182d344d5b9047633dfc0cc9131}

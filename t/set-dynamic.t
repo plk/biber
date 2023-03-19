@@ -66,10 +66,12 @@ my $string2 = q|    \entry{Dynamic1}{book}{skipbib=true,skipbiblist=true,skiplab
       }
       \strng{namehash}{252caa7921a061ca92087a1a52f15b78}
       \strng{fullhash}{252caa7921a061ca92087a1a52f15b78}
+      \strng{fullhashraw}{252caa7921a061ca92087a1a52f15b78}
       \strng{bibnamehash}{252caa7921a061ca92087a1a52f15b78}
       \strng{authorbibnamehash}{252caa7921a061ca92087a1a52f15b78}
       \strng{authornamehash}{252caa7921a061ca92087a1a52f15b78}
       \strng{authorfullhash}{252caa7921a061ca92087a1a52f15b78}
+      \strng{authorfullhashraw}{252caa7921a061ca92087a1a52f15b78}
       \field{sortinit}{8}
       \field{sortinithash}{a231b008ebf0ecbe0b4d96dcc159445f}
       \field{labeldatesource}{}
@@ -93,10 +95,12 @@ my $string3 = q|    \entry{Dynamic2}{book}{skipbib=true,skipbiblist=true,skiplab
       }
       \strng{namehash}{894a5fe6de820f5dcce84a65581667f4}
       \strng{fullhash}{894a5fe6de820f5dcce84a65581667f4}
+      \strng{fullhashraw}{894a5fe6de820f5dcce84a65581667f4}
       \strng{bibnamehash}{894a5fe6de820f5dcce84a65581667f4}
       \strng{authorbibnamehash}{894a5fe6de820f5dcce84a65581667f4}
       \strng{authornamehash}{894a5fe6de820f5dcce84a65581667f4}
       \strng{authorfullhash}{894a5fe6de820f5dcce84a65581667f4}
+      \strng{authorfullhashraw}{894a5fe6de820f5dcce84a65581667f4}
       \field{sortinit}{9}
       \field{sortinithash}{0a5ebc79d83c96b6579069544c73c7d4}
       \field{labeldatesource}{}
@@ -119,10 +123,12 @@ my $string4 = q|    \entry{Dynamic3}{book}{skipbib=true,skipbiblist=true,skiplab
       }
       \strng{namehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \strng{fullhash}{fc3cc97631ceaecdde2aee6cc60ab42b}
+      \strng{fullhashraw}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \strng{bibnamehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \strng{authorbibnamehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \strng{authornamehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \strng{authorfullhash}{fc3cc97631ceaecdde2aee6cc60ab42b}
+      \strng{authorfullhashraw}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \field{sortinit}{1}
       \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
       \field{labeldatesource}{}
@@ -146,10 +152,12 @@ my $string5 = q|    \entry{Dynamic3}{book}{}
       }
       \strng{namehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \strng{fullhash}{fc3cc97631ceaecdde2aee6cc60ab42b}
+      \strng{fullhashraw}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \strng{bibnamehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \strng{authorbibnamehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \strng{authornamehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \strng{authorfullhash}{fc3cc97631ceaecdde2aee6cc60ab42b}
+      \strng{authorfullhashraw}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \field{sortinit}{1}
       \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
       \field{extradatescope}{labelyear}
