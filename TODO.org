@@ -167,6 +167,6 @@
 ** TODO Add validate-bibjson option
 ** TODO Generate bibjson schema option and add --no_bibjson_schema option
 ** TODO CSL-JSON? https://github.com/citation-style-language/schema/blob/master/schemas/input/csl-data.json
-* TODO name hash template
-** TODO doc \ifnamehashtemplatename \DeclareNamehashTemplate, nametemplates refcontext option
-** TODO fullhash and 
+* DONE name hash template
+** DONE doc \ifnamehashtemplatename \DeclareNamehashTemplate, nametemplates refcontext option, refcontext option
+

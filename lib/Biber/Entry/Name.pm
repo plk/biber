@@ -133,7 +133,13 @@ sub get_hash_namepart {
   foreach my $np ($nhtemplate->@*) {
     if (fc($np->{namepart}) eq fc($namepart)) {
       if (fc($np->{hashscope}) eq 'init') {
-        return $self->{nameparts}{$namepart}{initial} || '';
+        if ($self->{nameparts}{$namepart}{initial}) {
+          return join('', $self->{nameparts}{$namepart}{initial}->@*);
+        }
+        else {
+          return '';
+        }
+        return 
       }
       elsif (fc($np->{hashscope}) eq 'full') {
         return $self->{nameparts}{$namepart}{string} || '';
