@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 74;
+use Test::More tests => 75;
 use Test::Differences;
 unified_diff;
 
@@ -194,6 +194,28 @@ my $l1 = q|    \entry{L1}{book}{}
       \strng{authorbibnamehash}{72287a68c1714cb1b9f4ab9e03a88b96}
       \strng{authornamehash}{72287a68c1714cb1b9f4ab9e03a88b96}
       \strng{authorfullhash}{72287a68c1714cb1b9f4ab9e03a88b96}
+      \field{extraname}{1}
+      \field{sortinit}{A}
+      \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
+      \field{labelnamesource}{author}
+    \endentry
+|;
+
+my $l1id = q|    \entry{L1id}{book}{}
+      \name{author}{1}{}{%
+        {{hash=88354d4ba914f2ded2574386a2493996}{%
+           family={Adler},
+           familyi={A\bibinitperiod},
+           given={Alfred},
+           giveni={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{88354d4ba914f2ded2574386a2493996}
+      \strng{fullhash}{72287a68c1714cb1b9f4ab9e03a88b96}
+      \strng{bibnamehash}{88354d4ba914f2ded2574386a2493996}
+      \strng{authorbibnamehash}{88354d4ba914f2ded2574386a2493996}
+      \strng{authornamehash}{88354d4ba914f2ded2574386a2493996}
+      \strng{authorfullhash}{72287a68c1714cb1b9f4ab9e03a88b96}
+      \field{extraname}{2}
       \field{sortinit}{A}
       \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
       \field{labelnamesource}{author}
@@ -214,6 +236,7 @@ my $l1h = q|    \entry{L1}{book}{}
       \strng{authorbibnamehash}{a4e132fab651ba62e051557227672cda}
       \strng{authornamehash}{a4e132fab651ba62e051557227672cda}
       \strng{authorfullhash}{72287a68c1714cb1b9f4ab9e03a88b96}
+      \field{extraname}{1}
       \field{sortinit}{A}
       \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
       \field{labelnamesource}{author}
@@ -947,6 +970,7 @@ is_deeply(Biber::Input::file::bibtex::parsename_x($section,'family=Smithers Jone
 # Full entry tests
 eq_or_diff( $out->get_output_entry('L1', $main), $l1, 'First Last') ;
 eq_or_diff( $out->get_output_entry('L1', $nhtest), $l1h, 'Name hashing - given initials'); # testing custom name hash templates
+eq_or_diff( $out->get_output_entry('L1id', $main), $l1id, 'Name hashing - custom hashid'); # testing custom hashid
 eq_or_diff( $out->get_output_entry('L2', $main), $l2, 'First Initial. Last') ;
 eq_or_diff( $out->get_output_entry('L3', $main), $l3, 'Initial. Initial. Last') ;
 eq_or_diff( $out->get_output_entry('L4', $main), $l4, 'First Initial Last') ;

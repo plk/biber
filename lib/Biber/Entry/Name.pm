@@ -66,6 +66,12 @@ sub new {
         $name->{nameparts}{$np} = $params{$np};
       }
     }
+
+    # Add any user-defined hashid
+    if (my $hid = $params{hashid}) {
+      $name->{hashid} = $hid;
+    }
+
     $name->{rawstring} = join('',
                               map {$name->{nameparts}{$_}{string} // ''} keys $name->{nameparts}->%*);
     $name->{id} = suniqid;
@@ -149,6 +155,16 @@ sub get_hash_namepart {
   return '';
 }
 
+=head2 get_hashid
+
+    Get a hashid by passed name
+
+=cut
+
+sub get_hashid {
+  my ($self, $namepart) = @_;
+  return $self->{hashid};
+}
 
 =head2 get_namepart
 

@@ -61,14 +61,20 @@ sub _getnamehash {
   # namehash obeys list truncations but not uniquename
   foreach my $n ($names->first_n_names($visible)->@*) {
 
+    # use user-defined hashid for hash generation if present
+    if (my $hid = $n->get_hashid) {
+      $hashkey .= $hid;
+      next;
+    }
+
     # Per-name namehashtemplate
     if (defined($n->get_namehashtemplatename)) {
       $nhtname = $n->get_namehashtemplatename;
     }
 
     foreach my $nt (@nps) {# list type so returns list
-    if (my $np = $n->get_hash_namepart($nt,
-                                       Biber::Config->getblxoption($secnum, 'namehashtemplate')->{$nhtname})) {
+      if (my $np = $n->get_hash_namepart($nt,
+                                         Biber::Config->getblxoption($secnum, 'namehashtemplate')->{$nhtname})) {
         $hashkey .= $np;
       }
     }
@@ -199,6 +205,11 @@ sub _genpnhash {
   my $secnum = $self->get_current_section;
   my $dm = Biber::Config->get_dm;
   my @nps = $dm->get_constant_value('nameparts');
+
+  # use user-defined hashid for hash generation if present
+  if (my $hid = $n->get_hashid) {
+    return md5_hex(encode_utf8(NFC(normalise_string_hash($hid))));
+  }
 
   # refcontext or per-entry namehashtemplate
   my $nhtname = Biber::Config->getblxoption($secnum, 'namehashtemplatename', undef, $citekey) // $dlist->get_namehashtemplatename;
