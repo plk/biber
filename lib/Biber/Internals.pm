@@ -73,10 +73,7 @@ sub _getnamehash {
     }
 
     foreach my $nt (@nps) {# list type so returns list
-      if (my $np = $n->get_hash_namepart($nt,
-                                         Biber::Config->getblxoption($secnum, 'namehashtemplate')->{$nhtname})) {
-        $hashkey .= $np;
-      }
+      $hashkey .= $n->get_hash_namepart($nt, Biber::Config->getblxoption($secnum, 'namehashtemplate')->{$nhtname});
     }
   }
 
@@ -127,10 +124,8 @@ sub _getfullhash {
     }
 
     foreach my $nt (@nps) {# list type so returns list
-      if (my $np = $n->get_hash_namepart($nt,
-                                         Biber::Config->getblxoption($secnum, 'namehashtemplate')->{$nhtname})) {
-        $hashkey .= strip_nonamestring($np, $names->get_type);
-      }
+      $hashkey .= strip_nonamestring($n->get_hash_namepart($nt, Biber::Config->getblxoption($secnum, 'namehashtemplate')->{$nhtname}),
+                                     $names->get_type);
     }
   }
 
@@ -273,10 +268,7 @@ sub _genpnhash {
   }
 
   foreach my $nt (@nps) {# list type so returns list
-    if (my $np = $n->get_hash_namepart($nt,
-                                       Biber::Config->getblxoption($secnum, 'namehashtemplate')->{$nhtname})) {
-      $hashkey .= $np;
-    }
+    $hashkey .= $n->get_hash_namepart($nt, Biber::Config->getblxoption($secnum, 'namehashtemplate')->{$nhtname});
   }
 
   if ($logger->is_trace()) { # performance shortcut
