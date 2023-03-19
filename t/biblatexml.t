@@ -76,7 +76,7 @@ my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
            giveni={A\\bibinitperiod\\bibinitdelim А\\bibinitperiod}}}%
       }
       \name{foreword}{1}{}{%
-        {{hash=a7a73749ea467229221b7e9cbf870988}{%
+        {{hash=88354d4ba914f2ded2574386a2493996}{%
            family={Brown},
            familyi={B\\bibinitperiod},
            given={John},
@@ -104,8 +104,8 @@ my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
       \strng{authorbibnamehash}{3400c73d7bf3e361d36350deb4832ad7}
       \strng{authornamehash}{3400c73d7bf3e361d36350deb4832ad7}
       \strng{authorfullhash}{3400c73d7bf3e361d36350deb4832ad7}
-      \strng{forewordbibnamehash}{a7a73749ea467229221b7e9cbf870988}
-      \strng{forewordnamehash}{a7a73749ea467229221b7e9cbf870988}
+      \strng{forewordbibnamehash}{88354d4ba914f2ded2574386a2493996}
+      \strng{forewordnamehash}{88354d4ba914f2ded2574386a2493996}
       \strng{forewordfullhash}{a7a73749ea467229221b7e9cbf870988}
       \strng{translatorbibnamehash}{b44eba830fe9817fbe8e53c82f1cbe04}
       \strng{translatornamehash}{b44eba830fe9817fbe8e53c82f1cbe04}
