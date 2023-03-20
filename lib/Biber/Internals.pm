@@ -72,8 +72,14 @@ sub _getnamehash {
       $nhtname = $n->get_namehashtemplatename;
     }
 
+    my $nht = Biber::Config->getblxoption($secnum, 'namehashtemplate')->{$nhtname};
+
+    unless ($nht) {
+      biber_error("No namehash template called '$nhtname'");
+    }
+
     foreach my $nt (@nps) {# list type so returns list
-      $hashkey .= $n->get_hash_namepart($nt, Biber::Config->getblxoption($secnum, 'namehashtemplate')->{$nhtname});
+      $hashkey .= $n->get_hash_namepart($nt, $nht);
     }
   }
 
@@ -123,9 +129,14 @@ sub _getfullhash {
       $nhtname = $n->get_namehashtemplatename;
     }
 
+    my $nht = Biber::Config->getblxoption($secnum, 'namehashtemplate')->{$nhtname};
+
+    unless ($nht) {
+      biber_error("No namehash template called '$nhtname'");
+    }
+
     foreach my $nt (@nps) {# list type so returns list
-      $hashkey .= strip_nonamestring($n->get_hash_namepart($nt, Biber::Config->getblxoption($secnum, 'namehashtemplate')->{$nhtname}),
-                                     $names->get_type);
+      $hashkey .= strip_nonamestring($n->get_hash_namepart($nt, $nht),  $names->get_type);
     }
   }
 
@@ -140,7 +151,7 @@ sub _getfullhash {
 
 # fullhash without any namehashtemplate. Basically a hash of all full nameparts present in the .bib,
 # after any sourcemaps, naturally
-sub _getfullhash_s {
+sub _getfullhashraw {
   my ($self, $citekey, $names, $dlist) = @_;
   my $hashkey = '';
   my $secnum = $self->get_current_section;
@@ -267,8 +278,14 @@ sub _genpnhash {
     $nhtname = $n->get_namehashtemplatename;
   }
 
+  my $nht = Biber::Config->getblxoption($secnum, 'namehashtemplate')->{$nhtname};
+
+  unless ($nht) {
+    biber_error("No namehash template called '$nhtname'");
+  }
+
   foreach my $nt (@nps) {# list type so returns list
-    $hashkey .= $n->get_hash_namepart($nt, Biber::Config->getblxoption($secnum, 'namehashtemplate')->{$nhtname});
+    $hashkey .= $n->get_hash_namepart($nt, $nht);
   }
 
   if ($logger->is_trace()) { # performance shortcut

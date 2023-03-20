@@ -2787,7 +2787,7 @@ sub process_fullhash {
   if (my $lnfhi = $be->get_labelnamefh_info) {
     if (my $lnfh = $be->get_field($lnfhi)) {
       $dlist->set_entryfield($citekey, 'fullhash', $self->_getfullhash($citekey, $lnfh, $dlist));
-      $dlist->set_entryfield($citekey, 'fullhashraw', $self->_getfullhash_s($citekey, $lnfh, $dlist));
+      $dlist->set_entryfield($citekey, 'fullhashraw', $self->_getfullhashraw($citekey, $lnfh, $dlist));
     }
   }
 
@@ -2795,7 +2795,7 @@ sub process_fullhash {
   foreach my $n ($dmh->{namelistsall}->@*) {
     next unless my $nv = $be->get_field($n);
     $dlist->set_entryfield($citekey, "${n}fullhash", $self->_getfullhash($citekey, $nv, $dlist));
-    $dlist->set_entryfield($citekey, "${n}fullhashraw", $self->_getfullhash_s($citekey, $nv, $dlist));
+    $dlist->set_entryfield($citekey, "${n}fullhashraw", $self->_getfullhashraw($citekey, $nv, $dlist));
   }
 
   return;
