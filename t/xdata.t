@@ -56,7 +56,7 @@ my $bibentries = $section->bibentries;
 my $main = $biber->datalists->get_list('nty/global//global/global/global');
 my $out = $biber->get_output_obj;
 
-my $xd1 = q|    \entry{xd1}{book}{}
+my $xd1 = q|    \entry{xd1}{book}{}{}
       \name{author}{1}{}{%
         {{hash=51db4bfd331cba22959ce2d224c517cd}{%
            family={Ellington},
@@ -92,7 +92,7 @@ my $xd1 = q|    \entry{xd1}{book}{}
     \endentry
 |;
 
-my $xd2 = q|    \entry{xd2}{book}{}
+my $xd2 = q|    \entry{xd2}{book}{}{}
       \name{author}{1}{}{%
         {{hash=68539e0ce4922cc4957c6cabf35e6fc8}{%
            family={Pillington},
@@ -129,7 +129,7 @@ my $xd2 = q|    \entry{xd2}{book}{}
     \endentry
 |;
 
-my $gxd1 = q|    \entry{gxd1}{book}{}
+my $gxd1 = q|    \entry{gxd1}{book}{}{}
       \name{author}{2}{}{%
         {{hash=6b3653417f9aa97391c37cff5dfda7fa}{%
            family={Smith},
@@ -207,7 +207,7 @@ my $gxd1 = q|    \entry{gxd1}{book}{}
     \endentry
 |;
 
-my $gxd1g = q|    \entry{gxd1g}{book}{}
+my $gxd1g = q|    \entry{gxd1g}{book}{}{}
       \name{author}{3}{}{%
         {{hash=6b3653417f9aa97391c37cff5dfda7fa}{%
            family={Smith},
@@ -291,7 +291,7 @@ my $gxd1g = q|    \entry{gxd1g}{book}{}
     \endentry
 |;
 
-my $bltxgxd1 = q|    \entry{bltxgxd1}{book}{}
+my $bltxgxd1 = q|    \entry{bltxgxd1}{book}{}{}
       \name{author}{2}{}{%
         {{hash=ecc4a87e596c582a09b19d4ab187d8c2}{%
            family={Brian},

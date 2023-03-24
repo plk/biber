@@ -65,7 +65,7 @@ my $l7 = [ "proceedings entry 'L7' (dateformats.bib): Invalid format '1996-10-35
 my $l11 = [ "Overwriting field 'year' with year value from field 'date' for entry 'L11'"];
 my $l12 = [ "Overwriting field 'month' with month value from field 'date' for entry 'L12'" ];
 
-my $l13c = q|    \entry{L13}{book}{}
+my $l13c = q|    \entry{L13}{book}{}{}
       \name{author}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
@@ -105,7 +105,7 @@ my $l13c = q|    \entry{L13}{book}{}
     \endentry
 |;
 
-my $l14 = q|    \entry{L14}{book}{}
+my $l14 = q|    \entry{L14}{book}{}{}
       \name{author}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
@@ -149,7 +149,7 @@ my $l14 = q|    \entry{L14}{book}{}
     \endentry
 |;
 
-my $l15 = q|    \entry{L15}{book}{}
+my $l15 = q|    \entry{L15}{book}{}{}
       \name{author}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
@@ -184,7 +184,7 @@ my $l15 = q|    \entry{L15}{book}{}
     \endentry
 |;
 
-my $l16 = q|    \entry{L16}{proceedings}{}
+my $l16 = q|    \entry{L16}{proceedings}{}{}
       \name{editor}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
@@ -225,7 +225,7 @@ my $l16 = q|    \entry{L16}{proceedings}{}
     \endentry
 |;
 
-my $l17 = q|    \entry{L17}{proceedings}{}
+my $l17 = q|    \entry{L17}{proceedings}{}{}
       \name{editor}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
@@ -286,7 +286,7 @@ my $l17 = q|    \entry{L17}{proceedings}{}
     \endentry
 |;
 
-my $l17c = q|    \entry{L17}{proceedings}{}
+my $l17c = q|    \entry{L17}{proceedings}{}{}
       \name{editor}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
@@ -346,7 +346,7 @@ my $l17c = q|    \entry{L17}{proceedings}{}
     \endentry
 |;
 
-my $l17e = q|    \entry{L17}{proceedings}{}
+my $l17e = q|    \entry{L17}{proceedings}{}{}
       \name{editor}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
@@ -478,7 +478,7 @@ eq_or_diff($bibentries->entry('L17')->get_labeldate_info->{field}{source}, 'pubs
 
 
 
-my $era1 = q|    \entry{era1}{article}{}
+my $era1 = q|    \entry{era1}{article}{}{}
       \name{author}{1}{}{%
         {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
            family={Smith},
@@ -513,7 +513,7 @@ my $era1 = q|    \entry{era1}{article}{}
     \endentry
 |;
 
-my $era2 = q|    \entry{era2}{inproceedings}{}
+my $era2 = q|    \entry{era2}{inproceedings}{}{}
       \name{author}{1}{}{%
         {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
            family={Smith},
@@ -549,7 +549,7 @@ my $era2 = q|    \entry{era2}{inproceedings}{}
     \endentry
 |;
 
-my $era3 = q|    \entry{era3}{inproceedings}{}
+my $era3 = q|    \entry{era3}{inproceedings}{}{}
       \name{author}{1}{}{%
         {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
            family={Smith},
@@ -585,7 +585,7 @@ my $era3 = q|    \entry{era3}{inproceedings}{}
     \endentry
 |;
 
-my $era4 = q|    \entry{era4}{inproceedings}{}
+my $era4 = q|    \entry{era4}{inproceedings}{}{}
       \name{author}{1}{}{%
         {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
            family={Smith},
@@ -629,7 +629,7 @@ my $era4 = q|    \entry{era4}{inproceedings}{}
     \endentry
 |;
 
-my $time1 = q|    \entry{time1}{article}{}
+my $time1 = q|    \entry{time1}{article}{}{}
       \name{author}{1}{}{%
         {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
            family={Smith},
@@ -680,7 +680,7 @@ my $time1 = q|    \entry{time1}{article}{}
     \endentry
 |;
 
-my $range1 = q|    \entry{range1}{inproceedings}{}
+my $range1 = q|    \entry{range1}{inproceedings}{}{}
       \name{author}{1}{}{%
         {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
            family={Smith},
@@ -723,7 +723,7 @@ my $range1 = q|    \entry{range1}{inproceedings}{}
     \endentry
 |;
 
-my $range2 = q|    \entry{range2}{inproceedings}{}
+my $range2 = q|    \entry{range2}{inproceedings}{}{}
       \name{author}{1}{}{%
         {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
            family={Smith},
@@ -766,7 +766,7 @@ my $range2 = q|    \entry{range2}{inproceedings}{}
     \endentry
 |;
 
-my $season1 = q|    \entry{season1}{inproceedings}{}
+my $season1 = q|    \entry{season1}{inproceedings}{}{}
       \name{author}{1}{}{%
         {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
            family={Smith},
@@ -800,7 +800,7 @@ my $season1 = q|    \entry{season1}{inproceedings}{}
     \endentry
 |;
 
-my $unspec1 = q|    \entry{unspec1}{inproceedings}{}
+my $unspec1 = q|    \entry{unspec1}{inproceedings}{}{}
       \name{author}{1}{}{%
         {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
            family={Smith},
@@ -855,7 +855,7 @@ my $unspec1 = q|    \entry{unspec1}{inproceedings}{}
 |;
 
 
-my $unspec2 = q|    \entry{unspec2}{article}{}
+my $unspec2 = q|    \entry{unspec2}{article}{}{}
       \name{author}{1}{}{%
         {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
            family={Smith},

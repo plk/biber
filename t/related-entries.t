@@ -42,7 +42,7 @@ my $out = $biber->get_output_obj;
 my $main = $biber->datalists->get_list('none/global//global/global/global');
 my $shs = $biber->datalists->get_list('shorthand/global//global/global/global', 0, 'list');
 
-my $k1 = q|    \entry{key1}{article}{}
+my $k1 = q|    \entry{key1}{article}{}{}
       \name{author}{1}{}{%
         {{un=0,uniquepart=base,hash=a517747c3d12f99244ae598910d979c5}{%
            family={Author},
@@ -77,7 +77,7 @@ my $k1 = q|    \entry{key1}{article}{}
     \endentry
 |;
 
-my $k2 = q|    \entry{key2}{inbook}{}
+my $k2 = q|    \entry{key2}{inbook}{}{}
       \name{author}{1}{}{%
         {{un=0,uniquepart=base,hash=a517747c3d12f99244ae598910d979c5}{%
            family={Author},
@@ -120,7 +120,7 @@ my $k2 = q|    \entry{key2}{inbook}{}
 |;
 
 
-my $kck1 = q|    \entry{c2add694bf942dc77b376592d9c862cd}{article}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}
+my $kck1 = q|    \entry{c2add694bf942dc77b376592d9c862cd}{article}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}{}
       \name{author}{1}{}{%
         {{hash=a517747c3d12f99244ae598910d979c5}{%
            family={Author},
@@ -152,7 +152,7 @@ my $kck1 = q|    \entry{c2add694bf942dc77b376592d9c862cd}{article}{skipbib=true,
     \endentry
 |;
 
-my $kck2 = q|    \entry{78f825aaa0103319aaa1a30bf4fe3ada}{inbook}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}
+my $kck2 = q|    \entry{78f825aaa0103319aaa1a30bf4fe3ada}{inbook}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}{}
       \name{author}{1}{}{%
         {{hash=a517747c3d12f99244ae598910d979c5}{%
            family={Author},
@@ -191,7 +191,7 @@ my $kck2 = q|    \entry{78f825aaa0103319aaa1a30bf4fe3ada}{inbook}{skipbib=true,s
     \endentry
 |;
 
-my $kck3 = q|    \entry{3631578538a2d6ba5879b31a9a42f290}{inbook}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}
+my $kck3 = q|    \entry{3631578538a2d6ba5879b31a9a42f290}{inbook}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}{}
       \name{author}{1}{}{%
         {{hash=a517747c3d12f99244ae598910d979c5}{%
            family={Author},
@@ -229,7 +229,7 @@ my $kck3 = q|    \entry{3631578538a2d6ba5879b31a9a42f290}{inbook}{skipbib=true,s
     \endentry
 |;
 
-my $kck4 = q|    \entry{caf8e34be07426ae7127c1b4829983c1}{inbook}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false,useeditor=false}
+my $kck4 = q|    \entry{caf8e34be07426ae7127c1b4829983c1}{inbook}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false,useeditor=false}{}
       \name{author}{1}{}{%
         {{hash=a517747c3d12f99244ae598910d979c5}{%
            family={Author},
@@ -264,26 +264,26 @@ my $kck4 = q|    \entry{caf8e34be07426ae7127c1b4829983c1}{inbook}{skipbib=true,s
     \endentry
 |;
 
-my $c1 = q|    \entry{c1}{book}{}
+my $c1 = q|    \entry{c1}{book}{}{}
       \field{sortinit}{3}
       \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
       \field{related}{9ab62b5ef34a985438bfdf7ee0102229}
     \endentry
 |;
 
-my $c2k = q|    \entry{9ab62b5ef34a985438bfdf7ee0102229}{book}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}
+my $c2k = q|    \entry{9ab62b5ef34a985438bfdf7ee0102229}{book}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}{}
       \field{clonesourcekey}{c2}
       \field{related}{0a3d72134fb3d6c024db4c510bc1605b}
     \endentry
 |;
 
-my $c3k = q|    \entry{0a3d72134fb3d6c024db4c510bc1605b}{book}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}
+my $c3k = q|    \entry{0a3d72134fb3d6c024db4c510bc1605b}{book}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}{}
       \field{clonesourcekey}{c3}
       \field{related}{9ab62b5ef34a985438bfdf7ee0102229}
     \endentry
 |;
 
-my $s1 = q|    \entry{8ddf878039b70767c4a5bcf4f0c4f65e}{book}{skipbib=false,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false,usecustom=false}
+my $s1 = q|    \entry{8ddf878039b70767c4a5bcf4f0c4f65e}{book}{skipbib=false,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false,usecustom=false}{}
       \name{author}{1}{}{%
         {{hash=a517747c3d12f99244ae598910d979c5}{%
            family={Author},
@@ -332,7 +332,7 @@ eq_or_diff( $out->get_output_entry('0a3d72134fb3d6c024db4c510bc1605b', $main), $
 # Testing custom relatedoptions
 eq_or_diff( $out->get_output_entry('8ddf878039b70767c4a5bcf4f0c4f65e', $main), $s1, 'Custom options - 1' ) ;
 
-my $un1 = q|    \entry{kullback}{book}{}
+my $un1 = q|    \entry{kullback}{book}{}{}
       \name{author}{1}{}{%
         {{un=0,uniquepart=base,hash=34c5bbf9876c37127c3abe4e7d7a7198}{%
            family={Kullback},
@@ -369,7 +369,7 @@ my $un1 = q|    \entry{kullback}{book}{}
     \\endentry
 |;
 
-my $un2 = q|    \entry{kullback:related}{book}{}
+my $un2 = q|    \entry{kullback:related}{book}{}{}
       \name{author}{1}{}{%
         {{un=0,uniquepart=base,hash=34c5bbf9876c37127c3abe4e7d7a7198}{%
            family={Kullback},

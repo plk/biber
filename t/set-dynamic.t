@@ -48,14 +48,14 @@ my $sh1 = $biber->datalists->get_list('shorthand/global//global/global/global', 
 
 my $out = $biber->get_output_obj;
 
-my $string1 = q|    \entry{DynSet}{set}{}
+my $string1 = q|    \entry{DynSet}{set}{}{}
       \set{Dynamic1,Dynamic2,Dynamic3}
       \field{sortinit}{1}
       \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
     \endentry
 |;
 
-my $string2 = q|    \entry{Dynamic1}{book}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}
+my $string2 = q|    \entry{Dynamic1}{book}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}{}
       \inset{DynSet}
       \name{author}{1}{}{%
         {{hash=252caa7921a061ca92087a1a52f15b78}{%
@@ -84,7 +84,7 @@ my $string2 = q|    \entry{Dynamic1}{book}{skipbib=true,skipbiblist=true,skiplab
     \endentry
 |;
 
-my $string3 = q|    \entry{Dynamic2}{book}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}
+my $string3 = q|    \entry{Dynamic2}{book}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}{}
       \inset{DynSet}
       \name{author}{1}{}{%
         {{hash=894a5fe6de820f5dcce84a65581667f4}{%
@@ -112,7 +112,7 @@ my $string3 = q|    \entry{Dynamic2}{book}{skipbib=true,skipbiblist=true,skiplab
     \endentry
 |;
 
-my $string4 = q|    \entry{Dynamic3}{book}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}
+my $string4 = q|    \entry{Dynamic3}{book}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}{}
       \inset{DynSet}
       \name{author}{1}{}{%
         {{hash=fc3cc97631ceaecdde2aee6cc60ab42b}{%
@@ -142,7 +142,7 @@ my $string4 = q|    \entry{Dynamic3}{book}{skipbib=true,skipbiblist=true,skiplab
 
 # Labelyear is now here as skiplab is not set for this entry when cited in section
 # without citation of a set it is a member of
-my $string5 = q|    \entry{Dynamic3}{book}{}
+my $string5 = q|    \entry{Dynamic3}{book}{}{}
       \name{author}{1}{}{%
         {{hash=fc3cc97631ceaecdde2aee6cc60ab42b}{%
            family={Regardless},

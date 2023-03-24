@@ -46,7 +46,7 @@ my $section = $biber->sections->get_section(0);
 my $main = $biber->datalists->get_list('nty/global//global/global/global');
 my $out = $biber->get_output_obj;
 
-my $us1 = q|    \entry{us1}{book}{}
+my $us1 = q|    \entry{us1}{book}{}{}
       \name{author}{1}{}{%
         {{un=0,uniquepart=base,hash=6a9b0705c275273262103333472cc656}{%
            family={Elk},
@@ -76,7 +76,7 @@ my $us1 = q|    \entry{us1}{book}{}
     \endentry
 |;
 
-my $us2a = q|    \entry{us2}{book}{}
+my $us2a = q|    \entry{us2}{book}{}{}
       \true{moreauthor}
       \true{morelabelname}
       \name{author}{1}{}{%
@@ -108,7 +108,7 @@ my $us2a = q|    \entry{us2}{book}{}
     \endentry
 |;
 
-my $us3 = q|    \entry{us3}{book}{}
+my $us3 = q|    \entry{us3}{book}{}{}
       \name{author}{1}{}{%
         {{un=0,uniquepart=base,hash=e06f6e5a8c1d5204dea326aa5f4f8d17}{%
            family={Uthor},
@@ -139,7 +139,7 @@ my $us3 = q|    \entry{us3}{book}{}
 |;
 
 
-my $us4a = q|    \entry{us4}{book}{}
+my $us4a = q|    \entry{us4}{book}{}{}
       \name{author}{4}{}{%
         {{un=0,uniquepart=base,hash=e06f6e5a8c1d5204dea326aa5f4f8d17}{%
            family={Uthor},
@@ -190,7 +190,7 @@ my $us4a = q|    \entry{us4}{book}{}
     \endentry
 |;
 
-my $us2b = q|    \entry{us2}{book}{}
+my $us2b = q|    \entry{us2}{book}{}{}
       \true{moreauthor}
       \true{morelabelname}
       \name{author}{1}{}{%
@@ -225,7 +225,7 @@ my $us2b = q|    \entry{us2}{book}{}
 |;
 
 
-my $us4b = q|    \entry{us4}{book}{}
+my $us4b = q|    \entry{us4}{book}{}{}
       \name{author}{4}{}{%
         {{un=0,uniquepart=base,hash=e06f6e5a8c1d5204dea326aa5f4f8d17}{%
            family={Uthor},
@@ -276,7 +276,7 @@ my $us4b = q|    \entry{us4}{book}{}
     \endentry
 |;
 
-my $us6 = q|    \entry{us6}{book}{}
+my $us6 = q|    \entry{us6}{book}{}{}
       \name{author}{1}{}{%
         {{un=0,uniquepart=base,hash=cbe9a5912d961199801c3fcd32356ecf}{%
            family={Red},
@@ -306,7 +306,7 @@ my $us6 = q|    \entry{us6}{book}{}
     \endentry
 |;
 
-my $us7 = q|    \entry{us7}{misc}{}
+my $us7 = q|    \entry{us7}{misc}{}{}
       \true{moreauthor}
       \true{morelabelname}
       \name{author}{1}{}{%
@@ -338,7 +338,7 @@ my $us7 = q|    \entry{us7}{misc}{}
     \endentry
 |;
 
-my $us8 = q|    \entry{us8}{book}{}
+my $us8 = q|    \entry{us8}{book}{}{}
       \name{author}{1}{}{%
         {{un=0,uniquepart=base,hash=a280925c093d27fe81e88f11d8f0e537}{%
            family={Sly},
@@ -370,7 +370,7 @@ my $us8 = q|    \entry{us8}{book}{}
     \endentry
 |;
 
-my $us9 = q|    \entry{us9}{book}{}
+my $us9 = q|    \entry{us9}{book}{}{}
       \name{author}{4}{}{%
         {{un=0,uniquepart=base,hash=a280925c093d27fe81e88f11d8f0e537}{%
            family={Sly},

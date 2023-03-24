@@ -698,7 +698,7 @@ $bibentries = $section->bibentries;
 $main = $biber->datalists->get_list('nty/global//global/global/global');
 
 
-my $po3 = q|    \entry{po3}{book}{}
+my $po3 = q|    \entry{po3}{book}{}{}
       \name{author}{4}{ul=4}{%
         {{un=1,uniquepart=given,hash=c2ab7e2b5663336cc4e65c8bcf1a280d}{%
            family={Abraham},

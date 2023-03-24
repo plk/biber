@@ -42,14 +42,14 @@ my $section = $biber->sections->get_section(0);
 my $main = $biber->datalists->get_list('none/global//global/global/global');
 my $out = $biber->get_output_obj;
 
-my $string1 = q|    \entry{Elias1955}{set}{}
+my $string1 = q|    \entry{Elias1955}{set}{}{}
       \set{Elias1955a,Elias1955b}
       \field{sortinit}{1}
       \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
     \endentry
 |;
 
-my $string2 = q|    \entry{Elias1955a}{article}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}
+my $string2 = q|    \entry{Elias1955a}{article}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}{}
       \inset{Elias1955}
       \name{author}{1}{}{%
         {{hash=68f587f427e068e26043d54745351d58}{%
@@ -85,7 +85,7 @@ my $string2 = q|    \entry{Elias1955a}{article}{skipbib=true,skipbiblist=true,sk
     \endentry
 |;
 
-my $string3 = q|    \entry{Elias1955b}{article}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}
+my $string3 = q|    \entry{Elias1955b}{article}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}{}
       \inset{Elias1955}
       \name{author}{1}{}{%
         {{hash=68f587f427e068e26043d54745351d58}{%

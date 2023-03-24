@@ -40,7 +40,7 @@ Biber::Config->setblxoption(undef, 'skipbiblist', 'true');
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 
 
-my $S1 = q|    \entry{S1}{book}{skipbib=false,skipbiblist=false,skiplab=false}
+my $S1 = q|    \entry{S1}{book}{skipbib=false,skipbiblist=false,skiplab=false}{}
       \name{author}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
@@ -79,7 +79,7 @@ my $S1 = q|    \entry{S1}{book}{skipbib=false,skipbiblist=false,skiplab=false}
     \endentry
 |;
 
-my $S2 = q|    \entry{S2}{book}{skipbib=false,skiplab=false}
+my $S2 = q|    \entry{S2}{book}{skipbib=false,skiplab=false}{}
       \name{author}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
@@ -118,7 +118,7 @@ my $S2 = q|    \entry{S2}{book}{skipbib=false,skiplab=false}
     \endentry
 |;
 
-my $S3 = q|    \entry{S3}{book}{}
+my $S3 = q|    \entry{S3}{book}{}{}
       \name{author}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},

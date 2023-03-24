@@ -53,7 +53,7 @@ my $encode1 = q|% $ biblatex auxiliary file $
 
 \refsection{0}
   \datalist[entry]{nty/global//global/global/global}
-    \entry{testŠ}{book}{}
+    \entry{testŠ}{book}{}{}
       \name{author}{1}{}{%
         {{un=0,uniquepart=base,hash=06a47edae2e847800cfd78323a0e6be8}{%
            family={Encalcer},
@@ -111,7 +111,7 @@ my $encode2 = q|% $ biblatex auxiliary file $
 
 \refsection{0}
   \datalist[entry]{nty/global//global/global/global}
-    \entry{test1}{book}{}
+    \entry{test1}{book}{}{}
       \name{author}{1}{}{%
         {{un=0,uniquepart=base,hash=06a47edae2e847800cfd78323a0e6be8}{%
            family={Encalcer},
@@ -169,7 +169,7 @@ my $encode3 = q|% $ biblatex auxiliary file $
 
 \refsection{0}
   \datalist[entry]{nty/global//global/global/global}
-    \entry{test1}{book}{}
+    \entry{test1}{book}{}{}
       \name{author}{1}{}{%
         {{un=0,uniquepart=base,hash=06a47edae2e847800cfd78323a0e6be8}{%
            family={Encalcer},
@@ -227,7 +227,7 @@ my $encode5 = q|% $ biblatex auxiliary file $
 
 \refsection{0}
   \datalist[entry]{nty/global//global/global/global}
-    \entry{test}{book}{}
+    \entry{test}{book}{}{}
       \name{author}{1}{}{%
         {{un=0,uniquepart=base,hash=06a47edae2e847800cfd78323a0e6be8}{%
            family={Encalcer},
@@ -285,7 +285,7 @@ my $encode6 = q|% $ biblatex auxiliary file $
 
 \refsection{0}
   \datalist[entry]{nty/global//global/global/global}
-    \entry{test}{book}{}
+    \entry{test}{book}{}{}
       \name{author}{1}{}{%
         {{un=0,uniquepart=base,hash=06a47edae2e847800cfd78323a0e6be8}{%
            family={Encalcer},
@@ -343,7 +343,7 @@ my $encode7 = q|% $ biblatex auxiliary file $
 
 \refsection{0}
   \datalist[entry]{nty/global//global/global/global}
-    \entry{test}{book}{}
+    \entry{test}{book}{}{}
       \name{author}{1}{}{%
         {{un=0,uniquepart=base,hash=06a47edae2e847800cfd78323a0e6be8}{%
            family={Encalcer},

@@ -98,7 +98,7 @@ my $ss = { locale => 'en-US',
            ],
           ]};
 
-my $l4 = q|    \entry{L4}{book}{}
+my $l4 = q|    \entry{L4}{book}{}{}
       \true{moreauthor}
       \true{morelabelname}
       \name{author}{1}{}{%
@@ -134,7 +134,7 @@ my $l4 = q|    \entry{L4}{book}{}
     \endentry
 |;
 
-my $l1 = q|    \entry{L1}{book}{}
+my $l1 = q|    \entry{L1}{book}{}{}
       \name{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
@@ -168,7 +168,7 @@ my $l1 = q|    \entry{L1}{book}{}
     \endentry
 |;
 
-my $l2 = q|    \entry{L2}{book}{}
+my $l2 = q|    \entry{L2}{book}{}{}
       \name{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
@@ -202,7 +202,7 @@ my $l2 = q|    \entry{L2}{book}{}
     \endentry
 |;
 
-my $l3 = q|    \entry{L3}{book}{}
+my $l3 = q|    \entry{L3}{book}{}{}
       \name{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
@@ -236,7 +236,7 @@ my $l3 = q|    \entry{L3}{book}{}
     \endentry
 |;
 
-my $l5 = q|    \entry{L5}{book}{}
+my $l5 = q|    \entry{L5}{book}{}{}
       \true{moreauthor}
       \true{morelabelname}
       \name{author}{1}{}{%

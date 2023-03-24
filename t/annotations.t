@@ -43,7 +43,7 @@ my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
 my $main = $biber->datalists->get_list('nty/global//global/global/global');
 
-my $ann1 = q|    \entry{ann1}{misc}{}
+my $ann1 = q|    \entry{ann1}{misc}{}{1}
       \name{author}{3}{}{%
         {{hash=89a9e5097e11e595700540379c9b3a6b}{%
            family={Last1},
@@ -88,7 +88,7 @@ my $ann1 = q|    \entry{ann1}{misc}{}
     \endentry
 |;
 
-my $ann2 = q|    \entry{ann2}{misc}{}
+my $ann2 = q|    \entry{ann2}{misc}{}{3}
       \name{author}{3}{}{%
         {{hash=89a9e5097e11e595700540379c9b3a6b}{%
            family={Last1},

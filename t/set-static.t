@@ -44,7 +44,7 @@ my $main1 = $biber->datalists->get_list('none/global//global/global/global', 1);
 my $out = $biber->get_output_obj;
 
 # Notes that \set is in nty order due to sortsets=true in .bcf
-my $string1 = q|    \entry{Static1}{set}{}
+my $string1 = q|    \entry{Static1}{set}{}{}
       \set{Static2,Static4,Static3}
       \field{sortinit}{B}
       \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
@@ -52,7 +52,7 @@ my $string1 = q|    \entry{Static1}{set}{}
     \endentry
 |;
 
-my $string2 = q|    \entry{Static2}{book}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}
+my $string2 = q|    \entry{Static2}{book}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}{}
       \inset{Static1}
       \name{author}{1}{}{%
         {{hash=43874d80d7ce68027102819f16c47df1}{%
@@ -80,7 +80,7 @@ my $string2 = q|    \entry{Static2}{book}{skipbib=true,skipbiblist=true,skiplab=
     \endentry
 |;
 
-my $string3 = q|    \entry{Static3}{book}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}
+my $string3 = q|    \entry{Static3}{book}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}{}
       \inset{Static1}
       \name{author}{1}{}{%
         {{hash=22dafa5cd57bb5dd7f3e3bab98fd539c}{%
@@ -107,7 +107,7 @@ my $string3 = q|    \entry{Static3}{book}{skipbib=true,skipbiblist=true,skiplab=
     \endentry
 |;
 
-my $string4 = q|    \entry{Static4}{book}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}
+my $string4 = q|    \entry{Static4}{book}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}{}
       \inset{Static1}
       \name{author}{1}{}{%
         {{hash=da80091c8cd89e5269bd55af1bd5d2fa}{%
@@ -136,7 +136,7 @@ my $string4 = q|    \entry{Static4}{book}{skipbib=true,skipbiblist=true,skiplab=
 
 # Labelyear is now here as skiplab is not set for this entry when cited in section
 # without citation of a set it is a member of
-my $string5 = q|    \entry{Static2}{book}{}
+my $string5 = q|    \entry{Static2}{book}{}{}
       \name{author}{1}{}{%
         {{hash=43874d80d7ce68027102819f16c47df1}{%
            family={Bumble},

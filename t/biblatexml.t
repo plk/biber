@@ -51,7 +51,7 @@ my $main = $biber->datalists->get_list('custom/global//global/global/global');
 
 my $bibentries = $section->bibentries;
 
-my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
+my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}{}
       \true{moreauthor}
       \true{morelabelname}
       \name{author}{3}{useprefix=true}{%
@@ -160,7 +160,7 @@ my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
     \endentry
 |;
 
-my $l2 = q|    \entry{loopkey:a}{book}{}
+my $l2 = q|    \entry{loopkey:a}{book}{}{}
       \field{sortinit}{0}
       \field{sortinithash}{c5602f03f17cc894ea7a6362c3cb0e13}
     \endentry

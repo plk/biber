@@ -218,7 +218,9 @@ sub set_output_entry {
 
   # Skip entrytypes we don't want to output according to datamodel
   return if $dm->entrytype_is_skipout($bee);
-  $acc .= "    \\entry{$key}{$outtype}{" . join(',', filter_entry_options($secnum, $be)->@*) . "}\n";
+  my $kc = $section->get_citecount($key);
+  $acc .= "    \\entry{$key}{$outtype}{" . join(',', filter_entry_options($secnum, $be)->@*) . '}{' .
+      ($kc==-1 ? '' : $kc) . "}\n";
 
   # Generate set information.
   # Set parents are special and need very little

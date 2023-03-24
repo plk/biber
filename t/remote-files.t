@@ -52,7 +52,7 @@ my $section = $biber->sections->get_section(0);
 my $main = $biber->datalists->get_list('nty/global//global/global/global');
 my $bibentries = $section->bibentries;
 
-my $dl1 = q|    \entry{AbdelbarH98}{article}{}
+my $dl1 = q|    \entry{AbdelbarH98}{article}{}{}
       \name{author}{2}{}{%
         {{un=0,uniquepart=base,hash=03fb065ad674e2c6269f3542112e30df}{%
            family={Abdelbar},

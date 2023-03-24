@@ -79,7 +79,7 @@ pages6 pages7 pages8 us1 labelstest list1 sn1 pages9 isbn1 isbn2 snk1
 clone-snk1 newtestkey ent1 avona rvonr verb1 over1 others1 others2 recurse1
 final};
 
-my $u1 = q|    \entry{u1}{misc}{}
+my $u1 = q|    \entry{u1}{misc}{}{}
       \name{author}{4}{ul=4}{%
         {{un=0,uniquepart=base,hash=e1faffb3e614e6c2fba74296962386b7}{%
            family={AAA},
@@ -143,7 +143,7 @@ $out = $biber->get_output_obj;
 
 is_deeply( \@keys, \@allkeys, 'citekeys 2') ;
 
-my $murray1 = q|    \entry{murray}{article}{}
+my $murray1 = q|    \entry{murray}{article}{}{}
       \name{author}{14}{}{%
         {{un=0,uniquepart=base,hash=1c180cd8a2042c60a0f1dda22e34794a}{%
            family={Hostetler},
@@ -262,7 +262,7 @@ my $murray1 = q|    \entry{murray}{article}{}
     \endentry
 |;
 
-my $murray2 = q|    \entry{murray}{article}{}
+my $murray2 = q|    \entry{murray}{article}{}{}
       \name{author}{14}{}{%
         {{un=0,uniquepart=base,hash=1c180cd8a2042c60a0f1dda22e34794a}{%
            family={Hostetler},
@@ -382,7 +382,7 @@ my $murray2 = q|    \entry{murray}{article}{}
 |;
 
 # This example wouldn't compile - it's just to test escaping
-my $t1 = q+    \entry{t1}{misc}{}
+my $t1 = q+    \entry{t1}{misc}{}{}
       \name{author}{1}{}{%
         {{un=0,uniquepart=base,hash=858fcf9483ec29b7707a7dda2dde7a6f}{%
            family={Brown},
@@ -414,7 +414,7 @@ my $t1 = q+    \entry{t1}{misc}{}
     \endentry
 +;
 
-my $t2 = q|    \entry{t2}{misc}{}
+my $t2 = q|    \entry{t2}{misc}{}{}
       \name{author}{1}{}{%
         {{un=0,uniquepart=base,hash=858fcf9483ec29b7707a7dda2dde7a6f}{%
            family={Brown},
@@ -445,7 +445,7 @@ my $t2 = q|    \entry{t2}{misc}{}
     \endentry
 |;
 
-my $anon1 = q|    \entry{anon1}{unpublished}{}
+my $anon1 = q|    \entry{anon1}{unpublished}{}{}
       \name{author}{1}{}{%
         {{hash=a66f357fe2fd356fe49959173522a651}{%
            family={AnonymousX},
@@ -487,7 +487,7 @@ my $anon1 = q|    \entry{anon1}{unpublished}{}
     \endentry
 |;
 
-my $anon2 = q|    \entry{anon2}{unpublished}{}
+my $anon2 = q|    \entry{anon2}{unpublished}{}{}
       \name{author}{1}{}{%
         {{hash=a0bccee4041bc840e14c06e5ba7f083c}{%
            family={AnonymousY},
@@ -529,7 +529,7 @@ my $anon2 = q|    \entry{anon2}{unpublished}{}
     \endentry
 |;
 
-my $url1 = q|    \entry{url1}{misc}{}
+my $url1 = q|    \entry{url1}{misc}{}{}
       \name{author}{1}{}{%
         {{un=0,uniquepart=base,hash=b2106a3dda6c5a4879a0cab37e9cca55}{%
            family={Alias},
@@ -567,7 +567,7 @@ my $url1 = q|    \entry{url1}{misc}{}
     \endentry
 |;
 
-my $list1 = q|    \entry{list1}{book}{}
+my $list1 = q|    \entry{list1}{book}{}{}
       \true{morelocation}
       \list{location}{2}{%
         {ÁAA}%
@@ -578,7 +578,7 @@ my $list1 = q|    \entry{list1}{book}{}
     \endentry
 |;
 
-my $over1 = q|    \entry{over1}{book}{}
+my $over1 = q|    \entry{over1}{book}{}{}
       \field{sortinit}{}
       \field{sortinithash}{495dc9894017a8b12cafa9c619d10c0c}
       \field{userd}{thing}
@@ -715,7 +715,7 @@ eq_or_diff( $out->get_output_entry('list1', $main), $list1, 'Entry with others l
 # source->target mapping with overwrite test
 eq_or_diff($out->get_output_entry('over1', $main), $over1, 'Overwrite test - 1');
 
-my $isbn1 = q|    \entry{isbn1}{misc}{}
+my $isbn1 = q|    \entry{isbn1}{misc}{}{}
       \name{author}{1}{}{%
         {{un=0,uniquepart=base,hash=f6595ccb9db5f634e7bb242a3f78e5f9}{%
            family={Flummox},
@@ -742,7 +742,7 @@ my $isbn1 = q|    \entry{isbn1}{misc}{}
     \endentry
 |;
 
-my $isbn2 = q|    \entry{isbn2}{misc}{}
+my $isbn2 = q|    \entry{isbn2}{misc}{}{}
       \name{author}{1}{}{%
         {{un=0,uniquepart=base,hash=f6595ccb9db5f634e7bb242a3f78e5f9}{%
            family={Flummox},
@@ -773,7 +773,7 @@ my $isbn2 = q|    \entry{isbn2}{misc}{}
 eq_or_diff($out->get_output_entry('isbn1', $main), $isbn1, 'ISBN options - 1');
 eq_or_diff($out->get_output_entry('isbn2', $main), $isbn2, 'ISBN options - 2');
 
-my $new1 = q|    \entry{newtestkey}{book}{}
+my $new1 = q|    \entry{newtestkey}{book}{}{}
       \field{sortinit}{}
       \field{sortinithash}{495dc9894017a8b12cafa9c619d10c0c}
       \field{note}{note}
@@ -782,7 +782,7 @@ my $new1 = q|    \entry{newtestkey}{book}{}
     \endentry
 |;
 
-my $clone1 = q|    \entry{snk1}{book}{}
+my $clone1 = q|    \entry{snk1}{book}{}{}
       \name{author}{1}{}{%
         {{un=0,uniquepart=base,hash=83330b0520b5d4ea57529a23b404d43d}{%
            family={Doe},
@@ -813,7 +813,7 @@ my $clone1 = q|    \entry{snk1}{book}{}
     \endentry
 |;
 
-my $clone2 = q|    \entry{clone-snk1}{book}{}
+my $clone2 = q|    \entry{clone-snk1}{book}{}{}
       \name{author}{1}{}{%
         {{un=0,uniquepart=base,hash=83330b0520b5d4ea57529a23b404d43d}{%
            family={Doe},
@@ -845,7 +845,7 @@ my $clone2 = q|    \entry{clone-snk1}{book}{}
     \endentry
 |;
 
-my $ent1 = q|    \entry{ent1}{book}{}
+my $ent1 = q|    \entry{ent1}{book}{}{}
       \name{author}{2}{sortingnamekeytemplatename=snks1}{%
         {{un=0,uniquepart=base,hash=6b3653417f9aa97391c37cff5dfda7fa}{%
            family={Smith},
@@ -878,7 +878,7 @@ my $ent1 = q|    \entry{ent1}{book}{}
     \endentry
 |;
 
-my $verb1 = q|    \entry{verb1}{book}{}
+my $verb1 = q|    \entry{verb1}{book}{}{}
       \name{author}{1}{}{%
         {{un=0,uniquepart=base,hash=cac5a25f503e71f5ef28f474e14007b6}{%
            family={Allright},

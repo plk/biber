@@ -55,7 +55,7 @@ my $out = $biber->get_output_obj;
 print "$stdout"; # needed for usual say(), dd() debugging due to capture() above
 
 # crossref field is included as the parent is included by being crossrefed >= mincrossrefs times
-my $cr1 = q|    \entry{cr1}{inbook}{}
+my $cr1 = q|    \entry{cr1}{inbook}{}{}
       \name{author}{1}{}{%
         {{hash=121b6dc164b5b619c81c670fbd823f12}{%
            family={Gullam},
@@ -105,7 +105,7 @@ my $cr1 = q|    \entry{cr1}{inbook}{}
 |;
 
 # crossref field is included as the parent is included by being crossrefed >= mincrossrefs times
-my $cr2 = q|    \entry{cr2}{inbook}{}
+my $cr2 = q|    \entry{cr2}{inbook}{}{}
       \name{author}{1}{}{%
         {{hash=2d51a96bc0a6804995b3a9ff350c3384}{%
            family={Fumble},
@@ -158,7 +158,7 @@ my $cr2 = q|    \entry{cr2}{inbook}{}
 # singletitle, labelname and labelname hashes because the only name is
 # EDITOR and useeditor is false This is also why there is no
 # \true{uniquework}
-my $cr_m = q|    \entry{cr_m}{book}{}
+my $cr_m = q|    \entry{cr_m}{book}{}{}
       \name{editor}{1}{}{%
         {{hash=c129df5593fdaa7475548811bfbb227d}{%
            family={Erbriss},
@@ -184,7 +184,7 @@ my $cr_m = q|    \entry{cr_m}{book}{}
 |;
 
 # crossref field is included as the parent is cited
-my $cr3 = q|    \entry{cr3}{inbook}{}
+my $cr3 = q|    \entry{cr3}{inbook}{}{}
       \name{author}{1}{}{%
         {{hash=2baf676a220704f6914223aefccaaa88}{%
            family={Aptitude},
@@ -232,7 +232,7 @@ my $cr3 = q|    \entry{cr3}{inbook}{}
 |;
 
 # No crossref field as parent is not cited (mincrossrefs < 2)
-my $cr4 = q|    \entry{cr4}{inbook}{}
+my $cr4 = q|    \entry{cr4}{inbook}{}{}
       \name{author}{1}{}{%
         {{hash=50ef7fd3a1be33bccc5de2768b013836}{%
            family={Mumble},
@@ -279,7 +279,7 @@ my $cr4 = q|    \entry{cr4}{inbook}{}
 
 # cited as normal
 # No singletitle as useeditor is false
-my $crt = q|    \entry{crt}{book}{}
+my $crt = q|    \entry{crt}{book}{}{}
       \name{editor}{1}{}{%
         {{hash=a1f5c22413396d599ec766725b226735}{%
            family={Monkley},
@@ -304,7 +304,7 @@ my $crt = q|    \entry{crt}{book}{}
 |;
 
 # various event fields inherited correctly
-my $cr6 = q|    \entry{cr6}{inproceedings}{}
+my $cr6 = q|    \entry{cr6}{inproceedings}{}{}
       \name{author}{1}{}{%
         {{hash=8ab39ee68c55046dc1f05d657fcefed9}{%
            family={Author},
@@ -358,7 +358,7 @@ my $cr6 = q|    \entry{cr6}{inproceedings}{}
 |;
 
 # Special fields inherited correctly
-my $cr7 = q|    \entry{cr7}{inbook}{}
+my $cr7 = q|    \entry{cr7}{inbook}{}{}
       \name{author}{1}{}{%
         {{hash=8ab39ee68c55046dc1f05d657fcefed9}{%
            family={Author},
@@ -409,7 +409,7 @@ my $cr7 = q|    \entry{cr7}{inbook}{}
 |;
 
 # Default inheritance supressed except for specified
-my $cr8 = q|    \entry{cr8}{incollection}{}
+my $cr8 = q|    \entry{cr8}{incollection}{}{}
       \name{author}{1}{}{%
         {{hash=3d449e56eb3ca1ae80dc99a18d689795}{%
            family={Smith},
@@ -442,7 +442,7 @@ my $cr8 = q|    \entry{cr8}{incollection}{}
 |;
 
 # xref field is included as the parent is included by being crossrefed >= mincrossrefs times
-my $xr1 = q|    \entry{xr1}{inbook}{}
+my $xr1 = q|    \entry{xr1}{inbook}{}{}
       \name{author}{1}{}{%
         {{hash=e0ecc4fc668ee499d1afba44e1ac064d}{%
            family={Zentrum},
@@ -473,7 +473,7 @@ my $xr1 = q|    \entry{xr1}{inbook}{}
 |;
 
 # xref field is included as the parent is included by being crossrefed >= mincrossrefs times
-my $xr2 = q|    \entry{xr2}{inbook}{}
+my $xr2 = q|    \entry{xr2}{inbook}{}{}
       \name{author}{1}{}{%
         {{hash=6afa09374ecfd6b394ce714d2d9709c7}{%
            family={Instant},
@@ -506,7 +506,7 @@ my $xr2 = q|    \entry{xr2}{inbook}{}
 # This is included as it is xref'd >= minxrefs times Notice lack of singletitle,
 # labelname and labelname hashes because the only name is EDITOR and
 # useeditor is false
-my $xrm = q|    \entry{xrm}{book}{}
+my $xrm = q|    \entry{xrm}{book}{}{}
       \name{editor}{1}{}{%
         {{hash=809950f9b59ae207092b909a19dcb27b}{%
            family={Prendergast},
@@ -532,7 +532,7 @@ my $xrm = q|    \entry{xrm}{book}{}
 |;
 
 # xref field is included as the parent is cited
-my $xr3 = q|    \entry{xr3}{inbook}{}
+my $xr3 = q|    \entry{xr3}{inbook}{}{}
       \name{author}{1}{}{%
         {{hash=9788055665b9bb4b37c776c3f6b74f16}{%
            family={Normal},
@@ -564,7 +564,7 @@ my $xr3 = q|    \entry{xr3}{inbook}{}
 
 # cited as normal
 # Note no singletitle as useeditor is false
-my $xrt = q|    \entry{xrt}{book}{}
+my $xrt = q|    \entry{xrt}{book}{}{}
       \name{editor}{1}{}{%
         {{hash=bf7d6b02f3e073913e5bfe5059508dd5}{%
            family={Lunders},
@@ -590,7 +590,7 @@ my $xrt = q|    \entry{xrt}{book}{}
 
 
 # No crossref field as parent is not cited (mincrossrefs < 2)
-my $xr4 = q|    \entry{xr4}{inbook}{}
+my $xr4 = q|    \entry{xr4}{inbook}{}{}
       \name{author}{1}{}{%
         {{hash=7804ffef086c0c4686c235807f5cb502}{%
            family={Mistrel},
@@ -620,7 +620,7 @@ my $xr4 = q|    \entry{xr4}{inbook}{}
 
 # Missing keys in xref/crossref should be deleted during datasource parse
 # So these two should have no xref/crossref data in them
-my $mxr = q|    \entry{mxr}{inbook}{}
+my $mxr = q|    \entry{mxr}{inbook}{}{}
       \name{author}{1}{}{%
         {{hash=7804ffef086c0c4686c235807f5cb502}{%
            family={Mistrel},
@@ -647,7 +647,7 @@ my $mxr = q|    \entry{mxr}{inbook}{}
     \endentry
 |;
 
-my $mcr = q|    \entry{mcr}{inbook}{}
+my $mcr = q|    \entry{mcr}{inbook}{}{}
       \name{author}{1}{}{%
         {{hash=7804ffef086c0c4686c235807f5cb502}{%
            family={Mistrel},
@@ -674,7 +674,7 @@ my $mcr = q|    \entry{mcr}{inbook}{}
     \endentry
 |;
 
-my $ccr1 = q|    \entry{ccr2}{book}{}
+my $ccr1 = q|    \entry{ccr2}{book}{}{}
       \name{author}{1}{}{%
         {{hash=6268941b408d3263bddb208a54899ea9}{%
            family={Various},
@@ -715,7 +715,7 @@ my $ccr1 = q|    \entry{ccr2}{book}{}
     \endentry
 |;
 
-my $ccr2 = q|    \entry{ccr3}{inbook}{}
+my $ccr2 = q|    \entry{ccr3}{inbook}{}{}
       \name{bookauthor}{1}{}{%
         {{hash=6268941b408d3263bddb208a54899ea9}{%
            family={Various},
@@ -752,7 +752,7 @@ my $ccr2 = q|    \entry{ccr3}{inbook}{}
 
 # This is strange in what it gets from where but it shows information being inherited from two
 # sources
-my $ccr3 = q|    \entry{ccr4}{inbook}{}
+my $ccr3 = q|    \entry{ccr4}{inbook}{}{}
       \name{bookauthor}{1}{}{%
         {{hash=6268941b408d3263bddb208a54899ea9}{Various}{V\bibinitperiod}{Vince}{V\bibinitperiod}{}{}{}{}}%
       }
@@ -769,7 +769,7 @@ my $ccr3 = q|    \entry{ccr4}{inbook}{}
     \endentry
 |;
 
-my $s1 = q|    \entry{s1}{inbook}{}
+my $s1 = q|    \entry{s1}{inbook}{}{}
       \field{sortinit}{S}
       \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
       \true{uniquetitle}
@@ -779,7 +779,7 @@ my $s1 = q|    \entry{s1}{inbook}{}
     \endentry
 |;
 
-my $xc2 = q|    \entry{xc2}{inbook}{}
+my $xc2 = q|    \entry{xc2}{inbook}{}{}
       \name{author}{1}{}{%
         {{hash=1a0f7d518cccdad859a74412ef956474}{%
            family={Crust},
@@ -815,7 +815,7 @@ my $xc2 = q|    \entry{xc2}{inbook}{}
     \endentry
 |;
 
-my $b1 = q|    \entry{b1}{inbook}{}
+my $b1 = q|    \entry{b1}{inbook}{}{}
       \field{sortinit}{2}
       \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
       \strng{crossref}{b2}
@@ -835,7 +835,7 @@ my $b1 = q|    \entry{b1}{inbook}{}
 # being present are by inheritance and singletitle tracking is suppressed
 # in this case because of the "suppress=singletitle" in the inheritance
 # definitions in the .bcf
-my $sup1 = q|    \entry{sup1}{mvbook}{}
+my $sup1 = q|    \entry{sup1}{mvbook}{}{}
       \name{author}{1}{}{%
         {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
            family={Smith},
@@ -862,7 +862,7 @@ my $sup1 = q|    \entry{sup1}{mvbook}{}
     \endentry
 |;
 
-my $sup2 = q|    \entry{sup2}{book}{}
+my $sup2 = q|    \entry{sup2}{book}{}{}
       \name{author}{1}{}{%
         {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
            family={Smith},
