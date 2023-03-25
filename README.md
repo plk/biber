@@ -32,6 +32,20 @@ The git repository for Biber is kept on github:
 
 [https://github.com/plk/biber](https://github.com/plk/biber)
 
+## INSTALLING
+
+If you wish to install from the source, make sure you have permissions to
+install Perl modules, get the source and from the top-level source
+directory, do:
+
+```
+perl Build.PL
+./Build installdeps
+./Build install
+```
+
+biber should now be available in your path, run `biber --version` to verify.
+
 ## SUPPORT AND DOCUMENTATION
 
 After installing, `biber --help` will give you the basic documentation.
