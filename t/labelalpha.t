@@ -48,7 +48,7 @@ Biber::Config->setblxoption(undef,'labeldateparts', 0);
 $biber->prepare;
 
 my $section = $biber->sections->get_section(0);
-my $main = $biber->datalists->get_list('custom/global//global/global');
+my $main = $biber->datalists->get_list('custom/global//global/global/global');
 my $bibentries = $section->bibentries;
 
 # Test with useprefix=false
@@ -99,7 +99,7 @@ foreach my $k ($section->get_citekeys) {
 $biber->prepare;
 
 $section = $biber->sections->get_section(0);
-$main = $biber->datalists->get_list('custom/global//global/global');
+$main = $biber->datalists->get_list('custom/global//global/global/global');
 $bibentries = $section->bibentries;
 
 eq_or_diff($main->get_entryfield('L1', 'sortlabelalpha'), 'Doe95', 'maxalphanames=2 minalphanames=1 entry L1 labelalpha');
@@ -134,7 +134,7 @@ foreach my $k ($section->get_citekeys) {
 $biber->prepare;
 
 $section = $biber->sections->get_section(0);
-$main = $biber->datalists->get_list('custom/global//global/global');
+$main = $biber->datalists->get_list('custom/global//global/global/global');
 $bibentries = $section->bibentries;
 
 eq_or_diff($main->get_entryfield('L1', 'sortlabelalpha'), 'Doe95', 'maxalphanames=2 minalphanames=2 entry L1 labelalpha');
@@ -169,7 +169,7 @@ foreach my $k ($section->get_citekeys) {
 $biber->prepare;
 
 $section = $biber->sections->get_section(0);
-$main = $biber->datalists->get_list('custom/global//global/global');
+$main = $biber->datalists->get_list('custom/global//global/global/global');
 $bibentries = $section->bibentries;
 
 eq_or_diff($main->get_entryfield('L1', 'sortlabelalpha'), 'Doe95', 'maxalphanames=3 minalphanames=1 entry L1 labelalpha');
@@ -210,7 +210,7 @@ $biber->prepare;
 
 my $out = $biber->get_output_obj;
 $section = $biber->sections->get_section(0);
-$main = $biber->datalists->get_list('custom/global//global/global');
+$main = $biber->datalists->get_list('custom/global//global/global/global');
 $bibentries = $section->bibentries;
 
 eq_or_diff($main->get_entryfield('L11', 'sortlabelalpha'), 'vRan22', 'prefix labelalpha 1');
@@ -261,7 +261,7 @@ foreach my $k ($section->get_citekeys) {
 $biber->prepare;
 
 $section = $biber->sections->get_section(0);
-$main = $biber->datalists->get_list('custom/global//global/global');
+$main = $biber->datalists->get_list('custom/global//global/global/global');
 $bibentries = $section->bibentries;
 
 # "Agas" and not "Aga" because the Schmidt/Schnee below need 4 chars to disambiguate
@@ -295,7 +295,7 @@ foreach my $k ($section->get_citekeys) {
 $biber->prepare;
 
 $section = $biber->sections->get_section(0);
-$main = $biber->datalists->get_list('custom/global//global/global');
+$main = $biber->datalists->get_list('custom/global//global/global/global');
 $bibentries = $section->bibentries;
 
 eq_or_diff($main->get_entryfield('L18', 'sortlabelalpha'), 'AChL', 'labelalpha list disambiguation 1');
@@ -349,7 +349,7 @@ foreach my $k ($section->get_citekeys) {
 $biber->prepare;
 
 $section = $biber->sections->get_section(0);
-$main = $biber->datalists->get_list('custom/global//global/global');
+$main = $biber->datalists->get_list('custom/global//global/global/global');
 $bibentries = $section->bibentries;
 
 eq_or_diff($main->get_entryfield('Schmidt2007', 'sortlabelalpha'), 'Sch+07', 'extraalpha ne extradate 1');
@@ -388,7 +388,7 @@ foreach my $k ($section->get_citekeys) {
 $biber->prepare;
 
 $section = $biber->sections->get_section(0);
-$main = $biber->datalists->get_list('custom/global//global/global');
+$main = $biber->datalists->get_list('custom/global//global/global/global');
 $bibentries = $section->bibentries;
 
 eq_or_diff($main->get_entryfield('Schmidt2007', 'sortlabelalpha'), 'SCH', 'entrykey label 1');
@@ -432,7 +432,7 @@ foreach my $k ($section->get_citekeys) {
 $biber->prepare;
 
 $section = $biber->sections->get_section(0);
-$main = $biber->datalists->get_list('custom/global//global/global');
+$main = $biber->datalists->get_list('custom/global//global/global/global');
 $bibentries = $section->bibentries;
 
 eq_or_diff($main->get_entryfield('labelstest', 'sortlabelalpha'), '200532', 'labeldate test - 1');
@@ -494,7 +494,7 @@ Biber::Config->setoption('nolabelwidthcount', [ {value => q/o+/} ] );
 $biber->prepare;
 
 $section = $biber->sections->get_section(0);
-$main = $biber->datalists->get_list('custom/global//global/global');
+$main = $biber->datalists->get_list('custom/global//global/global/global');
 $bibentries = $section->bibentries;
 
 eq_or_diff($main->get_entryfield('skipwidthtest1', 'sortlabelalpha'), 'OToolOToole', 'Skip width test - 1');
@@ -593,7 +593,7 @@ foreach my $k ($section->get_citekeys) {
 $biber->prepare;
 
 $section = $biber->sections->get_section(0);
-$main = $biber->datalists->get_list('custom/global//global/global');
+$main = $biber->datalists->get_list('custom/global//global/global/global');
 $bibentries = $section->bibentries;
 
 eq_or_diff($main->get_entryfield('rangetest1', 'sortlabelalpha'), 'WAXAYAZA.VEWEXE+.VTWT.XFYFZF.WH+', 'Name range test - 1');
@@ -667,7 +667,7 @@ foreach my $k ($section->get_citekeys) {
 $biber->prepare;
 
 $section = $biber->sections->get_section(0);
-$main = $biber->datalists->get_list('custom/global//global/global');
+$main = $biber->datalists->get_list('custom/global//global/global/global');
 $bibentries = $section->bibentries;
 
 eq_or_diff($main->get_entryfield('rangetest1', 'sortlabelalpha'), 'VWXYZ..V/W/X/Y/Z', 'Name range test - 2');

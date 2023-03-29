@@ -47,7 +47,7 @@ Biber::Config->setblxoption(undef, 'julianstart', '0001-01-01');
 $biber->prepare;
 my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
-my $main = $biber->datalists->get_list('nty/global//global/global');
+my $main = $biber->datalists->get_list('nty/global//global/global/global');
 
 my $bibentries = $section->bibentries;
 my $l1 = [ "article entry 'L1' (dateformats.bib): Invalid format '1985-1030' of date field 'origdate' - ignoring",
@@ -65,7 +65,7 @@ my $l7 = [ "proceedings entry 'L7' (dateformats.bib): Invalid format '1996-10-35
 my $l11 = [ "Overwriting field 'year' with year value from field 'date' for entry 'L11'"];
 my $l12 = [ "Overwriting field 'month' with month value from field 'date' for entry 'L12'" ];
 
-my $l13c = q|    \entry{L13}{book}{}
+my $l13c = q|    \entry{L13}{book}{}{}
       \name[default][en-us]{author}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
@@ -98,10 +98,12 @@ my $l13c = q|    \entry{L13}{book}{}
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{fullhashraw}{8c77336299b25bdada7bf8038f46722f}
       \strng{bibnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{authordefaulten-usbibnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{authordefaulten-usnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{authordefaulten-usfullhash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{authordefaulten-usfullhashraw}{8c77336299b25bdada7bf8038f46722f}
       \field{extraname}{3}
       \field{sortinit}{D}
       \strng{sortinithash}{6f385f66841fb5e82009dc833c761848}
@@ -118,7 +120,7 @@ my $l13c = q|    \entry{L13}{book}{}
     \endentry
 |;
 
-my $l14 = q|    \entry{L14}{book}{}
+my $l14 = q|    \entry{L14}{book}{}{}
       \name[default][en-us]{author}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
@@ -151,10 +153,12 @@ my $l14 = q|    \entry{L14}{book}{}
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{fullhashraw}{8c77336299b25bdada7bf8038f46722f}
       \strng{bibnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{authordefaulten-usbibnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{authordefaulten-usnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{authordefaulten-usfullhash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{authordefaulten-usfullhashraw}{8c77336299b25bdada7bf8038f46722f}
       \field{extraname}{4}
       \field{sortinit}{D}
       \strng{sortinithash}{6f385f66841fb5e82009dc833c761848}
@@ -175,7 +179,7 @@ my $l14 = q|    \entry{L14}{book}{}
     \endentry
 |;
 
-my $l15 = q|    \entry{L15}{book}{}
+my $l15 = q|    \entry{L15}{book}{}{}
       \name[default][en-us]{author}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
@@ -208,10 +212,12 @@ my $l15 = q|    \entry{L15}{book}{}
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{fullhashraw}{8c77336299b25bdada7bf8038f46722f}
       \strng{bibnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{authordefaulten-usbibnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{authordefaulten-usnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{authordefaulten-usfullhash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{authordefaulten-usfullhashraw}{8c77336299b25bdada7bf8038f46722f}
       \field{extraname}{12}
       \field{sortinit}{D}
       \strng{sortinithash}{6f385f66841fb5e82009dc833c761848}
@@ -223,7 +229,7 @@ my $l15 = q|    \entry{L15}{book}{}
     \endentry
 |;
 
-my $l16 = q|    \entry{L16}{proceedings}{}
+my $l16 = q|    \entry{L16}{proceedings}{}{}
       \name[default][en-us]{editor}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
@@ -256,10 +262,12 @@ my $l16 = q|    \entry{L16}{proceedings}{}
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{fullhashraw}{8c77336299b25bdada7bf8038f46722f}
       \strng{bibnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{editordefaulten-usbibnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{editordefaulten-usnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{editordefaulten-usfullhash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{editordefaulten-usfullhashraw}{8c77336299b25bdada7bf8038f46722f}
       \field{extraname}{13}
       \field{sortinit}{D}
       \strng{sortinithash}{6f385f66841fb5e82009dc833c761848}
@@ -277,7 +285,7 @@ my $l16 = q|    \entry{L16}{proceedings}{}
     \endentry
 |;
 
-my $l17 = q|    \entry{L17}{proceedings}{}
+my $l17 = q|    \entry{L17}{proceedings}{}{}
       \name[default][en-us]{editor}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
@@ -310,10 +318,12 @@ my $l17 = q|    \entry{L17}{proceedings}{}
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{fullhashraw}{8c77336299b25bdada7bf8038f46722f}
       \strng{bibnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{editordefaulten-usbibnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{editordefaulten-usnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{editordefaulten-usfullhash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{editordefaulten-usfullhashraw}{8c77336299b25bdada7bf8038f46722f}
       \field{extraname}{5}
       \field{sortinit}{D}
       \strng{sortinithash}{6f385f66841fb5e82009dc833c761848}
@@ -351,7 +361,7 @@ my $l17 = q|    \entry{L17}{proceedings}{}
     \endentry
 |;
 
-my $l17c = q|    \entry{L17}{proceedings}{}
+my $l17c = q|    \entry{L17}{proceedings}{}{}
       \name[default][en-us]{editor}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
@@ -384,10 +394,12 @@ my $l17c = q|    \entry{L17}{proceedings}{}
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{fullhashraw}{8c77336299b25bdada7bf8038f46722f}
       \strng{bibnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{editordefaulten-usbibnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{editordefaulten-usnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{editordefaulten-usfullhash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{editordefaulten-usfullhashraw}{8c77336299b25bdada7bf8038f46722f}
       \field{extraname}{5}
       \field{sortinit}{D}
       \strng{sortinithash}{6f385f66841fb5e82009dc833c761848}
@@ -424,7 +436,7 @@ my $l17c = q|    \entry{L17}{proceedings}{}
     \endentry
 |;
 
-my $l17e = q|    \entry{L17}{proceedings}{}
+my $l17e = q|    \entry{L17}{proceedings}{}{}
       \name[default][en-us]{editor}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
@@ -457,10 +469,12 @@ my $l17e = q|    \entry{L17}{proceedings}{}
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{fullhashraw}{8c77336299b25bdada7bf8038f46722f}
       \strng{bibnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{editordefaulten-usbibnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{editordefaulten-usnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{editordefaulten-usfullhash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{editordefaulten-usfullhashraw}{8c77336299b25bdada7bf8038f46722f}
       \field{extraname}{5}
       \field{sortinit}{D}
       \strng{sortinithash}{6f385f66841fb5e82009dc833c761848}
@@ -566,7 +580,7 @@ $biber->prepare;
 $out = $biber->get_output_obj;
 eq_or_diff($bibentries->entry('L17')->get_labeldate_info->{field}{source}, 'pubstate', 'Source is non-date field');
 
-my $era1 = q|    \entry{era1}{article}{}
+my $era1 = q|    \entry{era1}{article}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
            family={Smith},
@@ -582,10 +596,12 @@ my $era1 = q|    \entry{era1}{article}{}
       }
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{fullhashraw}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{bibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authordefaulten-usbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authordefaulten-usnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authordefaulten-usfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authordefaulten-usfullhashraw}{556c8dba145b472e6a8598d506f7cbe2}
       \field{extraname}{9}
       \field{sortinit}{S}
       \strng{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
@@ -605,7 +621,7 @@ my $era1 = q|    \entry{era1}{article}{}
     \endentry
 |;
 
-my $era2 = q|    \entry{era2}{inproceedings}{}
+my $era2 = q|    \entry{era2}{inproceedings}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
            family={Smith},
@@ -621,10 +637,12 @@ my $era2 = q|    \entry{era2}{inproceedings}{}
       }
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{fullhashraw}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{bibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authordefaulten-usbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authordefaulten-usnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authordefaulten-usfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authordefaulten-usfullhashraw}{556c8dba145b472e6a8598d506f7cbe2}
       \field{extraname}{10}
       \field{sortinit}{S}
       \strng{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
@@ -645,7 +663,7 @@ my $era2 = q|    \entry{era2}{inproceedings}{}
     \endentry
 |;
 
-my $era3 = q|    \entry{era3}{inproceedings}{}
+my $era3 = q|    \entry{era3}{inproceedings}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
            family={Smith},
@@ -661,10 +679,12 @@ my $era3 = q|    \entry{era3}{inproceedings}{}
       }
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{fullhashraw}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{bibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authordefaulten-usbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authordefaulten-usnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authordefaulten-usfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authordefaulten-usfullhashraw}{556c8dba145b472e6a8598d506f7cbe2}
       \field{extraname}{11}
       \field{sortinit}{S}
       \strng{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
@@ -685,7 +705,7 @@ my $era3 = q|    \entry{era3}{inproceedings}{}
     \endentry
 |;
 
-my $era4 = q|    \entry{era4}{inproceedings}{}
+my $era4 = q|    \entry{era4}{inproceedings}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
            family={Smith},
@@ -701,10 +721,12 @@ my $era4 = q|    \entry{era4}{inproceedings}{}
       }
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{fullhashraw}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{bibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authordefaulten-usbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authordefaulten-usnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authordefaulten-usfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authordefaulten-usfullhashraw}{556c8dba145b472e6a8598d506f7cbe2}
       \field{extraname}{6}
       \field{sortinit}{S}
       \strng{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
@@ -733,7 +755,7 @@ my $era4 = q|    \entry{era4}{inproceedings}{}
     \endentry
 |;
 
-my $time1 = q|    \entry{time1}{article}{}
+my $time1 = q|    \entry{time1}{article}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
            family={Smith},
@@ -749,10 +771,12 @@ my $time1 = q|    \entry{time1}{article}{}
       }
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{fullhashraw}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{bibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authordefaulten-usbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authordefaulten-usnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authordefaulten-usfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authordefaulten-usfullhashraw}{556c8dba145b472e6a8598d506f7cbe2}
       \field{extraname}{2}
       \field{sortinit}{S}
       \strng{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
@@ -788,7 +812,7 @@ my $time1 = q|    \entry{time1}{article}{}
     \endentry
 |;
 
-my $range1 = q|    \entry{range1}{inproceedings}{}
+my $range1 = q|    \entry{range1}{inproceedings}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
            family={Smith},
@@ -804,10 +828,12 @@ my $range1 = q|    \entry{range1}{inproceedings}{}
       }
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{fullhashraw}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{bibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authordefaulten-usbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authordefaulten-usnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authordefaulten-usfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authordefaulten-usfullhashraw}{556c8dba145b472e6a8598d506f7cbe2}
       \field{extraname}{7}
       \field{sortinit}{S}
       \strng{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
@@ -835,7 +861,7 @@ my $range1 = q|    \entry{range1}{inproceedings}{}
     \endentry
 |;
 
-my $range2 = q|    \entry{range2}{inproceedings}{}
+my $range2 = q|    \entry{range2}{inproceedings}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
            family={Smith},
@@ -851,10 +877,12 @@ my $range2 = q|    \entry{range2}{inproceedings}{}
       }
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{fullhashraw}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{bibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authordefaulten-usbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authordefaulten-usnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authordefaulten-usfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authordefaulten-usfullhashraw}{556c8dba145b472e6a8598d506f7cbe2}
       \field{extraname}{8}
       \field{sortinit}{S}
       \strng{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
@@ -882,7 +910,7 @@ my $range2 = q|    \entry{range2}{inproceedings}{}
     \endentry
 |;
 
-my $season1 = q|    \entry{season1}{inproceedings}{}
+my $season1 = q|    \entry{season1}{inproceedings}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
            family={Smith},
@@ -898,10 +926,12 @@ my $season1 = q|    \entry{season1}{inproceedings}{}
       }
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{fullhashraw}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{bibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authordefaulten-usbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authordefaulten-usnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authordefaulten-usfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authordefaulten-usfullhashraw}{556c8dba145b472e6a8598d506f7cbe2}
       \field{extraname}{1}
       \field{sortinit}{S}
       \strng{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
@@ -920,7 +950,7 @@ my $season1 = q|    \entry{season1}{inproceedings}{}
     \endentry
 |;
 
-my $unspec1 = q|    \entry{unspec1}{inproceedings}{}
+my $unspec1 = q|    \entry{unspec1}{inproceedings}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
            family={Smith},
@@ -936,10 +966,12 @@ my $unspec1 = q|    \entry{unspec1}{inproceedings}{}
       }
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{fullhashraw}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{bibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authordefaulten-usbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authordefaulten-usnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authordefaulten-usfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authordefaulten-usfullhashraw}{556c8dba145b472e6a8598d506f7cbe2}
       \field{extraname}{4}
       \field{sortinit}{S}
       \strng{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
@@ -979,7 +1011,7 @@ my $unspec1 = q|    \entry{unspec1}{inproceedings}{}
 |;
 
 
-my $unspec2 = q|    \entry{unspec2}{article}{}
+my $unspec2 = q|    \entry{unspec2}{article}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
            family={Smith},
@@ -995,10 +1027,12 @@ my $unspec2 = q|    \entry{unspec2}{article}{}
       }
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{fullhashraw}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{bibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authordefaulten-usbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authordefaulten-usnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authordefaulten-usfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authordefaulten-usfullhashraw}{556c8dba145b472e6a8598d506f7cbe2}
       \field{extraname}{3}
       \field{sortinit}{S}
       \strng{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}

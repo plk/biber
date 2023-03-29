@@ -944,6 +944,23 @@
           </tbody>
         </table>
         <br/>
+        <h4>Name hash Template</h4>
+        <table>
+          <thead>
+            <tr><td>Order</td><td>Scope</td><td>Namepart</td></tr>
+          </thead>
+          <tbody>
+            <xsl:for-each select="/bcf:controlfile/bcf:namehashtemplate/bcf:namepart">
+              <xsl:sort select="./@order"/>
+              <tr>
+                <td><xsl:value-of select="./@order"/></td>
+                <td><xsl:value-of select="./@hashscope"/></td>
+                <td><xsl:value-of select="./text()"/></td>
+              </tr>
+            </xsl:for-each>
+          </tbody>
+        </table>
+        <br/>
         <h4>Sorting Name Key Template</h4>
         <xsl:for-each select="/bcf:controlfile/bcf:sortingnamekeytemplate">
           <table>

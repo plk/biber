@@ -54,10 +54,10 @@ my ($stdout, $stderr) = capture { $biber->prepare };
 #my ($stdout, $stderr); $biber->prepare; # For debugging
 my $section = $biber->sections->get_section(0);
 my $bibentries = $section->bibentries;
-my $main = $biber->datalists->get_list('nty/global//global/global');
+my $main = $biber->datalists->get_list('nty/global//global/global/global');
 my $out = $biber->get_output_obj;
 
-my $xd1 = q|    \entry{xd1}{book}{}
+my $xd1 = q|    \entry{xd1}{book}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=51db4bfd331cba22959ce2d224c517cd}{%
            family={Ellington},
@@ -89,10 +89,12 @@ my $xd1 = q|    \entry{xd1}{book}{}
       }
       \strng{namehash}{51db4bfd331cba22959ce2d224c517cd}
       \strng{fullhash}{51db4bfd331cba22959ce2d224c517cd}
+      \strng{fullhashraw}{51db4bfd331cba22959ce2d224c517cd}
       \strng{bibnamehash}{51db4bfd331cba22959ce2d224c517cd}
       \strng{authordefaulten-usbibnamehash}{51db4bfd331cba22959ce2d224c517cd}
       \strng{authordefaulten-usnamehash}{51db4bfd331cba22959ce2d224c517cd}
       \strng{authordefaulten-usfullhash}{51db4bfd331cba22959ce2d224c517cd}
+      \strng{authordefaulten-usfullhashraw}{51db4bfd331cba22959ce2d224c517cd}
       \field{extraname}{2}
       \field{sortinit}{E}
       \strng{sortinithash}{8da8a182d344d5b9047633dfc0cc9131}
@@ -106,7 +108,7 @@ my $xd1 = q|    \entry{xd1}{book}{}
     \endentry
 |;
 
-my $xd2 = q|    \entry{xd2}{book}{}
+my $xd2 = q|    \entry{xd2}{book}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=68539e0ce4922cc4957c6cabf35e6fc8}{%
            family={Pillington},
@@ -138,10 +140,12 @@ my $xd2 = q|    \entry{xd2}{book}{}
       }
       \strng{namehash}{68539e0ce4922cc4957c6cabf35e6fc8}
       \strng{fullhash}{68539e0ce4922cc4957c6cabf35e6fc8}
+      \strng{fullhashraw}{68539e0ce4922cc4957c6cabf35e6fc8}
       \strng{bibnamehash}{68539e0ce4922cc4957c6cabf35e6fc8}
       \strng{authordefaulten-usbibnamehash}{68539e0ce4922cc4957c6cabf35e6fc8}
       \strng{authordefaulten-usnamehash}{68539e0ce4922cc4957c6cabf35e6fc8}
       \strng{authordefaulten-usfullhash}{68539e0ce4922cc4957c6cabf35e6fc8}
+      \strng{authordefaulten-usfullhashraw}{68539e0ce4922cc4957c6cabf35e6fc8}
       \field{sortinit}{P}
       \strng{sortinithash}{ff3bcf24f47321b42cb156c2cc8a8422}
       \field{extradatescope}{labelyear}
@@ -156,7 +160,7 @@ my $xd2 = q|    \entry{xd2}{book}{}
     \endentry
 |;
 
-my $gxd1 = q|    \entry{gxd1}{book}{}
+my $gxd1 = q|    \entry{gxd1}{book}{}{}
       \name[default][en-us]{author}{2}{}{%
         {{hash=6b3653417f9aa97391c37cff5dfda7fa}{%
            family={Smith},
@@ -238,19 +242,24 @@ my $gxd1 = q|    \entry{gxd1}{book}{}
       }
       \strng{namehash}{167d3a67f6ee19fe4d131fc34dcd9ede}
       \strng{fullhash}{167d3a67f6ee19fe4d131fc34dcd9ede}
+      \strng{fullhashraw}{167d3a67f6ee19fe4d131fc34dcd9ede}
       \strng{bibnamehash}{167d3a67f6ee19fe4d131fc34dcd9ede}
       \strng{authordefaulten-usbibnamehash}{167d3a67f6ee19fe4d131fc34dcd9ede}
       \strng{authordefaulten-usnamehash}{167d3a67f6ee19fe4d131fc34dcd9ede}
       \strng{authordefaulten-usfullhash}{167d3a67f6ee19fe4d131fc34dcd9ede}
+      \strng{authordefaulten-usfullhashraw}{167d3a67f6ee19fe4d131fc34dcd9ede}
       \strng{editordefaulten-usbibnamehash}{6238b302317c6baeba56035f2c4998c9}
       \strng{editordefaulten-usnamehash}{6238b302317c6baeba56035f2c4998c9}
       \strng{editordefaulten-usfullhash}{6238b302317c6baeba56035f2c4998c9}
+      \strng{editordefaulten-usfullhashraw}{6238b302317c6baeba56035f2c4998c9}
       \strng{nameadefaulten-usbibnamehash}{d41d8cd98f00b204e9800998ecf8427e}
       \strng{nameadefaulten-usnamehash}{d41d8cd98f00b204e9800998ecf8427e}
       \strng{nameadefaulten-usfullhash}{d41d8cd98f00b204e9800998ecf8427e}
+      \strng{nameadefaulten-usfullhashraw}{d41d8cd98f00b204e9800998ecf8427e}
       \strng{translatordefaulten-usbibnamehash}{d41d8cd98f00b204e9800998ecf8427e}
       \strng{translatordefaulten-usnamehash}{d41d8cd98f00b204e9800998ecf8427e}
       \strng{translatordefaulten-usfullhash}{d41d8cd98f00b204e9800998ecf8427e}
+      \strng{translatordefaulten-usfullhashraw}{d41d8cd98f00b204e9800998ecf8427e}
       \field{sortinit}{S}
       \strng{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
       \fieldmssource{labelname}{author}{default}{en-us}
@@ -268,7 +277,7 @@ my $gxd1 = q|    \entry{gxd1}{book}{}
     \endentry
 |;
 
-my $gxd1g = q|    \entry{gxd1g}{book}{}
+my $gxd1g = q|    \entry{gxd1g}{book}{}{}
       \name[default][en-us]{author}{3}{}{%
         {{hash=6b3653417f9aa97391c37cff5dfda7fa}{%
            family={Smith},
@@ -365,19 +374,24 @@ my $gxd1g = q|    \entry{gxd1g}{book}{}
       }
       \strng{namehash}{9fd3d5e0bec66ae3baacf58cf747485a}
       \strng{fullhash}{9fd3d5e0bec66ae3baacf58cf747485a}
+      \strng{fullhashraw}{9fd3d5e0bec66ae3baacf58cf747485a}
       \strng{bibnamehash}{9fd3d5e0bec66ae3baacf58cf747485a}
       \strng{authordefaulten-usbibnamehash}{9fd3d5e0bec66ae3baacf58cf747485a}
       \strng{authordefaulten-usnamehash}{9fd3d5e0bec66ae3baacf58cf747485a}
       \strng{authordefaulten-usfullhash}{9fd3d5e0bec66ae3baacf58cf747485a}
+      \strng{authordefaulten-usfullhashraw}{9fd3d5e0bec66ae3baacf58cf747485a}
       \strng{editordefaulten-usbibnamehash}{6238b302317c6baeba56035f2c4998c9}
       \strng{editordefaulten-usnamehash}{6238b302317c6baeba56035f2c4998c9}
       \strng{editordefaulten-usfullhash}{6238b302317c6baeba56035f2c4998c9}
+      \strng{editordefaulten-usfullhashraw}{6238b302317c6baeba56035f2c4998c9}
       \strng{nameadefaulten-usbibnamehash}{d41d8cd98f00b204e9800998ecf8427e}
       \strng{nameadefaulten-usnamehash}{d41d8cd98f00b204e9800998ecf8427e}
       \strng{nameadefaulten-usfullhash}{d41d8cd98f00b204e9800998ecf8427e}
+      \strng{nameadefaulten-usfullhashraw}{d41d8cd98f00b204e9800998ecf8427e}
       \strng{translatordefaulten-usbibnamehash}{d41d8cd98f00b204e9800998ecf8427e}
       \strng{translatordefaulten-usnamehash}{d41d8cd98f00b204e9800998ecf8427e}
       \strng{translatordefaulten-usfullhash}{d41d8cd98f00b204e9800998ecf8427e}
+      \strng{translatordefaulten-usfullhashraw}{d41d8cd98f00b204e9800998ecf8427e}
       \field{sortinit}{S}
       \strng{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
       \fieldmssource{labelname}{author}{default}{en-us}
@@ -395,7 +409,7 @@ my $gxd1g = q|    \entry{gxd1g}{book}{}
     \endentry
 |;
 
-my $bltxgxd1 = q|    \entry{bltxgxd1}{book}{}
+my $bltxgxd1 = q|    \entry{bltxgxd1}{book}{}{}
       \name[default][en-us]{author}{2}{}{%
         {{hash=ecc4a87e596c582a09b19d4ab187d8c2}{%
            family={Brian},
@@ -470,16 +484,20 @@ my $bltxgxd1 = q|    \entry{bltxgxd1}{book}{}
       }
       \strng{namehash}{f3cbd0df6512c5a3653f60e9e9849c69}
       \strng{fullhash}{f3cbd0df6512c5a3653f60e9e9849c69}
+      \strng{fullhashraw}{f3cbd0df6512c5a3653f60e9e9849c69}
       \strng{bibnamehash}{f3cbd0df6512c5a3653f60e9e9849c69}
       \strng{authordefaulten-usbibnamehash}{f3cbd0df6512c5a3653f60e9e9849c69}
       \strng{authordefaulten-usnamehash}{f3cbd0df6512c5a3653f60e9e9849c69}
       \strng{authordefaulten-usfullhash}{f3cbd0df6512c5a3653f60e9e9849c69}
+      \strng{authordefaulten-usfullhashraw}{f3cbd0df6512c5a3653f60e9e9849c69}
       \strng{editordefaulten-usbibnamehash}{c8eb0270ad4e434f36dca28e219e81a8}
       \strng{editordefaulten-usnamehash}{c8eb0270ad4e434f36dca28e219e81a8}
       \strng{editordefaulten-usfullhash}{c8eb0270ad4e434f36dca28e219e81a8}
+      \strng{editordefaulten-usfullhashraw}{c8eb0270ad4e434f36dca28e219e81a8}
       \strng{translatordefaulten-usbibnamehash}{d41d8cd98f00b204e9800998ecf8427e}
       \strng{translatordefaulten-usnamehash}{d41d8cd98f00b204e9800998ecf8427e}
       \strng{translatordefaulten-usfullhash}{d41d8cd98f00b204e9800998ecf8427e}
+      \strng{translatordefaulten-usfullhashraw}{d41d8cd98f00b204e9800998ecf8427e}
       \field{sortinit}{B}
       \strng{sortinithash}{d7095fff47cda75ca2589920aae98399}
       \fieldmssource{labelname}{author}{default}{en-us}

@@ -66,6 +66,12 @@ sub new {
         $name->{nameparts}{$np} = $params{$np};
       }
     }
+
+    # Add any user-defined hashid
+    if (my $hid = $params{hashid}) {
+      $name->{hashid} = $hid;
+    }
+
     $name->{rawstring} = join('',
                               map {$name->{nameparts}{$_}{string} // ''} keys $name->{nameparts}->%*);
     $name->{id} = suniqid;
@@ -100,6 +106,16 @@ sub was_stripped {
   return exists($self->{strip}) ? $self->{strip}{$part} : undef;
 }
 
+=head2 get_xdata
+
+    Get any xdata reference information for a name
+
+=cut
+
+sub get_xdata {
+  my $self = shift;
+  return $self->{xdata} || '';
+}
 
 =head2 get_nameparts
 
@@ -112,15 +128,41 @@ sub get_nameparts {
   return keys $self->{nameparts}->%*;
 }
 
-=head2 get_xdata
+=head2 get_hash_namepart
 
-    Get any xdata reference information for a name
+    Get a namepart determined by a namehashtemplate
 
 =cut
 
-sub get_xdata {
-  my $self = shift;
-  return $self->{xdata} || '';
+sub get_hash_namepart {
+  my ($self, $namepart, $nhtemplate) = @_;
+  foreach my $np ($nhtemplate->@*) {
+    if (fc($np->{namepart}) eq fc($namepart)) {
+      if (fc($np->{hashscope}) eq 'init') {
+        if ($self->{nameparts}{$namepart}{initial}) {
+          return join('', $self->{nameparts}{$namepart}{initial}->@*);
+        }
+        else {
+          return '';
+        }
+      }
+      elsif (fc($np->{hashscope}) eq 'full') {
+        return $self->{nameparts}{$namepart}{string} || '';
+      }
+    }
+  }
+  return '';
+}
+
+=head2 get_hashid
+
+    Get a hashid by passed name
+
+=cut
+
+sub get_hashid {
+  my ($self, $namepart) = @_;
+  return $self->{hashid};
 }
 
 =head2 get_namepart
@@ -155,7 +197,7 @@ sub set_namepart {
 
 sub get_namepart_initial {
   my ($self, $namepart) = @_;
-  return $self->{nameparts}{$namepart}{initial};
+  return $self->{nameparts}{$namepart}{initial} || '';
 }
 
 =head2 set_namepart_initial

@@ -43,20 +43,20 @@ Biber::Config->setoption('output_safechars', 1);
 $biber->prepare;
 my $out = $biber->get_output_obj;
 my $section0 = $biber->sections->get_section(0);
-my $main0 = $biber->datalists->get_list('custom/global//global/global');
-my $shs0 = $biber->datalists->get_list('shorthand/global//global/global', 0, 'list');
+my $main0 = $biber->datalists->get_list('custom/global//global/global/global');
+my $shs0 = $biber->datalists->get_list('shorthand/global//global/global/global', 0, 'list');
 
 my $section1 = $biber->sections->get_section(1);
-my $main1 = $biber->datalists->get_list('custom/global//global/global', 1);
-my $shs1 = $biber->datalists->get_list('shorthand/global//global/global', 1, 'list');
+my $main1 = $biber->datalists->get_list('custom/global//global/global/global', 1);
+my $shs1 = $biber->datalists->get_list('shorthand/global//global/global/global', 1, 'list');
 
 my $section2 = $biber->sections->get_section(2);
-my $main2 = $biber->datalists->get_list('custom/global//global/global', 2);
-my $shs2 = $biber->datalists->get_list('shorthand/global//global/global', 2, 'list');
+my $main2 = $biber->datalists->get_list('custom/global//global/global/global', 2);
+my $shs2 = $biber->datalists->get_list('shorthand/global//global/global/global', 2, 'list');
 
 my $section3 = $biber->sections->get_section(3);
-my $main3 = $biber->datalists->get_list('custom/global//global/global', 3);
-my $shs3 = $biber->datalists->get_list('shorthand/global//global/global', 3, 'list');
+my $main3 = $biber->datalists->get_list('custom/global//global/global/global', 3);
+my $shs3 = $biber->datalists->get_list('shorthand/global//global/global/global', 3, 'list');
 
 # Internal UTF-8 before output is always NFD so have to NFD bits of this
 my $preamble = [

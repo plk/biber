@@ -1922,6 +1922,7 @@ sub parsename {
       prefix         => {string => undef, initial => undef},
       suffix         => {string => undef, initial => undef},
       id             => 32RS0Wuj0P,
+      hashid         => 'someid',
       sortingnamekeytemplatename => 'template name',
     }
 
@@ -1948,13 +1949,16 @@ sub parsename_x {
       next;
     }
 
-    unless ($nps{$npn =~ s/-i$//r}) {
-      biber_warn("Invalid namepart '$npn' found in extended name format name '$fieldname' in entry '$key', ignoring");
+    unless ($nps{$npn =~ s/-i$//r} or $npn eq 'id') {# this is the hashid, not the internal unique ID
+      biber_warn("Invalid namepart option '$npn' found in extended name format name '$fieldname' in entry '$key', ignoring");
       next;
     }
 
     if ($npn =~ m/-i$/) {
       $namec{$npn} = _split_initials($npv);
+    }
+    elsif ($npn eq 'id') { # hashid
+      $namec{hashid} = $npv;
     }
     else {
       # Don't tie according to bibtex rules if the namepart is protected with braces
@@ -1988,21 +1992,26 @@ sub parsename_x {
     }
   }
 
-  my %nameparts;
+  my %nameinfo;
   foreach my $np (keys %nps) {
-    $nameparts{$np} = {string  => $namec{$np} // undef,
+    $nameinfo{$np} = {string  => $namec{$np} // undef,
                        initial => exists($namec{$np}) ? $namec{"${np}-i"} : undef};
 
     # Record max namepart lengths
-    $section->set_np_length($np, length($nameparts{$np}{string}))  if $nameparts{$np}{string};
-    $section->set_np_length("${np}-i", length(join('', $nameparts{$np}{initial}->@*)))  if $nameparts{$np}{initial};
+    $section->set_np_length($np, length($nameinfo{$np}{string}))  if $nameinfo{$np}{string};
+    $section->set_np_length("${np}-i", length(join('', $nameinfo{$np}{initial}->@*)))  if $nameinfo{$np}{initial};
+  }
+
+  # Add hashid if it exists
+  if (exists($namec{hashid})) {
+    $nameinfo{hashid} = $namec{hashid};
   }
 
   # The "strip" entry tells us which of the name parts had outer braces
   # stripped during processing so we can add them back when printing the
   # .bbl so as to maintain maximum BibTeX compatibility
   return  Biber::Entry::Name->new(
-                                  %nameparts,
+                                  %nameinfo,
                                   %pernameopts
                                  );
 }

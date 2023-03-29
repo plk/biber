@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 73;
+use Test::More tests => 75;
 use Test::Differences;
 unified_diff;
 
@@ -46,7 +46,8 @@ Biber::Config->setblxoption(undef,'mincitenames', 3);
 $biber->prepare;
 my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
-my $main = $biber->datalists->get_list('custom/global//global/global');
+my $main = $biber->datalists->get_list('custom/global//global/global/global');
+my $nhtest = $biber->datalists->get_list('custom/global//global/global/test');
 my $bibentries = $section->bibentries;
 
 my $name1 =
@@ -179,7 +180,7 @@ my $namex1 =
       prefix              => {string => 'van~der', initial => ['v','d']},
       suffix              => {string => undef, initial => undef}};
 
-my $l1 = q|    \entry{L1}{book}{}
+my $l1 = q|    \entry{L1}{book}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=72287a68c1714cb1b9f4ab9e03a88b96}{%
            family={Adler},
@@ -195,17 +196,78 @@ my $l1 = q|    \entry{L1}{book}{}
       }
       \strng{namehash}{72287a68c1714cb1b9f4ab9e03a88b96}
       \strng{fullhash}{72287a68c1714cb1b9f4ab9e03a88b96}
+      \strng{fullhashraw}{72287a68c1714cb1b9f4ab9e03a88b96}
       \strng{bibnamehash}{72287a68c1714cb1b9f4ab9e03a88b96}
       \strng{authordefaulten-usbibnamehash}{72287a68c1714cb1b9f4ab9e03a88b96}
       \strng{authordefaulten-usnamehash}{72287a68c1714cb1b9f4ab9e03a88b96}
       \strng{authordefaulten-usfullhash}{72287a68c1714cb1b9f4ab9e03a88b96}
+      \strng{authordefaulten-usfullhashraw}{72287a68c1714cb1b9f4ab9e03a88b96}
+      \field{extraname}{1}
       \field{sortinit}{A}
       \strng{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
       \fieldmssource{labelname}{author}{default}{en-us}
     \endentry
 |;
 
-my $l2 = q|    \entry{L2}{book}{}
+my $l1id = q|    \entry{L1id}{book}{}{}
+      \name[default][en-us]{author}{1}{}{%
+        {{hash=88354d4ba914f2ded2574386a2493996}{%
+           family={Adler},
+           familyi={A\bibinitperiod},
+           given={Alfred},
+           giveni={A\bibinitperiod}}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Adler},
+          familydefaulten-usi={A\bibinitperiod},
+          givendefaulten-us={Alfred},
+          givendefaulten-usi={A\bibinitperiod}
+      }
+      \strng{namehash}{88354d4ba914f2ded2574386a2493996}
+      \strng{fullhash}{88354d4ba914f2ded2574386a2493996}
+      \strng{fullhashraw}{72287a68c1714cb1b9f4ab9e03a88b96}
+      \strng{bibnamehash}{88354d4ba914f2ded2574386a2493996}
+      \strng{authordefaulten-usbibnamehash}{88354d4ba914f2ded2574386a2493996}
+      \strng{authordefaulten-usnamehash}{88354d4ba914f2ded2574386a2493996}
+      \strng{authordefaulten-usfullhash}{88354d4ba914f2ded2574386a2493996}
+      \strng{authordefaulten-usfullhashraw}{72287a68c1714cb1b9f4ab9e03a88b96}
+      \field{extraname}{2}
+      \field{sortinit}{A}
+      \strng{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
+      \fieldmssource{labelname}{author}{default}{en-us}
+    \endentry
+|;
+
+my $l1h = q|    \entry{L1}{book}{}{}
+      \name[default][en-us]{author}{1}{}{%
+        {{hash=a4e132fab651ba62e051557227672cda}{%
+           family={Adler},
+           familyi={A\bibinitperiod},
+           given={Alfred},
+           giveni={A\bibinitperiod}}}%
+      }
+      \namepartms{author}{1}{%
+          familydefaulten-us={Adler},
+          familydefaulten-usi={A\bibinitperiod},
+          givendefaulten-us={Alfred},
+          givendefaulten-usi={A\bibinitperiod}
+      }
+      \strng{namehash}{a4e132fab651ba62e051557227672cda}
+      \strng{fullhash}{a4e132fab651ba62e051557227672cda}
+      \strng{fullhashraw}{72287a68c1714cb1b9f4ab9e03a88b96}
+      \strng{bibnamehash}{a4e132fab651ba62e051557227672cda}
+      \strng{authordefaulten-usbibnamehash}{a4e132fab651ba62e051557227672cda}
+      \strng{authordefaulten-usnamehash}{a4e132fab651ba62e051557227672cda}
+      \strng{authordefaulten-usfullhash}{a4e132fab651ba62e051557227672cda}
+      \strng{authordefaulten-usfullhashraw}{72287a68c1714cb1b9f4ab9e03a88b96}
+      \field{extraname}{1}
+      \field{sortinit}{A}
+      \strng{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
+      \fieldmssource{labelname}{author}{default}{en-us}
+    \endentry
+|;
+
+my $l2 = q|    \entry{L2}{book}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=2098d59d0f19a2e003ee06c1aa750d57}{%
            family={Bull},
@@ -221,17 +283,19 @@ my $l2 = q|    \entry{L2}{book}{}
       }
       \strng{namehash}{2098d59d0f19a2e003ee06c1aa750d57}
       \strng{fullhash}{2098d59d0f19a2e003ee06c1aa750d57}
+      \strng{fullhashraw}{2098d59d0f19a2e003ee06c1aa750d57}
       \strng{bibnamehash}{2098d59d0f19a2e003ee06c1aa750d57}
       \strng{authordefaulten-usbibnamehash}{2098d59d0f19a2e003ee06c1aa750d57}
       \strng{authordefaulten-usnamehash}{2098d59d0f19a2e003ee06c1aa750d57}
       \strng{authordefaulten-usfullhash}{2098d59d0f19a2e003ee06c1aa750d57}
+      \strng{authordefaulten-usfullhashraw}{2098d59d0f19a2e003ee06c1aa750d57}
       \field{sortinit}{B}
       \strng{sortinithash}{d7095fff47cda75ca2589920aae98399}
       \fieldmssource{labelname}{author}{default}{en-us}
     \endentry
 |;
 
-my $l3 = q|    \entry{L3}{book}{}
+my $l3 = q|    \entry{L3}{book}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=c8b06fe88bde128b25eb0b3b1cc5837c}{%
            family={Crop},
@@ -247,17 +311,19 @@ my $l3 = q|    \entry{L3}{book}{}
       }
       \strng{namehash}{c8b06fe88bde128b25eb0b3b1cc5837c}
       \strng{fullhash}{c8b06fe88bde128b25eb0b3b1cc5837c}
+      \strng{fullhashraw}{c8b06fe88bde128b25eb0b3b1cc5837c}
       \strng{bibnamehash}{c8b06fe88bde128b25eb0b3b1cc5837c}
       \strng{authordefaulten-usbibnamehash}{c8b06fe88bde128b25eb0b3b1cc5837c}
       \strng{authordefaulten-usnamehash}{c8b06fe88bde128b25eb0b3b1cc5837c}
       \strng{authordefaulten-usfullhash}{c8b06fe88bde128b25eb0b3b1cc5837c}
+      \strng{authordefaulten-usfullhashraw}{c8b06fe88bde128b25eb0b3b1cc5837c}
       \field{sortinit}{C}
       \strng{sortinithash}{4d103a86280481745c9c897c925753c0}
       \fieldmssource{labelname}{author}{default}{en-us}
     \endentry
 |;
 
-my $l4 = q|    \entry{L4}{book}{}
+my $l4 = q|    \entry{L4}{book}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=5ec958b850c0c2de7de7c42c84b9c419}{%
            family={Decket},
@@ -273,17 +339,19 @@ my $l4 = q|    \entry{L4}{book}{}
       }
       \strng{namehash}{5ec958b850c0c2de7de7c42c84b9c419}
       \strng{fullhash}{5ec958b850c0c2de7de7c42c84b9c419}
+      \strng{fullhashraw}{5ec958b850c0c2de7de7c42c84b9c419}
       \strng{bibnamehash}{5ec958b850c0c2de7de7c42c84b9c419}
       \strng{authordefaulten-usbibnamehash}{5ec958b850c0c2de7de7c42c84b9c419}
       \strng{authordefaulten-usnamehash}{5ec958b850c0c2de7de7c42c84b9c419}
       \strng{authordefaulten-usfullhash}{5ec958b850c0c2de7de7c42c84b9c419}
+      \strng{authordefaulten-usfullhashraw}{5ec958b850c0c2de7de7c42c84b9c419}
       \field{sortinit}{D}
       \strng{sortinithash}{6f385f66841fb5e82009dc833c761848}
       \fieldmssource{labelname}{author}{default}{en-us}
     \endentry
 |;
 
-my $l5 = q|    \entry{L5}{book}{}
+my $l5 = q|    \entry{L5}{book}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=c6b9d281cc1ff3f35570f76f463d4244}{%
            family={Eel},
@@ -303,17 +371,19 @@ my $l5 = q|    \entry{L5}{book}{}
       }
       \strng{namehash}{c6b9d281cc1ff3f35570f76f463d4244}
       \strng{fullhash}{c6b9d281cc1ff3f35570f76f463d4244}
+      \strng{fullhashraw}{c6b9d281cc1ff3f35570f76f463d4244}
       \strng{bibnamehash}{c6b9d281cc1ff3f35570f76f463d4244}
       \strng{authordefaulten-usbibnamehash}{c6b9d281cc1ff3f35570f76f463d4244}
       \strng{authordefaulten-usnamehash}{c6b9d281cc1ff3f35570f76f463d4244}
       \strng{authordefaulten-usfullhash}{c6b9d281cc1ff3f35570f76f463d4244}
+      \strng{authordefaulten-usfullhashraw}{c6b9d281cc1ff3f35570f76f463d4244}
       \field{sortinit}{v}
       \strng{sortinithash}{afb52128e5b4dc4b843768c0113d673b}
       \fieldmssource{labelname}{author}{default}{en-us}
     \endentry
 |;
 
-my $l6 = q|    \entry{L6}{book}{}
+my $l6 = q|    \entry{L6}{book}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=5fd24d3d1608a310ec205a6b201a5495}{%
            family={Frome},
@@ -333,17 +403,19 @@ my $l6 = q|    \entry{L6}{book}{}
       }
       \strng{namehash}{5fd24d3d1608a310ec205a6b201a5495}
       \strng{fullhash}{5fd24d3d1608a310ec205a6b201a5495}
+      \strng{fullhashraw}{5fd24d3d1608a310ec205a6b201a5495}
       \strng{bibnamehash}{5fd24d3d1608a310ec205a6b201a5495}
       \strng{authordefaulten-usbibnamehash}{5fd24d3d1608a310ec205a6b201a5495}
       \strng{authordefaulten-usnamehash}{5fd24d3d1608a310ec205a6b201a5495}
       \strng{authordefaulten-usfullhash}{5fd24d3d1608a310ec205a6b201a5495}
+      \strng{authordefaulten-usfullhashraw}{5fd24d3d1608a310ec205a6b201a5495}
       \field{sortinit}{v}
       \strng{sortinithash}{afb52128e5b4dc4b843768c0113d673b}
       \fieldmssource{labelname}{author}{default}{en-us}
     \endentry
 |;
 
-my $l7 = q|    \entry{L7}{book}{}
+my $l7 = q|    \entry{L7}{book}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=98edb0b90251df22b74328d9227eceb7}{%
            family={Gloom},
@@ -363,17 +435,19 @@ my $l7 = q|    \entry{L7}{book}{}
       }
       \strng{namehash}{98edb0b90251df22b74328d9227eceb7}
       \strng{fullhash}{98edb0b90251df22b74328d9227eceb7}
+      \strng{fullhashraw}{98edb0b90251df22b74328d9227eceb7}
       \strng{bibnamehash}{98edb0b90251df22b74328d9227eceb7}
       \strng{authordefaulten-usbibnamehash}{98edb0b90251df22b74328d9227eceb7}
       \strng{authordefaulten-usnamehash}{98edb0b90251df22b74328d9227eceb7}
       \strng{authordefaulten-usfullhash}{98edb0b90251df22b74328d9227eceb7}
+      \strng{authordefaulten-usfullhashraw}{98edb0b90251df22b74328d9227eceb7}
       \field{sortinit}{v}
       \strng{sortinithash}{afb52128e5b4dc4b843768c0113d673b}
       \fieldmssource{labelname}{author}{default}{en-us}
     \endentry
 |;
 
-my $l8 = q|    \entry{L8}{book}{}
+my $l8 = q|    \entry{L8}{book}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=1211dc8dbbc191cbcab4da3c3c1fc48a}{%
            family={Henkel},
@@ -393,17 +467,19 @@ my $l8 = q|    \entry{L8}{book}{}
       }
       \strng{namehash}{1211dc8dbbc191cbcab4da3c3c1fc48a}
       \strng{fullhash}{1211dc8dbbc191cbcab4da3c3c1fc48a}
+      \strng{fullhashraw}{1211dc8dbbc191cbcab4da3c3c1fc48a}
       \strng{bibnamehash}{1211dc8dbbc191cbcab4da3c3c1fc48a}
       \strng{authordefaulten-usbibnamehash}{1211dc8dbbc191cbcab4da3c3c1fc48a}
       \strng{authordefaulten-usnamehash}{1211dc8dbbc191cbcab4da3c3c1fc48a}
       \strng{authordefaulten-usfullhash}{1211dc8dbbc191cbcab4da3c3c1fc48a}
+      \strng{authordefaulten-usfullhashraw}{1211dc8dbbc191cbcab4da3c3c1fc48a}
       \field{sortinit}{v}
       \strng{sortinithash}{afb52128e5b4dc4b843768c0113d673b}
       \fieldmssource{labelname}{author}{default}{en-us}
     \endentry
 |;
 
-my $l9 = q|    \entry{L9}{book}{}
+my $l9 = q|    \entry{L9}{book}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=bae61a889ab149a6deafe45333204cf0}{%
            family={{Iliad Ipswich}},
@@ -419,10 +495,12 @@ my $l9 = q|    \entry{L9}{book}{}
       }
       \strng{namehash}{bae61a889ab149a6deafe45333204cf0}
       \strng{fullhash}{bae61a889ab149a6deafe45333204cf0}
+      \strng{fullhashraw}{bae61a889ab149a6deafe45333204cf0}
       \strng{bibnamehash}{bae61a889ab149a6deafe45333204cf0}
       \strng{authordefaulten-usbibnamehash}{bae61a889ab149a6deafe45333204cf0}
       \strng{authordefaulten-usnamehash}{bae61a889ab149a6deafe45333204cf0}
       \strng{authordefaulten-usfullhash}{bae61a889ab149a6deafe45333204cf0}
+      \strng{authordefaulten-usfullhashraw}{bae61a889ab149a6deafe45333204cf0}
       \field{sortinit}{I}
       \strng{sortinithash}{8d291c51ee89b6cd86bf5379f0b151d8}
       \fieldmssource{labelname}{author}{default}{en-us}
@@ -430,7 +508,7 @@ my $l9 = q|    \entry{L9}{book}{}
 |;
 
 
-my $l10 = q|    \entry{L10}{book}{}
+my $l10 = q|    \entry{L10}{book}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=37b4325752e394ddfb2fc810f6c88e27}{%
            family={Jolly},
@@ -450,10 +528,12 @@ my $l10 = q|    \entry{L10}{book}{}
       }
       \strng{namehash}{37b4325752e394ddfb2fc810f6c88e27}
       \strng{fullhash}{37b4325752e394ddfb2fc810f6c88e27}
+      \strng{fullhashraw}{37b4325752e394ddfb2fc810f6c88e27}
       \strng{bibnamehash}{37b4325752e394ddfb2fc810f6c88e27}
       \strng{authordefaulten-usbibnamehash}{37b4325752e394ddfb2fc810f6c88e27}
       \strng{authordefaulten-usnamehash}{37b4325752e394ddfb2fc810f6c88e27}
       \strng{authordefaulten-usfullhash}{37b4325752e394ddfb2fc810f6c88e27}
+      \strng{authordefaulten-usfullhashraw}{37b4325752e394ddfb2fc810f6c88e27}
       \field{sortinit}{J}
       \strng{sortinithash}{b2f54a9081ace9966a7cb9413811edb4}
       \fieldmssource{labelname}{author}{default}{en-us}
@@ -461,7 +541,7 @@ my $l10 = q|    \entry{L10}{book}{}
 |;
 
 
-my $l10a = q|    \entry{L10a}{book}{}
+my $l10a = q|    \entry{L10a}{book}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=7bf2c9d8b89a1930ee91bfddcaf20c9c}{%
            family={Pimentel},
@@ -481,10 +561,12 @@ my $l10a = q|    \entry{L10a}{book}{}
       }
       \strng{namehash}{7bf2c9d8b89a1930ee91bfddcaf20c9c}
       \strng{fullhash}{7bf2c9d8b89a1930ee91bfddcaf20c9c}
+      \strng{fullhashraw}{7bf2c9d8b89a1930ee91bfddcaf20c9c}
       \strng{bibnamehash}{7bf2c9d8b89a1930ee91bfddcaf20c9c}
       \strng{authordefaulten-usbibnamehash}{7bf2c9d8b89a1930ee91bfddcaf20c9c}
       \strng{authordefaulten-usnamehash}{7bf2c9d8b89a1930ee91bfddcaf20c9c}
       \strng{authordefaulten-usfullhash}{7bf2c9d8b89a1930ee91bfddcaf20c9c}
+      \strng{authordefaulten-usfullhashraw}{7bf2c9d8b89a1930ee91bfddcaf20c9c}
       \field{sortinit}{P}
       \strng{sortinithash}{ff3bcf24f47321b42cb156c2cc8a8422}
       \fieldmssource{labelname}{author}{default}{en-us}
@@ -492,7 +574,7 @@ my $l10a = q|    \entry{L10a}{book}{}
 |;
 
 
-my $l11 = q|    \entry{L11}{book}{}
+my $l11 = q|    \entry{L11}{book}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=9f48d231be68c9435fab4faca55a5caf}{%
            family={Kluster},
@@ -516,17 +598,19 @@ my $l11 = q|    \entry{L11}{book}{}
       }
       \strng{namehash}{9f48d231be68c9435fab4faca55a5caf}
       \strng{fullhash}{9f48d231be68c9435fab4faca55a5caf}
+      \strng{fullhashraw}{9f48d231be68c9435fab4faca55a5caf}
       \strng{bibnamehash}{9f48d231be68c9435fab4faca55a5caf}
       \strng{authordefaulten-usbibnamehash}{9f48d231be68c9435fab4faca55a5caf}
       \strng{authordefaulten-usnamehash}{9f48d231be68c9435fab4faca55a5caf}
       \strng{authordefaulten-usfullhash}{9f48d231be68c9435fab4faca55a5caf}
+      \strng{authordefaulten-usfullhashraw}{9f48d231be68c9435fab4faca55a5caf}
       \field{sortinit}{v}
       \strng{sortinithash}{afb52128e5b4dc4b843768c0113d673b}
       \fieldmssource{labelname}{author}{default}{en-us}
     \endentry
 |;
 
-my $l12 = q|    \entry{L12}{book}{}
+my $l12 = q|    \entry{L12}{book}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=d7ca88c13a8f7ce1c23e920010a31f83}{%
            family={Vallée\bibnamedelima Poussin},
@@ -546,10 +630,12 @@ my $l12 = q|    \entry{L12}{book}{}
       }
       \strng{namehash}{d7ca88c13a8f7ce1c23e920010a31f83}
       \strng{fullhash}{d7ca88c13a8f7ce1c23e920010a31f83}
+      \strng{fullhashraw}{d7ca88c13a8f7ce1c23e920010a31f83}
       \strng{bibnamehash}{d7ca88c13a8f7ce1c23e920010a31f83}
       \strng{authordefaulten-usbibnamehash}{d7ca88c13a8f7ce1c23e920010a31f83}
       \strng{authordefaulten-usnamehash}{d7ca88c13a8f7ce1c23e920010a31f83}
       \strng{authordefaulten-usfullhash}{d7ca88c13a8f7ce1c23e920010a31f83}
+      \strng{authordefaulten-usfullhashraw}{d7ca88c13a8f7ce1c23e920010a31f83}
       \field{sortinit}{d}
       \strng{sortinithash}{6f385f66841fb5e82009dc833c761848}
       \true{uniqueprimaryauthor}
@@ -557,7 +643,7 @@ my $l12 = q|    \entry{L12}{book}{}
     \endentry
 |;
 
-my $l13 = q|    \entry{L13}{book}{}
+my $l13 = q|    \entry{L13}{book}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=227ac48bb788a658cfaa4eefc71ff0cc}{%
            family={Van\bibnamedelimb de\bibnamedelima Graaff},
@@ -573,17 +659,19 @@ my $l13 = q|    \entry{L13}{book}{}
       }
       \strng{namehash}{227ac48bb788a658cfaa4eefc71ff0cc}
       \strng{fullhash}{227ac48bb788a658cfaa4eefc71ff0cc}
+      \strng{fullhashraw}{227ac48bb788a658cfaa4eefc71ff0cc}
       \strng{bibnamehash}{227ac48bb788a658cfaa4eefc71ff0cc}
       \strng{authordefaulten-usbibnamehash}{227ac48bb788a658cfaa4eefc71ff0cc}
       \strng{authordefaulten-usnamehash}{227ac48bb788a658cfaa4eefc71ff0cc}
       \strng{authordefaulten-usfullhash}{227ac48bb788a658cfaa4eefc71ff0cc}
+      \strng{authordefaulten-usfullhashraw}{227ac48bb788a658cfaa4eefc71ff0cc}
       \field{sortinit}{V}
       \strng{sortinithash}{afb52128e5b4dc4b843768c0113d673b}
       \fieldmssource{labelname}{author}{default}{en-us}
     \endentry
 |;
 
-my $l14 = q|    \entry{L14}{book}{}
+my $l14 = q|    \entry{L14}{book}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=779475052c17ed56dc3be900d0dfdf87}{%
            family={St\bibnamedelima John-Mollusc},
@@ -599,17 +687,19 @@ my $l14 = q|    \entry{L14}{book}{}
       }
       \strng{namehash}{779475052c17ed56dc3be900d0dfdf87}
       \strng{fullhash}{779475052c17ed56dc3be900d0dfdf87}
+      \strng{fullhashraw}{779475052c17ed56dc3be900d0dfdf87}
       \strng{bibnamehash}{779475052c17ed56dc3be900d0dfdf87}
       \strng{authordefaulten-usbibnamehash}{779475052c17ed56dc3be900d0dfdf87}
       \strng{authordefaulten-usnamehash}{779475052c17ed56dc3be900d0dfdf87}
       \strng{authordefaulten-usfullhash}{779475052c17ed56dc3be900d0dfdf87}
+      \strng{authordefaulten-usfullhashraw}{779475052c17ed56dc3be900d0dfdf87}
       \field{sortinit}{S}
       \strng{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
       \fieldmssource{labelname}{author}{default}{en-us}
     \endentry
 |;
 
-my $l15 = q|    \entry{L15}{book}{}
+my $l15 = q|    \entry{L15}{book}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=783c636e853e47a854ae034ebe9dde62}{%
            family={Gompel},
@@ -629,10 +719,12 @@ my $l15 = q|    \entry{L15}{book}{}
       }
       \strng{namehash}{783c636e853e47a854ae034ebe9dde62}
       \strng{fullhash}{783c636e853e47a854ae034ebe9dde62}
+      \strng{fullhashraw}{783c636e853e47a854ae034ebe9dde62}
       \strng{bibnamehash}{783c636e853e47a854ae034ebe9dde62}
       \strng{authordefaulten-usbibnamehash}{783c636e853e47a854ae034ebe9dde62}
       \strng{authordefaulten-usnamehash}{783c636e853e47a854ae034ebe9dde62}
       \strng{authordefaulten-usfullhash}{783c636e853e47a854ae034ebe9dde62}
+      \strng{authordefaulten-usfullhashraw}{783c636e853e47a854ae034ebe9dde62}
       \field{extraname}{1}
       \field{sortinit}{v}
       \strng{sortinithash}{afb52128e5b4dc4b843768c0113d673b}
@@ -640,7 +732,7 @@ my $l15 = q|    \entry{L15}{book}{}
     \endentry
 |;
 
-my $l16 = q|    \entry{L16}{book}{}
+my $l16 = q|    \entry{L16}{book}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=783c636e853e47a854ae034ebe9dde62}{%
            family={Gompel},
@@ -660,10 +752,12 @@ my $l16 = q|    \entry{L16}{book}{}
       }
       \strng{namehash}{783c636e853e47a854ae034ebe9dde62}
       \strng{fullhash}{783c636e853e47a854ae034ebe9dde62}
+      \strng{fullhashraw}{783c636e853e47a854ae034ebe9dde62}
       \strng{bibnamehash}{783c636e853e47a854ae034ebe9dde62}
       \strng{authordefaulten-usbibnamehash}{783c636e853e47a854ae034ebe9dde62}
       \strng{authordefaulten-usnamehash}{783c636e853e47a854ae034ebe9dde62}
       \strng{authordefaulten-usfullhash}{783c636e853e47a854ae034ebe9dde62}
+      \strng{authordefaulten-usfullhashraw}{783c636e853e47a854ae034ebe9dde62}
       \field{extraname}{2}
       \field{sortinit}{v}
       \strng{sortinithash}{afb52128e5b4dc4b843768c0113d673b}
@@ -671,7 +765,7 @@ my $l16 = q|    \entry{L16}{book}{}
     \endentry
 |;
 
-my $l17 = q|    \entry{L17}{book}{}
+my $l17 = q|    \entry{L17}{book}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=b51f667a3384d92ea5458ba80716bff7}{%
            family={Lovecraft},
@@ -687,10 +781,12 @@ my $l17 = q|    \entry{L17}{book}{}
       }
       \strng{namehash}{b51f667a3384d92ea5458ba80716bff7}
       \strng{fullhash}{b51f667a3384d92ea5458ba80716bff7}
+      \strng{fullhashraw}{b51f667a3384d92ea5458ba80716bff7}
       \strng{bibnamehash}{b51f667a3384d92ea5458ba80716bff7}
       \strng{authordefaulten-usbibnamehash}{b51f667a3384d92ea5458ba80716bff7}
       \strng{authordefaulten-usnamehash}{b51f667a3384d92ea5458ba80716bff7}
       \strng{authordefaulten-usfullhash}{b51f667a3384d92ea5458ba80716bff7}
+      \strng{authordefaulten-usfullhashraw}{b51f667a3384d92ea5458ba80716bff7}
       \field{extraname}{1}
       \field{sortinit}{L}
       \strng{sortinithash}{7c47d417cecb1f4bd38d1825c427a61a}
@@ -698,7 +794,7 @@ my $l17 = q|    \entry{L17}{book}{}
     \endentry
 |;
 
-my $l18 = q|    \entry{L18}{book}{}
+my $l18 = q|    \entry{L18}{book}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=b51f667a3384d92ea5458ba80716bff7}{%
            family={Lovecraft},
@@ -714,10 +810,12 @@ my $l18 = q|    \entry{L18}{book}{}
       }
       \strng{namehash}{b51f667a3384d92ea5458ba80716bff7}
       \strng{fullhash}{b51f667a3384d92ea5458ba80716bff7}
+      \strng{fullhashraw}{b51f667a3384d92ea5458ba80716bff7}
       \strng{bibnamehash}{b51f667a3384d92ea5458ba80716bff7}
       \strng{authordefaulten-usbibnamehash}{b51f667a3384d92ea5458ba80716bff7}
       \strng{authordefaulten-usnamehash}{b51f667a3384d92ea5458ba80716bff7}
       \strng{authordefaulten-usfullhash}{b51f667a3384d92ea5458ba80716bff7}
+      \strng{authordefaulten-usfullhashraw}{b51f667a3384d92ea5458ba80716bff7}
       \field{extraname}{2}
       \field{sortinit}{L}
       \strng{sortinithash}{7c47d417cecb1f4bd38d1825c427a61a}
@@ -725,7 +823,7 @@ my $l18 = q|    \entry{L18}{book}{}
     \endentry
 |;
 
-my $l19 = q|    \entry{L19}{book}{}
+my $l19 = q|    \entry{L19}{book}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=83caa52f21f97e572dd3267bdf62978a}{%
            family={Mustermann},
@@ -741,17 +839,19 @@ my $l19 = q|    \entry{L19}{book}{}
       }
       \strng{namehash}{83caa52f21f97e572dd3267bdf62978a}
       \strng{fullhash}{83caa52f21f97e572dd3267bdf62978a}
+      \strng{fullhashraw}{83caa52f21f97e572dd3267bdf62978a}
       \strng{bibnamehash}{83caa52f21f97e572dd3267bdf62978a}
       \strng{authordefaulten-usbibnamehash}{83caa52f21f97e572dd3267bdf62978a}
       \strng{authordefaulten-usnamehash}{83caa52f21f97e572dd3267bdf62978a}
       \strng{authordefaulten-usfullhash}{83caa52f21f97e572dd3267bdf62978a}
+      \strng{authordefaulten-usfullhashraw}{83caa52f21f97e572dd3267bdf62978a}
       \field{sortinit}{M}
       \strng{sortinithash}{4625c616857f13d17ce56f7d4f97d451}
       \fieldmssource{labelname}{author}{default}{en-us}
     \endentry
 |;
 
-my $l19a = q|    \entry{L19a}{book}{}
+my $l19a = q|    \entry{L19a}{book}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=0963f6904ccfeaac2770c5882a587001}{%
            family={Lam},
@@ -767,10 +867,12 @@ my $l19a = q|    \entry{L19a}{book}{}
       }
       \strng{namehash}{0963f6904ccfeaac2770c5882a587001}
       \strng{fullhash}{0963f6904ccfeaac2770c5882a587001}
+      \strng{fullhashraw}{0963f6904ccfeaac2770c5882a587001}
       \strng{bibnamehash}{0963f6904ccfeaac2770c5882a587001}
       \strng{authordefaulten-usbibnamehash}{0963f6904ccfeaac2770c5882a587001}
       \strng{authordefaulten-usnamehash}{0963f6904ccfeaac2770c5882a587001}
       \strng{authordefaulten-usfullhash}{0963f6904ccfeaac2770c5882a587001}
+      \strng{authordefaulten-usfullhashraw}{0963f6904ccfeaac2770c5882a587001}
       \field{sortinit}{L}
       \strng{sortinithash}{7c47d417cecb1f4bd38d1825c427a61a}
       \fieldmssource{labelname}{author}{default}{en-us}
@@ -778,7 +880,7 @@ my $l19a = q|    \entry{L19a}{book}{}
 |;
 
 
-my $l20 = q|    \entry{L20}{book}{}
+my $l20 = q|    \entry{L20}{book}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=5f26c2f3b33095d5b005714893f4d698}{%
            family={Ford},
@@ -794,17 +896,19 @@ my $l20 = q|    \entry{L20}{book}{}
       }
       \strng{namehash}{5f26c2f3b33095d5b005714893f4d698}
       \strng{fullhash}{5f26c2f3b33095d5b005714893f4d698}
+      \strng{fullhashraw}{5f26c2f3b33095d5b005714893f4d698}
       \strng{bibnamehash}{5f26c2f3b33095d5b005714893f4d698}
       \strng{authordefaulten-usbibnamehash}{5f26c2f3b33095d5b005714893f4d698}
       \strng{authordefaulten-usnamehash}{5f26c2f3b33095d5b005714893f4d698}
       \strng{authordefaulten-usfullhash}{5f26c2f3b33095d5b005714893f4d698}
+      \strng{authordefaulten-usfullhashraw}{5f26c2f3b33095d5b005714893f4d698}
       \field{sortinit}{F}
       \strng{sortinithash}{2638baaa20439f1b5a8f80c6c08a13b4}
       \fieldmssource{labelname}{author}{default}{en-us}
     \endentry
 |;
 
-my $l21 = q|    \entry{L21}{book}{}
+my $l21 = q|    \entry{L21}{book}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=4389a3c0dc7da74487b50808ba9436ad}{%
            family={Smith},
@@ -820,10 +924,12 @@ my $l21 = q|    \entry{L21}{book}{}
       }
       \strng{namehash}{4389a3c0dc7da74487b50808ba9436ad}
       \strng{fullhash}{4389a3c0dc7da74487b50808ba9436ad}
+      \strng{fullhashraw}{4389a3c0dc7da74487b50808ba9436ad}
       \strng{bibnamehash}{4389a3c0dc7da74487b50808ba9436ad}
       \strng{authordefaulten-usbibnamehash}{4389a3c0dc7da74487b50808ba9436ad}
       \strng{authordefaulten-usnamehash}{4389a3c0dc7da74487b50808ba9436ad}
       \strng{authordefaulten-usfullhash}{4389a3c0dc7da74487b50808ba9436ad}
+      \strng{authordefaulten-usfullhashraw}{4389a3c0dc7da74487b50808ba9436ad}
       \field{extraname}{1}
       \field{sortinit}{S}
       \strng{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
@@ -832,7 +938,7 @@ my $l21 = q|    \entry{L21}{book}{}
     \endentry
 |;
 
-my $l22u = q|    \entry{L22}{book}{}
+my $l22u = q|    \entry{L22}{book}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=e58b861545799d0eaf883402a882126e}{%
            family={Šmith},
@@ -848,10 +954,12 @@ my $l22u = q|    \entry{L22}{book}{}
       }
       \strng{namehash}{e58b861545799d0eaf883402a882126e}
       \strng{fullhash}{e58b861545799d0eaf883402a882126e}
+      \strng{fullhashraw}{e58b861545799d0eaf883402a882126e}
       \strng{bibnamehash}{e58b861545799d0eaf883402a882126e}
       \strng{authordefaulten-usbibnamehash}{e58b861545799d0eaf883402a882126e}
       \strng{authordefaulten-usnamehash}{e58b861545799d0eaf883402a882126e}
       \strng{authordefaulten-usfullhash}{e58b861545799d0eaf883402a882126e}
+      \strng{authordefaulten-usfullhashraw}{e58b861545799d0eaf883402a882126e}
       \field{extraname}{1}
       \field{sortinit}{Š}
       \strng{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
@@ -860,7 +968,7 @@ my $l22u = q|    \entry{L22}{book}{}
 |;
 
 
-my $l22 = q|    \entry{L22}{book}{}
+my $l22 = q|    \entry{L22}{book}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=e58b861545799d0eaf883402a882126e}{%
            family={\v{S}mith},
@@ -876,10 +984,12 @@ my $l22 = q|    \entry{L22}{book}{}
       }
       \strng{namehash}{e58b861545799d0eaf883402a882126e}
       \strng{fullhash}{e58b861545799d0eaf883402a882126e}
+      \strng{fullhashraw}{e58b861545799d0eaf883402a882126e}
       \strng{bibnamehash}{e58b861545799d0eaf883402a882126e}
       \strng{authordefaulten-usbibnamehash}{e58b861545799d0eaf883402a882126e}
       \strng{authordefaulten-usnamehash}{e58b861545799d0eaf883402a882126e}
       \strng{authordefaulten-usfullhash}{e58b861545799d0eaf883402a882126e}
+      \strng{authordefaulten-usfullhashraw}{e58b861545799d0eaf883402a882126e}
       \field{extraname}{1}
       \field{sortinit}{\v{S}}
       \strng{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
@@ -889,7 +999,7 @@ my $l22 = q|    \entry{L22}{book}{}
 |;
 
 
-my $l23 = q|    \entry{L23}{book}{}
+my $l23 = q|    \entry{L23}{book}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=4389a3c0dc7da74487b50808ba9436ad}{%
            family={Smith},
@@ -905,10 +1015,12 @@ my $l23 = q|    \entry{L23}{book}{}
       }
       \strng{namehash}{4389a3c0dc7da74487b50808ba9436ad}
       \strng{fullhash}{4389a3c0dc7da74487b50808ba9436ad}
+      \strng{fullhashraw}{4389a3c0dc7da74487b50808ba9436ad}
       \strng{bibnamehash}{4389a3c0dc7da74487b50808ba9436ad}
       \strng{authordefaulten-usbibnamehash}{4389a3c0dc7da74487b50808ba9436ad}
       \strng{authordefaulten-usnamehash}{4389a3c0dc7da74487b50808ba9436ad}
       \strng{authordefaulten-usfullhash}{4389a3c0dc7da74487b50808ba9436ad}
+      \strng{authordefaulten-usfullhashraw}{4389a3c0dc7da74487b50808ba9436ad}
       \field{extraname}{2}
       \field{sortinit}{S}
       \strng{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
@@ -916,7 +1028,7 @@ my $l23 = q|    \entry{L23}{book}{}
     \endentry
 |;
 
-my $l24 = q|    \entry{L24}{book}{}
+my $l24 = q|    \entry{L24}{book}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=e58b861545799d0eaf883402a882126e}{%
            family={Šmith},
@@ -932,10 +1044,12 @@ my $l24 = q|    \entry{L24}{book}{}
       }
       \strng{namehash}{e58b861545799d0eaf883402a882126e}
       \strng{fullhash}{e58b861545799d0eaf883402a882126e}
+      \strng{fullhashraw}{e58b861545799d0eaf883402a882126e}
       \strng{bibnamehash}{e58b861545799d0eaf883402a882126e}
       \strng{authordefaulten-usbibnamehash}{e58b861545799d0eaf883402a882126e}
       \strng{authordefaulten-usnamehash}{e58b861545799d0eaf883402a882126e}
       \strng{authordefaulten-usfullhash}{e58b861545799d0eaf883402a882126e}
+      \strng{authordefaulten-usfullhashraw}{e58b861545799d0eaf883402a882126e}
       \field{extraname}{2}
       \field{sortinit}{Š}
       \strng{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
@@ -943,7 +1057,7 @@ my $l24 = q|    \entry{L24}{book}{}
     \endentry
 |;
 
-my $l25 = q|    \entry{L25}{book}{}
+my $l25 = q|    \entry{L25}{book}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=d7cd2c5ea0848abc3e90609558b84a45}{%
            family={{American Psychological Association, Task Force on the Sexualization of Girls}},
@@ -955,17 +1069,19 @@ my $l25 = q|    \entry{L25}{book}{}
       }
       \strng{namehash}{d7cd2c5ea0848abc3e90609558b84a45}
       \strng{fullhash}{d7cd2c5ea0848abc3e90609558b84a45}
+      \strng{fullhashraw}{d7cd2c5ea0848abc3e90609558b84a45}
       \strng{bibnamehash}{d7cd2c5ea0848abc3e90609558b84a45}
       \strng{authordefaulten-usbibnamehash}{d7cd2c5ea0848abc3e90609558b84a45}
       \strng{authordefaulten-usnamehash}{d7cd2c5ea0848abc3e90609558b84a45}
       \strng{authordefaulten-usfullhash}{d7cd2c5ea0848abc3e90609558b84a45}
+      \strng{authordefaulten-usfullhashraw}{d7cd2c5ea0848abc3e90609558b84a45}
       \field{sortinit}{A}
       \strng{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
       \fieldmssource{labelname}{author}{default}{en-us}
     \endentry
 |;
 
-my $l26 = q|    \entry{L26}{book}{}
+my $l26 = q|    \entry{L26}{book}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=8eee1dbafdbd0a4b73157e60f18b4784}{%
            family={{Sci-Art Publishers}},
@@ -977,17 +1093,19 @@ my $l26 = q|    \entry{L26}{book}{}
       }
       \strng{namehash}{8eee1dbafdbd0a4b73157e60f18b4784}
       \strng{fullhash}{8eee1dbafdbd0a4b73157e60f18b4784}
+      \strng{fullhashraw}{8eee1dbafdbd0a4b73157e60f18b4784}
       \strng{bibnamehash}{8eee1dbafdbd0a4b73157e60f18b4784}
       \strng{authordefaulten-usbibnamehash}{8eee1dbafdbd0a4b73157e60f18b4784}
       \strng{authordefaulten-usnamehash}{8eee1dbafdbd0a4b73157e60f18b4784}
       \strng{authordefaulten-usfullhash}{8eee1dbafdbd0a4b73157e60f18b4784}
+      \strng{authordefaulten-usfullhashraw}{8eee1dbafdbd0a4b73157e60f18b4784}
       \field{sortinit}{S}
       \strng{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
       \fieldmssource{labelname}{author}{default}{en-us}
     \endentry
 |;
 
-my $l29 = q|    \entry{L29}{book}{}
+my $l29 = q|    \entry{L29}{book}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=27ad192a3a715aa89152b2a4ee392e8c}{%
            family={{U.S. Department of Health and Human Services, National Institute of Mental Health, National Heart, Lung and Blood Institute}},
@@ -999,17 +1117,19 @@ my $l29 = q|    \entry{L29}{book}{}
       }
       \strng{namehash}{27ad192a3a715aa89152b2a4ee392e8c}
       \strng{fullhash}{27ad192a3a715aa89152b2a4ee392e8c}
+      \strng{fullhashraw}{27ad192a3a715aa89152b2a4ee392e8c}
       \strng{bibnamehash}{27ad192a3a715aa89152b2a4ee392e8c}
       \strng{authordefaulten-usbibnamehash}{27ad192a3a715aa89152b2a4ee392e8c}
       \strng{authordefaulten-usnamehash}{27ad192a3a715aa89152b2a4ee392e8c}
       \strng{authordefaulten-usfullhash}{27ad192a3a715aa89152b2a4ee392e8c}
+      \strng{authordefaulten-usfullhashraw}{27ad192a3a715aa89152b2a4ee392e8c}
       \field{sortinit}{U}
       \strng{sortinithash}{6901a00e45705986ee5e7ca9fd39adca}
       \fieldmssource{labelname}{author}{default}{en-us}
     \endentry
 |;
 
-my $l31 = q|    \entry{L31}{book}{}
+my $l31 = q|    \entry{L31}{book}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=29c3ff92fff79d09a8b44d2f775de0b1}{%
            family={\~{Z}elly},
@@ -1051,16 +1171,20 @@ my $l31 = q|    \entry{L31}{book}{}
       }
       \strng{namehash}{29c3ff92fff79d09a8b44d2f775de0b1}
       \strng{fullhash}{29c3ff92fff79d09a8b44d2f775de0b1}
+      \strng{fullhashraw}{29c3ff92fff79d09a8b44d2f775de0b1}
       \strng{bibnamehash}{29c3ff92fff79d09a8b44d2f775de0b1}
       \strng{authordefaulten-usbibnamehash}{29c3ff92fff79d09a8b44d2f775de0b1}
       \strng{authordefaulten-usnamehash}{29c3ff92fff79d09a8b44d2f775de0b1}
       \strng{authordefaulten-usfullhash}{29c3ff92fff79d09a8b44d2f775de0b1}
+      \strng{authordefaulten-usfullhashraw}{29c3ff92fff79d09a8b44d2f775de0b1}
       \strng{editordefaulten-usbibnamehash}{29c3ff92fff79d09a8b44d2f775de0b1}
       \strng{editordefaulten-usnamehash}{29c3ff92fff79d09a8b44d2f775de0b1}
       \strng{editordefaulten-usfullhash}{29c3ff92fff79d09a8b44d2f775de0b1}
+      \strng{editordefaulten-usfullhashraw}{29c3ff92fff79d09a8b44d2f775de0b1}
       \strng{translatordefaulten-usbibnamehash}{29c3ff92fff79d09a8b44d2f775de0b1}
       \strng{translatordefaulten-usnamehash}{29c3ff92fff79d09a8b44d2f775de0b1}
       \strng{translatordefaulten-usfullhash}{29c3ff92fff79d09a8b44d2f775de0b1}
+      \strng{translatordefaulten-usfullhashraw}{29c3ff92fff79d09a8b44d2f775de0b1}
       \field{sortinit}{\~{Z}}
       \strng{sortinithash}{96892c0b0a36bb8557c40c49813d48b3}
       \true{uniqueprimaryauthor}
@@ -1139,6 +1263,8 @@ is_deeply(Biber::Input::file::bibtex::parsename_x($section,'family=Smithers Jone
 
 # Full entry tests
 eq_or_diff( $out->get_output_entry('L1', $main), $l1, 'First Last') ;
+eq_or_diff( $out->get_output_entry('L1', $nhtest), $l1h, 'Name hashing - given initials'); # testing custom name hash templates
+eq_or_diff( $out->get_output_entry('L1id', $main), $l1id, 'Name hashing - custom hashid'); # testing custom hashid
 eq_or_diff( $out->get_output_entry('L2', $main), $l2, 'First Initial. Last') ;
 eq_or_diff( $out->get_output_entry('L3', $main), $l3, 'Initial. Initial. Last') ;
 eq_or_diff( $out->get_output_entry('L4', $main), $l4, 'First Initial Last') ;
@@ -1189,7 +1315,7 @@ Biber::Input::file::bibtex->init_cache;
 $biber->prepare;
 $out = $biber->get_output_obj;
 $section = $biber->sections->get_section(0);
-$main = $biber->datalists->get_list('custom/global//global/global');
+$main = $biber->datalists->get_list('custom/global//global/global/global');
 $bibentries = $section->bibentries;
 
 eq_or_diff(NFC($bibentries->entry('L21')->get_field($bibentries->entry('L21')->get_labelname_info->[0])->nth_name(1)->get_namepart_initial('given')->[0]), 'Š', 'Terseinitials 1'); # Should be in NFD UTF-8
@@ -1203,4 +1329,3 @@ eq_or_diff($main->get_entryfield('upa1', 'uniqueprimaryauthor'), 1, 'Unique prim
 ok(is_undef($main->get_entryfield('upa2', 'uniqueprimaryauthor')), 'Unique primary author - 2');
 ok(is_undef($main->get_entryfield('upa3', 'uniqueprimaryauthor')), 'Unique primary author - 3');
 eq_or_diff($main->get_entryfield('upa4', 'uniqueprimaryauthor'), 1, 'Unique primary author - 4');
-

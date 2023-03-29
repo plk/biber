@@ -70,7 +70,7 @@ ok(is_undef($bibentries->entry('bltx1')->get_field('author', 'transliteration', 
 eq_or_diff($bibentries->entry('bltx1')->get_field('author', 'transliteration', 'ru-grek')->nth_mslang(2), 'en-us', 'multiscript - 19');
 
 # BBL output tests
-my $ms1 = q|    \entry{ms1}{article}{}
+my $ms1 = q|    \entry{ms1}{article}{}{}
       \name[default][en-us]{author}{3}{}{%
         {{hash=c221fa2d0fd5443df81b6bc63acf958a}{%
            family={Smith},
@@ -177,16 +177,20 @@ my $ms1 = q|    \entry{ms1}{article}{}
       }
       \strng{namehash}{6506017dedcafd386988f8f975fedd0d}
       \strng{fullhash}{6506017dedcafd386988f8f975fedd0d}
+      \strng{fullhashraw}{6506017dedcafd386988f8f975fedd0d}
       \strng{bibnamehash}{6506017dedcafd386988f8f975fedd0d}
       \strng{authordefaulten-usbibnamehash}{c8e70e2e1328616e34339e681de514c7}
       \strng{authordefaulten-usnamehash}{c8e70e2e1328616e34339e681de514c7}
       \strng{authordefaulten-usfullhash}{c8e70e2e1328616e34339e681de514c7}
+      \strng{authordefaulten-usfullhashraw}{c8e70e2e1328616e34339e681de514c7}
       \strng{authortransliterationru-grekbibnamehash}{d4dcf56a391b21aec2131b22a251c6b5}
       \strng{authortransliterationru-greknamehash}{d4dcf56a391b21aec2131b22a251c6b5}
       \strng{authortransliterationru-grekfullhash}{d4dcf56a391b21aec2131b22a251c6b5}
+      \strng{authortransliterationru-grekfullhashraw}{d4dcf56a391b21aec2131b22a251c6b5}
       \strng{authortransliterationru-latnbibnamehash}{6506017dedcafd386988f8f975fedd0d}
       \strng{authortransliterationru-latnnamehash}{6506017dedcafd386988f8f975fedd0d}
       \strng{authortransliterationru-latnfullhash}{6506017dedcafd386988f8f975fedd0d}
+      \strng{authortransliterationru-latnfullhashraw}{6506017dedcafd386988f8f975fedd0d}
       \field{labelalpha}{SPXeS95}
       \field{sortinit}{S}
       \strng{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
@@ -207,7 +211,7 @@ my $ms1 = q|    \entry{ms1}{article}{}
     \endentry
 |;
 
-my $ms2 = q|    \entry{ms2}{inbook}{}
+my $ms2 = q|    \entry{ms2}{inbook}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=02c5906bf7d6156a9695735b750c744b}{%
            family={Treacle},
@@ -248,16 +252,20 @@ my $ms2 = q|    \entry{ms2}{inbook}{}
       }
       \strng{namehash}{cb8bc4824dfe756730d5837418bf5b53}
       \strng{fullhash}{cb8bc4824dfe756730d5837418bf5b53}
+      \strng{fullhashraw}{cb8bc4824dfe756730d5837418bf5b53}
       \strng{bibnamehash}{cb8bc4824dfe756730d5837418bf5b53}
       \strng{authordefaulten-usbibnamehash}{02c5906bf7d6156a9695735b750c744b}
       \strng{authordefaulten-usnamehash}{02c5906bf7d6156a9695735b750c744b}
       \strng{authordefaulten-usfullhash}{02c5906bf7d6156a9695735b750c744b}
+      \strng{authordefaulten-usfullhashraw}{02c5906bf7d6156a9695735b750c744b}
       \strng{authortransliterationru-latnbibnamehash}{cb8bc4824dfe756730d5837418bf5b53}
       \strng{authortransliterationru-latnnamehash}{cb8bc4824dfe756730d5837418bf5b53}
       \strng{authortransliterationru-latnfullhash}{cb8bc4824dfe756730d5837418bf5b53}
+      \strng{authortransliterationru-latnfullhashraw}{cb8bc4824dfe756730d5837418bf5b53}
       \strng{editordefaultdebibnamehash}{da4e9104ade84cb0fcd815add03dd1fd}
       \strng{editordefaultdenamehash}{da4e9104ade84cb0fcd815add03dd1fd}
       \strng{editordefaultdefullhash}{da4e9104ade84cb0fcd815add03dd1fd}
+      \strng{editordefaultdefullhashraw}{da4e9104ade84cb0fcd815add03dd1fd}
       \field{labelalpha}{Cle96}
       \field{sortinit}{C}
       \strng{sortinithash}{4d103a86280481745c9c897c925753c0}

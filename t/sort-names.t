@@ -35,5 +35,5 @@ Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 # (re)generate information based on option settings
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
-my $main = $biber->datalists->get_list('none/global//global/global');
+my $main = $biber->datalists->get_list('none/global//global/global/global');
 is_deeply($main->get_keys, ['N4', 'N1', 'N2', 'N3'], 'names order');

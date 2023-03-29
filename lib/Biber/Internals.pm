@@ -50,12 +50,36 @@ sub _getnamehash {
   my $dm = Biber::Config->get_dm;
   my @nps = $dm->get_constant_value('nameparts');
 
+  # refcontext or per-entry namehashtemplate
+  my $nhtname = Biber::Config->getblxoption($secnum, 'namehashtemplatename', undef, $citekey) // $dlist->get_namehashtemplatename;
+
+  # Per-namelist namehashtemplate
+  if (defined($names->get_namehashtemplatename)) {
+    $nhtname = $names->get_namehashtemplatename;
+  }
+
   # namehash obeys list truncations but not uniquename
   foreach my $n ($names->first_n_names($visible)->@*) {
+
+    # use user-defined hashid for hash generation if present
+    if (my $hid = $n->get_hashid) {
+      $hashkey .= $hid;
+      next;
+    }
+
+    # Per-name namehashtemplate
+    if (defined($n->get_namehashtemplatename)) {
+      $nhtname = $n->get_namehashtemplatename;
+    }
+
+    my $nht = Biber::Config->getblxoption($secnum, 'namehashtemplate')->{$nhtname};
+
+    unless ($nht) {
+      biber_error("No namehash template called '$nhtname'");
+    }
+
     foreach my $nt (@nps) {# list type so returns list
-      if (my $np = $n->get_namepart($nt)) {
-        $hashkey .= $np;
-      }
+      $hashkey .= $n->get_hash_namepart($nt, $nht);
     }
   }
 
@@ -78,8 +102,59 @@ sub _getnamehash {
 }
 
 sub _getfullhash {
-  my ($self, $citekey, $names) = @_;
+  my ($self, $citekey, $names, $dlist) = @_;
   my $hashkey = '';
+  my $secnum = $self->get_current_section;
+  my $dm = Biber::Config->get_dm;
+  my @nps = $dm->get_constant_value('nameparts');
+
+  # refcontext or per-entry namehashtemplate
+  my $nhtname = Biber::Config->getblxoption($secnum, 'namehashtemplatename', undef, $citekey) // $dlist->get_namehashtemplatename;
+
+  # Per-namelist namehashtemplate
+  if (defined($names->get_namehashtemplatename)) {
+    $nhtname = $names->get_namehashtemplatename;
+  }
+
+  foreach my $n ($names->names->@*) {
+
+    # use user-defined hashid for hash generation if present
+    if (my $hid = $n->get_hashid) {
+      $hashkey .= $hid;
+      next;
+    }
+
+    # Per-name namehashtemplate
+    if (defined($n->get_namehashtemplatename)) {
+      $nhtname = $n->get_namehashtemplatename;
+    }
+
+    my $nht = Biber::Config->getblxoption($secnum, 'namehashtemplate')->{$nhtname};
+
+    unless ($nht) {
+      biber_error("No namehash template called '$nhtname'");
+    }
+
+    foreach my $nt (@nps) {# list type so returns list
+      $hashkey .= strip_nonamestring($n->get_hash_namepart($nt, $nht),  $names->get_type);
+    }
+  }
+
+  # If we had an "and others"
+  if ($names->get_morenames) {
+    $hashkey .= '+'
+  }
+
+  # Digest::MD5 can't deal with straight UTF8 so encode it first (via NFC as this is "output")
+  return md5_hex(encode_utf8(NFC(normalise_string_hash($hashkey))));
+}
+
+# fullhash without any namehashtemplate. Basically a hash of all full nameparts present in the .bib,
+# after any sourcemaps, naturally
+sub _getfullhashraw {
+  my ($self, $citekey, $names, $dlist) = @_;
+  my $hashkey = '';
+  my $secnum = $self->get_current_section;
   my $dm = Biber::Config->get_dm;
   my @nps = $dm->get_constant_value('nameparts');
 
@@ -100,7 +175,7 @@ sub _getfullhash {
   return md5_hex(encode_utf8(NFC(normalise_string_hash($hashkey))));
 }
 
-# Same as _getnamehash but takes account of uniquename setting for firstname
+# Same as _getnamehash but takes account of uniquename template
 # It's used for extra* tracking only
 sub _getnamehash_u {
   my ($self, $citekey, $names, $dlist) = @_;
@@ -127,6 +202,7 @@ sub _getnamehash_u {
   # namehash obeys list truncations
   foreach my $n ($names->first_n_names($visible)->@*) {
     my $nid = $n->get_id;
+
     # Per-name uniquenametemplate
     if (defined($n->get_uniquenametemplatename)) {
       $untname = $n->get_uniquenametemplatename;
@@ -178,20 +254,44 @@ sub _getnamehash_u {
 
 # Special hash to track per-name information
 sub _genpnhash {
-  my ($self, $citekey, $n) = @_;
+  my ($self, $citekey, $names, $n, $dlist) = @_;
   my $hashkey = '';
+  my $secnum = $self->get_current_section;
   my $dm = Biber::Config->get_dm;
   my @nps = $dm->get_constant_value('nameparts');
 
+  # use user-defined hashid for hash generation if present
+  if (my $hid = $n->get_hashid) {
+    return md5_hex(encode_utf8(NFC(normalise_string_hash($hid))));
+  }
+
+  # refcontext or per-entry namehashtemplate
+  my $nhtname = Biber::Config->getblxoption($secnum, 'namehashtemplatename', undef, $citekey) // $dlist->get_namehashtemplatename;
+
+  # Per-namelist namehashtemplate
+  if (defined($names->get_namehashtemplatename)) {
+    $nhtname = $names->get_namehashtemplatename;
+  }
+
+  # Per-name namehashtemplate
+  if (defined($n->get_namehashtemplatename)) {
+    $nhtname = $n->get_namehashtemplatename;
+  }
+
+  my $nht = Biber::Config->getblxoption($secnum, 'namehashtemplate')->{$nhtname};
+
+  unless ($nht) {
+    biber_error("No namehash template called '$nhtname'");
+  }
+
   foreach my $nt (@nps) {# list type so returns list
-    if (my $np = $n->get_namepart($nt)) {
-      $hashkey .= $np;
-    }
+    $hashkey .= $n->get_hash_namepart($nt, $nht);
   }
 
   if ($logger->is_trace()) { # performance shortcut
     $logger->trace("Creating MD5 pnhash using '$hashkey'");
   }
+
   # Digest::MD5 can't deal with straight UTF8 so encode it first (via NFC as this is "output")
   return md5_hex(encode_utf8(NFC(normalise_string_hash($hashkey))));
 }
@@ -1601,24 +1701,20 @@ sub _namestring {
 
                 # The namepart is padded to the longest namepart in the ref
                 # section as this is the only way to make sorting work
-                # properly The padding is spaces as this sorts before all
+                # properly. The padding is spaces as this sorts before all
                 # glyphs but it also of variable weight and ignorable in
                 # DUCET so we have to set U::C to variable=>'non-ignorable'
                 # as sorting default so that spaces are non-ignorable
                 $nps = normalise_string_sort(join('', $npistring->@*), $field);
 
-                # Only pad the last namepart
-                if ($i == $kp->$#*) {
-                  $nps = sprintf("%-*s", $section->get_np_length("${namepart}-i"), $nps);
-                }
+                # pad all nameparts
+                $nps = sprintf("%-*s", $section->get_np_length("${namepart}-i"), $nps);
               }
               else {
                 $nps = normalise_string_sort($npstring, $field);
 
-                # Only pad the last namepart
-                if ($i == $kp->$#*) {
-                  $nps = sprintf("%-*s", $section->get_np_length($namepart), $nps);
-                }
+                # pad all nameparts
+                $nps = sprintf("%-*s", $section->get_np_length($namepart), $nps);
               }
               $kps .= $nps;
             }

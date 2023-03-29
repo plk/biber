@@ -78,7 +78,7 @@ my $prefix1     = 'mm,,Luzzatto     Moshe Ḥayyim  ,,,Lashon la-Ramḥal: u-vo 
 my $diacritic1  = 'mm,,Hasan        Alī           ,al-Hasan     ʿAlī          ,Hasan        Alī           ,Some title,2000,';
 my $labels      = '2005,3,2';
 my $sn1         = '';
-my $snk1        = 'mm,,John John           vonDoe          Jr,,,0';
+my $snk1        = 'mm,,John            John           vonDoe          Jr,,,0';
 my $ent1        = 'mm,,Smith        Brian          ,,,0';
 my $others1     = 'mm,,Gauck        Joachim        ,,Title A,0';
 my $others2     = 'mm,,Gauck        Joachim        ,,Title B,0';
@@ -137,7 +137,7 @@ Biber::Config->setblxoption(undef,'useprefix', 1);
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
 my $bibentries = $section->bibentries;
-my $main = $biber->datalists->get_list('nyt/global//global/global');
+my $main = $biber->datalists->get_list('nyt/global//global/global/global');
 
 eq_or_diff($main->get_sortdata_for_key('tvonb')->[0], $useprefix1, 'von with type-specific presort, exclusions and useprefix=true' );
 eq_or_diff($main->get_sortdata_for_key('avona')->[0], $useprefix2, 'von with name list scope useprefix' );

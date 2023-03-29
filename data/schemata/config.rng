@@ -497,6 +497,9 @@
         <zeroOrMore>
           <ref name="uniquenametemplate"/>
         </zeroOrMore>
+        <zeroOrMore>
+          <ref name="namehashtemplate"/>
+        </zeroOrMore>
         <optional>
           <ref name="sortingnamekeytemplate"/>
         </optional>
@@ -1536,6 +1539,29 @@
               </choice>
             </attribute>
           </optional>
+          <text/>
+        </element>
+      </oneOrMore>
+    </element>
+  </define>
+  <define name="namehashtemplate">
+    <element name="namehashtemplate">
+      <attribute name="name">
+        <data type="string">
+          <param name="minLength">1</param>
+        </data>
+      </attribute>
+      <oneOrMore>
+        <element name="namepart">
+          <attribute name="order">
+            <data type="integer"/>
+          </attribute>
+          <attribute name="hashscope">
+            <choice>
+              <value>init</value>
+              <value>full</value>
+            </choice>
+          </attribute>
           <text/>
         </element>
       </oneOrMore>

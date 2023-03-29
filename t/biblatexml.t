@@ -46,11 +46,11 @@ Biber::Config->setoption('bcf', 'biblatexml.bcf');
 $biber->prepare;
 my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
-my $main = $biber->datalists->get_list('custom/global//global/global');
+my $main = $biber->datalists->get_list('custom/global//global/global/global');
 
 my $bibentries = $section->bibentries;
 
-my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
+my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}{}
       \true{moreauthor}
       \true{morelabelname}
       \name[default][en-us]{author}{3}{useprefix=true}{%
@@ -97,7 +97,7 @@ my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
           givendefaulten-usi={A\bibinitperiod\bibinitdelim А\bibinitperiod}
       }
       \name[default][en-us]{foreword}{1}{}{%
-        {{hash=a7a73749ea467229221b7e9cbf870988}{%
+        {{hash=88354d4ba914f2ded2574386a2493996}{%
            family={Brown},
            familyi={B\bibinitperiod},
            given={John},
@@ -139,16 +139,20 @@ my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
       }
       \strng{namehash}{3400c73d7bf3e361d36350deb4832ad7}
       \strng{fullhash}{3400c73d7bf3e361d36350deb4832ad7}
+      \strng{fullhashraw}{3400c73d7bf3e361d36350deb4832ad7}
       \strng{bibnamehash}{3400c73d7bf3e361d36350deb4832ad7}
       \strng{authordefaulten-usbibnamehash}{3400c73d7bf3e361d36350deb4832ad7}
       \strng{authordefaulten-usnamehash}{3400c73d7bf3e361d36350deb4832ad7}
       \strng{authordefaulten-usfullhash}{3400c73d7bf3e361d36350deb4832ad7}
-      \strng{foreworddefaulten-usbibnamehash}{a7a73749ea467229221b7e9cbf870988}
-      \strng{foreworddefaulten-usnamehash}{a7a73749ea467229221b7e9cbf870988}
-      \strng{foreworddefaulten-usfullhash}{a7a73749ea467229221b7e9cbf870988}
+      \strng{authordefaulten-usfullhashraw}{3400c73d7bf3e361d36350deb4832ad7}
+      \strng{foreworddefaulten-usbibnamehash}{88354d4ba914f2ded2574386a2493996}
+      \strng{foreworddefaulten-usnamehash}{88354d4ba914f2ded2574386a2493996}
+      \strng{foreworddefaulten-usfullhash}{88354d4ba914f2ded2574386a2493996}
+      \strng{foreworddefaulten-usfullhashraw}{a7a73749ea467229221b7e9cbf870988}
       \strng{translatordefaulten-usbibnamehash}{b44eba830fe9817fbe8e53c82f1cbe04}
       \strng{translatordefaulten-usnamehash}{b44eba830fe9817fbe8e53c82f1cbe04}
       \strng{translatordefaulten-usfullhash}{b44eba830fe9817fbe8e53c82f1cbe04}
+      \strng{translatordefaulten-usfullhashraw}{b44eba830fe9817fbe8e53c82f1cbe04}
       \field{sortinit}{v}
       \strng{sortinithash}{afb52128e5b4dc4b843768c0113d673b}
       \field{extradatescope}{labelyear}
@@ -195,7 +199,7 @@ my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
     \endentry
 |;
 
-my $l2 = q|    \entry{loopkey:a}{book}{}
+my $l2 = q|    \entry{loopkey:a}{book}{}{}
       \field{sortinit}{0}
       \strng{sortinithash}{c5602f03f17cc894ea7a6362c3cb0e13}
     \endentry

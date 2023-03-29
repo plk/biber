@@ -2248,6 +2248,14 @@ format:
 AUTHOR = {namelistopt=true and Hans Harman and
           given=Simon, family=Beumont, nameopt=true}
 \end{verbatim}
+%
+A special \verb+id+ parameter may also be used for any name and this will be
+used to override the hash used to detect identical names, for example, a
+gender change could be handled like this:
+\begin{verbatim}
+  AUTHOR = {id=person1, given=Simon, family=Beumont}
+  AUTHOR = {id=person1, given=Simone, family=Beumont}
+\end{verbatim}
 
 \bigskip
 \subsection{Editor Integration}

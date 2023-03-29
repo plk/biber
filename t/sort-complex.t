@@ -53,8 +53,8 @@ Biber::Config->setblxoption(undef,'labeldateparts', 0);
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
 my $bibentries = $section->bibentries;
-my $main = $biber->datalists->get_list('nyt/global//global/global');
-my $shs = $biber->datalists->get_list('shorthand/global//global/global', 0, 'list');
+my $main = $biber->datalists->get_list('nyt/global//global/global/global');
+my $shs = $biber->datalists->get_list('shorthand/global//global/global/global', 0, 'list');
 
 my $out = $biber->get_output_obj;
 
@@ -98,7 +98,7 @@ my $ss = { locale => 'en-us',
            ],
           ]};
 
-my $l4 = q|    \entry{L4}{book}{}
+my $l4 = q|    \entry{L4}{book}{}{}
       \true{moreauthor}
       \true{morelabelname}
       \name[default][en-us]{author}{1}{}{%
@@ -128,10 +128,12 @@ my $l4 = q|    \entry{L4}{book}{}
       }
       \strng{namehash}{6eb389989020e8246fee90ac93fcecbe}
       \strng{fullhash}{6eb389989020e8246fee90ac93fcecbe}
+      \strng{fullhashraw}{6eb389989020e8246fee90ac93fcecbe}
       \strng{bibnamehash}{6eb389989020e8246fee90ac93fcecbe}
       \strng{authordefaulten-usbibnamehash}{6eb389989020e8246fee90ac93fcecbe}
       \strng{authordefaulten-usnamehash}{6eb389989020e8246fee90ac93fcecbe}
       \strng{authordefaulten-usfullhash}{6eb389989020e8246fee90ac93fcecbe}
+      \strng{authordefaulten-usfullhashraw}{6eb389989020e8246fee90ac93fcecbe}
       \field{extraname}{2}
       \field{labelalpha}{Doe\textbf{+}95}
       \field{sortinit}{D}
@@ -144,7 +146,7 @@ my $l4 = q|    \entry{L4}{book}{}
     \endentry
 |;
 
-my $l1 = q|    \entry{L1}{book}{}
+my $l1 = q|    \entry{L1}{book}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
@@ -172,10 +174,12 @@ my $l1 = q|    \entry{L1}{book}{}
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{fullhashraw}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{bibnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{authordefaulten-usbibnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{authordefaulten-usnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{authordefaulten-usfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authordefaulten-usfullhashraw}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{extraname}{1}
       \field{labelalpha}{Doe95}
       \field{sortinit}{D}
@@ -188,7 +192,7 @@ my $l1 = q|    \entry{L1}{book}{}
     \endentry
 |;
 
-my $l2 = q|    \entry{L2}{book}{}
+my $l2 = q|    \entry{L2}{book}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
@@ -216,10 +220,12 @@ my $l2 = q|    \entry{L2}{book}{}
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{fullhashraw}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{bibnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{authordefaulten-usbibnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{authordefaulten-usnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{authordefaulten-usfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authordefaulten-usfullhashraw}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{extraname}{3}
       \field{labelalpha}{Doe95}
       \field{sortinit}{D}
@@ -232,7 +238,7 @@ my $l2 = q|    \entry{L2}{book}{}
     \endentry
 |;
 
-my $l3 = q|    \entry{L3}{book}{}
+my $l3 = q|    \entry{L3}{book}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
@@ -260,10 +266,12 @@ my $l3 = q|    \entry{L3}{book}{}
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{fullhashraw}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{bibnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{authordefaulten-usbibnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{authordefaulten-usnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{authordefaulten-usfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authordefaulten-usfullhashraw}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{extraname}{2}
       \field{labelalpha}{Doe95}
       \field{sortinit}{D}
@@ -276,7 +284,7 @@ my $l3 = q|    \entry{L3}{book}{}
     \endentry
 |;
 
-my $l5 = q|    \entry{L5}{book}{}
+my $l5 = q|    \entry{L5}{book}{}{}
       \true{moreauthor}
       \true{morelabelname}
       \name[default][en-us]{author}{1}{}{%
@@ -306,10 +314,12 @@ my $l5 = q|    \entry{L5}{book}{}
       }
       \strng{namehash}{6eb389989020e8246fee90ac93fcecbe}
       \strng{fullhash}{6eb389989020e8246fee90ac93fcecbe}
+      \strng{fullhashraw}{6eb389989020e8246fee90ac93fcecbe}
       \strng{bibnamehash}{6eb389989020e8246fee90ac93fcecbe}
       \strng{authordefaulten-usbibnamehash}{6eb389989020e8246fee90ac93fcecbe}
       \strng{authordefaulten-usnamehash}{6eb389989020e8246fee90ac93fcecbe}
       \strng{authordefaulten-usfullhash}{6eb389989020e8246fee90ac93fcecbe}
+      \strng{authordefaulten-usfullhashraw}{6eb389989020e8246fee90ac93fcecbe}
       \field{extraname}{1}
       \field{labelalpha}{Doe\textbf{+}95}
       \field{sortinit}{D}
@@ -347,7 +357,7 @@ $section->del_everykeys;
 Biber::Input::file::bibtex->init_cache;
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-$shs = $biber->datalists->get_list('shorthand/global//global/global', 0, 'list');
+$shs = $biber->datalists->get_list('shorthand/global//global/global/global', 0, 'list');
 
 # Sort by shorthand
 is_deeply($shs->get_keys, ['L1', 'L2', 'L3', 'L4', 'L5'], 'sortorder - 3');

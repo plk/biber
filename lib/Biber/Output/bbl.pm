@@ -232,7 +232,9 @@ sub set_output_entry {
 
   # Skip entrytypes we don't want to output according to datamodel
   return if $dm->entrytype_is_skipout($bee);
-  $acc .= "    \\entry{$key}{$outtype}{" . join(',', filter_entry_options($secnum, $be)->@*) . "}\n";
+  my $kc = $section->get_citecount($key);
+  $acc .= "    \\entry{$key}{$outtype}{" . join(',', filter_entry_options($secnum, $be)->@*) . '}{' .
+      ($kc==-1 ? '' : $kc) . "}\n";
 
   # Generate set information.
   # Set parents are special and need very little
@@ -409,8 +411,8 @@ sub set_output_entry {
 
   # Output labelname hashes
   $acc .= "      <BDS>NAMEHASH</BDS>\n";
-  my $fullhash = $be->get_field('fullhash');
-  $acc .= "      \\strng{fullhash}{$fullhash}\n" if $fullhash;
+  $acc .= "      <BDS>FULLHASH</BDS>\n";
+  $acc .= "      <BDS>FULLHASHRAW</BDS>\n";
   $acc .= "      <BDS>BIBNAMEHASH</BDS>\n";
 
   # Output namelist hashes
@@ -421,9 +423,8 @@ sub set_output_entry {
       my $lang = $alts->{lang} // '';
       $acc .= "      <BDS>${n}${form}${lang}BIBNAMEHASH</BDS>\n";
       $acc .= "      <BDS>${n}${form}${lang}NAMEHASH</BDS>\n";
-      if (my $fullhash = $be->get_field("${n}${form}${lang}fullhash")) {
-        $acc .= "      \\strng{${n}${form}${lang}fullhash}{$fullhash}\n";
-      }
+      $acc .= "      <BDS>${n}${form}${lang}FULLHASH</BDS>\n";
+      $acc .= "      <BDS>${n}${form}${lang}FULLHASHRAW</BDS>\n";
     }
   }
 

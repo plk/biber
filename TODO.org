@@ -167,6 +167,9 @@
 ** TODO Add validate-bibjson option
 ** TODO Generate bibjson schema option and add --no_bibjson_schema option
 ** TODO CSL-JSON? https://github.com/citation-style-language/schema/blob/master/schemas/input/csl-data.json
+* DONE name hash template
+** DONE doc \ifnamehashtemplatename \DeclareNamehashTemplate, nametemplates refcontext option, refcontext option
+
 * TODO Multiscript
 ** TODO default mslang for field selection is global->refcontext->entry, what about field items?
 ** TODO LANGIDOPTS and how they interact with LANGID->mslang

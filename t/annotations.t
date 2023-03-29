@@ -41,9 +41,9 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 $biber->prepare;
 my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
-my $main = $biber->datalists->get_list('nty/global//global/global');
+my $main = $biber->datalists->get_list('nty/global//global/global/global');
 
-my $ann1 = q|    \entry{ann1}{misc}{}
+my $ann1 = q|    \entry{ann1}{misc}{}{1}
       \name[default][en-us]{author}{3}{}{%
         {{hash=89a9e5097e11e595700540379c9b3a6b}{%
            family={Last1},
@@ -85,10 +85,12 @@ my $ann1 = q|    \entry{ann1}{misc}{}
       }
       \strng{namehash}{90ae96c82de92e36949bc64254bbde0c}
       \strng{fullhash}{90ae96c82de92e36949bc64254bbde0c}
+      \strng{fullhashraw}{90ae96c82de92e36949bc64254bbde0c}
       \strng{bibnamehash}{90ae96c82de92e36949bc64254bbde0c}
       \strng{authordefaulten-usbibnamehash}{90ae96c82de92e36949bc64254bbde0c}
       \strng{authordefaulten-usnamehash}{90ae96c82de92e36949bc64254bbde0c}
       \strng{authordefaulten-usfullhash}{90ae96c82de92e36949bc64254bbde0c}
+      \strng{authordefaulten-usfullhashraw}{90ae96c82de92e36949bc64254bbde0c}
       \field{extraname}{1}
       \field{sortinit}{L}
       \strng{sortinithash}{7c47d417cecb1f4bd38d1825c427a61a}
@@ -105,7 +107,7 @@ my $ann1 = q|    \entry{ann1}{misc}{}
     \endentry
 |;
 
-my $ann2 = q|    \entry{ann2}{misc}{}
+my $ann2 = q|    \entry{ann2}{misc}{}{3}
       \name[default][en-us]{author}{3}{}{%
         {{hash=89a9e5097e11e595700540379c9b3a6b}{%
            family={Last1},
@@ -147,10 +149,12 @@ my $ann2 = q|    \entry{ann2}{misc}{}
       }
       \strng{namehash}{90ae96c82de92e36949bc64254bbde0c}
       \strng{fullhash}{90ae96c82de92e36949bc64254bbde0c}
+      \strng{fullhashraw}{90ae96c82de92e36949bc64254bbde0c}
       \strng{bibnamehash}{90ae96c82de92e36949bc64254bbde0c}
       \strng{authordefaulten-usbibnamehash}{90ae96c82de92e36949bc64254bbde0c}
       \strng{authordefaulten-usnamehash}{90ae96c82de92e36949bc64254bbde0c}
       \strng{authordefaulten-usfullhash}{90ae96c82de92e36949bc64254bbde0c}
+      \strng{authordefaulten-usfullhashraw}{90ae96c82de92e36949bc64254bbde0c}
       \field{extraname}{2}
       \field{sortinit}{L}
       \strng{sortinithash}{7c47d417cecb1f4bd38d1825c427a61a}

@@ -46,7 +46,7 @@ Biber::Config->setblxoption(undef,'labeldatespec', [ {content => 'date', type =>
 $biber->prepare;
 my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
-my $main = $biber->datalists->get_list('nty/global//global/global');
+my $main = $biber->datalists->get_list('nty/global//global/global/global');
 my $bibentries = $section->bibentries;
 
 my $dmv =  [
@@ -81,7 +81,7 @@ my $dmv =  [
 
 my $bln = [ {content => 'author'}, {content => 'editor'} ];
 
-my $l1 = q|    \entry{L1}{book}{}
+my $l1 = q|    \entry{L1}{book}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
@@ -104,10 +104,12 @@ my $l1 = q|    \entry{L1}{book}{}
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{fullhashraw}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{bibnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{authordefaulten-usbibnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{authordefaulten-usnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{authordefaulten-usfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authordefaulten-usfullhashraw}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{sortinit}{D}
       \strng{sortinithash}{6f385f66841fb5e82009dc833c761848}
       \field{extradatescope}{labelyear}
@@ -127,7 +129,7 @@ my $l1 = q|    \entry{L1}{book}{}
     \endentry
 |;
 
-my $l2 = q|    \entry{L2}{book}{maxalphanames=10,maxbibnames=3,maxcitenames=3,maxitems=2}
+my $l2 = q|    \entry{L2}{book}{maxalphanames=10,maxbibnames=3,maxcitenames=3,maxitems=2}{}
       \name[default][en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=19eec87c959944d6d9c72434a42856ba}{%
            family={Edwards},
@@ -150,10 +152,12 @@ my $l2 = q|    \entry{L2}{book}{maxalphanames=10,maxbibnames=3,maxcitenames=3,ma
       }
       \strng{namehash}{19eec87c959944d6d9c72434a42856ba}
       \strng{fullhash}{19eec87c959944d6d9c72434a42856ba}
+      \strng{fullhashraw}{19eec87c959944d6d9c72434a42856ba}
       \strng{bibnamehash}{19eec87c959944d6d9c72434a42856ba}
       \strng{authordefaulten-usbibnamehash}{19eec87c959944d6d9c72434a42856ba}
       \strng{authordefaulten-usnamehash}{19eec87c959944d6d9c72434a42856ba}
       \strng{authordefaulten-usfullhash}{19eec87c959944d6d9c72434a42856ba}
+      \strng{authordefaulten-usfullhashraw}{19eec87c959944d6d9c72434a42856ba}
       \field{sortinit}{E}
       \strng{sortinithash}{8da8a182d344d5b9047633dfc0cc9131}
       \field{extradatescope}{labelyear}
@@ -168,7 +172,7 @@ my $l2 = q|    \entry{L2}{book}{maxalphanames=10,maxbibnames=3,maxcitenames=3,ma
     \endentry
 |;
 
-my $l3 = q|    \entry{L3}{book}{blah=10}
+my $l3 = q|    \entry{L3}{book}{blah=10}{}
       \name[default][en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=490250da1f3b92580d97563dc96c6c84}{%
            family={Bluntford},
@@ -191,10 +195,12 @@ my $l3 = q|    \entry{L3}{book}{blah=10}
       }
       \strng{namehash}{490250da1f3b92580d97563dc96c6c84}
       \strng{fullhash}{490250da1f3b92580d97563dc96c6c84}
+      \strng{fullhashraw}{490250da1f3b92580d97563dc96c6c84}
       \strng{bibnamehash}{490250da1f3b92580d97563dc96c6c84}
       \strng{authordefaulten-usbibnamehash}{490250da1f3b92580d97563dc96c6c84}
       \strng{authordefaulten-usnamehash}{490250da1f3b92580d97563dc96c6c84}
       \strng{authordefaulten-usfullhash}{490250da1f3b92580d97563dc96c6c84}
+      \strng{authordefaulten-usfullhashraw}{490250da1f3b92580d97563dc96c6c84}
       \field{sortinit}{B}
       \strng{sortinithash}{d7095fff47cda75ca2589920aae98399}
       \field{extradatescope}{labelyear}

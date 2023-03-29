@@ -39,9 +39,9 @@ $biber->prepare;
 my $section = $biber->sections->get_section(0);
 my $section1 = $biber->sections->get_section(1);
 my $section2 = $biber->sections->get_section(2);
-my $main = $biber->datalists->get_list('none/global//global/global');
-my $main1 = $biber->datalists->get_list('none/global//global/global', 1);
-my $main2 = $biber->datalists->get_list('none/global//global/global', 2);
+my $main = $biber->datalists->get_list('none/global//global/global/global');
+my $main1 = $biber->datalists->get_list('none/global//global/global/global', 1);
+my $main2 = $biber->datalists->get_list('none/global//global/global/global', 2);
 
 # Testing \nocite order with sorting=none
 is_deeply($main1->get_keys, ['L2', 'L1','L1A','L1B','L3','L4','L5','L6','L7','L8','L9'], 'sorting=none and \nocite{*} second');

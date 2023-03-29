@@ -40,7 +40,7 @@ Biber::Config->setblxoption(undef, 'skipbiblist', 'true');
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 
 
-my $S1 = q|    \entry{S1}{book}{skipbib=false,skipbiblist=false,skiplab=false}
+my $S1 = q|    \entry{S1}{book}{skipbib=false,skipbiblist=false,skiplab=false}{}
       \name[default][en-us]{author}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
@@ -73,10 +73,12 @@ my $S1 = q|    \entry{S1}{book}{skipbib=false,skipbiblist=false,skiplab=false}
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{fullhashraw}{8c77336299b25bdada7bf8038f46722f}
       \strng{bibnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{authordefaulten-usbibnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{authordefaulten-usnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{authordefaulten-usfullhash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{authordefaulten-usfullhashraw}{8c77336299b25bdada7bf8038f46722f}
       \field{extraname}{1}
       \field{labelalpha}{DA95}
       \field{sortinit}{D}
@@ -92,7 +94,7 @@ my $S1 = q|    \entry{S1}{book}{skipbib=false,skipbiblist=false,skiplab=false}
     \endentry
 |;
 
-my $S2 = q|    \entry{S2}{book}{skipbib=false,skiplab=false}
+my $S2 = q|    \entry{S2}{book}{skipbib=false,skiplab=false}{}
       \name[default][en-us]{author}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
@@ -125,10 +127,12 @@ my $S2 = q|    \entry{S2}{book}{skipbib=false,skiplab=false}
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{fullhashraw}{8c77336299b25bdada7bf8038f46722f}
       \strng{bibnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{authordefaulten-usbibnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{authordefaulten-usnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{authordefaulten-usfullhash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{authordefaulten-usfullhashraw}{8c77336299b25bdada7bf8038f46722f}
       \field{extraname}{2}
       \field{labelalpha}{DA95}
       \field{sortinit}{D}
@@ -144,7 +148,7 @@ my $S2 = q|    \entry{S2}{book}{skipbib=false,skiplab=false}
     \endentry
 |;
 
-my $S3 = q|    \entry{S3}{book}{}
+my $S3 = q|    \entry{S3}{book}{}{}
       \name[default][en-us]{author}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
@@ -177,10 +181,12 @@ my $S3 = q|    \entry{S3}{book}{}
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{fullhashraw}{8c77336299b25bdada7bf8038f46722f}
       \strng{bibnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{authordefaulten-usbibnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{authordefaulten-usnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{authordefaulten-usfullhash}{8c77336299b25bdada7bf8038f46722f}
+      \strng{authordefaulten-usfullhashraw}{8c77336299b25bdada7bf8038f46722f}
       \field{sortinit}{D}
       \strng{sortinithash}{6f385f66841fb5e82009dc833c761848}
       \field{labeldatesource}{}
@@ -195,7 +201,7 @@ my $S3 = q|    \entry{S3}{book}{}
 $biber->prepare;
 my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
-my $main = $biber->datalists->get_list('custom/global//global/global');
+my $main = $biber->datalists->get_list('custom/global//global/global/global');
 # labels as per-entry dataonly=false
 eq_or_diff( $out->get_output_entry('S1', $main), $S1, 'Global skips with entry override - 1') ;
 # labels as per-entry skpiplab=false

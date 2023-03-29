@@ -32,7 +32,7 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 # (re)generate information based on option settings
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
-my $main = $biber->datalists->get_list('nty/global//global/global');
+my $main = $biber->datalists->get_list('nty/global//global/global/global');
 
 is_deeply([map {NFC($_)} $main->get_keys->@*], ['aachen', 'aix-en-provence', 'arnhem', 'augsburg', 'avignon', 'berlin', 'utrecht', 'zeven', 'kumāra', 'kha', 'jīvita', 'jvara', 'tyāga', 'tridaśa', 'tvid', 'kṣetra', 'jñāna'], 'translit sorting - 1');
 

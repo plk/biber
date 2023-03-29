@@ -128,7 +128,7 @@ sub display_end {
 
   if ($self->{warnings}) {
     foreach my $w ($self->{warnings}->@*) {
-      $logger->warn($w);
+      $logger->warn(NFC($w)); # NFC boundary
     }
     $logger->info('WARNINGS: ' . scalar($self->{warnings}->@*));
   }
@@ -312,8 +312,9 @@ sub tool_mode_setup {
                                      sortingnamekeytemplatename => 'global',
                                      uniquenametemplatename     => 'global',
                                      labelalphanametemplatename => 'global',
+                                     namehashtemplatename       => 'global',
                                      labelprefix                => '',
-                                     name                       => 'tool/global//global/global');
+                                     name                       => 'tool/global//global/global/global');
   $seclist->set_type('entry');
   # Locale just needs a default here - there is no biblatex option to take it from
   Biber::Config->setblxoption(undef, 'sortlocale', 'en_US');
@@ -475,6 +476,7 @@ sub parse_ctrlfile {
                                                            qr/\Adatalist\z/,
                                                            qr/\Alabel(?:part|element|alpha(?:name)?template)\z/,
                                                            qr/\Auniquenametemplate\z/,
+                                                           qr/\Anamehashtemplate\z/,
                                                            qr/\Acondition\z/,
                                                            qr/\Afilter(?:or)?\z/,
                                                            qr/\Aoptionscope\z/,
@@ -753,6 +755,19 @@ sub parse_ctrlfile {
 
   Biber::Config->setblxoption(undef, 'uniquenametemplate', $unts);
 
+  # NAME HASH TEMPLATE
+  my $nhts;
+  foreach my $nht ($bcfxml->{namehashtemplate}->@*) {
+    my $nhtval = [];
+    foreach my $np (sort {$a->{order} <=> $b->{order}} $nht->{namepart}->@*) {
+      push $nhtval->@*, {namepart        => $np->{content},
+                         hashscope       => $np->{hashscope}};
+    }
+    $nhts->{$nht->{name}} = $nhtval;
+  }
+
+  Biber::Config->setblxoption(undef, 'namehashtemplate', $nhts);
+
   # SORTING NAME KEY
   # Use the order attributes to make sure things are in right order and create a data structure
   # we can use later
@@ -1001,6 +1016,7 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
     my $lsnksn = $list->{sortingnamekeytemplatename};
     my $luntn = $list->{uniquenametemplatename};
     my $llantn = $list->{labelalphanametemplatename};
+    my $lnhtn = $list->{namehashtemplatename};
     my $lpn = $list->{labelprefix};
     my $lname = $list->{name};
 
@@ -1012,9 +1028,10 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
                              sortingnamekeytemplatename => $lsnksn,
                              labelprefix                => $lpn,
                              uniquenametemplatename     => $luntn,
-                             labelalphanametemplatename => $llantn)) {
+                             labelalphanametemplatename => $llantn,
+                             namehashtemplatename       => $lnhtn)) {
       if ($logger->is_debug()) {# performance tune
-        $logger->debug("Section datalist '$lname' of type '$ltype' with sortingtemplate '$lstn', sortingnamekeytemplatename '$lsnksn', labelprefix '$lpn', uniquenametemplate '$luntn' and labelalphanametemplate '$llantn' is repeated for section $lsection - ignoring");
+        $logger->debug("Section datalist '$lname' of type '$ltype' with sortingtemplate '$lstn', sortingnamekeytemplatename '$lsnksn', labelprefix '$lpn', uniquenametemplate '$luntn', labelalphanametemplate '$llantn' and namehashtemplate '$lnhtn' is repeated for section $lsection - ignoring");
       }
       next;
     }
@@ -1024,10 +1041,11 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
                                         sortingnamekeytemplatename => $lsnksn,
                                         uniquenametemplatename     => $luntn,
                                         labelalphanametemplatename => $llantn,
+                                        namehashtemplatename       => $lnhtn,
                                         labelprefix                => $lpn,
                                         name                       => $lname);
     $datalist->set_type($ltype || 'entry'); # lists are entry lists by default
-    $datalist->set_name($lname || "$lstn/$lsnksn/$lpn/$luntn/$llantn"); # default to ss+snkss+pn+untn+lantn
+    $datalist->set_name($lname || "$lstn/$lsnksn/$lpn/$luntn/$llantn/$lnhtn"); # default to ss+snkss+pn+untn+lantn+lnhtn
     foreach my $filter ($list->{filter}->@*) {
       $datalist->add_filter({'type'  => $filter->{type},
                             'value' => $filter->{content}});
@@ -1067,16 +1085,18 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
                                            sortingnamekeytemplatename => 'global',
                                            uniquenametemplatename     => 'global',
                                            labelalphanametemplatename => 'global',
+                                           namehashtemplatename       => 'global',
                                            labelprefix                => '',
-                                           name                       => "$globalss/global//global/global")) {
+                                           name                       => "$globalss/global//global/global/global")) {
       my $datalist = Biber::DataList->new(section                    => $secnum,
                                           type                       => 'entry',
                                           sortingtemplatename        => $globalss,
                                           sortingnamekeytemplatename => 'global',
                                           uniquenametemplatename     => 'global',
                                           labelalphanametemplatename => 'global',
+                                          namehashtemplatename       => 'global',
                                           labelprefix                => '',
-                                          name                       => "$globalss/global//global/global");
+                                          name                       => "$globalss/global//global/global/global");
       $datalists->add_list($datalist);
       # See comment above
 
@@ -1127,8 +1147,9 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
                                         sortingnamekeytemplatename => 'global',
                                         uniquenametemplatename     => 'global',
                                         labelalphanametemplatename => 'global',
+                                        namehashtemplatename       => 'global',
                                         labelprefix => '',
-                                        name => Biber::Config->getblxoption(undef, 'sortingtemplatename') . '/global//global/global');
+                                        name => Biber::Config->getblxoption(undef, 'sortingtemplatename') . '/global//global/global/global');
     $datalist->set_type('entry');
     if ($logger->is_debug()) {# performance tune
       $logger->debug("Adding 'entry' list 'none' for pseudo-section 99999");
@@ -1172,8 +1193,9 @@ sub process_setup {
                                           sortingnamekeytemplatename => 'global',
                                           uniquenametemplatename     => 'global',
                                           labelalphanametemplatename => 'global',
+                                          namehashtemplatename       => 'global',
                                           labelprefix => '',
-                                          name => Biber::Config->getblxoption(undef, 'sortingtemplatename') . '/global//global/global');
+                                          name => Biber::Config->getblxoption(undef, 'sortingtemplatename') . '/global//global/global/global');
       $datalist->set_type('entry');
       $datalist->set_section($secnum);
       $self->datalists->add_list($datalist);
@@ -1965,9 +1987,6 @@ sub process_entries_static {
     # generate labeltitle name
     $self->process_labeltitle($citekey);
 
-    # generate fullhash
-    $self->process_fullhash($citekey);
-
     # push entry-specific presort fields into the presort state
     $self->process_presort($citekey);
   }
@@ -2038,6 +2057,9 @@ sub process_entries_post {
     $logger->debug("Postprocessing entries in section $secnum (after uniqueness)");
   }
   foreach my $citekey ( $section->get_citekeys ) {
+
+    # generate fullhashes
+    $self->process_fullhash($citekey, $dlist);
 
     # generate labelalpha information
     $self->process_labelalpha($citekey, $dlist);
@@ -2176,7 +2198,7 @@ sub process_workuniqueness {
   # Don't generate information for entries with no labelname or labeltitle
   # Use fullhash as this is not a test of uniqueness of only visible information
   if ($lni and Biber::Config->getblxoption(undef, 'singletitle', $bee, $citekey)) {
-    $identifier = $self->_getfullhash($citekey, $be->get_field($lni, $lnf, $lnl));
+    $identifier = $self->_getfullhash($citekey, $be->get_field($lni, $lnf, $lnl), $dlist);
 
     # Skip due to ignore settings?
     # Don't count towards singletitle being false if both labelname and labeltitle
@@ -2218,7 +2240,7 @@ sub process_workuniqueness {
   # Don't generate information for entries with no labelname and labeltitle
   # Should use fullhash this is not a test of uniqueness of only visible information
   if ($lni and $lti and Biber::Config->getblxoption(undef, 'uniquework', $bee, $citekey)) {
-    $identifier = $self->_getfullhash($citekey, $be->get_field($lni, $lnf, $lnl)) . $be->get_field($lti, $ltf, $ltl);
+    $identifier = $self->_getfullhash($citekey, $be->get_field($lni, $lnf, $lnl), $dlist) . $be->get_field($lti, $ltf, $ltl);
 
     # Skip due to ignore settings?
     unless (first {fc($lni) eq fc($_)} $ignore->{uniquework}->@* and
@@ -2564,8 +2586,7 @@ sub process_labelname {
   }
 
   # Then we loop again to set the labelname name for the fullhash generation code
-  # This is because fullhash generation ignores SHORT* fields (section 4.2.4.1, BibLaTeX
-  # manual)
+  # This is because fullhash generation ignores SHORT* fields
   foreach my $h_ln ($lnamespec->@*) {
     my $ln = $h_ln->{content};
     my $form = $h_ln->{form};
@@ -2782,8 +2803,7 @@ sub process_labeltitle {
 =cut
 
 sub process_fullhash {
-  my $self = shift;
-  my $citekey = shift;
+  my ($self, $citekey, $dlist) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
@@ -2795,7 +2815,8 @@ sub process_fullhash {
   # and also SHORT* fields etc.
   if (my ($lni, $lnf, $lnl) = $be->get_labelnamefh_info->@*) {
     if (my $lnfh = $be->get_field($lni, $lnf, $lnl)) {
-      $be->set_field('fullhash', $self->_getfullhash($citekey, $lnfh));
+      $dlist->set_entryfield($citekey, 'fullhash', $self->_getfullhash($citekey, $lnfh, $dlist));
+      $dlist->set_entryfield($citekey, 'fullhashraw', $self->_getfullhashraw($citekey, $lnfh, $dlist));
     }
   }
 
@@ -2806,7 +2827,8 @@ sub process_fullhash {
       my $form = $alts->{form} // '';
       my $lang = $alts->{lang} // '';
 
-      $be->set_field("${n}${form}${lang}fullhash", $self->_getfullhash($citekey, $nv));
+      $dlist->set_entryfield($citekey, "${n}${form}${lang}fullhash", $self->_getfullhash($citekey, $nv, $dlist));
+      $dlist->set_entryfield($citekey, "${n}${form}${lang}fullhashraw", $self->_getfullhashraw($citekey, $nv, $dlist));
     }
   }
 
@@ -2868,7 +2890,7 @@ sub process_pername_hashes {
     foreach my $alts ($be->get_alternates_for_field($pn)->@*) {
       my $nl = $alts->{val};
       foreach my $n ($nl->names->@*) {
-        my $pnhash = $self->_genpnhash($citekey, $n);
+        my $pnhash = $self->_genpnhash($citekey, $nl, $n, $dlist);
         $n->set_hash($pnhash);
         $dlist->set_namehash($nl->get_id, $n->get_id, $pnhash);
       }
@@ -3098,6 +3120,7 @@ sub process_lists {
     $list->set_sortingnamekeytemplatename('global') unless $list->get_sortingnamekeytemplatename;
     $list->set_uniquenametemplatename('global') unless $list->get_uniquenametemplatename;
     $list->set_labelalphanametemplatename('global') unless $list->get_labelalphanametemplatename;
+    $list->set_namehashtemplatename('global') unless $list->get_namehashtemplatename;
     $list->set_keys([ $section->get_citekeys ]);
     if ($logger->is_debug()) {  # performance tune
       $logger->debug("Populated datalist '$lname' of type '$ltype' with attributes '$lattrs' in section $secnum with keys: " . join(', ', $list->get_keys->@*));

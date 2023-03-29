@@ -18,8 +18,8 @@
 
 
 \refsection{0}
-  \datalist[entry]{custom/global//global/global}
-    \entry{F1}{book}{}
+  \datalist[entry]{custom/global//global/global/global}
+    \entry{F1}{book}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
@@ -36,10 +36,12 @@
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{fullhashraw}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{bibnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{authordefaulten-usbibnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{authordefaulten-usnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{authordefaulten-usfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authordefaulten-usfullhashraw}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{labelalpha}{\emph{A}}
       \field{sortinit}{A}
       \strng{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
@@ -51,8 +53,8 @@
       \field{year}{1995}
     \endentry
   \enddatalist
-  \datalist[list]{shorthand/global//global/global}
-    \entry{F1}{book}{}
+  \datalist[list]{shorthand/global//global/global/global}
+    \entry{F1}{book}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
@@ -69,10 +71,12 @@
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{fullhashraw}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{bibnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{authordefaulten-usbibnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{authordefaulten-usnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{authordefaulten-usfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authordefaulten-usfullhashraw}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{labelalpha}{\emph{A}}
       \field{sortinit}{A}
       \strng{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
@@ -84,8 +88,8 @@
       \field{year}{1995}
     \endentry
   \enddatalist
-  \datalist[entry]{nty/global//global/global}
-    \entry{F1}{book}{}
+  \datalist[entry]{nty/global//global/global/global}
+    \entry{F1}{book}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{un=0,uniquepart=base,hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
@@ -102,10 +106,12 @@
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{fullhashraw}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{bibnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{authordefaulten-usbibnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{authordefaulten-usnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{authordefaulten-usfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authordefaulten-usfullhashraw}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{labelalpha}{\emph{A}}
       \field{sortinit}{D}
       \strng{sortinithash}{6f385f66841fb5e82009dc833c761848}

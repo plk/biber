@@ -39,12 +39,12 @@ Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 # Now generate the information
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
-my $main = $biber->datalists->get_list('nty/global//global/global');
-my $main1 = $biber->datalists->get_list('none/global//global/global', 1);
+my $main = $biber->datalists->get_list('nty/global//global/global/global');
+my $main1 = $biber->datalists->get_list('none/global//global/global/global', 1);
 my $out = $biber->get_output_obj;
 
 # Notes that \set is in nty order due to sortsets=true in .bcf
-my $string1 = q|    \entry{Static1}{set}{}
+my $string1 = q|    \entry{Static1}{set}{}{}
       \set{Static2,Static4,Static3}
       \field{sortinit}{B}
       \strng{sortinithash}{d7095fff47cda75ca2589920aae98399}
@@ -52,7 +52,7 @@ my $string1 = q|    \entry{Static1}{set}{}
     \endentry
 |;
 
-my $string2 = q|    \entry{Static2}{book}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}
+my $string2 = q|    \entry{Static2}{book}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}{}
       \inset{Static1}
       \name[default][en-us]{author}{1}{}{%
         {{hash=43874d80d7ce68027102819f16c47df1}{%
@@ -69,10 +69,12 @@ my $string2 = q|    \entry{Static2}{book}{skipbib=true,skipbiblist=true,skiplab=
       }
       \strng{namehash}{43874d80d7ce68027102819f16c47df1}
       \strng{fullhash}{43874d80d7ce68027102819f16c47df1}
+      \strng{fullhashraw}{43874d80d7ce68027102819f16c47df1}
       \strng{bibnamehash}{43874d80d7ce68027102819f16c47df1}
       \strng{authordefaulten-usbibnamehash}{43874d80d7ce68027102819f16c47df1}
       \strng{authordefaulten-usnamehash}{43874d80d7ce68027102819f16c47df1}
       \strng{authordefaulten-usfullhash}{43874d80d7ce68027102819f16c47df1}
+      \strng{authordefaulten-usfullhashraw}{43874d80d7ce68027102819f16c47df1}
       \field{sortinit}{B}
       \strng{sortinithash}{d7095fff47cda75ca2589920aae98399}
       \field{labeldatesource}{}
@@ -84,7 +86,7 @@ my $string2 = q|    \entry{Static2}{book}{skipbib=true,skipbiblist=true,skiplab=
     \endentry
 |;
 
-my $string3 = q|    \entry{Static3}{book}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}
+my $string3 = q|    \entry{Static3}{book}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}{}
       \inset{Static1}
       \name[default][en-us]{author}{1}{}{%
         {{hash=22dafa5cd57bb5dd7f3e3bab98fd539c}{%
@@ -101,10 +103,12 @@ my $string3 = q|    \entry{Static3}{book}{skipbib=true,skipbiblist=true,skiplab=
       }
       \strng{namehash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
       \strng{fullhash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
+      \strng{fullhashraw}{22dafa5cd57bb5dd7f3e3bab98fd539c}
       \strng{bibnamehash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
       \strng{authordefaulten-usbibnamehash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
       \strng{authordefaulten-usnamehash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
       \strng{authordefaulten-usfullhash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
+      \strng{authordefaulten-usfullhashraw}{22dafa5cd57bb5dd7f3e3bab98fd539c}
       \field{sortinit}{D}
       \strng{sortinithash}{6f385f66841fb5e82009dc833c761848}
       \field{labeldatesource}{}
@@ -115,7 +119,7 @@ my $string3 = q|    \entry{Static3}{book}{skipbib=true,skipbiblist=true,skiplab=
     \endentry
 |;
 
-my $string4 = q|    \entry{Static4}{book}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}
+my $string4 = q|    \entry{Static4}{book}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}{}
       \inset{Static1}
       \name[default][en-us]{author}{1}{}{%
         {{hash=da80091c8cd89e5269bd55af1bd5d2fa}{%
@@ -132,10 +136,12 @@ my $string4 = q|    \entry{Static4}{book}{skipbib=true,skipbiblist=true,skiplab=
       }
       \strng{namehash}{da80091c8cd89e5269bd55af1bd5d2fa}
       \strng{fullhash}{da80091c8cd89e5269bd55af1bd5d2fa}
+      \strng{fullhashraw}{da80091c8cd89e5269bd55af1bd5d2fa}
       \strng{bibnamehash}{da80091c8cd89e5269bd55af1bd5d2fa}
       \strng{authordefaulten-usbibnamehash}{da80091c8cd89e5269bd55af1bd5d2fa}
       \strng{authordefaulten-usnamehash}{da80091c8cd89e5269bd55af1bd5d2fa}
       \strng{authordefaulten-usfullhash}{da80091c8cd89e5269bd55af1bd5d2fa}
+      \strng{authordefaulten-usfullhashraw}{da80091c8cd89e5269bd55af1bd5d2fa}
       \field{sortinit}{C}
       \strng{sortinithash}{4d103a86280481745c9c897c925753c0}
       \field{labeldatesource}{}
@@ -148,7 +154,7 @@ my $string4 = q|    \entry{Static4}{book}{skipbib=true,skipbiblist=true,skiplab=
 
 # Labelyear is now here as skiplab is not set for this entry when cited in section
 # without citation of a set it is a member of
-my $string5 = q|    \entry{Static2}{book}{}
+my $string5 = q|    \entry{Static2}{book}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{hash=43874d80d7ce68027102819f16c47df1}{%
            family={Bumble},
@@ -164,10 +170,12 @@ my $string5 = q|    \entry{Static2}{book}{}
       }
       \strng{namehash}{43874d80d7ce68027102819f16c47df1}
       \strng{fullhash}{43874d80d7ce68027102819f16c47df1}
+      \strng{fullhashraw}{43874d80d7ce68027102819f16c47df1}
       \strng{bibnamehash}{43874d80d7ce68027102819f16c47df1}
       \strng{authordefaulten-usbibnamehash}{43874d80d7ce68027102819f16c47df1}
       \strng{authordefaulten-usnamehash}{43874d80d7ce68027102819f16c47df1}
       \strng{authordefaulten-usfullhash}{43874d80d7ce68027102819f16c47df1}
+      \strng{authordefaulten-usfullhashraw}{43874d80d7ce68027102819f16c47df1}
       \field{sortinit}{1}
       \strng{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
       \field{extradatescope}{labelyear}

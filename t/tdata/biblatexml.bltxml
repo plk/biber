@@ -45,7 +45,7 @@
       </bltx:name>
     </bltx:names>
     <bltx:names type="afterword">
-      <bltx:name gender="sm">
+      <bltx:name gender="sm" id="testid">
         <bltx:namepart type="given">John</bltx:namepart>
         <bltx:namepart type="family">Brown</bltx:namepart>
       </bltx:name>

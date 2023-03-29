@@ -1176,7 +1176,8 @@ sub get_attrs {
                     $self->{sortingnamekeytemplatename},
                     $self->{labelprefix},
                     $self->{uniquenametemplatename},
-                    $self->{labelalphanametemplatename}));
+                    $self->{labelalphanametemplatename},
+                    $self->{namehashtemplatename}));
 }
 
 =head2 get_sortingtemplatename
@@ -1261,6 +1262,31 @@ sub get_labelalphanametemplatename {
   my $self = shift;
   return $self->{labelalphanametemplatename};
 }
+
+=head2 set_namehashtemplatename
+
+    Sets the namehashtemplate name of a data list
+
+=cut
+
+sub set_namehashtemplatename {
+  my $self = shift;
+  my $nhtn = shift;
+  $self->{namehashtemplatename} = lc($nhtn);
+  return;
+}
+
+=head2 get_namehashtemplatename
+
+    Gets the namehashtemplate name of a data list
+
+=cut
+
+sub get_namehashtemplatename {
+  my $self = shift;
+  return $self->{namehashtemplatename};
+}
+
 
 =head2 set_sortinit_collator
 
@@ -1917,9 +1943,32 @@ sub instantiate_entry {
         if (my $e = $self->get_entryfield($key, "${n}${form}${lang}namehash")) {
           my $str = "\\strng{${n}${form}${lang}namehash}{$e}";
           $entry_string =~ s|<BDS>${n}${form}${lang}NAMEHASH</BDS>|$str|gxms;
+        }
 
+        # per-namelist fullhash
+        if (my $e = $self->get_entryfield($key, "${n}${form}${lang}fullhash")) {
+          my $str = "\\strng{${n}${form}${lang}fullhash}{$e}";
+          $entry_string =~ s|<BDS>${n}${form}${lang}FULLHASH</BDS>|$str|gxms;
+        }
+
+        # per-namelist fullhashraw
+        if (my $e = $self->get_entryfield($key, "${n}${form}${lang}fullhashraw")) {
+          my $str = "\\strng{${n}${form}${lang}fullhashraw}{$e}";
+          $entry_string =~ s|<BDS>${n}${form}${lang}FULLHASHRAW</BDS>|$str|gxms;
         }
       }
+    }
+
+    # fullhash
+    if (my $e = $self->get_entryfield($key, 'fullhash')) {
+      my $str = "\\strng{fullhash}{$e}";
+      $entry_string =~ s|<BDS>FULLHASH</BDS>|$str|gxms;
+    }
+
+    # fullhashraw
+    if (my $e = $self->get_entryfield($key, 'fullhashraw')) {
+      my $str = "\\strng{fullhashraw}{$e}";
+      $entry_string =~ s|<BDS>FULLHASHRAW</BDS>|$str|gxms;
     }
 
     # bibnamehash

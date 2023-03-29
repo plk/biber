@@ -166,7 +166,7 @@ is_deeply($biber->datalists->get_lists_by_attrs(section           => 0,
                                        uniquenametemplatename     => 'global',
                                        labelalphanametemplatename => 'global')->[0]->get_keys, ['K11', 'K1', 'K2', 'K4', 'K3', 'K7', 'K5', 'K8', 'K9', 'K10', 'K12', 'K6'], 'List - sorting name key templates - 1');
 
-my $K11 = q|    \entry{K11}{book}{}
+my $K11 = q|    \entry{K11}{book}{}{}
       \name[default][en-us]{author}{1}{sortingnamekeytemplatename=snk1}{%
         {{hash=4edc280a0ef229f9c061e3b121b17482}{%
            family={Xanax},
@@ -194,10 +194,12 @@ my $K11 = q|    \entry{K11}{book}{}
       }
       \strng{namehash}{4edc280a0ef229f9c061e3b121b17482}
       \strng{fullhash}{4edc280a0ef229f9c061e3b121b17482}
+      \strng{fullhashraw}{4edc280a0ef229f9c061e3b121b17482}
       \strng{bibnamehash}{4edc280a0ef229f9c061e3b121b17482}
       \strng{authordefaulten-usbibnamehash}{4edc280a0ef229f9c061e3b121b17482}
       \strng{authordefaulten-usnamehash}{4edc280a0ef229f9c061e3b121b17482}
       \strng{authordefaulten-usfullhash}{4edc280a0ef229f9c061e3b121b17482}
+      \strng{authordefaulten-usfullhashraw}{4edc280a0ef229f9c061e3b121b17482}
       \field{sortinit}{a}
       \strng{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
       \field{extradatescope}{labelyear}
@@ -210,7 +212,7 @@ my $K11 = q|    \entry{K11}{book}{}
     \endentry
 |;
 
-my $K12 = q|    \entry{K12}{book}{}
+my $K12 = q|    \entry{K12}{book}{}{}
       \name[default][en-us]{author}{1}{}{%
         {{sortingnamekeytemplatename=snk2,hash=a846a485fc9cbb59b0ebeedd6ac637e4}{%
            family={Allen},
@@ -238,10 +240,12 @@ my $K12 = q|    \entry{K12}{book}{}
       }
       \strng{namehash}{a846a485fc9cbb59b0ebeedd6ac637e4}
       \strng{fullhash}{a846a485fc9cbb59b0ebeedd6ac637e4}
+      \strng{fullhashraw}{a846a485fc9cbb59b0ebeedd6ac637e4}
       \strng{bibnamehash}{a846a485fc9cbb59b0ebeedd6ac637e4}
       \strng{authordefaulten-usbibnamehash}{a846a485fc9cbb59b0ebeedd6ac637e4}
       \strng{authordefaulten-usnamehash}{a846a485fc9cbb59b0ebeedd6ac637e4}
       \strng{authordefaulten-usfullhash}{a846a485fc9cbb59b0ebeedd6ac637e4}
+      \strng{authordefaulten-usfullhashraw}{a846a485fc9cbb59b0ebeedd6ac637e4}
       \field{sortinit}{Z}
       \strng{sortinithash}{96892c0b0a36bb8557c40c49813d48b3}
       \field{extradatescope}{labelyear}
