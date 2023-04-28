@@ -863,6 +863,7 @@
     <char>textunderscore</char>
     <char>textasciitilde</char>
     <char>textasciicircum</char>
+    <char>textasciigrave</char>
     <char>dots</char>
   </decode_exclude>
   <encode_exclude>
