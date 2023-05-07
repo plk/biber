@@ -2039,7 +2039,7 @@
   </bcf:datamodel>
   <!-- SECTION 0 -->
   <bcf:bibdata section="0">
-    <bcf:datasource type="file" datatype="bibtex">http://people.cs.uu.nl/hansb/graphs-bib/definitions.bib</bcf:datasource>
+    <bcf:datasource type="file" datatype="bibtex">https://webspace.science.uu.nl/~bodla101/graphs-bib/definitions.bib</bcf:datasource>
     <bcf:datasource type="file" datatype="bibtex">https://www.staff.science.uu.nl/~bodla101/graphs-bib/papers.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
