@@ -4765,8 +4765,8 @@ sub get_dependents {
             # record that $rm is used as a related entry key
             $section->add_related($rm);
             push $new_deps->@*, $rm;
-            push $keyswithdeps->@*, $citekey unless first {$citekey eq $_} $keyswithdeps->@*;
           }
+          push $keyswithdeps->@*, $citekey unless first {$citekey eq $_} $keyswithdeps->@*;
         }
         if ($logger->is_debug()) {# performance tune
           $logger->debug("Entry '$citekey' has related entries: " . join(', ', $relkeys->@*));
@@ -4923,7 +4923,7 @@ sub remove_undef_dependent {
       if (first {$missing_key eq $_} $relkeys->@*) {
         $be->set_datafield('related', [ grep {$_ ne $missing_key} $relkeys->@* ]);
         # If no more related entries, remove the other related fields
-        unless ($be->get_field('related')) {
+        unless ($be->get_field('related')->@*) {
           $be->del_field('relatedtype');
           $be->del_field('relatedstring');
           if ($logger->is_trace()) {# performance tune
@@ -4934,7 +4934,7 @@ sub remove_undef_dependent {
       }
     }
   }
-    return;
+  return;
 }
 
 =head2 _parse_sort
