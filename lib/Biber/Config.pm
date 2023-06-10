@@ -194,7 +194,7 @@ sub _initopts {
 
   # Set log file name
   my $biberlog;
-  if (my $log = Biber::Config->getoption('logfile')) { # user specified logfile name
+  if (my $log = Biber::Utils::biber_decode_utf8(Biber::Config->getoption('logfile'))) { # user specified logfile name
     # Sanitise user-specified log name
     $log =~ s/\.blg\z//xms;
     $biberlog = $log . '.blg';
@@ -206,7 +206,7 @@ sub _initopts {
     my $bcf = $ARGV[0];         # ARGV is ok even in a module
     # Sanitise control file name
     $bcf =~ s/\.bcf\z//xms;
-    $biberlog = $bcf . '.blg';
+    $biberlog = Biber::Utils::biber_decode_utf8($bcf . '.blg');
   }
 
   # prepend output directory for log, if specified
@@ -306,8 +306,8 @@ sub _initopts {
 
   $logger->info("This is Biber $vn$tool") unless Biber::Config->getoption('nolog');
 
-  $logger->info("Config file is '" . $opts->{configfile} . "'") if $opts->{configfile};
-  $logger->info("Logfile is '$biberlog'") unless Biber::Config->getoption('nolog');
+  $logger->info("Config file is '" . NFC($opts->{configfile}) . "'") if $opts->{configfile};
+  $logger->info("Logfile is '" . NFC($biberlog) . "'") unless Biber::Config->getoption('nolog');
 
   if (Biber::Config->getoption('debug')) {
     $screen->info("DEBUG mode: all messages are logged to '$biberlog'")
