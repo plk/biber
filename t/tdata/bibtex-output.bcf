@@ -2050,7 +2050,7 @@
     <bcf:citekey order="2" intorder="1">xd1</bcf:citekey>
     <bcf:citekey order="3" intorder="1">bo1</bcf:citekey>
   </bcf:section>
-  <!-- SORTING SCHEME -->
+  <!-- SORTING TEMPLATE -->
   <bcf:sortingtemplate name="nty">
     <bcf:sort order="1">
       <bcf:sortitem order="1">presort</bcf:sortitem>
