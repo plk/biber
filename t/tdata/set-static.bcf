@@ -2076,6 +2076,14 @@
       <bcf:sortitem literal="1" order="2">0</bcf:sortitem>
     </bcf:sort>
   </bcf:sortingtemplate>
+  <bcf:sortingtemplate name="shorthand">
+    <bcf:sort order="1" final="1">
+      <bcf:sortitem order="1">sortshorthand</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="2">
+      <bcf:sortitem order="1">shorthand</bcf:sortitem>
+    </bcf:sort>
+  </bcf:sortingtemplate>
   <bcf:sortingtemplate name="none">
     <bcf:sort order="1">
       <bcf:sortitem order="1">citeorder</bcf:sortitem>
@@ -2100,5 +2108,16 @@
                 uniquenametemplatename="global"
                 labelalphanametemplatename="global"
                 namehashtemplatename="global"/>
+  <bcf:datalist section="0"
+                name="shorthand:shorthand/global//global/global/global"
+                type="list"
+                sortingtemplatename="shorthand"
+                sortingnamekeytemplatename="global"
+                labelprefix=""
+                uniquenametemplatename="global"
+                labelalphanametemplatename="global"
+                namehashtemplatename="global">
+    <bcf:filter type="field">shorthand</bcf:filter>
+  </bcf:datalist>
 </bcf:controlfile>
 

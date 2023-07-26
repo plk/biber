@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 5;
+use Test::More tests => 6;
 use Test::Differences;
 unified_diff;
 
@@ -171,3 +171,12 @@ eq_or_diff($out->get_output_entry('Static3', $main), $string3, 'Static set test 
 eq_or_diff($out->get_output_entry('Static4', $main), $string4, 'Static set test 4');
 eq_or_diff($out->get_output_entry('Static2', $main1, 1), $string5, 'Static set test 5');
 
+is_deeply($biber->datalists->get_lists_by_attrs(section                    => 0,
+                                                name                       => 'shorthand:shorthand/global//global/global/global',
+                                                type                       => 'list',
+                                                sortingtemplatename        => 'shorthand',
+                                                sortingnamekeytemplatename => 'global',
+                                                labelprefix                => '',
+                                                uniquenametemplatename     => 'global',
+                                                labelalphanametemplatename => 'global',
+                                                namehashtemplatename       => 'global')->[0]->get_keys, ['Static2', 'Static1', 'Static3', 'Static4'], 'Shorthand - sets');

@@ -194,7 +194,8 @@ sub _initopts {
 
   # Set log file name
   my $biberlog;
-  if (my $log = Biber::Utils::biber_decode_utf8(Biber::Config->getoption('logfile'))) { # user specified logfile name
+  if (my $log = Biber::Config->getoption('logfile')) { # user specified logfile name
+    $log = Biber::Utils::biber_decode_utf8($log);
     # Sanitise user-specified log name
     $log =~ s/\.blg\z//xms;
     $biberlog = $log . '.blg';

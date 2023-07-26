@@ -3081,8 +3081,7 @@ sub process_lists {
       $logger->debug("Populated datalist '$lname' of type '$ltype' with attributes '$lattrs' in section $secnum with keys: " . join(', ', $list->get_keys->@*));
     }
 
-    # A datalist represents a biblatex refcontext
-    # and many things are refcontext specific and so we need to use the right data. For
+    # Many things are refcontext specific and so we need to use the right data. For
     # example labelalphanametemplate and uniquenametemplate can be set per-list and much
     # processing uses these
 
@@ -3112,9 +3111,17 @@ sub process_lists {
     # Filtering - must come before sorting/labelling so that there are no gaps in e.g. extradate
     if (my $filters = $list->get_filters) {
       my $flist = [];
+      my @sets = grep {$section->bibentry($_)->get_field('entrytype') eq 'set'} $list->get_keys->@*;
+      say "HERE: " . join (',', @sets);
     KEYLOOP: foreach my $k ($list->get_keys->@*) {
-
         my $be = $section->bibentry($k);
+
+        # Entries that are in a set which is in this list should not be filtered out
+        if (first {$be->get_field('entryset')} @sets) {
+          push $flist->@*, $k;
+          next KEYLOOP
+        }
+
         foreach my $f ($filters->@*) {
           # Filter disjunction is ok if any of the checks are ok, hence the grep()
           if (ref $f eq 'ARRAY') {
