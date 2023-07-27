@@ -685,6 +685,9 @@ sub set_inherit_from {
     # is a low-level operation on datafields
     next if fc($field) eq fc('annotation');
 
+    # sets can have their own shorthands and it's not useful to inherit this anyway
+    next if fc($field) eq fc('shorthand');
+
     $self->set_datafield($field, $parent->get_field($field));
   }
 

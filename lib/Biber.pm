@@ -3112,7 +3112,6 @@ sub process_lists {
     if (my $filters = $list->get_filters) {
       my $flist = [];
       my @sets = grep {$section->bibentry($_)->get_field('entrytype') eq 'set'} $list->get_keys->@*;
-      say "HERE: " . join (',', @sets);
     KEYLOOP: foreach my $k ($list->get_keys->@*) {
         my $be = $section->bibentry($k);
 

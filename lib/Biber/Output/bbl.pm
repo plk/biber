@@ -250,6 +250,11 @@ sub set_output_entry {
       $acc .= "      \\field{annotation}{$ann}\n";
     }
 
+    # Sets can have shorthands
+    if ( my $sh = $be->get_field('shorthand') ) {
+      $acc .= "      \\field{shorthand}{$sh}\n";
+    }
+
     # Keyword is necessary in some cases
     if ( my $k = $be->get_field('keywords') ) {
       $k = join(',', $k->@*);
