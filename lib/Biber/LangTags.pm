@@ -62,7 +62,8 @@ my %bcp47parts = ('language'      => 'single',
 
 =head1 NAME
 
-Biber::LangTags
+Biber::LangTags - Biber::LangTags objects
+
 
 =head2 new
 
