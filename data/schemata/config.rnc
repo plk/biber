@@ -101,7 +101,7 @@ start =
     element output_field_replace { text }? &
     element output_file          { text }? &
     element output_format        { "bibtex" | "bbl" | "biblatexml" | "dot" }? &
-    element output_indent        { xsd:unsignedByte }? &
+    element output_indent        { xsd:string { pattern = "\d+t?" } }? &
     element output_legacy_dates  { "0" | "1" }? &
     element output_listsep       { text }? &
     element output_namesep       { text }? &
