@@ -145,6 +145,7 @@ t/tdata/maps.bcf
 t/tdata/maps.bib
 t/tdata/multiscript.bcf
 t/tdata/multiscript.bib
+t/tdata/multiscript.bltxml
 t/tdata/names.bcf
 t/tdata/names_x.bcf
 t/tdata/names.bib
