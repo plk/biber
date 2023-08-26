@@ -1047,8 +1047,8 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
     $datalist->set_type($ltype || 'entry'); # lists are entry lists by default
     $datalist->set_name($lname || "$lstn/$lsnksn/$lpn/$luntn/$llantn/$lnhtn"); # default to ss+snkss+pn+untn+lantn+lnhtn
     foreach my $filter ($list->{filter}->@*) {
-      $datalist->add_filter({'type'  => $filter->{type},
-                            'value' => $filter->{content}});
+      $datalist->add_filter({type  => $filter->{type},
+                             value => $filter->{content}});
     }
     # disjunctive filters are an array ref of filter hashes
     foreach my $orfilter ($list->{filteror}->@*) {
