@@ -550,8 +550,8 @@ sub set_output_entry {
   foreach my $vfield ($dmh->{vfields}->@*) {
     # Performance - as little as possible here - loop over DM fields for every entry
     if ( my $vf = $be->get_field($vfield) ) {
-      if ($vfield eq 'url') {
-        $acc .= "      \\verb{urlraw}\n";
+      if ($dm->get_datatype($vfield) eq 'uri') {
+        $acc .= "      \\verb{${vfield}raw}\n";
         $acc .= "      \\verb $vf\n      \\endverb\n";
         # Unicode NFC boundary (before hex encoding)
         $vf = URI->new(NFC($vf))->as_string;
@@ -569,9 +569,19 @@ sub set_output_entry {
         pop $vlf->@*; # remove the last element in the array
       }
       my $total = $vlf->$#* + 1;
+      # Raw URL list
+      $acc .= "      \\lverb{${vlist}raw}{$total}\n";
+      foreach my $f ($vlf->@*) {
+        if ($dm->get_datatype($vlist) eq 'uri') {
+          # Unicode NFC boundary (before hex encoding)
+        }
+        $acc .= "      \\lverb $f\n";
+      }
+      $acc .= "      \\endlverb\n";
+      # Encode URL list
       $acc .= "      \\lverb{$vlist}{$total}\n";
       foreach my $f ($vlf->@*) {
-        if ($vlist eq 'urls') {
+        if ($dm->get_datatype($vlist) eq 'uri') {
           # Unicode NFC boundary (before hex encoding)
           $f = URI->new(NFC($f))->as_string;
         }
