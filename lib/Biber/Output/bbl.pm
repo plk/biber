@@ -569,18 +569,19 @@ sub set_output_entry {
         pop $vlf->@*; # remove the last element in the array
       }
       my $total = $vlf->$#* + 1;
-      # Raw URL list
-      $acc .= "      \\lverb{${vlist}raw}{$total}\n";
-      foreach my $f ($vlf->@*) {
-        if ($dm->get_datatype($vlist) eq 'uri') {
-          # Unicode NFC boundary (before hex encoding)
+
+      # Raw URL list - special case
+      if ($dm->get_datatype($vlist) eq 'uri') {
+        $acc .= "      \\lverb{${vlist}raw}{$total}\n";
+        foreach my $f ($vlf->@*) {
+          $acc .= "      \\lverb $f\n";
         }
-        $acc .= "      \\lverb $f\n";
+        $acc .= "      \\endlverb\n";
       }
-      $acc .= "      \\endlverb\n";
-      # Encode URL list
+
       $acc .= "      \\lverb{$vlist}{$total}\n";
       foreach my $f ($vlf->@*) {
+        # Encode URL lists
         if ($dm->get_datatype($vlist) eq 'uri') {
           # Unicode NFC boundary (before hex encoding)
           $f = URI->new(NFC($f))->as_string;
