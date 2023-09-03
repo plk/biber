@@ -667,18 +667,18 @@ sub set_output_entry {
       }
       my $total = $vlf->count;
 
-      # Raw URL list
-      $acc .= "      \\lverb{${vlist}raw}{$total}\n";
-      foreach my $f ($vlf->get_items->@*) {
-        if ($dm->get_datatype($vlist) eq 'uri') {
-          # Unicode NFC boundary (before hex encoding)
+      # Raw URL list - special case
+      if ($dm->get_datatype($vlist) eq 'uri') {
+        $acc .= "      \\lverb{${vlist}raw}{$total}\n";
+        foreach my $f ($vlf->get_items->@*) {
+          $acc .= "      \\lverb $f\n";
         }
-        $acc .= "      \\lverb $f\n";
+        $acc .= "      \\endlverb\n";
       }
-      $acc .= "      \\endlverb\n";
-      # Encode URL list
+
       $acc .= "      \\lverb{$vlist}{$total}\n";
       foreach my $f ($vlf->get_items->@*) {
+        # Encode URL lists
         if ($dm->get_datatype($vlist) eq 'uri') {
           # Unicode NFC boundary (before hex encoding)
           $f = URI->new(NFC($f))->as_string;
