@@ -264,6 +264,11 @@ sub set_output_entry {
       $acc .= "      \\field{annotation}{$ann}\n";
     }
 
+    # Sets can have shorthands
+    if ( my $sh = $be->get_field('shorthand') ) {
+      $acc .= "      \\field{shorthand}{$sh}\n";
+    }
+
     # Keyword is necessary in some cases
     if ( my $k = $be->get_field('keywords') ) {
       $k = join(',', $k->get_items->@*);
@@ -642,8 +647,8 @@ sub set_output_entry {
   foreach my $vfield ($dmh->{vfields}->@*) {
     # Performance - as little as possible here - loop over DM fields for every entry
     if ( my $vf = $be->get_field($vfield) ) {
-      if ($vfield eq 'url') {
-        $acc .= "      \\verb{urlraw}\n";
+      if ($dm->get_datatype($vfield) eq 'uri') {
+        $acc .= "      \\verb{${vfield}raw}\n";
         $acc .= "      \\verb $vf\n      \\endverb\n";
         # Unicode NFC boundary (before hex encoding)
         $vf = URI->new(NFC($vf))->as_string;
@@ -661,9 +666,20 @@ sub set_output_entry {
         $vlf->del_last_item;
       }
       my $total = $vlf->count;
+
+      # Raw URL list
+      $acc .= "      \\lverb{${vlist}raw}{$total}\n";
+      foreach my $f ($vlf->get_items->@*) {
+        if ($dm->get_datatype($vlist) eq 'uri') {
+          # Unicode NFC boundary (before hex encoding)
+        }
+        $acc .= "      \\lverb $f\n";
+      }
+      $acc .= "      \\endlverb\n";
+      # Encode URL list
       $acc .= "      \\lverb{$vlist}{$total}\n";
       foreach my $f ($vlf->get_items->@*) {
-        if ($vlist eq 'urls') {
+        if ($dm->get_datatype($vlist) eq 'uri') {
           # Unicode NFC boundary (before hex encoding)
           $f = URI->new(NFC($f))->as_string;
         }

@@ -2088,7 +2088,7 @@
     <bcf:citekey order="26" intorder="1">others2</bcf:citekey>
     <bcf:citekey order="27" intorder="1">final</bcf:citekey>
   </bcf:section>
-  <!-- SORTING SCHEME -->
+  <!-- SORTING TEMPLATE -->
   <bcf:sortingtemplate name="nty">
     <bcf:sort order="1">
       <bcf:sortitem order="1">presort</bcf:sortitem>

@@ -13,7 +13,7 @@ use List::Util qw( first );
 
 =head1 NAME
 
-Biber::DataList - Biber::DataLists objects
+Biber::DataList - Biber::DataList objects
 
 =head2 new
 

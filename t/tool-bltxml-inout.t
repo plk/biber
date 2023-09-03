@@ -144,8 +144,6 @@ my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
       </bltx:list>
     </bltx:publisher>
     <bltx:pagetotal>240</bltx:pagetotal>
-    <bltx:relatedstring>Somestring</bltx:relatedstring>
-    <bltx:relatedtype>reprint</bltx:relatedtype>
     <bltx:series>Научно-биографическая литература</bltx:series>
     <bltx:title>Мухаммад ибн муса ал-Хорезми. Около 783 – около 850</bltx:title>
     <bltx:usera>usera</bltx:usera>

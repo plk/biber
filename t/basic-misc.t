@@ -770,6 +770,10 @@ my $url1 = q|    \entry{url1}{misc}{}{}
       \verb{url}
       \verb http://www.something.com/q=%C3%A1%C5%A0
       \endverb
+      \lverb{urlsraw}{2}
+      \lverb http://www.something.com/q=áŠ
+      \lverb http://www.sun.com
+      \endlverb
       \lverb{urls}{2}
       \lverb http://www.something.com/q=%C3%A1%C5%A0
       \lverb http://www.sun.com

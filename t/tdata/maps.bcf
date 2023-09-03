@@ -2048,7 +2048,7 @@
     <bcf:citekey order="1" intorder="1">maps1</bcf:citekey>
     <bcf:citekey order="2" intorder="1" nocite="1">*</bcf:citekey>
   </bcf:section>
-  <!-- SORTING SCHEME -->
+  <!-- SORTING TEMPLATE -->
   <bcf:sortingtemplate name="nty">
     <bcf:sort order="1">
       <bcf:sortitem order="1">presort</bcf:sortitem>

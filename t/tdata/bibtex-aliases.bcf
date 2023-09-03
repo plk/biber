@@ -2105,7 +2105,7 @@
     <bcf:citekey order="7" intorder="1">alias7</bcf:citekey>
     <bcf:citekey order="8" intorder="1">alias8</bcf:citekey>
   </bcf:section>
-  <!-- SORTING SCHEME -->
+  <!-- SORTING TEMPLATE -->
   <bcf:sortingtemplate name="nty">
     <bcf:sort order="1">
       <bcf:sortitem order="1">presort</bcf:sortitem>

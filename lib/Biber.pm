@@ -1047,8 +1047,8 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
     $datalist->set_type($ltype || 'entry'); # lists are entry lists by default
     $datalist->set_name($lname || "$lstn/$lsnksn/$lpn/$luntn/$llantn/$lnhtn"); # default to ss+snkss+pn+untn+lantn+lnhtn
     foreach my $filter ($list->{filter}->@*) {
-      $datalist->add_filter({'type'  => $filter->{type},
-                            'value' => $filter->{content}});
+      $datalist->add_filter({type  => $filter->{type},
+                             value => $filter->{content}});
     }
     # disjunctive filters are an array ref of filter hashes
     foreach my $orfilter ($list->{filteror}->@*) {
@@ -3126,8 +3126,7 @@ sub process_lists {
       $logger->debug("Populated datalist '$lname' of type '$ltype' with attributes '$lattrs' in section $secnum with keys: " . join(', ', $list->get_keys->@*));
     }
 
-    # A datalist represents a biblatex refcontext
-    # and many things are refcontext specific and so we need to use the right data. For
+    # Many things are refcontext specific and so we need to use the right data. For
     # example labelalphanametemplate and uniquenametemplate can be set per-list and much
     # processing uses these
 
@@ -3157,9 +3156,16 @@ sub process_lists {
     # Filtering - must come before sorting/labelling so that there are no gaps in e.g. extradate
     if (my $filters = $list->get_filters) {
       my $flist = [];
+      my @sets = grep {$section->bibentry($_)->get_field('entrytype') eq 'set'} $list->get_keys->@*;
     KEYLOOP: foreach my $k ($list->get_keys->@*) {
-
         my $be = $section->bibentry($k);
+
+        # Entries that are in a set which is in this list should not be filtered out
+        if (first {$be->get_field('entryset')} @sets) {
+          push $flist->@*, $k;
+          next KEYLOOP
+        }
+
         foreach my $f ($filters->@*) {
           # Filter disjunction is ok if any of the checks are ok, hence the grep()
           if (ref $f eq 'ARRAY') {
@@ -4812,8 +4818,8 @@ sub get_dependents {
             # record that $rm is used as a related entry key
             $section->add_related($rm);
             push $new_deps->@*, $rm;
-            push $keyswithdeps->@*, $citekey unless first {$citekey eq $_} $keyswithdeps->@*;
           }
+          push $keyswithdeps->@*, $citekey unless first {$citekey eq $_} $keyswithdeps->@*;
         }
         if ($logger->is_debug()) {# performance tune
           $logger->debug("Entry '$citekey' has related entries: " . join(', ', $relkeys->get_items->@*));
@@ -4970,7 +4976,7 @@ sub remove_undef_dependent {
       if (first {$missing_key eq $_} $relkeys->get_items->@*) {
         $be->get_field('related')->remove_item($missing_key);
         # If no more related entries, remove the other related fields
-        unless ($be->get_field('related')) {
+        unless ($be->get_field('related')->@*) {
           $be->del_field('relatedtype');
           $be->del_field('relatedstring');
           if ($logger->is_trace()) {# performance tune
@@ -4981,7 +4987,7 @@ sub remove_undef_dependent {
       }
     }
   }
-    return;
+  return;
 }
 
 =head2 _parse_sort

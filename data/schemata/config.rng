@@ -362,7 +362,9 @@
         </optional>
         <optional>
           <element name="output_indent">
-            <data type="unsignedByte"/>
+            <data type="string">
+              <param name="pattern">\d+t?</param>
+            </data>
           </element>
         </optional>
         <optional>
