@@ -375,7 +375,7 @@ sub set_output_entry {
       my $lang = $alts->{lang} // '';
 
       # Internally, no distinction is made between multiscript and
-      # non-multiscript fields but it is on output
+      # non-multiscript fields but there is on output
       my $ms = '';
       if ($dm->is_multiscript($listfield)) {
         $ms = "[$form][$lang]";
@@ -516,7 +516,7 @@ sub set_output_entry {
       my $lang = $alts->{lang} // '';
 
       # Internally, no distinction is made between multiscript and
-      # non-multiscript fields but it is on output
+      # non-multiscript fields but there is on output
       my $ms = '';
       if ($dm->is_multiscript($field)) {
         $ms = "[$form][$lang]";

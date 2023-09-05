@@ -4976,7 +4976,7 @@ sub remove_undef_dependent {
       if (first {$missing_key eq $_} $relkeys->get_items->@*) {
         $be->get_field('related')->remove_item($missing_key);
         # If no more related entries, remove the other related fields
-        unless ($be->get_field('related')->@*) {
+        unless ($be->get_field('related')) {
           $be->del_field('relatedtype');
           $be->del_field('relatedstring');
           if ($logger->is_trace()) {# performance tune
