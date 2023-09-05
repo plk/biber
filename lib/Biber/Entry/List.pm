@@ -76,6 +76,20 @@ sub remove_item {
   return;
 }
 
+=head2 has_item
+
+    Check if an item is in a Biber::Entry::List object
+
+=cut
+
+sub has_item {
+  my ($self, $item) = @_;
+  if (first {$item eq $_} $self->{items}->@*) {
+    return 1;
+  }
+  return 0;
+}
+
 =head2 replace_item
 
     Replace an item at a position (1-based)

@@ -168,8 +168,6 @@ my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}{}
       \field{eventyear}{1990}
       \field{origyear}{356}
       \field{pagetotal}{240}
-      \field[default][en-us]{relatedstring}{Somestring}
-      \field{relatedtype}{reprint}
       \field[default][en-us]{series}{Научно-биографическая литература}
       \field[default][en-us]{title}{Мухаммад ибн муса ал-Хорезми. Около 783 – около 850}
       \field{urlendyear}{}

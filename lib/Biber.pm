@@ -4973,10 +4973,10 @@ sub remove_undef_dependent {
 
     # remove related entries
     if (my $relkeys = $be->get_field('related')) {
-      if (first {$missing_key eq $_} $relkeys->get_items->@*) {
-        $be->get_field('related')->remove_item($missing_key);
+      if ($relkeys->has_item($missing_key)) {
+        $relkeys->remove_item($missing_key);
         # If no more related entries, remove the other related fields
-        unless ($be->get_field('related')) {
+        if ($be->get_field('related')->count == 0) {
           $be->del_field('relatedtype');
           $be->del_field('relatedstring');
           if ($logger->is_trace()) {# performance tune
