@@ -49,6 +49,7 @@ my $string1 = q|    \entry{Static1}{set}{}{}
       \field{sortinit}{B}
       \strng{sortinithash}{d7095fff47cda75ca2589920aae98399}
       \field{annotation}{Some notes}
+      \field{shorthand}{STAT1}
     \endentry
 |;
 
@@ -203,4 +204,4 @@ is_deeply($biber->datalists->get_lists_by_attrs(section                    => 0,
                                                 labelprefix                => '',
                                                 uniquenametemplatename     => 'global',
                                                 labelalphanametemplatename => 'global',
-                                                namehashtemplatename       => 'global')->[0]->get_keys, ['Static2', 'Static1', 'Static3', 'Static4'], 'Shorthand - sets');
+                                                namehashtemplatename       => 'global')->[0]->get_keys, ['Static2', 'Static3', 'Static4', 'Static1'], 'Shorthand - sets');
