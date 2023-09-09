@@ -3111,15 +3111,9 @@ sub process_lists {
     # Filtering - must come before sorting/labelling so that there are no gaps in e.g. extradate
     if (my $filters = $list->get_filters) {
       my $flist = [];
-      my @sets = grep {$section->bibentry($_)->get_field('entrytype') eq 'set'} $list->get_keys->@*;
+
     KEYLOOP: foreach my $k ($list->get_keys->@*) {
         my $be = $section->bibentry($k);
-
-        # Entries that are in a set which is in this list should not be filtered out
-        if (first {$be->get_field('entryset')} @sets) {
-          push $flist->@*, $k;
-          next KEYLOOP
-        }
 
         foreach my $f ($filters->@*) {
           # Filter disjunction is ok if any of the checks are ok, hence the grep()
@@ -3130,8 +3124,22 @@ sub process_lists {
             next KEYLOOP unless check_list_filter($k, $f->{type}, $f->{value}, $be);
           }
         }
+
         push $flist->@*, $k;
       }
+
+      # Now add set members of sets which have not been filtered out
+      my @sets = grep {$section->bibentry($_)->get_field('entrytype') eq 'set'} $flist->@*;
+      foreach my $k ($list->get_keys->@*) {
+        my $be = $section->bibentry($k);
+        if (first {$be->get_field('entryset')} @sets) {
+          push $flist->@*, $k;
+        }
+      }
+
+      # $flist now has the filtered list keys, possibly with duplicates due to sets so uniqify
+      $flist->@* = uniq $flist->@*;
+
       if ($logger->is_debug()) { # performance tune
         $logger->debug("Keys after filtering list '$lname' in section $secnum: " . join(', ', $flist->@*));
       }
