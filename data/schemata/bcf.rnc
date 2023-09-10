@@ -683,8 +683,10 @@ nosortothers =
 # full (true) = disambiguate with full name or initials, only up to maxcitenames/uniquelist
 # allinit = disambiguate with initials, ignore maxcitenames/uniquelist
 # allfull = disambiguate with full name or initials, ignore maxcitenames/uniquelist
-# mininit = disambiguate with initials, only between identical lists in different entries
-# minfull = disambiguate with full name or initials, only between identical lists in different entries
+# mininit = disambiguate with initials, only between identical lists of base names in different entries
+# minfull = disambiguate with full name or initials, only between identical lists of base names in different entries
+# minyearinit = disambiguate with initials, only between identical lists of base names and years in different entries
+# minyearfull = disambiguate with full name or initials, only between identical lists of base names and years in different entries
 pluralothers =
   element bcf:option {
     attribute type { "singlevalued" },
@@ -695,7 +697,7 @@ uniquename =
   element bcf:option {
     attribute type { "singlevalued" },
     element bcf:key { "uniquename" },
-    element bcf:value { "false" | "init" | "full" | "allinit" | "allfull" | "mininit" | "minfull" }
+    element bcf:value { "false" | "init" | "full" | "allinit" | "allfull" | "mininit" | "minfull" | "minyearinit" | "minyearfull" }
   }
 uniqueprimaryauthor =
   element bcf:option {

@@ -218,13 +218,15 @@ our %DS_EXTENSIONS = (
                       );
 
 # Mapping of biblatex uniquename option to disambiguation level
-our %UNIQUENAME_CONTEXTS = ('false' => 'none',
-                            'init' => 'init',
-                            'full' => 'initorfull',
-                            'allinit' => 'init',
-                            'allfull' => 'initorfull',
-                            'mininit' => 'init',
-                            'minfull' => 'initorfull');
+our %UNIQUENAME_CONTEXTS = ('false'       => 'none',
+                            'init'        => 'init',
+                            'full'        => 'initorfull',
+                            'allinit'     => 'init',
+                            'allfull'     => 'initorfull',
+                            'mininit'     => 'init',
+                            'minfull'     => 'initorfull',
+                            'minyearinit' => 'init',
+                            'minyearfull' => 'initorfull');
 
 # Mapping of strings to numeric uniquename values for easier biblatex processing
 our %UNIQUENAME_VALUES = ('none' => 0, 'init' => 1, full => 2);

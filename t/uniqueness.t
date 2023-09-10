@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 222;
+use Test::More tests => 227;
 use Test::Differences;
 unified_diff;
 
@@ -750,3 +750,28 @@ my $po3 = q|    \entry{po3}{book}{}{}
 eq_or_diff($main->get_visible_cite($bibentries->entry('po3')->get_field($bibentries->entry('po3')->get_labelname_info)->get_id), '4', 'Pluralothers test - 3');
 ok(is_undef($main->get_extranamedata_for_key('po3')), 'Pluralothers test - 4');
 eq_or_diff( $out->get_output_entry('po3', $main), $po3, 'Pluralothers test - 5');
+
+#############################################################################
+# Testing uniquename minyearinit and minyearfull 
+
+$biber = Biber->new(noconf => 1);
+$biber->parse_ctrlfile('uniqueness7.bcf');
+$biber->set_output_obj(Biber::Output::bbl->new());
+# Biblatex options
+Biber::Config->setblxoption(undef,'uniquelist', 'true');
+Biber::Config->setblxoption(undef,'uniquename', 'minyearinit');
+Biber::Config->setblxoption(undef,'pluralothers', 'false');
+Biber::Config->setblxoption(undef,'maxcitenames', 3);
+Biber::Config->setblxoption(undef,'mincitenames', 1);
+# Now generate the information
+$biber->prepare;
+$out = $biber->get_output_obj;
+$section = $biber->sections->get_section(0);
+$bibentries = $section->bibentries;
+$main = $biber->datalists->get_list('nty/global//global/global/global');
+
+eq_or_diff($main->get_unsummary($bibentries->entry('un1')->get_field($bibentries->entry('un1')->get_labelname_info)->get_id, $bibentries->entry('un1')->get_field($bibentries->entry('un1')->get_labelname_info)->nth_name(1)->get_id), '0', 'Uniquename minyearinit - 1');
+eq_or_diff($main->get_unsummary($bibentries->entry('un2')->get_field($bibentries->entry('un2')->get_labelname_info)->get_id, $bibentries->entry('un2')->get_field($bibentries->entry('un2')->get_labelname_info)->nth_name(1)->get_id), '0', 'Uniquename minyearinit - 2');
+eq_or_diff($main->get_unsummary($bibentries->entry('un3')->get_field($bibentries->entry('un3')->get_labelname_info)->get_id, $bibentries->entry('un3')->get_field($bibentries->entry('un3')->get_labelname_info)->nth_name(1)->get_id), '0', 'Uniquename minyearinit - 3');
+eq_or_diff($main->get_unsummary($bibentries->entry('un4')->get_field($bibentries->entry('un4')->get_labelname_info)->get_id, $bibentries->entry('un4')->get_field($bibentries->entry('un4')->get_labelname_info)->nth_name(1)->get_id), '1', 'Uniquename minyearinit - 4');
+eq_or_diff($main->get_unsummary($bibentries->entry('un5')->get_field($bibentries->entry('un5')->get_labelname_info)->get_id, $bibentries->entry('un5')->get_field($bibentries->entry('un5')->get_labelname_info)->nth_name(1)->get_id), '1', 'Uniquename minyearinit - 5');
