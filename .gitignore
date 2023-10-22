@@ -12,6 +12,7 @@ MYMETA.json
 META.yml
 META.json
 Build
+.vscode
 blib/
 _build/
 dist/*/biber-*
