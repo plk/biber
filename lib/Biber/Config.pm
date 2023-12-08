@@ -355,6 +355,7 @@ sub _config_file_set {
                                                             qr/\Aentrytype\z/,
                                                             qr/\Aentryfields\z/,
                                                             qr/\Adatetype\z/,
+                                                            qr/\Adatafieldset\z/,
                                                             qr/\Acondition\z/,
                                                             qr/\A(?:or)?filter\z/,
                                                             qr/\Asortexclusion\z/,
