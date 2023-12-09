@@ -951,7 +951,7 @@ C<CROSSREF> and C<XDATA> fields from the output which point to a missing
 entry. Useful if you have split datafiles where the e.g. C<CROSSREF>s are
 in another file that you are not including in the tool mode run.
 
-=item B<--trace|T>
+=item B<--trace|-T>
 
 Turn on tracing. Also turns on B<--debug|d> and additionally provides a lot of low-level tracing
 information in the log.
