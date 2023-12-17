@@ -17,7 +17,7 @@ use Scalar::Util qw(looks_like_number);
 use Text::Wrap;
 use Unicode::Normalize;
 use URI;
-$Text::Wrap::columns = 80;
+
 my $logger = Log::Log4perl::get_logger('main');
 
 =encoding utf-8
@@ -132,7 +132,7 @@ sub _printfield {
     $str =~ s/(?<!\\)(\#|\&|\%)/\\$1/gxms;
   }
 
-  if (Biber::Config->getoption('wraplines')) {
+  if ($Text::Wrap::columns = Biber::Config->getoption('wraplines')) {
     ## 16 is the length of '      \field{}{}' or '      \strng{}{}'
     if ( 16 + Unicode::GCString->new($outfield)->length + Unicode::GCString->new($str)->length > 2*$Text::Wrap::columns ) {
       return "      \\${field_type}{$outfield}{%\n" . wrap('      ', '      ', $str) . "%\n      }\n";

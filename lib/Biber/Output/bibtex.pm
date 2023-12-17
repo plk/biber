@@ -574,9 +574,14 @@ sub bibfield {
   else {
     $acc .= "\{$value\},\n";
   }
-  return $acc;
-}
 
+  if ($Text::Wrap::columns = Biber::Config->getoption('wraplines')) {
+    return wrap('', $ichar x $inum, $acc);
+  }
+  else {
+    return $acc;
+  }
+}
 
 =head2 construct_annotation
 

@@ -122,7 +122,7 @@ GetOptions(
            'validate_datamodel|validate-datamodel|V',
            'version|v',
            'winunicode|W',
-           'wraplines|w',
+           'wraplines|w:80',
            'xdatamarker=s',
            'xdatasep=s',
            'xnamesep=s',
@@ -1009,9 +1009,10 @@ system APIs. If that option is enabled, use this option to turn off biber's
 UTF-16 filename support on Windows. This will result in much improved
 handling of Unicode filenames.
 
-=item B<--wraplines|-w>
+=item B<--wraplines|-w=[column]>
 
-Wrap lines in the F<.bbl> file.
+Wrap lines in the F<.bbl> file (or output F<.bib> file in tool mode) at column
+F<column> (default 80).
 
 =item B<--xdatamarker=[marker]>
 
