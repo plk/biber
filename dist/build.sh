@@ -66,21 +66,21 @@ fi
 # Build farm OSX 64-bit intel LEGACY (10.5<version<10.13)
 # ntpdate is because Vbox doesn't timesync OSX and ntp never works because the
 # time difference is too great between boots
-# if [ ! -e $DIR/biber-darwinlegacy_x86_64.tar.gz ]; then
-#   vmon osx10.6
-#   sleep 5
-#   ssh philkime@bbf-osx10.6 "sudo ntpdate ch.pool.ntp.org;cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/darwinlegacy_x86_64;$SCANCACHE./build.sh;~/pp_osx_codesign_fix biber-darwinlegacy_x86_64;cd ~/biblatex-biber;sudo ./Build realclean"
-#   scp philkime@bbf-osx10.6:biblatex-biber/dist/darwinlegacy_x86_64/biber-darwinlegacy_x86_64 $DIR/
-#   ssh philkime@bbf-osx10.6 "\\rm -f biblatex-biber/dist/darwinlegacy_x86_64/biber-darwinlegacy_x86_64"
-#   vmoff osx10.6
-#   cd $DIR
-#   mv biber-darwinlegacy_x86_64 $BINARYNAME
-#   chmod +x $BINARYNAME
-#   tar cf biber-darwinlegacy_x86_64.tar $BINARYNAME
-#   gzip biber-darwinlegacy_x86_64.tar
-#   \rm $BINARYNAME
-#   cd $BASE
-# fi
+if [ ! -e $DIR/biber-darwinlegacy_x86_64.tar.gz ]; then
+  vmon osx10.6
+  sleep 5
+  ssh philkime@bbf-osx106 "sudo ntpdate ch.pool.ntp.org;cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/darwinlegacy_x86_64;$SCANCACHE./build.sh;~/pp_osx_codesign_fix biber-darwinlegacy_x86_64;cd ~/biblatex-biber;sudo ./Build realclean"
+  scp philkime@bbf-osx106:biblatex-biber/dist/darwinlegacy_x86_64/biber-darwinlegacy_x86_64 $DIR/
+  ssh philkime@bbf-osx106 "\\rm -f biblatex-biber/dist/darwinlegacy_x86_64/biber-darwinlegacy_x86_64"
+  vmoff osx10.6
+  cd $DIR
+  mv biber-darwinlegacy_x86_64 $BINARYNAME
+  chmod +x $BINARYNAME
+  tar cf biber-darwinlegacy_x86_64.tar $BINARYNAME
+  gzip biber-darwinlegacy_x86_64.tar
+  \rm $BINARYNAME
+  cd $BASE
+fi
 
 # Build farm OSX 64-bit intel
 if [ ! -e $DIR/biber-darwin_x86_64.tar.gz ]; then
