@@ -66,34 +66,34 @@ fi
 # Build farm OSX 64-bit intel LEGACY (10.5<version<10.13)
 # ntpdate is because Vbox doesn't timesync OSX and ntp never works because the
 # time difference is too great between boots
-if [ ! -e $DIR/biber-darwinlegacy_x86_64.tar.gz ]; then
-  vmon osx10.6
-  sleep 5
-  ssh philkime@bbf-osx10.6 "sudo ntpdate ch.pool.ntp.org;cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/darwinlegacy_x86_64;$SCANCACHE./build.sh;~/pp_osx_codesign_fix biber-darwinlegacy_x86_64;cd ~/biblatex-biber;sudo ./Build realclean"
-  scp philkime@bbf-osx10.6:biblatex-biber/dist/darwinlegacy_x86_64/biber-darwinlegacy_x86_64 $DIR/
-  ssh philkime@bbf-osx10.6 "\\rm -f biblatex-biber/dist/darwinlegacy_x86_64/biber-darwinlegacy_x86_64"
-  vmoff osx10.6
-  cd $DIR
-  mv biber-darwinlegacy_x86_64 $BINARYNAME
-  chmod +x $BINARYNAME
-  tar cf biber-darwinlegacy_x86_64.tar $BINARYNAME
-  gzip biber-darwinlegacy_x86_64.tar
-  \rm $BINARYNAME
-  cd $BASE
-fi
+# if [ ! -e $DIR/biber-darwinlegacy_x86_64.tar.gz ]; then
+#   vmon osx10.6
+#   sleep 5
+#   ssh philkime@bbf-osx10.6 "sudo ntpdate ch.pool.ntp.org;cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/darwinlegacy_x86_64;$SCANCACHE./build.sh;~/pp_osx_codesign_fix biber-darwinlegacy_x86_64;cd ~/biblatex-biber;sudo ./Build realclean"
+#   scp philkime@bbf-osx10.6:biblatex-biber/dist/darwinlegacy_x86_64/biber-darwinlegacy_x86_64 $DIR/
+#   ssh philkime@bbf-osx10.6 "\\rm -f biblatex-biber/dist/darwinlegacy_x86_64/biber-darwinlegacy_x86_64"
+#   vmoff osx10.6
+#   cd $DIR
+#   mv biber-darwinlegacy_x86_64 $BINARYNAME
+#   chmod +x $BINARYNAME
+#   tar cf biber-darwinlegacy_x86_64.tar $BINARYNAME
+#   gzip biber-darwinlegacy_x86_64.tar
+#   \rm $BINARYNAME
+#   cd $BASE
+# fi
 
 # Build farm OSX 64-bit intel
 if [ ! -e $DIR/biber-darwin_x86_64.tar.gz ]; then
-  vmon osx10.12
+  vmon osx10.12 # VM name contains a '.' hostname does not
   sleep 5
-  ssh philkime@bbf-osx10.12 "cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/darwin_x86_64;$SCANCACHE./build.sh;~/pp_osx_codesign_fix biber-darwin_x86_64;cd ~/biblatex-biber;sudo ./Build realclean"
-  scp philkime@bbf-osx10.12:biblatex-biber/dist/darwin_x86_64/biber-darwin_x86_64 $DIR/
-  ssh philkime@bbf-osx10.12 "\\rm -f biblatex-biber/dist/darwin_x86_64/biber-darwin_x86_64"
-  vmoff osx10.12
+  ssh philkime@bbf-osx1012 "cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/darwin_x86_64;$SCANCACHE./build.sh;~/pp_osx_codesign_fix biber-darwin_x86_64;cd ~/biblatex-biber;sudo ./Build realclean"
+  scp philkime@bbf-osx1012:biblatex-biber/dist/darwin_x86_64/biber-darwin_x86_64 $DIR/
+  ssh philkime@bbf-osx1012 "\\rm -f biblatex-biber/dist/darwin_x86_64/biber-darwin_x86_64"
+  vmoff osx1012
   cd $DIR
   if [ "$CODESIGN" = "1" ]; then
     # Special - copy biber back to local OSX to codesign and then back again
-    # codesign in Xcode for osx10.12 does not have the runtime hardening options
+    # codesign in Xcode for osx1012 does not have the runtime hardening options
     # --------------------------------------------------------------------------
     scp $DIR/biber-darwin_x86_64 philkime@tree:/tmp/
     ssh philkime@tree "cd /tmp;security unlock-keychain -p \$(</Users/philkime/.pw) login.keychain;codesign --verbose  --sign 45MA3H23TG --force --timestamp --options runtime biber-darwin_x86_64"
