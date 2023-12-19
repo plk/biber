@@ -576,7 +576,9 @@ sub bibfield {
   }
 
   if ($Text::Wrap::columns = Biber::Config->getoption('wraplines')) {
-    return wrap('', $ichar x $inum, $acc);
+    # +4 is for ' = {'
+    my $indent = $inum + ($max_field_len // Unicode::GCString->new($field)->length) + 4;
+    return wrap('', $ichar x $indent, $acc);
   }
   else {
     return $acc;
