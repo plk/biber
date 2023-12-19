@@ -89,7 +89,7 @@ if [ ! -e $DIR/biber-darwin_x86_64.tar.gz ]; then
   ssh philkime@bbf-osx1012 "cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/darwin_x86_64;$SCANCACHE./build.sh;~/pp_osx_codesign_fix biber-darwin_x86_64;cd ~/biblatex-biber;sudo ./Build realclean"
   scp philkime@bbf-osx1012:biblatex-biber/dist/darwin_x86_64/biber-darwin_x86_64 $DIR/
   ssh philkime@bbf-osx1012 "\\rm -f biblatex-biber/dist/darwin_x86_64/biber-darwin_x86_64"
-  vmoff osx1012
+  vmoff osx10.12
   cd $DIR
   if [ "$CODESIGN" = "1" ]; then
     # Special - copy biber back to local OSX to codesign and then back again
