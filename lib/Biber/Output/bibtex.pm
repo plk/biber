@@ -14,7 +14,7 @@ use IO::File;
 use Log::Log4perl qw( :no_extra_logdie_message );
 use Scalar::Util qw(looks_like_number);
 use Text::Wrap;
-$Text::Wrap::columns = 80;
+$Text::Wrap::unexpand = 0;
 use Unicode::Normalize;
 my $logger = Log::Log4perl::get_logger('main');
 
