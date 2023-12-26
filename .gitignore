@@ -26,3 +26,4 @@ testfiles/test.bbl
 dist/build-env-cmds
 *_flymake*
 *~
+.auctex-auto
