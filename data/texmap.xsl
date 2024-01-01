@@ -128,7 +128,7 @@
                 <td><span class="utf8"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><xsl:value-of select="./to/text()"/></span></td>
                 <td><span class="hex"><xsl:value-of select="./to/@hex"/></span></td>
               </tr>
-            </xsl:for-each>              
+            </xsl:for-each>
           </tbody>
         </table>
         <hr/>
@@ -138,8 +138,8 @@
   </xsl:template>
 </xsl:stylesheet>
 <!--
-    Copyright 2012-2023 Philip Kime, all rights reserved.
-    
+    Copyright 2012-2024 Philip Kime, all rights reserved.
+
     This code is free software.  You can redistribute it and/or
     modify it under the terms of the Artistic License 2.0.
 
