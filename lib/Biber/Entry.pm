@@ -771,6 +771,11 @@ sub resolve_xdata {
             foreach my $field ($xdataentry->datafields()) { # set fields
               next if $field eq 'ids'; # Never inherit aliases
               $self->set_datafield($field, $xdataentry->get_field($field));
+              # Inherit field annotations too
+              Biber::Annotation->inherit_annotations($xdataentry->get_field('citekey'),
+                                                     $self->get_field('citekey'),
+                                                     $field,
+                                                     $field);
 
               # Record graphing information if required
               if (Biber::Config->getoption('output_format') eq 'dot') {
@@ -805,9 +810,17 @@ sub resolve_xdata {
             # Name lists
             if ($dm->field_is_type('list', 'name', $reffield)) {
               if ($xdatum->{xdataposition} eq '*') { # insert all positions from XDATA field
-                my $bibentries = $section->bibentries;
-                my $be = $bibentries->entry($xdatum->{xdataentries}[0]);
                 $self->get_field($reffield)->splice($xdataentry->get_field($xdatafield), $refposition);
+                # Inherit annotations for the field and remap indices to new positions in target
+                for (my $i=1; $i<=$xdataentry->get_field($xdatafield)->count; $i++) {
+                  Biber::Annotation->inherit_annotations($xdataentry->get_field('citekey'),
+                                                         $self->get_field('citekey'),
+                                                         $xdatafield,
+                                                         $reffield,
+                                                         $i,
+                                                         $refposition+($i-1));
+                }
+
                 if ($logger->is_debug()) { # performance tune
                   $logger->debug("Inserting at position $refposition in name field '$reffield' in entry '$entry_key' via XDATA");
                 }
@@ -818,8 +831,15 @@ sub resolve_xdata {
                   $xdatum->{resolved} = 0;
                   next;
                 }
-
-                $self->get_field($reffield)->replace_name($xdataentry->get_field($xdatafield)->nth_name($xdataposition), $refposition);
+                $self->get_field($reffield)->
+                  replace_name($xdataentry->get_field($xdatafield)->nth_name($xdataposition), $refposition);
+                # Inherit annotations for the field and remap indices to new positions in target
+                Biber::Annotation->inherit_annotations($xdataentry->get_field('citekey'),
+                                                       $self->get_field('citekey'),
+                                                       $xdatafield,
+                                                       $reffield,
+                                                       $xdataposition,
+                                                       $refposition);
 
                 if ($logger->is_debug()) { # performance tune
                   $logger->debug("Setting position $refposition in name field '$reffield' in entry '$entry_key' via XDATA");
@@ -831,7 +851,20 @@ sub resolve_xdata {
               if ($xdatum->{xdataposition} eq '*') { # insert all positions from XDATA field
                 my $bibentries = $section->bibentries;
                 my $be = $bibentries->entry($xdatum->{xdataentries}[0]);
-                splice($self->get_field($reffield)->@*, $refposition-1, 1, $be->get_field($xdatum->{xdatafield})->@*);
+                splice($self->get_field($reffield)->@*,
+                       $refposition-1,
+                       1,
+                       $be->get_field($xdatafield)->@*);
+                # Inherit annotations for the field and remap indices to new positions in target
+                for (my $i=1; $i<=scalar($xdataentry->get_field($xdatafield)->@*);$i++) {
+                  Biber::Annotation->inherit_annotations($xdataentry->get_field('citekey'),
+                                                              $self->get_field('citekey'),
+                                                              $xdatafield,
+                                                              $reffield,
+                                                              $i,
+                                                              $refposition+($i-1));
+                }
+
                 if ($logger->is_debug()) { # performance tune
                   $logger->debug("Inserting at position $refposition in list field '$reffield' in entry '$entry_key' via XDATA");
                 }
@@ -843,7 +876,16 @@ sub resolve_xdata {
                   next;
                 }
                 $self->get_field($reffield)->[$refposition-1] =
-                  $xdataentry->get_field($xdatafield)->[$refposition-1];
+                  $xdataentry->get_field($xdatafield)->[$xdataposition-1];
+
+                # Inherit annotations for the field and remap indices to new positions in target
+                Biber::Annotation->inherit_annotations($xdataentry->get_field('citekey'),
+                                                       $self->get_field('citekey'),
+                                                       $xdatafield,
+                                                       $reffield,
+                                                       $xdataposition,
+                                                       $refposition);
+
                 if ($logger->is_debug()) { # performance tune
                   $logger->debug("Setting position $refposition in list field '$reffield' in entry '$entry_key' via XDATA");
                 }
@@ -853,6 +895,13 @@ sub resolve_xdata {
             else {
 
               $self->set_datafield($reffield, $xdataentry->get_field($xdatafield));
+
+              # Inherit annotations for the field and remap indices to new positions in target
+              Biber::Annotation->inherit_annotations($xdataentry->get_field('citekey'),
+                                                     $self->get_field('citekey'),
+                                                     $xdatafield,
+                                                     $reffield);
+
               if ($logger->is_debug()) { # performance tune
                 $logger->debug("Setting field '$reffield' in entry '$entry_key' via XDATA");
               }

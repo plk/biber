@@ -332,6 +332,7 @@ sub set_output_entry {
   foreach my $listfield ($dmh->{lists}->@*) {
     # Performance - as little as possible here - loop over DM fields for every entry
     if (my $lf = $be->get_field($listfield)) {
+      use Data::Dump;dd($lf);
       if ( lc($lf->[-1]) eq Biber::Config->getoption('others_string') ) {
         $acc .= "      \\true{more$listfield}\n";
         pop $lf->@*; # remove the last element in the array

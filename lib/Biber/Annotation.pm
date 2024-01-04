@@ -46,10 +46,101 @@ sub set_annotation {
   # For easy checking later whether or not a field is annotated
   $ANN->{fields}{$key}{$field} = 1;
 
-  # Record all annotation names or a field
+  # Record all annotation names for a field
   unless (first {fc($_) eq fc($name)} $ANN->{names}{$key}{$field}->@*) {
     push $ANN->{names}{$key}{$field}->@*, $name;
   }
+  return;
+}
+
+=head2 copy_field_annotations
+
+  Copy all annotations for a field from one entry to another
+
+=cut
+
+sub copy_field_annotations {
+  shift; # class method so don't care about class name
+  my ($sourcekey, $targetkey, $sourcefield, $targetfield) = @_;
+
+  $ANN->{field}{$targetkey}{$targetfield} = dclone($ANN->{field}{$sourcekey}{$sourcefield})
+    if exists($ANN->{field}{$sourcekey}{$sourcefield});
+  $ANN->{item}{$targetkey}{$targetfield} = dclone($ANN->{item}{$sourcekey}{$sourcefield})
+    if exists($ANN->{item}{$sourcekey}{$sourcefield});
+  $ANN->{part}{$targetkey}{$targetfield} = dclone($ANN->{part}{$sourcekey}{$sourcefield})
+    if exists($ANN->{part}{$sourcekey}{$sourcefield});
+
+  foreach my $name (keys $ANN->{item}{$targetkey}{$targetfield}->%*) {
+    unless (first {fc($_) eq fc($name)} $ANN->{names}{$targetkey}{$targetfield}->@*) {
+      push $ANN->{names}{$targetkey}{$targetfield}->@*, $name;
+    }
+  }
+
+  foreach my $type (('field', 'item', 'part')) {
+    foreach my $f (keys $ANN->{$type}{$targetkey}->%*) {
+      $ANN->{fields}{$targetkey}{$f} = 1;
+    }
+  }
+
+  return;
+}
+
+=head2 inherit_annotations
+
+  Inherit, in a granular manner, annotations for a particular entryfield from
+  one entry to another for all annotation names, reindxeing any item counts using
+  an offset since annotations might be copied due to xdata inheritance which can
+  change the item positions of annotations
+
+=cut
+
+sub inherit_annotations {
+  shift; # class method so don't care about class name
+  my ($sourcekey, $targetkey, $sourcefield, $targetfield, $sourceitem, $targetitem) = @_;
+
+  if (-not $sourceitem) {
+    if (exists($ANN->{field}{$sourcekey}{$sourcefield})) {
+      $ANN->{field}{$targetkey}{$targetfield} = dclone($ANN->{field}{$sourcekey}{$sourcefield})
+    }
+    if (exists($ANN->{item}{$sourcekey}{$sourcefield})) {
+      $ANN->{item}{$targetkey}{$targetfield} = dclone($ANN->{item}{$sourcekey}{$sourcefield})
+    }
+    if (exists($ANN->{part}{$sourcekey}{$sourcefield})) {
+      $ANN->{part}{$targetkey}{$targetfield} = dclone($ANN->{part}{$sourcekey}{$sourcefield})
+    }
+  }
+  else {
+    if (exists($ANN->{item}{$sourcekey}{$sourcefield})) {
+      foreach my $name (keys $ANN->{item}{$sourcekey}{$sourcefield}->%*) {
+        unless (first {fc($_) eq fc($name)} $ANN->{names}{$targetkey}{$targetfield}->@*) {
+          push $ANN->{names}{$targetkey}{$targetfield}->@*, $name;
+        }
+        if (exists($ANN->{item}{$sourcekey}{$sourcefield}{$name}{$sourceitem})) {
+          $ANN->{item}{$targetkey}{$targetfield}{$name}{$targetitem} =
+            dclone($ANN->{item}{$sourcekey}{$sourcefield}{$name}{$sourceitem});
+        }
+      }
+    }
+
+    if (exists($ANN->{part}{$sourcekey}{$sourcefield})) {
+      foreach my $name (keys $ANN->{part}{$sourcekey}{$sourcefield}->%*) {
+        unless (first {fc($_) eq fc($name)} $ANN->{names}{$targetkey}{$targetfield}->@*) {
+          push $ANN->{names}{$targetkey}{$targetfield}->@*, $name;
+        }
+        if (exists($ANN->{part}{$sourcekey}{$sourcefield}{$name}{$sourceitem})) {
+          $ANN->{part}{$targetkey}{$targetfield}{$name}{$targetitem} =
+            dclone($ANN->{part}{$sourcekey}{$sourcefield}{$name}{$sourceitem})
+          }
+      }
+    }
+  }
+
+  foreach my $type (('field', 'item', 'part')) {
+    foreach my $f (keys $ANN->{$type}{$targetkey}->%*) {
+      $ANN->{fields}{$targetkey}{$f} = 1;
+    }
+  }
+
   return;
 }
 
@@ -66,6 +157,12 @@ sub copy_annotations {
   $ANN->{item}{$targetkey} = dclone($ANN->{item}{$sourcekey}) if exists($ANN->{item}{$sourcekey});
   $ANN->{part}{$targetkey} = dclone($ANN->{part}{$sourcekey}) if exists($ANN->{part}{$sourcekey});
   $ANN->{names}{$targetkey} = dclone($ANN->{names}{$sourcekey}) if exists($ANN->{names}{$sourcekey});
+
+  foreach my $type (('field', 'item', 'part')) {
+    foreach my $f (keys $ANN->{$type}{$targetkey}->%*) {
+      $ANN->{fields}{$targetkey}{$f} = 1;
+    }
+  }
   return;
 }
 

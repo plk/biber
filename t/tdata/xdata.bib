@@ -114,3 +114,41 @@
 @XDATA{lxd4:loop,
   EDITOR = {xdata=lxd4:loop-editor-1}
 }
+
+% annotation inheritance via xdata
+@XDATA{notes,
+  NOTE    = {A note},
+  NOTE+an = {=bignote}
+}
+
+@XDATA{auths,
+  EDITOR    = {John Doe and Jane Doe and May Bee},
+  EDITOR+an = {1=bigishauthor;3=bigauthor}
+}
+
+@XDATA{nloc,
+  LOCATION = {xdata=loc-location-2}
+}
+
+@XDATA{loc,
+  INSTITUTION    = {inst1 and inst2},
+  INSTITUTION+an = {2=biginst},
+  LOCATION       = {xloc1 and xloc2},
+  LOCATION+an    = {2=bigloc}
+}
+
+@XDATA{pub,
+  PUBLISHER    = {MacMillan},
+  PUBLISHER+an = {1=bigpublisher}
+}
+
+@BOOK{xdann1,
+  AUTHOR      = {Arthur Smith and xdata=auths-editor-3 and xdata=auths-editor-1 and Bill Blogs},
+  AUTHOR+an   = {1=biggerauthor},
+  EDITOR      = {Raymond Little and xdata=auths-editor and Gerald Roth},
+  TITLE       = {Very Long Title with XDATA},
+  LOCATION    = {loca and xdata=nloc-location-1 and xdata=loc-location-2},
+  NOTE        = {xdata=notes-note},
+  INSTITUTION = {xdata=loc-institution and inst3},
+  XDATA       = {pub}
+}
