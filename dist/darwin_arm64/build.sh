@@ -15,20 +15,20 @@
 # by looking to see if there is a site_perl directory for the module. If there is, we use that
 # version.
 
-declare -r perlv='5.36'
-declare ucpath="/opt/local/lib/perl5/${perlv}/Unicode/Collate"
-export PATH=/opt/local/libexec/perl${perlv}/sitebin:$PATH
+declare -r perlv='5.38.0'
+declare ucpath="/opt/homebrew/Cellar/perl/${perlv}/lib/perl5/${perlv%.0}/Unicode/Collate"
 
 # Unicode::Collate has a site_perl version so has been updated since this
 # perl was released
-if [ -d "/opt/local/lib/perl5/site_perl/${perlv}/darwin-thread-multi-2level/Unicode/Collate" ]
+
+if [ -d "/opt/homebrew/Cellar/perl/${perlv}/lib/perl5/site_perl/${perlv%.0}/Unicode/Collate" ]
 then
-  ucpath="/opt/local/lib/perl5/site_perl/${perlv}/darwin-thread-multi-2level/Unicode/Collate"
+  ucpath="/opt/homebrew/Cellar/perl/${perlv}/lib/perl5/site_perl/${perlv%.0}/Unicode/Collate"
 fi
 
 echo "USING Unicode::Collate at: ${ucpath}"
 
-cp /opt/local/libexec/perl${perlv}/sitebin/biber /tmp/biber-darwin
+cp /opt/homebrew/Cellar/perl/${perlv}/bin/biber /tmp/biber-darwin
 
 PAR_VERBATIM=1 pp \
   --module=deprecate \
@@ -55,7 +55,7 @@ PAR_VERBATIM=1 pp \
   --module=DateTime \
   --link=/opt/local/lib/libz.1.dylib \
   --link=/opt/local/lib/libiconv.2.dylib \
-  --link=/opt/local/libexec/perl${perlv}/sitebin/libbtparse.dylib \
+  --link=/opt/homebrew/Cellar/perl/${perlv}/lib/libbtparse.dylib \
   --link=/opt/local/lib/libxml2.2.dylib \
   --link=/opt/local/lib/libxslt.1.dylib \
   --link=/opt/local/lib/libgdbm.6.dylib \
@@ -78,9 +78,9 @@ PAR_VERBATIM=1 pp \
   --addfile="${ucpath}/CJK;lib/Unicode/Collate/CJK;lib/Unicode/Collate/CJK" \
   --addfile="${ucpath}/allkeys.txt;lib/Unicode/Collate/allkeys.txt" \
   --addfile="${ucpath}/keys.txt;lib/Unicode/Collate/keys.txt" \
-  --addfile="/opt/local/lib/perl5/site_perl/${perlv}/Mozilla/CA/cacert.pem;lib/Mozilla/CA/cacert.pem" \
-  --addfile="/opt/local/lib/perl5/site_perl/${perlv}/Business/ISBN/RangeMessage.xml;lib/Business/ISBN/RangeMessage.xml" \
-  --addfile="/opt/local/lib/perl5/site_perl/${perlv}/darwin-thread-multi-2level/auto/Unicode/LineBreak/LineBreak.bundle;lib/auto/Unicode/LineBreak/LineBreak.bundle" \
+--addfile="/opt/homebrew/Cellar/perl/${perlv}/lib/perl5/site_perl/${perlv%.0}/Mozilla/CA/cacert.pem;lib/Mozilla/CA/cacert.pem" \
+  --addfile="/opt/homebrew/Cellar/perl/${perlv}/lib/perl5/site_perl/${perlv%.0}/Business/ISBN/RangeMessage.xml;lib/Business/ISBN/RangeMessage.xml" \
+  --addfile="/opt/homebrew/Cellar/perl/${perlv}/lib/perl5/site_perl/${perlv%.0}/darwin-thread-multi-2level/auto/Unicode/LineBreak/LineBreak.bundle;lib/auto/Unicode/LineBreak/LineBreak.bundle" \
   --cachedeps=scancache \
   --output=biber-darwin_arm64 \
   /tmp/biber-darwin

@@ -5,7 +5,7 @@
 # build-universal.sh <release> <branch> <binaryname> <justbuild> <deletescancache> <codesign>
 #
 # ./build-universal.sh development dev biber 0 0 1
-# 
+#
 # <release> is a SF subdir of /home/frs/project/biblatex-biber/
 # <branch> is a git branch to checkout on the build farm servers
 # <binaryname> is the name of the biber binary to use for the release.
@@ -35,13 +35,13 @@ cd $BASE
 git checkout $BRANCH
 git pull
 perl ./Build.PL
-sudo ./Build installdeps
-sudo ./Build install
+./Build installdeps
+./Build install
 cd $BINDIR/darwin_arm64
 $SCANCACHE./build.sh
 ~/bin/pp_osx_codesign_fix biber-darwin_arm64
 cd $BASE
-sudo ./Build realclean
+./Build realclean
 
 cd $BINDIR/darwin_arm64
 \rm -rf biber-darwin_arm64.tar.gz
@@ -56,12 +56,12 @@ echo "Downloading x86_64 binary ... make sure it's the one you want"
 \rm -rf biber-darwin_universal.tar.gz
 \rm -rf biber-darwin_x86_64.tar.gz
 \rm -rf $BINARYNAME
-/opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/$RELEASE/binaries/MacOS/biber-darwin_x86_64.tar.gz -O biber-darwin_x86_64.tar.gz
-gnutar zxf biber-darwin_x86_64.tar.gz
+/opt/homebrew/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/$RELEASE/binaries/MacOS/biber-darwin_x86_64.tar.gz -O biber-darwin_x86_64.tar.gz
+gtar zxf biber-darwin_x86_64.tar.gz
 mv $BINARYNAME biber-darwin_x86_64
 /usr/bin/lipo -create -output $BINARYNAME biber-darwin_x86_64 biber-darwin_arm64
 chmod +x $BINARYNAME
-gnutar cf biber-darwin_universal.tar $BINARYNAME
+gtar cf biber-darwin_universal.tar $BINARYNAME
 gzip biber-darwin_universal.tar
 \rm biber-darwin_arm*
 \rm biber-darwin_x86_64*
