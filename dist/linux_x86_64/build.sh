@@ -14,7 +14,7 @@
 # for file in `find /usr/local/perl/lib* -name \*.so`; do echo $file >> /tmp/out ;readelf -d $file >> /tmp/out; done
 # and then grep the file for "RPATH"
 
-# Had to add /etc/ld.so.conf.d/biber.conf and put "/usr/local/perl/lib64" in there
+# Had to add /etc/ld.so.conf.d/biber.conf and put "/usr/local/perl/lib" in there
 # and then run "sudo ldconfig" so that libbtparse.so is found. Doesn't really make
 # a difference to the build, just the running of Text::BibTeX itself.
 
@@ -35,7 +35,7 @@
 # by looking to see if there is a site_perl directory for the module. If there is, we use that
 # version.
 
-declare -r perlv='5.32.0'
+declare -r perlv='5.38.2'
 declare ucpath="/usr/local/perl/lib/${perlv}/Unicode/Collate"
 
 # Unicode::Collate has a site_perl version so has been updated since this
@@ -75,8 +75,8 @@ PAR_VERBATIM=1 /usr/local/perl/bin/pp \
   --link=/usr/local/lib/libz.so.1 \
   --link=/usr/local/lib/libxslt.so.1 \
   --link=/usr/local/lib/libexslt.so.0 \
-  --link=/usr/lib/libssl.so.0.9.8 \
-  --link=/usr/lib/libcrypto.so.0.9.8 \
+  --link=/lib/x86_64-linux-gnu/libssl.so.1.0.0 \
+  --link=/lib/x86_64-linux-gnu/libcrypto.so.1.0.0 \
   --addfile="../../data/biber-tool.conf;lib/Biber/biber-tool.conf" \
   --addfile="../../data/schemata/config.rnc;lib/Biber/config.rnc" \
   --addfile="../../data/schemata/config.rng;lib/Biber/config.rng"\
