@@ -53,38 +53,6 @@ sub set_annotation {
   return;
 }
 
-=head2 copy_field_annotations
-
-  Copy all annotations for a field from one entry to another
-
-=cut
-
-sub copy_field_annotations {
-  shift; # class method so don't care about class name
-  my ($sourcekey, $targetkey, $sourcefield, $targetfield) = @_;
-
-  $ANN->{field}{$targetkey}{$targetfield} = dclone($ANN->{field}{$sourcekey}{$sourcefield})
-    if exists($ANN->{field}{$sourcekey}{$sourcefield});
-  $ANN->{item}{$targetkey}{$targetfield} = dclone($ANN->{item}{$sourcekey}{$sourcefield})
-    if exists($ANN->{item}{$sourcekey}{$sourcefield});
-  $ANN->{part}{$targetkey}{$targetfield} = dclone($ANN->{part}{$sourcekey}{$sourcefield})
-    if exists($ANN->{part}{$sourcekey}{$sourcefield});
-
-  foreach my $name (keys $ANN->{item}{$targetkey}{$targetfield}->%*) {
-    unless (first {fc($_) eq fc($name)} $ANN->{names}{$targetkey}{$targetfield}->@*) {
-      push $ANN->{names}{$targetkey}{$targetfield}->@*, $name;
-    }
-  }
-
-  foreach my $type (('field', 'item', 'part')) {
-    foreach my $f (keys $ANN->{$type}{$targetkey}->%*) {
-      $ANN->{fields}{$targetkey}{$f} = 1;
-    }
-  }
-
-  return;
-}
-
 =head2 inherit_annotations
 
   Inherit, in a granular manner, annotations for a particular entryfield from

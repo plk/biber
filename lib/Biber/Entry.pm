@@ -1008,6 +1008,10 @@ sub inherit_from {
             }
 
             $self->set_datafield($field->{target}, $parent->get_field($field->{source}));
+            Biber::Annotation->inherit_annotations($source_key,
+                                                   $target_key,
+                                                   $field->{source},
+                                                   $field->{target});
 
             # Ignore uniqueness information tracking for this inheritance?
             my $ignore = $inherit->{ignore} || $dignore;
@@ -1093,6 +1097,10 @@ sub inherit_from {
         }
 
         $self->set_datafield($field, $parent->get_field($field));
+        Biber::Annotation->inherit_annotations($source_key,
+                                               $target_key,
+                                               $field,
+                                               $field);
 
         # Ignore uniqueness information tracking for this inheritance?
         Biber::Config->add_uniq_ignore($target_key, $field, $dignore);
