@@ -2821,6 +2821,15 @@ tool mode the sorting scheme is the same as the \biblatex \texttt{none}
 scheme, that is, no sorting is performed. The sorting locale in tool mode
 defaults to «\texttt{en\_US}» if you do not use \biber's \opt{sortlocale}
 option.
+
+\subsubsection{ISBN validation}
+\biber\ has an option \opt{--validate-datamodel} which, among other things, will
+use the module \verb+Business::ISBN+ to validate ISBNs. This uses a file
+\file{RangeMessage.xml} to do the validation. The copy distributed with \biber\
+can be out of date since it is updated regularly. If you require up-to-date ISBN
+validation, you can generate a current \file{RangeMessage.xml} file here
+\url{https://www.isbn-international.org/range_file_generation} and point to it
+with the environment variable \verb+ISBN_RANGE_MESSAGE+
 \bigskip
 \section{Binaries}\label{binaries}
 
@@ -2859,7 +2868,7 @@ is worth noting:
 \subsection{Binary Caches}\label{bc}
 
 \verb+PAR::Packer+ works by unpacking the required files to a cache
-location. It only does this on the first run of a binary 
+location. It only does this on the first run of a binary
 by computing a hash of the binary and comparing it with
 the cache directory name which contains the hash. So, if you run
 several versions of a binary, you will end up with several cached
@@ -2884,7 +2893,10 @@ places to look (where \verb+*+ can vary depending on username):
 \end{itemize}
 
 \noindent To clean up, you can just remove the whole \verb+par-<hex_encoded_username>+
-directory/folder and then run the current binary again. You can see the active cache by running biber with the \texttt{--cache} option which will print the current cache location and exit.
+directory/folder and then run the current binary again. You can see the active
+cache by running biber with the \texttt{--cache} option which will print the
+current cache location and exit. The environment variable
+\verb+PAR_GLOBAL_TMPDIR+ can be used to specify a custom cache location.
 
 \subsection{Binary Architectures}
 

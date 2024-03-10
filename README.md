@@ -46,6 +46,31 @@ perl Build.PL
 
 biber should now be available in your path, run `biber --version` to verify.
 
+## USEFUL ENVIRONMENT VARIABLES
+
+There are a few environment variables for `biber` which are useful sometimes:
+
+### ISBN_RANGE_MESSAGE
+
+`biber` uses the Perl `Business::ISBN::Data` module to verify ISBNs. This relies
+on a data file called `RangeMessage.xml` which comes with the module and which
+is packaged with `biber`. This can be updated quite regularly and the packaged
+version might be several months old. If you find yourself needing an updated
+version of this file (e.g. you have ISBN validation errors when using `biber`s
+`--validate-datamodel` option), then you can download a recent version from
+here:
+[https://www.isbn-international.org/range_file_generation](https://www.isbn-international.org/range_file_generation)
+and point to the location with this environment variable.
+
+### PAR_GLOBAL_TMPDIR
+
+When a new version of the binary version of `biber` first runs, it unpacks
+itself to location which is OS dependent but usually some sort of temporary
+location (which you can see with `biber --cache`). Sometimes, this causes
+problems because the OS might clean up files in the default location or you
+might not have permissions to unpack `biber` to the default location. You can
+use this environment variable to set the location of the unpack cache.
+
 ## SUPPORT AND DOCUMENTATION
 
 After installing, `biber --help` will give you the basic documentation.
@@ -67,7 +92,7 @@ Sourceforge.
 
 ## LICENCE
 
-Copyright 2009-2023 François Charette and Philip Kime, all rights reserved.
+Copyright 2009-2024 François Charette and Philip Kime, all rights reserved.
 
 This module is free software.  You can redistribute it and/or
 modify it under the terms of the Artistic License 2.0.

@@ -164,7 +164,7 @@ if [ ! -e $DIR/biber-linux_x86_32.tar.gz ]; then
   cd $BASE
 fi
 
-# Build farm Linux 64-bit (built on Ubuntu 10.10)
+# Build farm Linux 64-bit (built on Ubuntu 16.04)
 if [ ! -e $DIR/biber-linux_x86_64.tar.gz ]; then
   vmon l64
   sleep 10
