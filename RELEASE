@@ -18,6 +18,7 @@
   empty_tree.sh current
 * Build binaries from release and upload to SF to new version folder using
   "current" as release 
+* Build universal binary for MacOS using ./dist/build-universal.sh current master biber 0 0 1
 * scp htdocs/*.html philkime,biblatex-biber@web.sourceforge.net:htdocs/
 * Inform builders of binaries to update
 * Associate new defaults with new binaries and change labels

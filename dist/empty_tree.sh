@@ -21,6 +21,6 @@ chmod -R 777 /tmp/sftree
 
 # Need to use -O for legacy compat since scp is too new for the SF servers
 # https://unix.stackexchange.com/questions/730328/scp-requires-directory-of-same-name-to-exist-on-target-server
-scp -O -r /tmp/sftree/* philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/$1/
+scp -O -r /tmp/sftree/* philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/biblatex-biber/$1/
 
 \rm -rf /tmp/sftree

@@ -4,7 +4,7 @@
 
 # build-universal.sh <release> <branch> <binaryname> <justbuild> <deletescancache> <codesign>
 #
-# ./build-universal.sh development dev biber 0 0 1
+# ./build-universal.sh current master biber 0 0 1
 #
 # <release> is a SF subdir of /home/frs/project/biblatex-biber/
 # <branch> is a git branch to checkout on the build farm servers
