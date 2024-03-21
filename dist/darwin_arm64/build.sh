@@ -31,7 +31,7 @@ echo "USING Unicode::Collate at: ${ucpath}"
 
 cp /opt/homebrew/Cellar/perl/${perlv}/bin/biber /tmp/biber-darwin
 
-PAR_VERBATIM=1 pp \
+PAR_VERBATIM=1 /opt/homebrew/Cellar/perl/${perlv}/bin/pp \
   --module=deprecate \
   --module=Biber::Input::file::bibtex \
   --module=Biber::Input::file::biblatexml \
