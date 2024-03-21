@@ -17,7 +17,7 @@
 
 declare -r perlv='5.38.2_1'
 declare -r perlvc=$(echo "$perlv" | perl -pe 's/^(.+)\.\d+(?:_\d+)?$/$1/')
-declare ucpath="/opt/homebrew/Cellar/perl/${perlv}/lib/perl5/${perlv%.0}/Unicode/Collate"
+declare ucpath="/opt/homebrew/Cellar/perl/${perlv}/lib/perl5/${perlvc}/Unicode/Collate"
 
 # Unicode::Collate has a site_perl version so has been updated since this
 # perl was released
