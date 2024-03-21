@@ -15,15 +15,16 @@
 # by looking to see if there is a site_perl directory for the module. If there is, we use that
 # version.
 
-declare -r perlv='5.38.0'
+declare -r perlv='5.38.2_1'
+declare -r perlvc=$(echo "$perlv" | perl -pe 's/^(.+)\.\d+(?:_\d+)?$/$1/')
 declare ucpath="/opt/homebrew/Cellar/perl/${perlv}/lib/perl5/${perlv%.0}/Unicode/Collate"
 
 # Unicode::Collate has a site_perl version so has been updated since this
 # perl was released
 
-if [ -d "/opt/homebrew/Cellar/perl/${perlv}/lib/perl5/site_perl/${perlv%.0}/Unicode/Collate" ]
+if [ -d "/opt/homebrew/Cellar/perl/${perlv}/lib/perl5/site_perl/${perlvc}/Unicode/Collate" ]
 then
-  ucpath="/opt/homebrew/Cellar/perl/${perlv}/lib/perl5/site_perl/${perlv%.0}/Unicode/Collate"
+  ucpath="/opt/homebrew/Cellar/perl/${perlv}/lib/perl5/site_perl/${perlvc}/Unicode/Collate"
 fi
 
 echo "USING Unicode::Collate at: ${ucpath}"
@@ -56,7 +57,7 @@ PAR_VERBATIM=1 pp \
   --link=/opt/homebrew/lib/libz3.dylib \
   --link=/opt/homebrew/Cellar/libiconv/1.17/lib/libiconv.2.dylib \
   --link=/opt/homebrew/Cellar/perl/${perlv}/lib/libbtparse.dylib \
-  --link=/opt/homebrew/Cellar/libxml2/2.11.5_1/lib/libxml2.dylib \
+  --link=/opt/homebrew/Cellar/libxml2/2.12.6/lib/libxml2.dylib \
   --link=/opt/homebrew/Cellar/libxslt/1.1.38_1/lib/libxslt.dylib \
   --link=/opt/homebrew/lib/libgdbm.6.dylib \
   --link=/opt/homebrew/Cellar/libxslt/1.1.38_1/lib/libexslt.dylib \
@@ -64,9 +65,9 @@ PAR_VERBATIM=1 pp \
   --link=/opt/homebrew/lib/libcrypto.3.dylib \
   --link=/opt/homebrew/lib/liblzma.5.dylib \
   --link=/opt/homebrew/lib/libintl.8.dylib \
-  --link=/opt/homebrew/Cellar/icu4c/73.2/lib/libicui18n.73.dylib \
-  --link=/opt/homebrew/Cellar/icu4c/73.2/lib/libicuuc.73.dylib \
-  --link=/opt/homebrew/Cellar/icu4c/73.2/lib/libicudata.73.dylib \
+  --link=/opt/homebrew/Cellar/icu4c/74.2/lib/libicui18n.74.dylib \
+  --link=/opt/homebrew/Cellar/icu4c/74.2/lib/libicuuc.74.dylib \
+  --link=/opt/homebrew/Cellar/icu4c/74.2/lib/libicudata.74.dylib \
   --addfile="../../data/biber-tool.conf;lib/Biber/biber-tool.conf" \
   --addfile="../../data/schemata/config.rnc;lib/Biber/config.rnc" \
   --addfile="../../data/schemata/config.rng;lib/Biber/config.rng" \
@@ -78,9 +79,9 @@ PAR_VERBATIM=1 pp \
   --addfile="${ucpath}/CJK;lib/Unicode/Collate/CJK;lib/Unicode/Collate/CJK" \
   --addfile="${ucpath}/allkeys.txt;lib/Unicode/Collate/allkeys.txt" \
   --addfile="${ucpath}/keys.txt;lib/Unicode/Collate/keys.txt" \
---addfile="/opt/homebrew/Cellar/perl/${perlv}/lib/perl5/site_perl/${perlv%.0}/Mozilla/CA/cacert.pem;lib/Mozilla/CA/cacert.pem" \
-  --addfile="/opt/homebrew/Cellar/perl/${perlv}/lib/perl5/site_perl/${perlv%.0}/Business/ISBN/RangeMessage.xml;lib/Business/ISBN/RangeMessage.xml" \
-  --addfile="/opt/homebrew/Cellar/perl/${perlv}/lib/perl5/site_perl/${perlv%.0}/darwin-thread-multi-2level/auto/Unicode/LineBreak/LineBreak.bundle;lib/auto/Unicode/LineBreak/LineBreak.bundle" \
+--addfile="/opt/homebrew/Cellar/perl/${perlv}/lib/perl5/site_perl/${perlvc}/Mozilla/CA/cacert.pem;lib/Mozilla/CA/cacert.pem" \
+  --addfile="/opt/homebrew/Cellar/perl/${perlv}/lib/perl5/site_perl/${perlvc}/Business/ISBN/RangeMessage.xml;lib/Business/ISBN/RangeMessage.xml" \
+  --addfile="/opt/homebrew/Cellar/perl/${perlv}/lib/perl5/site_perl/${perlvc}/darwin-thread-multi-2level/auto/Unicode/LineBreak/LineBreak.bundle;lib/auto/Unicode/LineBreak/LineBreak.bundle" \
   --cachedeps=scancache \
   --output=biber-darwin_arm64 \
   /tmp/biber-darwin
