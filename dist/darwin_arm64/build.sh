@@ -15,6 +15,27 @@
 # by looking to see if there is a site_perl directory for the module. If there is, we use that
 # version.
 
+# Have to be very careful about Perl modules with .bundle binary libraries as sometimes
+# (LibXML.bundle for example), they include RPATH which means that the PAR cache
+# is not searched first, even though it's at the top of LD_LIBRARY_PATH. So, the wrong
+# libraries will be found and things may well break. Strip any RPATH out of such libs
+# with "install_name_tool -delete_rpath <rpath> <lib.bundle>". Check for presence with "otool -l
+# <lib> | fgrep RPATH".
+#
+# Check all perl binaries with:
+# \rm -rf /tmp/out; for file in `find /opt/homebrew/Cellar/perl -name \*.bundle`; do echo $file >> /tmp/out; otool -l $file | fgrep -i rpath >> /tmp/out; done
+# and then grep /tmp/out for "RPATH"
+
+# With homebrew, perl libs, when built, will often use system libraries because many things are not
+# in /opt/homebrew/lib to find. However, you can't find the libs it linked to as
+# they are now hidden, see https://developer.apple.com/documentation/macos-release-notes/macos-big-sur-11_0_1-release-notes#Kernel
+# So, extract all the libs to a temp location from the cache first so they can be linked and packed.
+# This requires dyld-shared-cache-extractor to be installed (https://github.com/keith/dyld-shared-cache-extractor)
+if [ ! -e "/tmp/libraries" ]
+then
+  dyld-shared-cache-extractor /System/Volumes/Preboot/Cryptexes/OS/System/Library/dyld/dyld_shared_cache_arm64e /tmp/libraries
+fi
+
 declare -r perlv='5.38.2_1'
 declare -r perlvc=$(echo "$perlv" | perl -pe 's/^(.+)\.\d+(?:_\d+)?$/$1/')
 declare ucpath="/opt/homebrew/Cellar/perl/${perlv}/lib/perl5/${perlvc}/Unicode/Collate"
@@ -54,17 +75,16 @@ PAR_VERBATIM=1 /opt/homebrew/Cellar/perl/${perlv}/bin/pp \
   --module=PerlIO::utf8_strict \
   --module=Text::CSV_XS \
   --module=DateTime \
-  --link=/opt/homebrew/lib/libz3.dylib \
-  --link=/opt/homebrew/Cellar/libiconv/1.17/lib/libiconv.2.dylib \
-  --link=/opt/homebrew/Cellar/perl/${perlv}/lib/libbtparse.dylib \
-  --link=/opt/homebrew/Cellar/libxml2/2.12.6/lib/libxml2.dylib \
-  --link=/opt/homebrew/Cellar/libxslt/1.1.38_1/lib/libxslt.dylib \
-  --link=/opt/homebrew/lib/libgdbm.6.dylib \
-  --link=/opt/homebrew/Cellar/libxslt/1.1.38_1/lib/libexslt.dylib \
-  --link=/opt/homebrew/lib/libssl.3.dylib \
-  --link=/opt/homebrew/lib/libcrypto.3.dylib \
-  --link=/opt/homebrew/lib/liblzma.5.dylib \
+  --link=/opt/homebrew/lib/libgdbm.dylib \
   --link=/opt/homebrew/lib/libintl.8.dylib \
+  --link=/tmp/libraries/usr/lib/libz.1.dylib \
+  --link=/tmp/libraries/usr/lib/libiconv.2.dylib \
+  --link=/tmp/libraries/usr/lib/libssl.dylib \
+  --link=/tmp/libraries/usr/lib/libxml2.2.dylib \
+  --link=/tmp/libraries/usr/lib/libxslt.1.dylib \
+  --link=/tmp/libraries/usr/lib/libcrypto.dylib \
+  --link=/tmp/libraries/usr/lib/liblzma.5.dylib \
+  --link=/opt/homebrew/Cellar/perl/${perlv}/lib/libbtparse.dylib \
   --link=/opt/homebrew/Cellar/icu4c/74.2/lib/libicui18n.74.dylib \
   --link=/opt/homebrew/Cellar/icu4c/74.2/lib/libicuuc.74.dylib \
   --link=/opt/homebrew/Cellar/icu4c/74.2/lib/libicudata.74.dylib \
@@ -88,3 +108,7 @@ PAR_VERBATIM=1 /opt/homebrew/Cellar/perl/${perlv}/bin/pp \
 
 \rm -f /tmp/biber-darwin
 
+if [ -e "/tmp/libraries" ]
+then
+  \rm -rf /tmp/libraries
+fi
