@@ -224,6 +224,9 @@ sub _initopts {
     }
   }
 
+  # Sanitse log file name to NFC
+  $biberlog = NFC($biberlog);
+
   # cache meta markers since they are referenced in the oft-called _get_handler
   $CONFIG_META_MARKERS{annotation} = quotemeta(Biber::Config->getoption('annotation_marker'));
   $CONFIG_META_MARKERS{namedannotation} = quotemeta(Biber::Config->getoption('named_annotation_marker'));
@@ -308,7 +311,7 @@ sub _initopts {
   $logger->info("This is Biber $vn$tool") unless Biber::Config->getoption('nolog');
 
   $logger->info("Config file is '" . NFC($opts->{configfile}) . "'") if $opts->{configfile};
-  $logger->info("Logfile is '" . NFC($biberlog) . "'") unless Biber::Config->getoption('nolog');
+  $logger->info("Logfile is '$biberlog'") unless Biber::Config->getoption('nolog');
 
   if (Biber::Config->getoption('debug')) {
     $screen->info("DEBUG mode: all messages are logged to '$biberlog'")
