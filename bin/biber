@@ -20,6 +20,7 @@ use Encode;
 use File::Spec;
 use Pod::Usage;
 use List::AllUtils qw( first );
+use Unicode::Normalize qw(NFC);
 
 use Getopt::Long qw/:config no_ignore_case/;
 my $opts = {};
@@ -340,6 +341,14 @@ my $time_string = strftime "%a %b %e, %Y, %H:%M:%S", localtime;
 $logfile->info("=== $time_string");
 
 my $bcf = Biber::Config->getoption('bcf');
+
+# Determine the input Unicode form so we can make sure output filenames are the
+# same format
+if ($bcf eq NFC($bcf)) {
+    Biber::Config->setoption('UFORM', 'NFC');
+} else {
+    Biber::Config->setoption('UFORM', 'NFD');
+}
 
 if (Biber::Config->getoption('output_file')) {
   $outfile = Biber::Config->getoption('output_file')

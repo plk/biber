@@ -18,7 +18,7 @@ use Log::Log4perl::Appender::Screen;
 use Log::Log4perl::Appender::File;
 use Log::Log4perl::Layout::SimpleLayout;
 use Log::Log4perl::Layout::PatternLayout;
-use Unicode::Normalize;
+use Unicode::Normalize qw(normalize NFC NFD);
 use parent qw(Class::Accessor);
 __PACKAGE__->follow_best_practice;
 
@@ -224,8 +224,11 @@ sub _initopts {
     }
   }
 
-  # Sanitse log file name to NFC
-  $biberlog = NFC($biberlog);
+  # Sanitise log file name to the same as the input .bcf
+  if ($biberlog) {
+    $biberlog = normalize('NFD', $biberlog);
+    #    $biberlog = normalize(Biber::Config->getoption('UFORM'), $biberlog);
+  }
 
   # cache meta markers since they are referenced in the oft-called _get_handler
   $CONFIG_META_MARKERS{annotation} = quotemeta(Biber::Config->getoption('annotation_marker'));
