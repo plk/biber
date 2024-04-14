@@ -665,7 +665,7 @@ sub output {
     my $enc_out;
     if (Biber::Config->getoption('output_encoding')) {
       $enc_out = ':encoding(' . Biber::Config->getoption('output_encoding') . ')';
-  }
+    }
     $target = new IO::File ">-$enc_out";
   }
 
