@@ -177,7 +177,7 @@ sub _initopts {
   }
 
   # Decode ARGV to UTF8, not NFD yet ...
-  @ARGV = map { decode_utf8($_) } @ARGV;
+#  @ARGV = map { decode_utf8($_) } @ARGV;
 
   # Determine the input Unicode form so we can make sure output filenames are the
   # same format

@@ -164,8 +164,6 @@ sub locate_data_file {
   my $sourcepath = $source; # default if nothing else below applies
   my $foundfile;
 
-  $logger->info("Looking for '$source'!");
-
   if ($source =~ m/\A(?:http|ftp)(s?):\/\//xms) {
     $logger->info("Data source '$source' is a remote BibTeX data source - fetching ...");
     if (my $cf = $REMOTE_MAP{$source}) {
