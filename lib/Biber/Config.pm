@@ -8,7 +8,7 @@ use IPC::Run3; # This works with PAR::Packer and Windows. IPC::Run doesn't
 use Cwd qw( abs_path );
 use Data::Compare;
 use Data::Dump;
-use Encode;
+use Encode qw(decode_utf8);
 use File::Slurper;
 use File::Spec;
 use Carp;
@@ -18,7 +18,7 @@ use Log::Log4perl::Appender::Screen;
 use Log::Log4perl::Appender::File;
 use Log::Log4perl::Layout::SimpleLayout;
 use Log::Log4perl::Layout::PatternLayout;
-use Unicode::Normalize qw(normalize NFC NFD);
+use Unicode::Normalize qw(normalize NFC NFD checkNFC);
 use parent qw(Class::Accessor);
 __PACKAGE__->follow_best_practice;
 
@@ -176,6 +176,20 @@ sub _initopts {
     }
   }
 
+  # Decode ARGV to UTF8, not NFD yet ...
+  @ARGV = map { decode_utf8($_) } @ARGV;
+
+  # Determine the input Unicode form so we can make sure output filenames are the
+  # same format
+  if (checkNFC($ARGV[0])) {
+    Biber::Config->setoption('UFORM', 'NFC');
+  } else {
+    Biber::Config->setoption('UFORM', 'NFD');
+  }
+
+  # Now convert to NFD
+  @ARGV = map { NFD($_) } @ARGV;
+
   # Record the $ARGV[0] name for future use
   if (Biber::Config->getoption('tool')) {
     # Set datasource file name. In a conditional as @ARGV might not be set in tests
@@ -186,6 +200,7 @@ sub _initopts {
   else {
     # Set control file name. In a conditional as @ARGV might not be set in tests
     if (defined($ARGV[0])) {         # ARGV is ok even in a module
+
       my $bcf = $ARGV[0];
       $bcf .= '.bcf' unless $bcf =~ m/\.bcf$/;
       Biber::Config->setoption('bcf', $bcf);
@@ -207,7 +222,7 @@ sub _initopts {
     my $bcf = $ARGV[0];         # ARGV is ok even in a module
     # Sanitise control file name
     $bcf =~ s/\.bcf\z//xms;
-    $biberlog = Biber::Utils::biber_decode_utf8($bcf . '.blg');
+    $biberlog = $bcf . '.blg';
   }
 
   # prepend output directory for log, if specified
@@ -226,8 +241,7 @@ sub _initopts {
 
   # Sanitise log file name to the same as the input .bcf
   if ($biberlog) {
-    $biberlog = normalize('NFD', $biberlog);
-    #    $biberlog = normalize(Biber::Config->getoption('UFORM'), $biberlog);
+    $biberlog = normalize(Biber::Config->getoption('UFORM'), $biberlog);
   }
 
   # cache meta markers since they are referenced in the oft-called _get_handler

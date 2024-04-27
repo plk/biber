@@ -342,14 +342,6 @@ $logfile->info("=== $time_string");
 
 my $bcf = Biber::Config->getoption('bcf');
 
-# Determine the input Unicode form so we can make sure output filenames are the
-# same format
-if ($bcf eq NFC($bcf)) {
-    Biber::Config->setoption('UFORM', 'NFC');
-} else {
-    Biber::Config->setoption('UFORM', 'NFD');
-}
-
 if (Biber::Config->getoption('output_file')) {
   $outfile = Biber::Config->getoption('output_file')
 }
