@@ -29,7 +29,6 @@ use Text::Roman qw(isroman roman2int);
 use Unicode::Normalize;
 use Unicode::GCString;
 my $logger = Log::Log4perl::get_logger('main');
-my $screen = Log::Log4perl::get_logger('screen');
 
 =encoding utf-8
 
@@ -164,8 +163,6 @@ sub locate_data_file {
   my $source = shift;
   my $sourcepath = $source; # default if nothing else below applies
   my $foundfile;
-
-  $screen->info("Looking for '$source'!");
 
   if ($source =~ m/\A(?:http|ftp)(s?):\/\//xms) {
     $logger->info("Data source '$source' is a remote BibTeX data source - fetching ...");
@@ -319,7 +316,7 @@ sub locate_data_file {
   }
 
   # Not found
-  biber_error("Cannot find '$source'!")
+  biber_error("Cannot Zfind '$source'!")
 }
 
 =head2 
