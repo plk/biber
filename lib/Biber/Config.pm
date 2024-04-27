@@ -177,7 +177,7 @@ sub _initopts {
   }
 
   # Decode ARGV to UTF8, not NFD yet ...
-#  @ARGV = map { decode_utf8($_) } @ARGV;
+  @ARGV = map { decode_utf8($_) } @ARGV;
 
   # Determine the input Unicode form so we can make sure output filenames are the
   # same format
@@ -188,7 +188,7 @@ sub _initopts {
   }
 
   # Now convert to NFD
-  @ARGV = map { NFD($_) } @ARGV;
+#  @ARGV = map { NFD($_) } @ARGV;
 
   # Record the $ARGV[0] name for future use
   if (Biber::Config->getoption('tool')) {
