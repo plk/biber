@@ -29,6 +29,7 @@ use Text::Roman qw(isroman roman2int);
 use Unicode::Normalize;
 use Unicode::GCString;
 my $logger = Log::Log4perl::get_logger('main');
+my $screen = Log::Log4perl::get_logger('screen');
 
 =encoding utf-8
 
