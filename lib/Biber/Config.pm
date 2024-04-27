@@ -187,9 +187,6 @@ sub _initopts {
     Biber::Config->setoption('UFORM', 'NFD');
   }
 
-  # Now convert to NFD
-#  @ARGV = map { NFD($_) } @ARGV;
-
   # Record the $ARGV[0] name for future use
   if (Biber::Config->getoption('tool')) {
     # Set datasource file name. In a conditional as @ARGV might not be set in tests
