@@ -181,9 +181,9 @@ if [ ! -e $DIR/biber-linux_x86_64.tar.gz ]; then
   cd $BASE
 fi
 
-# Build farm Linux MUSL 64-bit (built on Ubuntu 16.04)
+# Build farm Linux MUSL 64-bit (Alpine)
 if [ ! -e $DIR/biber-linux-musl_x86_64.tar.gz ]; then
-  vmon l64
+  vmon musll64
   sleep 10
   ssh philkime@bbf-musll64 "sudo ntpdate ch.pool.ntp.org;cd biblatex-biber;git checkout $BRANCH;git pull;/usr/local/perl/bin/perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/linux-musl_x86_64;$SCANCACHE./build.sh;cd ~/biblatex-biber;sudo ./Build realclean"
   scp philkime@bbf-musll64:biblatex-biber/dist/linux-musl_x86_64/biber-linux-musl_x86_64 $DIR/
