@@ -186,7 +186,7 @@ if [ ! -e $DIR/biber-linux-musl_x86_64.tar.gz ]; then
   vmon l64
   sleep 10
   ssh philkime@bbf-musll64 "sudo ntpdate ch.pool.ntp.org;cd biblatex-biber;git checkout $BRANCH;git pull;/usr/local/perl/bin/perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/linux-musl_x86_64;$SCANCACHE./build.sh;cd ~/biblatex-biber;sudo ./Build realclean"
-  scp philkime@bbf-musll64:biblatex-biber/dist/linux-musl_x86_64/linux-musl_x86_64 $DIR/
+  scp philkime@bbf-musll64:biblatex-biber/dist/linux-musl_x86_64/biber-linux-musl_x86_64 $DIR/
   ssh philkime@bbf-musll64 "\\rm -f biblatex-biber/dist/linux-musl_x86_64/biber-linux-musl_x86_64"
   vmoff musll64
   cd $DIR
