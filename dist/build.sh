@@ -182,21 +182,21 @@ if [ ! -e $DIR/biber-linux_x86_64.tar.gz ]; then
 fi
 
 # Build farm Linux MUSL 64-bit (Alpine)
-if [ ! -e $DIR/biber-linux-musl_x86_64.tar.gz ]; then
-  vmon musll64
-  sleep 10
-  ssh philkime@bbf-musll64 "sudo ntpdate ch.pool.ntp.org;cd biblatex-biber;git checkout $BRANCH;git pull;/usr/local/perl/bin/perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/linux-musl_x86_64;$SCANCACHE./build.sh;cd ~/biblatex-biber;sudo ./Build realclean"
-  scp philkime@bbf-musll64:biblatex-biber/dist/linux-musl_x86_64/biber-linux-musl_x86_64 $DIR/
-  ssh philkime@bbf-musll64 "\\rm -f biblatex-biber/dist/linux-musl_x86_64/biber-linux-musl_x86_64"
-  vmoff musll64
-  cd $DIR
-  mv biber-linux-musl_x86_64 $BINARYNAME
-  chmod +x $BINARYNAME
-  tar cf biber-linux-musl_x86_64.tar $BINARYNAME
-  gzip biber-linux-musl_x86_64.tar
-  \rm $BINARYNAME
-  cd $BASE
-fi
+# if [ ! -e $DIR/biber-linux-musl_x86_64.tar.gz ]; then
+#   vmon musll64
+#   sleep 10
+#   ssh philkime@bbf-musll64 "sudo ntpdate ch.pool.ntp.org;cd biblatex-biber;git checkout $BRANCH;git pull;/usr/local/perl/bin/perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/linux-musl_x86_64;$SCANCACHE./build.sh;cd ~/biblatex-biber;sudo ./Build realclean"
+#   scp philkime@bbf-musll64:biblatex-biber/dist/linux-musl_x86_64/biber-linux-musl_x86_64 $DIR/
+#   ssh philkime@bbf-musll64 "\\rm -f biblatex-biber/dist/linux-musl_x86_64/biber-linux-musl_x86_64"
+#   vmoff musll64
+#   cd $DIR
+#   mv biber-linux-musl_x86_64 $BINARYNAME
+#   chmod +x $BINARYNAME
+#   tar cf biber-linux-musl_x86_64.tar $BINARYNAME
+#   gzip biber-linux-musl_x86_64.tar
+#   \rm $BINARYNAME
+#   cd $BASE
+# fi
 
 # Stop here if JUSTBUILD is set
 if [ "$JUSTBUILD" = "1" ]; then
@@ -236,9 +236,9 @@ if [ -e $DIR/biber-linux_x86_64.tar.gz ]; then
 fi
 
 # Linux MUSL 64-bit
-if [ -e $DIR/biber-linux-musl_x86_64.tar.gz ]; then
-  scp biber-linux-musl_x86_64.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/biblatex-biber/$RELEASE/binaries/Linux/biber-linux-musl_x86_64.tar.gz
-fi
+# if [ -e $DIR/biber-linux-musl_x86_64.tar.gz ]; then
+#   scp biber-linux-musl_x86_64.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/biblatex-biber/$RELEASE/binaries/Linux/biber-linux-musl_x86_64.tar.gz
+# fi
 
 # Doc
 cd $DOCDIR
