@@ -1438,7 +1438,7 @@ sub _changenode {
     # set attribute value
     if ($n->nodeType == XML_ATTRIBUTE_NODE) {
       if ($nodeval) {
-        $$error = "Tried to replace '$xp_target_s' Atribute node with complex data";
+        $$error = "Tried to replace '$xp_target_s' Attribute node with complex data";
         return 0;
       }
       $n->setValue(NFC($value));

@@ -152,7 +152,7 @@ sub extract_entries {
   }
 
   # Text::BibTeX can't be controlled by Log4perl so we have to do something clumsy
-  # We can't redirect STDERR to a variable as libbtparse doesnt' use PerlIO, just stdio
+  # We can't redirect STDERR to a variable as libbtparse doesn't use PerlIO, just stdio
   # so it doesn't understand this. It does understand normal file redirection though as
   # that's standard stdio.
   # The Log4Perl setup outputs only to STDOUT so redirecting all STDERR like this is
@@ -1924,7 +1924,7 @@ sub parsename_x {
       # Generate any stripped information
       (my $s, $namec{$np}) = remove_outer($namec{$np});
 
-      # Protect spaces inside {} when splitting to produce intials
+      # Protect spaces inside {} when splitting to produce initials
       my $part = $namec{$np};
       if ($s) {
         $part = $namec{$np} =~ s/\s+/_/gr;

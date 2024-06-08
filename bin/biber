@@ -696,7 +696,7 @@ be obtained with the B<--show-tmp-dir> option.
 
 =item B<--noxname>
 
-Disable exended name processing in bibtex data sources. Can be useful if
+Disable extended name processing in bibtex data sources. Can be useful if
 you don't use this and it causes problems due to auto-detection of extended
 name format.
 

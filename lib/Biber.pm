@@ -859,7 +859,7 @@ sub parse_ctrlfile {
   }
   Biber::Config->setblxoption(undef, 'sortingtemplate', $sortingtemplates);
 
-  # DATAMODEL schema (always global and is an array to accomodate multiple
+  # DATAMODEL schema (always global and is an array to accommodate multiple
   # datamodels in tool mode)
 
   # Because in tests, parse_ctrlfile() is called several times so we need to sanitise this here
@@ -4845,7 +4845,7 @@ sub get_dependents {
   get_dependents($self, $new_deps, $keyswithdeps) if $new_deps->@*;
 
   # Now remove any missing entries from various places in all entries we have flagged
-  # as having dependendents. If we don't do this, many things fail later like clone creation
+  # as having dependents. If we don't do this, many things fail later like clone creation
   # for related entries etc.
   foreach my $keywithdeps ($keyswithdeps->@*) {
     foreach my $missing_key ($missing->@*) {

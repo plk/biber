@@ -772,7 +772,7 @@ sub _process_label_attributes {
             }
 
             # Now set a new global index for the name part index which is the maximum of those
-            # occuring above a certain threshold
+            # occurring above a certain threshold
             foreach my $s (keys %$lcache) {
               foreach my $ind (keys %$is) {
                 next unless $indices{$s} == $ind;
@@ -1322,7 +1322,7 @@ sub _sort_citeorder {
       return $ko || $biborder;
     }
   }
-  # otherwise, we need to take account of citations with simulataneous order like
+  # otherwise, we need to take account of citations with simultaneous order like
   # \cite{key1, key2} so this tied sorting order can be further sorted with other fields
   # Note the fallback of '' - this is for auto-generated entries which are not cited
   # and so never have a keyorder entry
@@ -1731,7 +1731,7 @@ sub _liststring {
 
   # These should be symbols which can't appear in lists and which sort before all alphanum
   # so that "Alan Smith" sorts after "Al Smith". This means, symbols which normalise_string_sort()
-  # strips out. Unfortuately, this means using punctuation and these are by default variable
+  # strips out. Unfortunately, this means using punctuation and these are by default variable
   # weight and ignorable in DUCET so we have to redefine these these symbols after loading DUCET
   # when sorting so that they are non-ignorable (see Biber.pm)
   my $lsi    = '!';          # list separator, internal

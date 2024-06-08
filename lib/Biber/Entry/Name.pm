@@ -173,7 +173,7 @@ sub get_hashid {
 
 sub get_namepart {
   my ($self, $namepart) = @_;
-  # prevent warnings when concating arbitrary nameparts
+  # prevent warnings when concatenating arbitrary nameparts
   return $self->{nameparts}{$namepart}{string} || '';
 }
 

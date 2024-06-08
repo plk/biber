@@ -621,7 +621,7 @@ $out = $biber->get_output_obj;
 
 eq_or_diff($out->get_output_entry('murray', $main), $murray2, 'bbl with > maxcitenames, empty alphaothers');
 
-# Make sure namehash and fullhash are seperately generated
+# Make sure namehash and fullhash are separately generated
 eq_or_diff( $out->get_output_entry('anon1', $main), $anon1, 'namehash/fullhash 1' ) ;
 eq_or_diff( $out->get_output_entry('anon2', $main), $anon2, 'namehash/fullhash 2' ) ;
 

@@ -43,7 +43,7 @@ my $main = $biber->datalists->get_lists_by_attrs(section          => 0,
 # relying on here for tests
 Biber::Config->setoption('bcf', 'datalists.bcf');
 
-# (re)generate informtion based on option settings
+# (re)generate information based on option settings
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
 my $out = $biber->get_output_obj;
