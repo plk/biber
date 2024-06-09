@@ -249,7 +249,7 @@ sub latex_decode {
 
         # Hacky - specially protect {\X} which is a simple protection as in
         # TITLE = {Part {I}}
-        # Can't do this using the seperators above as these are stripping around \X
+        # Can't do this using the separators above as these are stripping around \X
         # later to avoid breaking capitliastion/kerning with spurious introduced/retained
         # braces
         # Using the VLB method from the link below, this is equivalent to:

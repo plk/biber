@@ -242,7 +242,7 @@
               <optional>
                 <!--
                   Applies to ENTRY, NAMELIST and NAME scope
-                  Determines whether biber will write the option to its ouput (e.g.
+                  Determines whether biber will write the option to its output (e.g.
                   .bbl) because biblatex needs to know the value.
                 -->
                 <attribute name="backendout">

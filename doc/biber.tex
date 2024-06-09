@@ -98,7 +98,7 @@ details on changes in each version. This section is just for important
 things like incompatible changes which users should be aware of.
 
 \minisec{2.15}
-The BBLXML output format is deprected and will be removed in version 4. It
+The BBLXML output format is deprecated and will be removed in version 4. It
 is rarely used and is not worth the overhead of test complications.
 
 Datamodel override via the user configuration file has been made more
@@ -2431,7 +2431,7 @@ per-document basis using \TeX\ macros in your document, you define the
 datamodel changes in XML in the \biber config file. This is a matter of
 choice and/or convenience since the datamodel \TeX\ macro interface simply
 results in XML definitions in the \opt{.bcf} anyway and these latter are
-overriden by the XML definitions in the \biber config file. For example, to
+overridden by the XML definitions in the \biber config file. For example, to
 add a new name list field \bibfield{DIRECTOR} to \bibfield{VIDEO} entry
 types, you can either use the \biblatex macros \cmd{DeclareDatamodelFields}
 and \cmd{DeclareDatamodelEntryfields} in your document or put the following
@@ -2463,7 +2463,7 @@ not read a \file{.bcf} but instead, it reads all entries from the file
 defaulting to a \bibtex file called «\file{<datasource>\_bibertool.bib}» if
 the options \opt{--output-file} and \opt{--output-format} are not specified.
 
-Tool mode is useful if you need to programatically change your datasource
+Tool mode is useful if you need to programmatically change your datasource
 using the semantics provided by \biber or if you would like to convert your
 data to a different format. For example, you could choose to reencode your
 datasource by turning all UTF-8 characters into \latex\ macros:
@@ -2718,7 +2718,7 @@ Notice here that:
 \end{itemize}
 
 Tool mode can also be used to convert between datasource
-formats. For example, if you wish to covert a \bibtex format data file to
+formats. For example, if you wish to convert a \bibtex format data file to
 the experimental \texttt{biblatexml} XML format, you can do:
 
 \begin{verbatim}

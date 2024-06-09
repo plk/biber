@@ -161,7 +161,7 @@ sub _initopts {
   # Command-line overrides everything else
   foreach my $copt (keys $opts->%*) {
     # This is a tricky option as we need to keep non-overriden defaults
-    # If we don't we can get errors when contructing the sorting call to eval() later
+    # If we don't we can get errors when constructing the sorting call to eval() later
     if (lc($copt) eq 'collate_options') {
       my $collopts = Biber::Config->getoption('collate_options');
       my $copt_h = eval "{ $opts->{$copt} }" or croak('Bad command-line collation options');

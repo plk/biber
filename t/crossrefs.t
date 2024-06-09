@@ -408,7 +408,7 @@ my $cr7 = q|    \entry{cr7}{inbook}{}{}
     \endentry
 |;
 
-# Default inheritance supressed except for specified
+# Default inheritance suppressed except for specified
 my $cr8 = q|    \entry{cr8}{incollection}{}{}
       \name{author}{1}{}{%
         {{hash=3d449e56eb3ca1ae80dc99a18d689795}{%
