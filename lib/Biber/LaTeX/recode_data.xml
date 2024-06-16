@@ -115,7 +115,7 @@
     <map><from>texththeng</from>                       <to hex="267">ɧ</to></map>
     <map><from>textbari</from>                         <to hex="268">ɨ</to></map>
     <map><from>textiotalatin</from>                    <to hex="269">ɩ</to></map>
-    <map><from preferred="1">textiota</from>           <to hex="269">ɩ</to></map>
+    <map><from preferred="1">textiota</from>           <to hex="3B9">ι</to></map>
     <map><from>textsci</from>                          <to hex="26A">ɪ</to></map>
     <map><from>textltilde</from>                       <to hex="26B">ɫ</to></map>
     <map><from>textbeltl</from>                        <to hex="26C">ɬ</to></map>
@@ -150,7 +150,7 @@
     <map><from>textrtailt</from>                       <to hex="288">ʈ</to></map>
     <map><from preferred="1">texttretroflexhook</from> <to hex="288">ʈ</to></map>
     <map><from>textbaru</from>                         <to hex="289">ʉ</to></map>
-    <map><from>textupsilon</from>                      <to hex="28A">ʊ</to></map>
+    <map><from>textupsilon</from>                      <to hex="3C5">υ</to></map>
     <map><from>textscriptv</from>                      <to hex="28B">ʋ</to></map>
     <map><from preferred="1">textvhook</from>          <to hex="28B">ʋ</to></map>
     <map><from>textturnv</from>                        <to hex="28C">ʌ</to></map>
@@ -364,7 +364,7 @@
     <map><from preferred="1">div</from>   <to hex="F7">÷</to></map>
     <map><from>texttimes</from>           <to hex="D7">×</to></map>
     <map><from preferred="1">times</from> <to hex="D7">×</to></map>
-    <map><from>textmu</from>              <to hex="B5">µ</to></map>
+    <map><from>textmu</from>              <to hex="3BC">μ</to></map>
     <map><from preferred="1">mu</from>    <to hex="B5">µ</to></map>
     <map><from>textpm</from>              <to hex="B1">±</to></map>
     <map><from preferred="1">pm</from>    <to hex="B1">±</to></map>
