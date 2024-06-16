@@ -108,7 +108,7 @@
     <map><from>textscriptg</from>                      <to hex="261">ɡ</to></map>
     <map><from>textscg</from>                          <to hex="262">ɢ</to></map>
     <map><from>textgammalatinsmall</from>              <to hex="263">ɣ</to></map>
-    <map><from preferred="1">textgamma</from>          <to hex="263">ɣ</to></map>
+    <map><from preferred="1">textgamma</from>          <to hex="3B3">γ</to></map>
     <map><from>textramshorns</from>                    <to hex="264">ɤ</to></map>
     <map><from>textturnh</from>                        <to hex="265">ɥ</to></map>
     <map><from>texthth</from>                          <to hex="266">ɦ</to></map>
