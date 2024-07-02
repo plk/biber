@@ -308,11 +308,9 @@
     <map><from>rangle</from>                    <to hex="27E9">⟩</to></map>
   </maps>
   <maps type="symbols" set ="base,full">
-    <map><from>textquotedbl</from>                     <to hex="22">"</to></map>
     <map><from>textdollar</from>                       <to hex="24">$</to></map>
     <map><from>textpercent</from>                      <to hex="25">%</to></map>
     <map><from>textampersand</from>                    <to hex="26">&amp;</to></map>
-    <map><from>textquotesingle</from>                  <to hex="27">'</to></map>
     <map><from>textasteriskcentered</from>             <to hex="2A">*</to></map>
     <map><from>textless</from>                         <to hex="3C">&lt;</to></map>
     <map><from>textequals</from>                       <to hex="3D">=</to></map>
@@ -860,6 +858,8 @@
     <char>|</char>
     <char>textbraceleft</char>
     <char>textbraceright</char>
+    <char>textquotedbl</char>
+    <char>textquotesingle</char>
     <char>textunderscore</char>
     <char>textasciitilde</char>
     <char>textasciicircum</char>
