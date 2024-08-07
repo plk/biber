@@ -418,7 +418,7 @@ sub create_entry {
         # Set up any mapping foreach loop
         my @maploop = ('');
         if (my $foreach = $map->{map_foreach}) {
-          if (my $dslist = $DATAFIELD_SETS{$foreach}) { # datafield set list
+          if (my $dslist = $DATAFIELD_SETS{fc($foreach)}) { # datafield set list
             @maploop = $dslist->@*;
           }
           # casefold here as the field name does not come from Text::BibTeX so it might not be
