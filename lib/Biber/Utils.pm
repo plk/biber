@@ -1077,6 +1077,8 @@ sub filter_entry_options {
 
 sub imatch {
   my ($value, $val_match, $negmatch, $ci) = @_;
+  my @result;
+
   return 0 unless $val_match;
   if ($ci) {
     $val_match = qr/$val_match/i;
@@ -1084,12 +1086,23 @@ sub imatch {
   else {
     $val_match = qr/$val_match/;
   }
+
+  # Have to make $value temporarily NFC as unicode character clases (e.g. \p{Lu}) only work on characters
+  # not glyphs and people will want to use these
+  $value = NFC($value);
+
+  # ... and if we make $value NFC, the match item has to be NFC too otherwise we can't match NFD glyphs
+  $val_match = NFC($val_match);
+
   if ($negmatch) {# "!~" doesn't work here as we need an array returned
-    return $value =~ m/$val_match/xmsg ? () : (1);
+    @result = $value =~ m/$val_match/xmsg ? () : (1);
   }
   else {
-    return $value =~ m/$val_match/xmsg;
+    @result = $value =~ m/$val_match/xmsg;
   }
+
+  # ... but we return NFD to keep the internals consistently NFD
+  return map {NFD($_)} @result;
 }
 
 
@@ -1109,10 +1122,21 @@ sub ireplace {
   else {
     $val_match = qr/$val_match/;
   }
+
   # Tricky quoting because of later evals
   $val_replace = '"' . $val_replace . '"';
+
+  # Have to make $value temporarily NFC as unicode character clases (e.g. \p{Lu}) only work on characters
+  # not glyphs and people will want to use these
+  $value = NFC($value);
+
+  # ... and if we make $value NFC, the match item has to be NFC too otherwise we can't match NFD glyphs
+  $val_match = NFC($val_match);
+
   $value =~ s/$val_match/$val_replace/eegxms;
-  return $value;
+
+  # ... but we return NFD to keep the internals consistently NFD
+  return NFD($value);
 }
 
 
