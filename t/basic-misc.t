@@ -630,7 +630,7 @@ ok(is_undef($bibentries->entry('i1')->get_field('abstract')), 'map 1' );
 eq_or_diff($bibentries->entry('i1')->get_field('userd'), 'test', 'map 2' );
 ok(is_undef($bibentries->entry('i2')->get_field('userb')), 'map 3' );
 eq_or_diff(NFC($bibentries->entry('i2')->get_field('usere')), 'a Štring', 'map 4' );
-# Testing of UTF8 match/replace
+# Testing ot UTF8 match/replace
 eq_or_diff($biber->_liststring('i1', 'listd'), 'abc', 'map 5' );
 # Testing of user field map match/replace
 eq_or_diff($biber->_liststring('i1', 'listb'), 'REPlacedte!early', 'map 6');
