@@ -18,7 +18,7 @@ use Log::Log4perl::Appender::Screen;
 use Log::Log4perl::Appender::File;
 use Log::Log4perl::Layout::SimpleLayout;
 use Log::Log4perl::Layout::PatternLayout;
-use Unicode::Normalize qw(normalize NFC NFD checkNFC);
+use Unicode::Normalize qw(normalize NFC NFD checkNFC checkNFD);
 use parent qw(Class::Accessor);
 __PACKAGE__->follow_best_practice;
 
@@ -183,8 +183,17 @@ sub _initopts {
   # same format
   if (checkNFC($ARGV[0])) {
     Biber::Config->setoption('UFORM', 'NFC');
-  } else {
+  }
+  elsif (checkNFC($ARGV[0])) {
     Biber::Config->setoption('UFORM', 'NFD');
+  }
+  else { # Mixed NFC/NFD so set it platform dependent
+    if ($^O =~ /(?:Mac|darwin)/) {
+      Biber::Config->setoption('UFORM', 'NFD');
+    }
+    else {
+      Biber::Config->setoption('UFORM', 'NFC');
+    }
   }
 
   # Record the $ARGV[0] name for future use
