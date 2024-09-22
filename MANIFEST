@@ -209,6 +209,7 @@ t/tdata/xdata.bib
 t/tdata/xdata.bltxml
 testfiles/test.bcf
 testfiles/test.bib
+testfiles/test.tex
 visual.pl
 META.yml
 META.json

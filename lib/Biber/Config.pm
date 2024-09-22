@@ -8,7 +8,7 @@ use IPC::Run3; # This works with PAR::Packer and Windows. IPC::Run doesn't
 use Cwd qw( abs_path );
 use Data::Compare;
 use Data::Dump;
-use Encode;
+use Encode qw(decode_utf8);
 use File::Slurper;
 use File::Spec;
 use Carp;
@@ -18,7 +18,7 @@ use Log::Log4perl::Appender::Screen;
 use Log::Log4perl::Appender::File;
 use Log::Log4perl::Layout::SimpleLayout;
 use Log::Log4perl::Layout::PatternLayout;
-use Unicode::Normalize;
+use Unicode::Normalize qw(normalize NFC NFD checkNFC checkNFD);
 use parent qw(Class::Accessor);
 __PACKAGE__->follow_best_practice;
 
@@ -175,7 +175,7 @@ sub _initopts {
   # Command-line overrides everything else
   foreach my $copt (keys $opts->%*) {
     # This is a tricky option as we need to keep non-overriden defaults
-    # If we don't we can get errors when contructing the sorting call to eval() later
+    # If we don't we can get errors when constructing the sorting call to eval() later
     if (lc($copt) eq 'collate_options') {
       my $collopts = Biber::Config->getoption('collate_options');
       my $copt_h = eval "{ $opts->{$copt} }" or croak('Bad command-line collation options');
@@ -190,6 +190,26 @@ sub _initopts {
     }
   }
 
+  # Decode ARGV to UTF8, not NFD yet ...
+  @ARGV = map { decode_utf8($_) } @ARGV;
+
+  # Determine the input Unicode form so we can make sure output filenames are the
+  # same format
+  if (checkNFC($ARGV[0])) {
+    Biber::Config->setoption('UFORM', 'NFC');
+  }
+  elsif (checkNFC($ARGV[0])) {
+    Biber::Config->setoption('UFORM', 'NFD');
+  }
+  else { # Mixed NFC/NFD so set it platform dependent
+    if ($^O =~ /(?:Mac|darwin)/) {
+      Biber::Config->setoption('UFORM', 'NFD');
+    }
+    else {
+      Biber::Config->setoption('UFORM', 'NFC');
+    }
+  }
+
   # Record the $ARGV[0] name for future use
   if (Biber::Config->getoption('tool')) {
     # Set datasource file name. In a conditional as @ARGV might not be set in tests
@@ -200,6 +220,7 @@ sub _initopts {
   else {
     # Set control file name. In a conditional as @ARGV might not be set in tests
     if (defined($ARGV[0])) {         # ARGV is ok even in a module
+
       my $bcf = $ARGV[0];
       $bcf .= '.bcf' unless $bcf =~ m/\.bcf$/;
       Biber::Config->setoption('bcf', $bcf);
@@ -221,7 +242,7 @@ sub _initopts {
     my $bcf = $ARGV[0];         # ARGV is ok even in a module
     # Sanitise control file name
     $bcf =~ s/\.bcf\z//xms;
-    $biberlog = Biber::Utils::biber_decode_utf8($bcf . '.blg');
+    $biberlog = $bcf . '.blg';
   }
 
   # prepend output directory for log, if specified
@@ -236,6 +257,11 @@ sub _initopts {
       my ($f, $fr) = $ofr =~ m/^([^:]+):([^:]+)$/;
       $CONFIG_OUTPUT_FIELDREPLACE{$f} = $fr;
     }
+  }
+
+  # Sanitise log file name to the same as the input .bcf
+  if ($biberlog) {
+    $biberlog = normalize(Biber::Config->getoption('UFORM'), $biberlog);
   }
 
   # cache meta markers since they are referenced in the oft-called _get_handler
@@ -325,7 +351,7 @@ sub _initopts {
   $logger->info("This is Biber $vn$tool") unless Biber::Config->getoption('nolog');
 
   $logger->info("Config file is '" . NFC($opts->{configfile}) . "'") if $opts->{configfile};
-  $logger->info("Logfile is '" . NFC($biberlog) . "'") unless Biber::Config->getoption('nolog');
+  $logger->info("Logfile is '$biberlog'") unless Biber::Config->getoption('nolog');
 
   if (Biber::Config->getoption('debug')) {
     $screen->info("DEBUG mode: all messages are logged to '$biberlog'")
@@ -372,6 +398,7 @@ sub _config_file_set {
                                                             qr/\Aentrytype\z/,
                                                             qr/\Aentryfields\z/,
                                                             qr/\Adatetype\z/,
+                                                            qr/\Adatafieldset\z/,
                                                             qr/\Acondition\z/,
                                                             qr/\A(?:or)?filter\z/,
                                                             qr/\Asortexclusion\z/,
@@ -1411,7 +1438,7 @@ L<https://github.com/plk/biber/issues>.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2012-2023 Philip Kime, all rights reserved.
+Copyright 2012-2024 Philip Kime, all rights reserved.
 
 This module is free software.  You can redistribute it and/or
 modify it under the terms of the Artistic License 2.0.

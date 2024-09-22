@@ -1019,7 +1019,7 @@ sub inits {
   # The map {} is there to remove broken hyphenated initials returned from btparse
   # For example, in the, admittedly strange 'al- Hassan, John', we want the 'al-'
   # interpreted as a prefix (because of the following space) but because of the
-  # hypen, this is intialised as "a-" by btparse. So we correct such edge cases here by
+  # hyphen, this is initialised as "a-" by btparse. So we correct such edge cases here by
   # removing any trailing dashes in initials
   return [ map {s/\p{Pd}$//r} split(/(?<!\\)~/, $istring) ];
 }
@@ -1765,8 +1765,8 @@ sub gen_initials {
   foreach my $str (@strings) {
     # Deal with hyphenated name parts and normalise to a '-' character for easy
     # replacement with macro later
-    # Dont' split a name part if it's brace-wrapped
-    # Dont' split a name part if the hyphen in a hyphenated name is protected like:
+    # Don't split a name part if it's brace-wrapped
+    # Don't split a name part if the hyphen in a hyphenated name is protected like:
     # Hans{-}Peter as this is an old BibTeX way of suppressing hyphenated names
     if ($str !~ m/^\{.+\}$/ and $str =~ m/[^{]\p{Dash}[^}]/) {
       push @strings_out, join('-', gen_initials(split(/\p{Dash}/, $str)));
@@ -1950,7 +1950,7 @@ L<https://github.com/plk/biber/issues>.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2012-2023 Philip Kime, all rights reserved.
+Copyright 2012-2024 Philip Kime, all rights reserved.
 
 This module is free software.  You can redistribute it and/or
 modify it under the terms of the Artistic License 2.0.

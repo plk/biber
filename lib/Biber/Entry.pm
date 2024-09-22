@@ -936,6 +936,16 @@ sub resolve_xdata {
                 my $form = $alts->{form} // '';
                 my $lang = $alts->{lang} // '';
 
+                # Inherit field annotations too
+                Biber::Annotation->inherit_annotations($xdataentry->get_field('citekey'),
+                                                       $self->get_field('citekey'),
+                                                       $field,
+                                                       $form,
+                                                       $lang,
+                                                       $field,
+                                                       $form,
+                                                       $lang);
+
                 next if $field eq 'ids'; # Never inherit aliases
                 $self->set_datafield($field, $xdataentry->get_field($field, $form, $lang), $form, $lang);
 
@@ -976,6 +986,21 @@ sub resolve_xdata {
                 my $bibentries = $section->bibentries;
                 my $be = $bibentries->entry($xdatum->{xdataentries}[0]);
                 $self->get_field($reffield, $refform, $reflang)->splice($xdataentry->get_field($xdatafield, $xdataform, $xdatalang), $refposition);
+
+                # Inherit annotations for the field and remap indices to new positions in target
+                for (my $i=1; $i<=$xdataentry->get_field($xdatafield, $xdataform, $xdatalang)->count; $i++) {
+                  Biber::Annotation->inherit_annotations($xdataentry->get_field('citekey'),
+                                                         $self->get_field('citekey'),
+                                                         $xdatafield,
+                                                         $xdataform,
+                                                         $xdatalang,
+                                                         $reffield,
+                                                         $refform,
+                                                         $reflang,
+                                                         $i,
+                                                         $refposition+($i-1));
+                }
+
                 if ($logger->is_debug()) { # performance tune
                   $logger->debug("Inserting at position $refposition in name field '$reffield/$refform/$reflang' in entry '$entry_key' via XDATA");
                 }
@@ -988,6 +1013,17 @@ sub resolve_xdata {
                 }
 
                 $self->get_field($reffield, $refform, $reflang)->replace_name($xdataentry->get_field($xdatafield, $xdataform, $xdatalang)->nth_name($xdataposition), $refposition);
+                # Inherit annotations for the field and remap indices to new positions in target
+                Biber::Annotation->inherit_annotations($xdataentry->get_field('citekey'),
+                                                       $self->get_field('citekey'),
+                                                       $xdatafield,
+                                                       $xdataform,
+                                                       $xdatalang,
+                                                       $reffield,
+                                                       $refform,
+                                                       $reflang,
+                                                       $xdataposition,
+                                                       $refposition);
 
                 if ($logger->is_debug()) { # performance tune
                   $logger->debug("Setting position $refposition in name field '$reffield/$refform/$reflang' in entry '$entry_key' via XDATA");
@@ -1000,6 +1036,20 @@ sub resolve_xdata {
                 my $bibentries = $section->bibentries;
                 my $be = $bibentries->entry($xdatum->{xdataentries}[0]);
                 $self->get_field($reffield, $refform, $reflang)->splice($xdataentry->get_field($xdatafield, $xdataform, $xdatalang), $refposition);
+                # Inherit annotations for the field and remap indices to new positions in target
+                for (my $i=1; $i<=scalar($xdataentry->get_field($xdatafield, $xdataform, $xdatalang)->@*);$i++) {
+                  Biber::Annotation->inherit_annotations($xdataentry->get_field('citekey'),
+                                                         $self->get_field('citekey'),
+                                                         $xdatafield,
+                                                         $xdataform,
+                                                         $xdatalang,
+                                                         $reffield,
+                                                         $refform,
+                                                         $reflang,
+                                                         $i,
+                                                         $refposition+($i-1));
+                }
+
                 if ($logger->is_debug()) { # performance tune
                   $logger->debug("Inserting at position $refposition in list field '$reffield/$refform/$reflang' in entry '$entry_key' via XDATA");
                 }
@@ -1011,6 +1061,18 @@ sub resolve_xdata {
                   next;
                 }
                 $self->get_field($reffield, $refform, $reflang)->replace_item($xdataentry->get_field($xdatafield, $xdataform, $xdatalang)->nth_item($refposition), $refposition);
+                # Inherit annotations for the field and remap indices to new positions in target
+                Biber::Annotation->inherit_annotations($xdataentry->get_field('citekey'),
+                                                       $self->get_field('citekey'),
+                                                       $xdatafield,
+                                                       $xdataform,
+                                                       $xdatalang,
+                                                       $reffield,
+                                                       $refform,
+                                                       $reflang,
+                                                       $xdataposition,
+                                                       $refposition);
+
                 if ($logger->is_debug()) { # performance tune
                   $logger->debug("Setting position $refposition in list field '$reffield/$refform/$reflang' in entry '$entry_key' via XDATA");
                 }
@@ -1019,6 +1081,17 @@ sub resolve_xdata {
             # Non-list
             else {
               $self->set_datafield($reffield, $xdataentry->get_field($xdatafield, $xdataform, $xdatalang), $refform, $reflang);
+
+              # Inherit annotations for the field and remap indices to new positions in target
+              Biber::Annotation->inherit_annotations($xdataentry->get_field('citekey'),
+                                                     $self->get_field('citekey'),
+                                                     $xdatafield,
+                                                     $xdataform,
+                                                     $xdatalang,
+                                                     $reffield,
+                                                     $refform,
+                                                     $reflang);
+
               if ($logger->is_debug()) { # performance tune
                 $logger->debug("Setting field '$reffield/$refform/$reflang' in entry '$entry_key' via XDATA");
               }
@@ -1139,6 +1212,15 @@ sub inherit_from {
                 Biber::Annotation->set_annotation('field', $target_key, $field->{target}, $form, $tlang, 'mslang', $lang, 1);
               }
 
+              Biber::Annotation->inherit_annotations($source_key,
+                                                     $target_key,
+                                                     $field->{source},
+                                                     $form,
+                                                     $lang,
+                                                     $field->{target},
+                                                     $form,
+                                                     $lang);
+
               $self->set_datafield($field->{target}, $parent->get_field($field->{source}, $form, $lang), $form, $tlang);
 
               # Ignore uniqueness information tracking for this inheritance?
@@ -1226,6 +1308,15 @@ sub inherit_from {
             $logger->debug("$bee entry '$target_key' is inheriting field '$field/$form/$lang' from entry '$source_key'");
           }
 
+          Biber::Annotation->inherit_annotations($source_key,
+                                                 $target_key,
+                                                 $field,
+                                                 $form,
+                                                 $lang,
+                                                 $field,
+                                                 $form,
+                                                 $lang);
+
           # Force inherited fields to be langid of entry if it exists and override
           # with annotation
           my $tlang = $lang;
@@ -1285,7 +1376,7 @@ L<https://github.com/plk/biber/issues>.
 =head1 COPYRIGHT & LICENSE
 
 Copyright 2009-2012 François Charette and Philip Kime, all rights reserved.
-Copyright 2012-2023 Philip Kime, all rights reserved.
+Copyright 2012-2024 Philip Kime, all rights reserved.
 
 This module is free software.  You can redistribute it and/or
 modify it under the terms of the Artistic License 2.0.

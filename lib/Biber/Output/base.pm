@@ -10,7 +10,7 @@ use IO::File;
 use Text::Wrap;
 $Text::Wrap::columns = 80;
 use Log::Log4perl qw( :no_extra_logdie_message );
-use Unicode::Normalize;
+use Unicode::Normalize qw(normalize NFC NFD);
 my $logger = Log::Log4perl::get_logger('main');
 
 =encoding utf-8
@@ -60,7 +60,13 @@ sub set_output_target_file {
   if (my $enc = Biber::Config->getoption('output_encoding')) {
     $enc_out = ":encoding($enc)";
   }
-  return IO::File->new($file, ">$enc_out");
+
+  if (ref($file) eq 'SCALAR') {
+    return IO::File->new($file, ">$enc_out");
+  }
+  else {
+    return IO::File->new(normalize(Biber::Config->getoption('UFORM'), $file), ">$enc_out");
+  }
 }
 
 =head2 get_output_target_file
@@ -356,7 +362,7 @@ sub create_output_section {
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
 
-  # We rely on the order of this array for the order of the ouput
+  # We rely on the order of this array for the order of the output
   foreach my $k ($section->get_citekeys) {
     # Regular entry
     my $be = $section->bibentry($k) or biber_error("Cannot find entry with key '$k' to output");
@@ -463,7 +469,7 @@ L<https://github.com/plk/biber/issues>.
 =head1 COPYRIGHT & LICENSE
 
 Copyright 2009-2012 François Charette and Philip Kime, all rights reserved.
-Copyright 2012-2023 Philip Kime, all rights reserved.
+Copyright 2012-2024 Philip Kime, all rights reserved.
 
 This module is free software.  You can redistribute it and/or
 modify it under the terms of the Artistic License 2.0.

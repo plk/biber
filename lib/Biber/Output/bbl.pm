@@ -17,7 +17,7 @@ use Scalar::Util qw(looks_like_number);
 use Text::Wrap;
 use Unicode::Normalize;
 use URI;
-$Text::Wrap::columns = 80;
+
 my $logger = Log::Log4perl::get_logger('main');
 
 =encoding utf-8
@@ -146,7 +146,7 @@ sub _printfield {
     $str =~ s/(?<!\\)(\#|\&|\%)/\\$1/gxms;
   }
 
-  if (Biber::Config->getoption('wraplines')) {
+  if ($Text::Wrap::columns = Biber::Config->getoption('wraplines')) {
     ## 16 is the length of '      \field{}{}' or '      \strng{}{}'
     if ( 16 + Unicode::GCString->new($ms)->length + Unicode::GCString->new($outfield)->length + Unicode::GCString->new($str)->length > 2*$Text::Wrap::columns ) {
       return "      \\${field_type}${ms}{$outfield}{%\n" . wrap('      ', '      ', $str) . "%\n      }\n";
@@ -790,7 +790,7 @@ sub output {
     my $enc_out;
     if (Biber::Config->getoption('output_encoding')) {
       $enc_out = ':encoding(' . Biber::Config->getoption('output_encoding') . ')';
-  }
+    }
     $target = new IO::File ">-$enc_out";
   }
 
@@ -922,7 +922,7 @@ L<https://github.com/plk/biber/issues>.
 =head1 COPYRIGHT & LICENSE
 
 Copyright 2009-2012 François Charette and Philip Kime, all rights reserved.
-Copyright 2012-2023 Philip Kime, all rights reserved.
+Copyright 2012-2024 Philip Kime, all rights reserved.
 
 This module is free software.  You can redistribute it and/or
 modify it under the terms of the Artistic License 2.0.

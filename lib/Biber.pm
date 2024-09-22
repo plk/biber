@@ -859,7 +859,7 @@ sub parse_ctrlfile {
   }
   Biber::Config->setblxoption(undef, 'sortingtemplate', $sortingtemplates);
 
-  # DATAMODEL schema (always global and is an array to accomodate multiple
+  # DATAMODEL schema (always global and is an array to accommodate multiple
   # datamodels in tool mode)
 
   # Because in tests, parse_ctrlfile() is called several times so we need to sanitise this here
@@ -3583,24 +3583,25 @@ sub create_uniquename_info {
       # Uniquelist is not set, a name list is longer than the maxcitenames truncation
       #   and the name appears before the mincitenames truncation
 
-      if ($un eq 'allinit' or $un eq 'allfull' or
+      if ($un eq 'allinit' or $un eq 'allfull' or $un eq 'minyearinit' or $un eq 'minyearfull' or
           ($ul and $n->get_index <= $ul) or
           $morenames or
           $num_names <= $maxcn or
           $n->get_index <= $mincn) { # implicitly, $num_names > $maxcn here
 
         $truncnames{$nid} = 1;
-        if ($un eq 'mininit' or $un eq 'minfull') {
+        if ($un eq 'mininit' or $un eq 'minfull' or $un eq 'minyearinit' or $un eq 'minyearfull') {
           push @basenames, $dlist->get_basenamestring($nlid, $nid);
           push @allnames, $dlist->get_namestring($nlid, $nid);
         }
       }
     }
+
     # Information for mininit or minfull, here the basename
     # and non-basename is all names in the namelist, not just the current name
     my $min_basename;
     my $min_namestring;
-    if ($un eq 'mininit' or $un eq 'minfull') {
+    if ($un eq 'mininit' or $un eq 'minfull' or $un eq 'minyearinit' or $un eq 'minyearfull') {
       $min_basename = join("\x{10FFFD}", @basenames);
       $min_namestring = join("\x{10FFFD}", @allnames);
       if ($#basenames + 1 < $num_names or $morenames) {
@@ -3626,6 +3627,12 @@ sub create_uniquename_info {
         $namedisamiguationscope = $min_basename;
         $nskey = $min_namestring;
         $dlist->set_unmininfo($nlid, $nid, $min_basename);
+      }
+      elsif ($un eq 'minyearinit' or $un eq 'minyearfull') {
+        my $lyear = $be->get_field('labelyear') // '';
+        $namedisamiguationscope = $min_basename . $lyear;
+        $nskey = $min_namestring . $lyear;
+        $dlist->set_unmininfo($nlid, $nid, $min_basename . $lyear);
       }
 
       if ($truncnames{$nid}) {
@@ -3735,7 +3742,7 @@ MAIN:  foreach my $citekey ( $section->get_citekeys ) {
       my $namedisschema = $dlist->get_namedisschema($nlid, $nid);
       my $namescope = 'global'; # default
 
-      if ($un eq 'mininit' or $un eq 'minfull') {
+      if ($un eq 'mininit' or $un eq 'minfull' or $un eq 'minyearinit' or $un eq 'minyearfull') {
         $namescope = $dlist->get_unmininfo($nlid, $nid);
       }
 
@@ -4885,7 +4892,7 @@ sub get_dependents {
   get_dependents($self, $new_deps, $keyswithdeps) if $new_deps->@*;
 
   # Now remove any missing entries from various places in all entries we have flagged
-  # as having dependendents. If we don't do this, many things fail later like clone creation
+  # as having dependents. If we don't do this, many things fail later like clone creation
   # for related entries etc.
   foreach my $keywithdeps ($keyswithdeps->@*) {
     foreach my $missing_key ($missing->@*) {
@@ -5097,7 +5104,7 @@ L<https://github.com/plk/biber/issues>.
 =head1 COPYRIGHT & LICENSE
 
 Copyright 2009-2012 François Charette and Philip Kime, all rights reserved.
-Copyright 2012-2023 Philip Kime, all rights reserved.
+Copyright 2012-2024 Philip Kime, all rights reserved.
 
 This module is free software.  You can redistribute it and/or
 modify it under the terms of the Artistic License 2.0.

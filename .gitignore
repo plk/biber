@@ -12,6 +12,7 @@ MYMETA.json
 META.yml
 META.json
 Build
+.vscode
 blib/
 _build/
 dist/*/biber-*
@@ -25,3 +26,4 @@ testfiles/test.bbl
 dist/build-env-cmds
 *_flymake*
 *~
+.auctex-auto

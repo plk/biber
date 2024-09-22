@@ -722,7 +722,7 @@ sub field_is_skipout {
 =head2 check_mandatory_constraints
 
     Checks constraints of type "mandatory" on entry and
-    returns an arry of warnings, if any
+    returns an array of warnings, if any
 
 =cut
 
@@ -787,7 +787,7 @@ sub check_mandatory_constraints {
 =head2 check_conditional_constraints
 
     Checks constraints of type "conditional" on entry and
-    returns an arry of warnings, if any
+    returns an array of warnings, if any
 
 =cut
 
@@ -1520,7 +1520,7 @@ L<https://github.com/plk/biber/issues>.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2012-2023 Philip Kime, all rights reserved.
+Copyright 2012-2024 Philip Kime, all rights reserved.
 
 This module is free software.  You can redistribute it and/or
 modify it under the terms of the Artistic License 2.0.

@@ -15,22 +15,44 @@
 # by looking to see if there is a site_perl directory for the module. If there is, we use that
 # version.
 
-declare -r perlv='5.36'
-declare ucpath="/opt/local/lib/perl5/${perlv}/Unicode/Collate"
-export PATH=/opt/local/libexec/perl${perlv}/sitebin:$PATH
+# Have to be very careful about Perl modules with .bundle binary libraries as sometimes
+# (LibXML.bundle for example), they include RPATH which means that the PAR cache
+# is not searched first, even though it's at the top of LD_LIBRARY_PATH. So, the wrong
+# libraries will be found and things may well break. Strip any RPATH out of such libs
+# with "install_name_tool -delete_rpath <rpath> <lib.bundle>". Check for presence with "otool -l
+# <lib> | fgrep RPATH".
+#
+# Check all perl binaries with:
+# \rm -rf /tmp/out; for file in `find /opt/homebrew/Cellar/perl -name \*.bundle`; do echo $file >> /tmp/out; otool -l $file | fgrep -i rpath >> /tmp/out; done
+# and then grep /tmp/out for "RPATH"
+
+# With homebrew, perl libs, when built, will often use system libraries because many things are not
+# in /opt/homebrew/lib to find. However, you can't find the libs it linked to as
+# they are now hidden, see https://developer.apple.com/documentation/macos-release-notes/macos-big-sur-11_0_1-release-notes#Kernel
+# So, extract all the libs to a temp location from the cache first so they can be linked and packed.
+# This requires dyld-shared-cache-extractor to be installed (https://github.com/keith/dyld-shared-cache-extractor)
+if [ ! -e "/tmp/libraries" ]
+then
+  dyld-shared-cache-extractor /System/Volumes/Preboot/Cryptexes/OS/System/Library/dyld/dyld_shared_cache_arm64e /tmp/libraries
+fi
+
+declare -r perlv='5.38.2_1'
+declare -r perlvc=$(echo "$perlv" | perl -pe 's/^(.+)\.\d+(?:_\d+)?$/$1/')
+declare ucpath="/opt/homebrew/Cellar/perl/${perlv}/lib/perl5/${perlvc}/Unicode/Collate"
 
 # Unicode::Collate has a site_perl version so has been updated since this
 # perl was released
-if [ -d "/opt/local/lib/perl5/site_perl/${perlv}/darwin-thread-multi-2level/Unicode/Collate" ]
+
+if [ -d "/opt/homebrew/Cellar/perl/${perlv}/lib/perl5/site_perl/${perlvc}/Unicode/Collate" ]
 then
-  ucpath="/opt/local/lib/perl5/site_perl/${perlv}/darwin-thread-multi-2level/Unicode/Collate"
+  ucpath="/opt/homebrew/Cellar/perl/${perlv}/lib/perl5/site_perl/${perlvc}/Unicode/Collate"
 fi
 
 echo "USING Unicode::Collate at: ${ucpath}"
 
-cp /opt/local/libexec/perl${perlv}/sitebin/biber /tmp/biber-darwin
+cp /opt/homebrew/Cellar/perl/${perlv}/bin/biber /tmp/biber-darwin
 
-PAR_VERBATIM=1 pp \
+PAR_VERBATIM=1 /opt/homebrew/Cellar/perl/${perlv}/bin/pp \
   --module=deprecate \
   --module=Biber::Input::file::bibtex \
   --module=Biber::Input::file::biblatexml \
@@ -53,20 +75,19 @@ PAR_VERBATIM=1 pp \
   --module=PerlIO::utf8_strict \
   --module=Text::CSV_XS \
   --module=DateTime \
-  --link=/opt/local/lib/libz.1.dylib \
-  --link=/opt/local/lib/libiconv.2.dylib \
-  --link=/opt/local/libexec/perl${perlv}/sitebin/libbtparse.dylib \
-  --link=/opt/local/lib/libxml2.2.dylib \
-  --link=/opt/local/lib/libxslt.1.dylib \
-  --link=/opt/local/lib/libgdbm.6.dylib \
-  --link=/opt/local/lib/libexslt.0.dylib \
-  --link=/opt/local/lib/libssl.3.dylib \
-  --link=/opt/local/lib/libcrypto.3.dylib \
-  --link=/opt/local/lib/liblzma.5.dylib \
-  --link=/opt/local/lib/libintl.8.dylib \
-  --link=/opt/local/lib/libicui18n.73.dylib \
-  --link=/opt/local/lib/libicuuc.73.dylib \
-  --link=/opt/local/lib/libicudata.73.dylib \
+  --link=/opt/homebrew/lib/libgdbm.dylib \
+  --link=/opt/homebrew/lib/libintl.8.dylib \
+  --link=/tmp/libraries/usr/lib/libz.1.dylib \
+  --link=/tmp/libraries/usr/lib/libiconv.2.dylib \
+  --link=/tmp/libraries/usr/lib/libssl.dylib \
+  --link=/tmp/libraries/usr/lib/libxml2.2.dylib \
+  --link=/tmp/libraries/usr/lib/libxslt.1.dylib \
+  --link=/tmp/libraries/usr/lib/libcrypto.dylib \
+  --link=/tmp/libraries/usr/lib/liblzma.5.dylib \
+  --link=/opt/homebrew/Cellar/perl/${perlv}/lib/libbtparse.dylib \
+  --link=/opt/homebrew/Cellar/icu4c/74.2/lib/libicui18n.74.dylib \
+  --link=/opt/homebrew/Cellar/icu4c/74.2/lib/libicuuc.74.dylib \
+  --link=/opt/homebrew/Cellar/icu4c/74.2/lib/libicudata.74.dylib \
   --addfile="../../data/biber-tool.conf;lib/Biber/biber-tool.conf" \
   --addfile="../../data/schemata/config.rnc;lib/Biber/config.rnc" \
   --addfile="../../data/schemata/config.rng;lib/Biber/config.rng" \
@@ -78,12 +99,16 @@ PAR_VERBATIM=1 pp \
   --addfile="${ucpath}/CJK;lib/Unicode/Collate/CJK;lib/Unicode/Collate/CJK" \
   --addfile="${ucpath}/allkeys.txt;lib/Unicode/Collate/allkeys.txt" \
   --addfile="${ucpath}/keys.txt;lib/Unicode/Collate/keys.txt" \
-  --addfile="/opt/local/lib/perl5/site_perl/${perlv}/Mozilla/CA/cacert.pem;lib/Mozilla/CA/cacert.pem" \
-  --addfile="/opt/local/lib/perl5/site_perl/${perlv}/Business/ISBN/RangeMessage.xml;lib/Business/ISBN/RangeMessage.xml" \
-  --addfile="/opt/local/lib/perl5/site_perl/${perlv}/darwin-thread-multi-2level/auto/Unicode/LineBreak/LineBreak.bundle;lib/auto/Unicode/LineBreak/LineBreak.bundle" \
+--addfile="/opt/homebrew/Cellar/perl/${perlv}/lib/perl5/site_perl/${perlvc}/Mozilla/CA/cacert.pem;lib/Mozilla/CA/cacert.pem" \
+  --addfile="/opt/homebrew/Cellar/perl/${perlv}/lib/perl5/site_perl/${perlvc}/Business/ISBN/RangeMessage.xml;lib/Business/ISBN/RangeMessage.xml" \
+  --addfile="/opt/homebrew/Cellar/perl/${perlv}/lib/perl5/site_perl/${perlvc}/darwin-thread-multi-2level/auto/Unicode/LineBreak/LineBreak.bundle;lib/auto/Unicode/LineBreak/LineBreak.bundle" \
   --cachedeps=scancache \
   --output=biber-darwin_arm64 \
   /tmp/biber-darwin
 
 \rm -f /tmp/biber-darwin
 
+if [ -e "/tmp/libraries" ]
+then
+  \rm -rf /tmp/libraries
+fi

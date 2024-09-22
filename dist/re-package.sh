@@ -46,7 +46,7 @@ for i in "${!PLATFORMS[@]}"; do
     if [ ! -e biber$PACKAGEEXT-$METAPLATFORM/biber$PACKAGEEXT-$VER-$PLATFORM.$EXT ]; then
       echo -n "Retrieving $PLATFORM ... "
       mkdir biber$PACKAGEEXT-$METAPLATFORM 2>/dev/null
-      /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/$RELEASE/binaries/$SFPLATFORM/biber-$PLATFORM.$EXT -O biber$PACKAGEEXT-$METAPLATFORM/biber$PACKAGEEXT-$VER-$PLATFORM.$EXT >/dev/null 2>&1
+      /opt/homebrew/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/$RELEASE/binaries/$SFPLATFORM/biber$PACKAGEEXT-$PLATFORM.$EXT -O biber$PACKAGEEXT-$METAPLATFORM/biber$PACKAGEEXT-$VER-$PLATFORM.$EXT >/dev/null 2>&1
       [ $? -eq 0 ] || exit 1
       create-readme $METAPLATFORM biber$PACKAGEEXT-$METAPLATFORM/README
       echo "done"
@@ -69,15 +69,15 @@ if [ ! -e biber$PACKAGEEXT-base.tgz ]; then
   cd biber$PACKAGEEXT
   mkdir source
   mkdir documentation
-  /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/$RELEASE/biblatex-biber.tar.gz -O source/biblatex-biber$PACKAGEEXT.tar.gz >/dev/null 2>&1
+  /opt/homebrew/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/$RELEASE/biblatex-biber.tar.gz -O source/biblatex-biber$PACKAGEEXT.tar.gz >/dev/null 2>&1
   [ $? -eq 0 ] || exit 1
-  /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/$RELEASE/documentation/biber.pdf -O documentation/biber$PACKAGEEXT.pdf >/dev/null 2>&1
+  /opt/homebrew/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/$RELEASE/documentation/biber.pdf -O documentation/biber$PACKAGEEXT.pdf >/dev/null 2>&1
   [ $? -eq 0 ] || exit 1
-  /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/$RELEASE/Changes -O documentation/Changes >/dev/null 2>&1
+  /opt/homebrew/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/$RELEASE/Changes -O documentation/Changes >/dev/null 2>&1
   [ $? -eq 0 ] || exit 1
-  /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/$RELEASE/documentation/utf8-macro-map.html -O documentation/utf8-macro-map.html >/dev/null 2>&1
+  /opt/homebrew/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/$RELEASE/documentation/utf8-macro-map.html -O documentation/utf8-macro-map.html >/dev/null 2>&1
   [ $? -eq 0 ] || exit 1
-  /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/README.md -O README.md >/dev/null 2>&1
+  /opt/homebrew/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/README.md -O README.md >/dev/null 2>&1
   cd ..
   tar zcf biber$PACKAGEEXT-base.tgz biber$PACKAGEEXT
   \rm -rf biber$PACKAGEEXT

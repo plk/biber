@@ -10,7 +10,7 @@ start =
         # the option into on reading it
         attribute backendin {xsd:string}?,
         # Applies to ENTRY, NAMELIST and NAME scope
-        # Determines whether biber will write the option to its ouput (e.g.
+        # Determines whether biber will write the option to its output (e.g.
         # .bbl) because biblatex needs to know the value.
         attribute backendout {xsd:boolean}?,
         xsd:string
@@ -504,7 +504,7 @@ element sort {
 dmfieldtype =  "field" | "list"
 dmdatatype =  "literal" | "name" | "key" | "entrykey" | "date" | "verbatim" | "integer" | "range" | "code" | "uri" | "datepart" | "keyword" | "option"
 
-# Copyright 2012-2023 Philip Kime, all rights reserved.
+# Copyright 2012-2024 Philip Kime, all rights reserved.
 
 # This code is free software.  You can redistribute it and/or
 # modify it under the terms of the Artistic License 2.0.

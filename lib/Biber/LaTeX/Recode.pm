@@ -249,7 +249,7 @@ sub latex_decode {
 
         # Hacky - specially protect {\X} which is a simple protection as in
         # TITLE = {Part {I}}
-        # Can't do this using the seperators above as these are stripping around \X
+        # Can't do this using the separators above as these are stripping around \X
         # later to avoid breaking capitliastion/kerning with spurious introduced/retained
         # braces
         # Using the VLB method from the link below, this is equivalent to:
@@ -436,7 +436,7 @@ L<https://github.com/plk/biber/issues>.
 =head1 COPYRIGHT & LICENSE
 
 Copyright 2009-2012 François Charette and Philip Kime, all rights reserved.
-Copyright 2012-2023 Philip Kime, all rights reserved.
+Copyright 2012-2024 Philip Kime, all rights reserved.
 
 This module is free software.  You can redistribute it and/or
 modify it under the terms of the Artistic License 2.0.

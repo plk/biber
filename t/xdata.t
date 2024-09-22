@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 12;
+use Test::More tests => 13;
 use Test::Differences;
 use List::AllUtils qw( first );
 unified_diff;
@@ -514,6 +514,100 @@ my $bltxgxd1 = q|    \entry{bltxgxd1}{book}{}{}
     \endentry
 |;
 
+my $xdann1 = q|    \entry{xdann1}{book}{}{}
+      \name{author}{4}{}{%
+        {{hash=9c855075c7ab53ad38ec38086eda2029}{%
+           family={Smith},
+           familyi={S\bibinitperiod},
+           given={Arthur},
+           giveni={A\bibinitperiod}}}%
+        {{hash=0c6731af5e4274be0b0ceef16eccb8f6}{%
+           family={Bee},
+           familyi={B\bibinitperiod},
+           given={May},
+           giveni={M\bibinitperiod}}}%
+        {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
+           family={Doe},
+           familyi={D\bibinitperiod},
+           given={John},
+           giveni={J\bibinitperiod}}}%
+        {{hash=ccc542396e5b42506590dc7132859c8c}{%
+           family={Blogs},
+           familyi={B\bibinitperiod},
+           given={Bill},
+           giveni={B\bibinitperiod}}}%
+      }
+      \name{editor}{5}{}{%
+        {{hash=93f025f0446f3db59decfaf17a19dbbe}{%
+           family={Little},
+           familyi={L\bibinitperiod},
+           given={Raymond},
+           giveni={R\bibinitperiod}}}%
+        {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
+           family={Doe},
+           familyi={D\bibinitperiod},
+           given={John},
+           giveni={J\bibinitperiod}}}%
+        {{hash=d6cfb2b8c4b3f9440ec4642438129367}{%
+           family={Doe},
+           familyi={D\bibinitperiod},
+           given={Jane},
+           giveni={J\bibinitperiod}}}%
+        {{hash=0c6731af5e4274be0b0ceef16eccb8f6}{%
+           family={Bee},
+           familyi={B\bibinitperiod},
+           given={May},
+           giveni={M\bibinitperiod}}}%
+        {{hash=ead97b429847e5d377495ef9e13acb27}{%
+           family={Roth},
+           familyi={R\bibinitperiod},
+           given={Gerald},
+           giveni={G\bibinitperiod}}}%
+      }
+      \list{institution}{3}{%
+        {inst1}%
+        {inst2}%
+        {inst3}%
+      }
+      \list{location}{3}{%
+        {loca}%
+        {xloc2}%
+        {xloc2}%
+      }
+      \list{publisher}{1}{%
+        {MacMillan}%
+      }
+      \strng{namehash}{416c234e34c8082fb7acf86c6e7a499a}
+      \strng{fullhash}{7d301d11b9579ee16fad350195f2d756}
+      \strng{fullhashraw}{7d301d11b9579ee16fad350195f2d756}
+      \strng{bibnamehash}{416c234e34c8082fb7acf86c6e7a499a}
+      \strng{authorbibnamehash}{416c234e34c8082fb7acf86c6e7a499a}
+      \strng{authornamehash}{416c234e34c8082fb7acf86c6e7a499a}
+      \strng{authorfullhash}{7d301d11b9579ee16fad350195f2d756}
+      \strng{authorfullhashraw}{7d301d11b9579ee16fad350195f2d756}
+      \strng{editorbibnamehash}{d1f1309f75dc90b7a1846a2efbd43572}
+      \strng{editornamehash}{d1f1309f75dc90b7a1846a2efbd43572}
+      \strng{editorfullhash}{519612891addebf4b3e5e61fefc6d52d}
+      \strng{editorfullhashraw}{519612891addebf4b3e5e61fefc6d52d}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{A note}
+      \field{title}{Very Long Title with XDATA}
+      \annotation{field}{note}{default}{}{}{0}{bignote}
+      \annotation{item}{author}{default}{1}{}{0}{biggerauthor}
+      \annotation{item}{author}{default}{2}{}{0}{bigauthor}
+      \annotation{item}{author}{default}{3}{}{0}{bigishauthor}
+      \annotation{item}{editor}{default}{2}{}{0}{bigishauthor}
+      \annotation{item}{editor}{default}{4}{}{0}{bigauthor}
+      \annotation{item}{institution}{default}{2}{}{0}{biginst}
+      \annotation{item}{location}{default}{2}{}{0}{bigloc}
+      \annotation{item}{location}{default}{3}{}{0}{bigloc}
+      \annotation{item}{publisher}{default}{1}{}{0}{bigpublisher}
+    \endentry
+|;
+
 # Test::Differences doesn't like utf8 unless it's encoded here
 eq_or_diff($out->get_output_entry('xd1', $main), $xd1, 'xdata test - 1');
 eq_or_diff(encode_utf8($out->get_output_entry('xd2', $main)), encode_utf8($xd2), 'xdata test - 2');
@@ -523,6 +617,7 @@ eq_or_diff($out->get_output_entry('macmillan:pub', $main), undef, 'xdata test - 
 eq_or_diff($out->get_output_entry('gxd1', $main), $gxd1, 'xdata granular test - 1');
 eq_or_diff($out->get_output_entry('gxd1g', $main), $gxd1g, 'xdata granular test - 2');
 eq_or_diff($out->get_output_entry('bltxgxd1', $main), $bltxgxd1, 'xdata granular test - 3');
+eq_or_diff($out->get_output_entry('xdann1', $main), $xdann1, 'xdata annotation test - 1');
 chomp $stderr;
 ok((first {$_ eq "ERROR - Circular XDATA inheritance between 'lxd1:loop'<->'lxd2:loop'"} split("\n",$stderr)), 'Cyclic xdata error check - 1');
 ok((first {$_ eq "ERROR - Circular XDATA inheritance between 'lxd4:loop'<->'lxd4:loop'"} split("\n",$stderr)), 'Cyclic xdata error check - 2');

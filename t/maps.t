@@ -38,7 +38,7 @@ my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
 my $bibentries = $section->bibentries;
 
-# Explictly cited ARTICLE, not deleted by map
+# Explicitly cited ARTICLE, not deleted by map
 ok(defined($bibentries->entry('maps1')), 'Maps test - 1' );
 # \nocite{*} ARTICLE, deleted by map
 ok(is_undef($bibentries->entry('maps2')), 'Maps test - 2' );

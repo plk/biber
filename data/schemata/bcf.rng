@@ -243,7 +243,7 @@
               <optional>
                 <!--
                   Applies to ENTRY, NAMELIST and NAME scope
-                  Determines whether biber will write the option to its ouput (e.g.
+                  Determines whether biber will write the option to its output (e.g.
                   .bbl) because biblatex needs to know the value.
                 -->
                 <attribute name="backendout">
@@ -1692,8 +1692,10 @@
     full (true) = disambiguate with full name or initials, only up to maxcitenames/uniquelist
     allinit = disambiguate with initials, ignore maxcitenames/uniquelist
     allfull = disambiguate with full name or initials, ignore maxcitenames/uniquelist
-    mininit = disambiguate with initials, only between identical lists in different entries
-    minfull = disambiguate with full name or initials, only between identical lists in different entries
+    mininit = disambiguate with initials, only between identical lists of base names in different entries
+    minfull = disambiguate with full name or initials, only between identical lists of base names in different entries
+    minyearinit = disambiguate with initials, only between identical lists of base names and years in different entries
+    minyearfull = disambiguate with full name or initials, only between identical lists of base names and years in different entries
   -->
   <define name="pluralothers">
     <element name="bcf:option">
@@ -1725,6 +1727,8 @@
           <value>allfull</value>
           <value>mininit</value>
           <value>minfull</value>
+          <value>minyearinit</value>
+          <value>minyearfull</value>
         </choice>
       </element>
     </element>
@@ -2431,7 +2435,7 @@
 </grammar>
 <!--
   Copyright 2009-2012 François Charette and Philip Kime, all rights reserved.
-  Copyright 2012-2023 Philip Kime, all rights reserved.
+  Copyright 2012-2024 Philip Kime, all rights reserved.
 -->
 <!--
   This code is free software.  You can redistribute it and/or

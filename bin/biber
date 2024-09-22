@@ -20,6 +20,7 @@ use Encode;
 use File::Spec;
 use Pod::Usage;
 use List::AllUtils qw( first );
+use Unicode::Normalize qw(NFC);
 
 use Getopt::Long qw/:config no_ignore_case/;
 my $opts = {};
@@ -122,7 +123,7 @@ GetOptions(
            'validate_datamodel|validate-datamodel|V',
            'version|v',
            'winunicode|W',
-           'wraplines|w',
+           'wraplines|w:80',
            'xdatamarker=s',
            'xdatasep=s',
            'xnamesep=s',
@@ -671,7 +672,7 @@ be obtained with the B<--show-tmp-dir> option.
 
 =item B<--noxname>
 
-Disable exended name processing in bibtex data sources. Can be useful if
+Disable extended name processing in bibtex data sources. Can be useful if
 you don't use this and it causes problems due to auto-detection of extended
 name format.
 
@@ -922,9 +923,9 @@ C<CROSSREF> and C<XDATA> fields from the output which point to a missing
 entry. Useful if you have split datafiles where the e.g. C<CROSSREF>s are
 in another file that you are not including in the tool mode run.
 
-=item B<--trace|T>
+=item B<--trace|-T>
 
-Turn on tracing. Also turns on B<--debug|d> and additionally provides a lot of low-level tracing
+Turn on tracing. Also turns on B<--debug|-D> and additionally provides a lot of low-level tracing
 information in the log.
 
 =item B<-u>
@@ -973,9 +974,10 @@ system APIs. If that option is enabled, use this option to turn off biber's
 UTF-16 filename support on Windows. This will result in much improved
 handling of Unicode filenames.
 
-=item B<--wraplines|-w>
+=item B<--wraplines|-w=[column]>
 
-Wrap lines in the F<.bbl> file.
+Wrap lines in the F<.bbl> file (or output F<.bib> file in tool mode) at column
+F<column> (default 80).
 
 =item B<--xdatamarker=[marker]>
 
@@ -1017,7 +1019,7 @@ L<https://github.com/plk/biber/issues>.
 =head1 COPYRIGHT & LICENSE
 
 Copyright 2009-2012 François Charette and Philip Kime, all rights reserved.
-Copyright 2012-2023 Philip Kime, all rights reserved.
+Copyright 2012-2024 Philip Kime, all rights reserved.
 
 This module is free software.  You can redistribute it and/or
 modify it under the terms of the Artistic License 2.0.

@@ -1,5 +1,13 @@
 Revision history for Biber
 
+2.20   (2024-03)
+       * Added new option settings `minyearinit` and `minyearfull` for
+         `uniquename`
+       * Added `\DeclareNamehashTemplate` and supporting macros to allow
+         customisation of the nameparts used in name hash construction.
+       * Added facility for custom namehash ids in extended name format.
+       * Added new field `fullhashraw`.
+       * Misc bug fixes
 2.19   (2023-03)
        * Misc bug fixes
 2.18   (2022-06)

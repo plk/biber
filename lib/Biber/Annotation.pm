@@ -75,6 +75,65 @@ sub set_annotation {
   return;
 }
 
+=head2 inherit_annotations
+
+  Inherit, in a granular manner, annotations for a particular entryfield from
+  one entry to another for all annotation names, reindxeing any item counts using
+  an offset since annotations might be copied due to xdata inheritance which can
+  change the item positions of annotations
+
+=cut
+
+sub inherit_annotations {
+  shift; # class method so don't care about class name
+  my ($sourcekey, $targetkey, $sourcefield, $sourceform, $sourcelang, $targetfield, $targetform, $targetlang, $sourceitem, $targetitem) = @_;
+
+  if (-not $sourceitem) {
+    if (exists($ANN->{field}{$sourcekey}{$sourcefield}{$sourceform}{$sourcelang})) {
+      $ANN->{field}{$targetkey}{$targetfield}{$targetform}{$targetlang} = dclone($ANN->{field}{$sourcekey}{$sourcefield}{$sourceform}{$sourcelang})
+    }
+    if (exists($ANN->{item}{$sourcekey}{$sourcefield}{$sourceform}{$sourcelang})) {
+      $ANN->{item}{$targetkey}{$targetfield}{$targetform}{$targetlang} = dclone($ANN->{item}{$sourcekey}{$sourcefield}{$sourceform}{$sourcelang})
+    }
+    if (exists($ANN->{part}{$sourcekey}{$sourcefield}{$sourceform}{$sourcelang})) {
+      $ANN->{part}{$targetkey}{$targetfield}{$targetform}{$targetlang} = dclone($ANN->{part}{$sourcekey}{$sourcefield}{$sourceform}{$sourcelang})
+    }
+  }
+  else {
+    if (exists($ANN->{item}{$sourcekey}{$sourcefield}{$sourceform}{$sourcelang})) {
+      foreach my $name (keys $ANN->{item}{$sourcekey}{$sourcefield}{$sourceform}{$sourcelang}->%*) {
+        unless (first {fc($_) eq fc($name)} $ANN->{names}{$targetkey}{$targetfield}{$targetform}{$targetlang}->@*) {
+          push $ANN->{names}{$targetkey}{$targetfield}{$targetform}{$targetlang}->@*, $name;
+        }
+        if (exists($ANN->{item}{$sourcekey}{$sourcefield}{$sourceform}{$sourcelang}{$name}{$sourceitem})) {
+          $ANN->{item}{$targetkey}{$targetfield}{$targetform}{$targetlang}{$name}{$targetitem} =
+            dclone($ANN->{item}{$sourcekey}{$sourcefield}{$sourceform}{$sourcelang}{$name}{$sourceitem});
+        }
+      }
+    }
+
+    if (exists($ANN->{part}{$sourcekey}{$sourcefield}{$sourceform}{$sourcelang})) {
+      foreach my $name (keys $ANN->{part}{$sourcekey}{$sourcefield}{$sourceform}{$sourcelang}->%*) {
+        unless (first {fc($_) eq fc($name)} $ANN->{names}{$targetkey}{$targetfield}{$targetform}{$targetlang}->@*) {
+          push $ANN->{names}{$targetkey}{$targetfield}{$targetform}{$targetlang}->@*, $name;
+        }
+        if (exists($ANN->{part}{$sourcekey}{$sourcefield}{$sourceform}{$sourcelang}{$name}{$sourceitem})) {
+          $ANN->{part}{$targetkey}{$targetfield}{$targetform}{$targetlang}{$name}{$targetitem} =
+            dclone($ANN->{part}{$sourcekey}{$sourcefield}{$sourceform}{$sourcelang}{$name}{$sourceitem})
+          }
+      }
+    }
+  }
+
+  foreach my $type (('field', 'item', 'part')) {
+    foreach my $f (keys $ANN->{$type}{$targetkey}->%*) {
+      $ANN->{fields}{$targetkey}{$f}{$targetform}{$targetlang} = 1;
+    }
+  }
+
+  return;
+}
+
 =head2 copy_annotations
 
   Copy all annotations from one entry to another
@@ -92,6 +151,11 @@ sub copy_annotations {
   $ANN->{fieldswithname}{$targetkey} = dclone($ANN->{fieldswithname}{$sourcekey}) if exists($ANN->{fieldswithname}{$sourcekey});
   $ANN->{ms}{$targetkey} = dclone($ANN->{ms}{$sourcekey}) if exists($ANN->{ms}{$sourcekey});
 
+  foreach my $type (('field', 'item', 'part')) {
+    foreach my $f (keys $ANN->{$type}{$targetkey}->%*) {
+      $ANN->{fields}{$targetkey}{$f}{$targetform}{$targetlang} = 1;
+    }
+  }
   return;
 }
 
@@ -328,7 +392,7 @@ L<https://github.com/plk/biber/issues>.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2012-2023 Philip Kime, all rights reserved.
+Copyright 2012-2024 Philip Kime, all rights reserved.
 
 This module is free software.  You can redistribute it and/or
 modify it under the terms of the Artistic License 2.0.

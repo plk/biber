@@ -217,13 +217,15 @@ our %DS_EXTENSIONS = (
                       );
 
 # Mapping of biblatex uniquename option to disambiguation level
-our %UNIQUENAME_CONTEXTS = ('false' => 'none',
-                            'init' => 'init',
-                            'full' => 'initorfull',
-                            'allinit' => 'init',
-                            'allfull' => 'initorfull',
-                            'mininit' => 'init',
-                            'minfull' => 'initorfull');
+our %UNIQUENAME_CONTEXTS = ('false'       => 'none',
+                            'init'        => 'init',
+                            'full'        => 'initorfull',
+                            'allinit'     => 'init',
+                            'allfull'     => 'initorfull',
+                            'mininit'     => 'init',
+                            'minfull'     => 'initorfull',
+                            'minyearinit' => 'init',
+                            'minyearfull' => 'initorfull');
 
 # Mapping of strings to numeric uniquename values for easier biblatex processing
 our %UNIQUENAME_VALUES = ('none' => 0, 'init' => 1, full => 2);
@@ -308,6 +310,7 @@ our $CONFIG_DEFAULT_BIBER = {
   xdatasep                                    => { content => '-' },
   xnamesep                                    => { content => '=' },
   xsvsep                                      => { content => q/\s*,\s*/ },
+  UFORM                                       => { content => 'NFC' }
 };
 
 # Set up some re-usable CSV parsers here for efficiency reasons
@@ -679,7 +682,7 @@ L<https://github.com/plk/biber/issues>.
 =head1 COPYRIGHT & LICENSE
 
 Copyright 2009-2012 François Charette and Philip Kime, all rights reserved.
-Copyright 2012-2023 Philip Kime, all rights reserved.
+Copyright 2012-2024 Philip Kime, all rights reserved.
 
 This module is free software.  You can redistribute it and/or
 modify it under the terms of the Artistic License 2.0.
