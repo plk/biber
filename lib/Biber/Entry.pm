@@ -1037,7 +1037,7 @@ sub resolve_xdata {
                 my $be = $bibentries->entry($xdatum->{xdataentries}[0]);
                 $self->get_field($reffield, $refform, $reflang)->splice($xdataentry->get_field($xdatafield, $xdataform, $xdatalang), $refposition);
                 # Inherit annotations for the field and remap indices to new positions in target
-                for (my $i=1; $i<=scalar($xdataentry->get_field($xdatafield, $xdataform, $xdatalang)->@*);$i++) {
+                for (my $i=1; $i<=scalar($xdataentry->get_field($xdatafield, $xdataform, $xdatalang)->get_items->@*);$i++) {
                   Biber::Annotation->inherit_annotations($xdataentry->get_field('citekey'),
                                                          $self->get_field('citekey'),
                                                          $xdatafield,

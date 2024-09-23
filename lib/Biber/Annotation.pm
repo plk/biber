@@ -151,11 +151,6 @@ sub copy_annotations {
   $ANN->{fieldswithname}{$targetkey} = dclone($ANN->{fieldswithname}{$sourcekey}) if exists($ANN->{fieldswithname}{$sourcekey});
   $ANN->{ms}{$targetkey} = dclone($ANN->{ms}{$sourcekey}) if exists($ANN->{ms}{$sourcekey});
 
-  foreach my $type (('field', 'item', 'part')) {
-    foreach my $f (keys $ANN->{$type}{$targetkey}->%*) {
-      $ANN->{fields}{$targetkey}{$f}{$targetform}{$targetlang} = 1;
-    }
-  }
   return;
 }
 

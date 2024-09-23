@@ -515,7 +515,7 @@ my $bltxgxd1 = q|    \entry{bltxgxd1}{book}{}{}
 |;
 
 my $xdann1 = q|    \entry{xdann1}{book}{}{}
-      \name{author}{4}{}{%
+      \name[default][en-us]{author}{4}{}{%
         {{hash=9c855075c7ab53ad38ec38086eda2029}{%
            family={Smith},
            familyi={S\bibinitperiod},
@@ -537,7 +537,31 @@ my $xdann1 = q|    \entry{xdann1}{book}{}{}
            given={Bill},
            giveni={B\bibinitperiod}}}%
       }
-      \name{editor}{5}{}{%
+      \namepartms{author}{1}{%
+          familydefaulten-us={Smith},
+          familydefaulten-usi={S\bibinitperiod},
+          givendefaulten-us={Arthur},
+          givendefaulten-usi={A\bibinitperiod}
+      }
+      \namepartms{author}{2}{%
+          familydefaulten-us={Bee},
+          familydefaulten-usi={B\bibinitperiod},
+          givendefaulten-us={May},
+          givendefaulten-usi={M\bibinitperiod}
+      }
+      \namepartms{author}{3}{%
+          familydefaulten-us={Doe},
+          familydefaulten-usi={D\bibinitperiod},
+          givendefaulten-us={John},
+          givendefaulten-usi={J\bibinitperiod}
+      }
+      \namepartms{author}{4}{%
+          familydefaulten-us={Blogs},
+          familydefaulten-usi={B\bibinitperiod},
+          givendefaulten-us={Bill},
+          givendefaulten-usi={B\bibinitperiod}
+      }
+      \name[default][en-us]{editor}{5}{}{%
         {{hash=93f025f0446f3db59decfaf17a19dbbe}{%
            family={Little},
            familyi={L\bibinitperiod},
@@ -564,47 +588,91 @@ my $xdann1 = q|    \entry{xdann1}{book}{}{}
            given={Gerald},
            giveni={G\bibinitperiod}}}%
       }
-      \list{institution}{3}{%
+      \namepartms{editor}{1}{%
+          familydefaulten-us={Little},
+          familydefaulten-usi={L\bibinitperiod},
+          givendefaulten-us={Raymond},
+          givendefaulten-usi={R\bibinitperiod}
+      }
+      \namepartms{editor}{2}{%
+          familydefaulten-us={Doe},
+          familydefaulten-usi={D\bibinitperiod},
+          givendefaulten-us={John},
+          givendefaulten-usi={J\bibinitperiod}
+      }
+      \namepartms{editor}{3}{%
+          familydefaulten-us={Doe},
+          familydefaulten-usi={D\bibinitperiod},
+          givendefaulten-us={Jane},
+          givendefaulten-usi={J\bibinitperiod}
+      }
+      \namepartms{editor}{4}{%
+          familydefaulten-us={Bee},
+          familydefaulten-usi={B\bibinitperiod},
+          givendefaulten-us={May},
+          givendefaulten-usi={M\bibinitperiod}
+      }
+      \namepartms{editor}{5}{%
+          familydefaulten-us={Roth},
+          familydefaulten-usi={R\bibinitperiod},
+          givendefaulten-us={Gerald},
+          givendefaulten-usi={G\bibinitperiod}
+      }
+      \list[default][en-us]{institution}{3}{%
         {inst1}%
         {inst2}%
         {inst3}%
       }
-      \list{location}{3}{%
-        {loca}%
-        {xloc2}%
-        {xloc2}%
+      \listitemms{institution}{1}{%
+        defaulten-us={inst1}
       }
-      \list{publisher}{1}{%
+      \listitemms{institution}{2}{%
+        defaulten-us={inst2}
+      }
+      \listitemms{institution}{3}{%
+        defaulten-us={inst3}
+      }
+      \list[default][en-us]{location}{3}{%
+        {loca}%
+        {}%
+        {}%
+      }
+      \listitemms{location}{1}{%
+        defaulten-us={loca}
+      }
+      \listitemms{location}{2}{%
+        defaulten-us={}
+      }
+      \listitemms{location}{3}{%
+        defaulten-us={}
+      }
+      \list[default][en-us]{publisher}{1}{%
         {MacMillan}%
+      }
+      \listitemms{publisher}{1}{%
+        defaulten-us={MacMillan}
       }
       \strng{namehash}{416c234e34c8082fb7acf86c6e7a499a}
       \strng{fullhash}{7d301d11b9579ee16fad350195f2d756}
       \strng{fullhashraw}{7d301d11b9579ee16fad350195f2d756}
       \strng{bibnamehash}{416c234e34c8082fb7acf86c6e7a499a}
-      \strng{authorbibnamehash}{416c234e34c8082fb7acf86c6e7a499a}
-      \strng{authornamehash}{416c234e34c8082fb7acf86c6e7a499a}
-      \strng{authorfullhash}{7d301d11b9579ee16fad350195f2d756}
-      \strng{authorfullhashraw}{7d301d11b9579ee16fad350195f2d756}
-      \strng{editorbibnamehash}{d1f1309f75dc90b7a1846a2efbd43572}
-      \strng{editornamehash}{d1f1309f75dc90b7a1846a2efbd43572}
-      \strng{editorfullhash}{519612891addebf4b3e5e61fefc6d52d}
-      \strng{editorfullhashraw}{519612891addebf4b3e5e61fefc6d52d}
+      \strng{authordefaulten-usbibnamehash}{416c234e34c8082fb7acf86c6e7a499a}
+      \strng{authordefaulten-usnamehash}{416c234e34c8082fb7acf86c6e7a499a}
+      \strng{authordefaulten-usfullhash}{7d301d11b9579ee16fad350195f2d756}
+      \strng{authordefaulten-usfullhashraw}{7d301d11b9579ee16fad350195f2d756}
+      \strng{editordefaulten-usbibnamehash}{d1f1309f75dc90b7a1846a2efbd43572}
+      \strng{editordefaulten-usnamehash}{d1f1309f75dc90b7a1846a2efbd43572}
+      \strng{editordefaulten-usfullhash}{519612891addebf4b3e5e61fefc6d52d}
+      \strng{editordefaulten-usfullhashraw}{519612891addebf4b3e5e61fefc6d52d}
       \field{sortinit}{S}
-      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{note}{A note}
-      \field{title}{Very Long Title with XDATA}
-      \annotation{field}{note}{default}{}{}{0}{bignote}
-      \annotation{item}{author}{default}{1}{}{0}{biggerauthor}
-      \annotation{item}{author}{default}{2}{}{0}{bigauthor}
-      \annotation{item}{author}{default}{3}{}{0}{bigishauthor}
-      \annotation{item}{editor}{default}{2}{}{0}{bigishauthor}
-      \annotation{item}{editor}{default}{4}{}{0}{bigauthor}
-      \annotation{item}{institution}{default}{2}{}{0}{biginst}
-      \annotation{item}{location}{default}{2}{}{0}{bigloc}
-      \annotation{item}{location}{default}{3}{}{0}{bigloc}
-      \annotation{item}{publisher}{default}{1}{}{0}{bigpublisher}
+      \strng{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \fieldmssource{labelname}{author}{default}{en-us}
+      \fieldmssource{labeltitle}{title}{default}{en-us}
+      \field[default][en-us]{note}{A note}
+      \field[default][en-us]{title}{Very Long Title with XDATA}
+      \annotation[default][en-us]{item}{author}{default}{1}{}{0}{biggerauthor}
+      \annotation[default][en-us]{item}{author}{default}{2}{}{0}{bigauthor}
+      \annotation[default][en-us]{item}{author}{default}{3}{}{0}{bigishauthor}
     \endentry
 |;
 
