@@ -61,12 +61,7 @@ sub set_output_target_file {
     $enc_out = ":encoding($enc)";
   }
 
-  if (ref($file) eq 'SCALAR') {
-    return IO::File->new($file, ">$enc_out");
-  }
-  else {
-    return IO::File->new(normalize(Biber::Config->getoption('UFORM'), $file), ">$enc_out");
-  }
+  return IO::File->new($file, ">$enc_out");
 }
 
 =head2 get_output_target_file

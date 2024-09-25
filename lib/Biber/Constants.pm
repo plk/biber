@@ -310,8 +310,7 @@ our $CONFIG_DEFAULT_BIBER = {
   xdatamarker                                 => { content => 'xdata' },
   xdatasep                                    => { content => '-' },
   xnamesep                                    => { content => '=' },
-  xsvsep                                      => { content => q/\s*,\s*/ },
-  UFORM                                       => { content => 'NFC' }
+  xsvsep                                      => { content => q/\s*,\s*/ }
 };
 
 # Set up some re-usable CSV parsers here for efficiency reasons

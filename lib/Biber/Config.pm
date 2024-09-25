@@ -176,26 +176,6 @@ sub _initopts {
     }
   }
 
-  # Decode ARGV to UTF8, not NFD yet ...
-  @ARGV = map { decode_utf8($_) } @ARGV;
-
-  # Determine the input Unicode form so we can make sure output filenames are the
-  # same format
-  if (checkNFC($ARGV[0])) {
-    Biber::Config->setoption('UFORM', 'NFC');
-  }
-  elsif (checkNFC($ARGV[0])) {
-    Biber::Config->setoption('UFORM', 'NFD');
-  }
-  else { # Mixed NFC/NFD so set it platform dependent
-    if ($^O =~ /(?:Mac|darwin)/) {
-      Biber::Config->setoption('UFORM', 'NFD');
-    }
-    else {
-      Biber::Config->setoption('UFORM', 'NFC');
-    }
-  }
-
   # Record the $ARGV[0] name for future use
   if (Biber::Config->getoption('tool')) {
     # Set datasource file name. In a conditional as @ARGV might not be set in tests
@@ -243,11 +223,6 @@ sub _initopts {
       my ($f, $fr) = $ofr =~ m/^([^:]+):([^:]+)$/;
       $CONFIG_OUTPUT_FIELDREPLACE{$f} = $fr;
     }
-  }
-
-  # Sanitise log file name to the same as the input .bcf
-  if ($biberlog) {
-    $biberlog = normalize(Biber::Config->getoption('UFORM'), $biberlog);
   }
 
   # cache meta markers since they are referenced in the oft-called _get_handler
