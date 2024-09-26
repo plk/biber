@@ -1,19 +1,9 @@
 #!/usr/bin/env perl
 
-#!!!!!!!!!!!!!!!!!!! John Collins 2024-09-26:
-# Add code (like typical script on CTAN) to find modules installed in
-#    same directory as binary.
-# Use Biber::CodePage, so have correct settings for Windows here.
-# Remove ARGV processing under Windows.  That's taken care of in Config.pm
-#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
 use v5.24;
 use strict;
 use warnings;
-# So we can test code page issues here, with literal strings.
 use utf8;
-
-# To allow finding of modules installed alongside of binary
 use FindBin;
 use lib $FindBin::RealBin;
 

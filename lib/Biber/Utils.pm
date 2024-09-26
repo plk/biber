@@ -1,8 +1,3 @@
-# JCC 2024-09-26
-# Issues: 1. Error: Tested on Linux with mixed NF bcf filename, and got file-not-found.
-#         2. NFC and NFD is done in glob_data_file, but no encoding and decoding of strings.
-#         3. Similar issues in slurp_switchr, file_exist_check, check_empty, check_exists
-
 package Biber::Utils;
 use v5.24;
 use strict;

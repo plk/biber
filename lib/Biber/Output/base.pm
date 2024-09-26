@@ -1,7 +1,3 @@
-#JCC 2024-09-26
-#     1. use Biber::CodePage,
-#     2. 
-
 package Biber::Output::base;
 use v5.24;
 use strict;
@@ -67,8 +63,14 @@ sub set_output_target_file {
     $enc_out = ":encoding($enc)";
   }
 
+  # This is only for test suite when output is to a scalar ref
+  if (ref($file) eq 'SCALAR') {
+    return IO::File->new($file, ">$enc_out");
+  }
   # Calls to OS file system use byte strings encoded in the system CS:
-  return IO::File->new($file_bytes, ">$enc_out");
+  else {
+    return IO::File->new($file_bytes, ">$enc_out");
+  }
 }
 
 =head2 get_output_target_file

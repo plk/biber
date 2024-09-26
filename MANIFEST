@@ -12,6 +12,7 @@ data/texmap.xsl
 doc/biber.tex
 lib/Biber/Annotation.pm
 lib/Biber/Config.pm
+lib/Biber/CodePage.pm
 lib/Biber/Constants.pm
 lib/Biber/Date/Format.pm
 lib/Biber/DataModel.pm

@@ -1,11 +1,3 @@
-#JCC 2024-09-26
-#     1. Fix up for Windows CP.  I.e., use Biber::CodePage,
-#          and decode @ARGV according to system CP.
-#        Since @ARGV is always set by OS to be a byte string, and we
-#          use it as a Unicode string, we must decode it.
-#     2. Provide log file name to log4perl as a byte string (in system CS),
-#          since it is that string that log4perl uses to open the log file.
-
 package Biber::Config;
 use v5.24;
 
@@ -31,7 +23,7 @@ use Unicode::Normalize qw(normalize NFC NFD checkNFC checkNFD);
 use parent qw(Class::Accessor);
 __PACKAGE__->follow_best_practice;
 
-our $VERSION = '2.21 JCC';
+our $VERSION = '2.21';
 our $BETA_VERSION = 1; # Is this a beta version?
 
 our $logger  = Log::Log4perl::get_logger('main');
