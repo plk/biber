@@ -1,11 +1,5 @@
 # JCC 2024-09-26
-# 1. Removed NFC and NFD applied to filenames, except in file_exist_chek.
-# 2. For file_exist_check, which tests for variants, I added a test for
-#    existence of the file name with the given form, as well as its NFC and
-#    NFD variants.
-#    A future version could do a more elaborate normalization insensitive
-#    test, with a suitably efficient algorithm.
-# 3. Remaining issues
+# Remaining issues
 #    a. In glob_data_file, it's not clear whether the filename argument is
 #       decoded (i.e., a proper Unicode string) or encoded.
 #       In any case, for correct behavior glob needs to be given a byte
