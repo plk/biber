@@ -1,0 +1,12 @@
+Directory listing
+
+Banana🍌.tex
+Carrot-🥕.tex
+NFC-café.tex
+NFD-café.tex
+Renormalization-Перенормовка.tex
+chinese-中文.tex
+mix-NFCé-café.tex
+test-çß.txt
+test-çß.txt.~1~
+test.tex

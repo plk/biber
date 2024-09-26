@@ -1,0 +1,19 @@
+\documentclass{minimal}
+\usepackage{iftex}
+\ifluatex
+   \usepackage{luatexja-fontspec}
+   \usepackage{luatexja}
+   \typeout{==========USING lualatex}
+\else
+   \ifxetex
+      \usepackage{xeCJK}
+      \typeout{==========USING xelatex}
+   \else
+      \typeout{==== NON-SUPPORTED engine for this document}
+   \fi
+\fi
+\begin{document}
+Hello.
+
+Chinese(中文).
+\end{document}
