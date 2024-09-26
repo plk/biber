@@ -12,6 +12,7 @@ data/texmap.xsl
 doc/biber.tex
 lib/Biber/Annotation.pm
 lib/Biber/Config.pm
+lib/Biber/CodePage.pm
 lib/Biber/Constants.pm
 lib/Biber/Date/Format.pm
 lib/Biber/DataModel.pm
@@ -206,6 +207,16 @@ t/tdata/uniqueness-nameparts.bib
 t/tdata/xdata.bcf
 t/tdata/xdata.bib
 t/tdata/xdata.bltxml
+testfiles/Unicode-tests/Banana🍌.tex
+testfiles/Unicode-tests/Carrot-🥕.tex
+testfiles/Unicode-tests/NFC-café.tex
+testfiles/Unicode-tests/NFD-café.tex
+testfiles/Unicode-tests/Renormalization-Перенормовка.tex
+testfiles/Unicode-tests/bibliographie.bib
+testfiles/Unicode-tests/chinese-中文.tex
+testfiles/Unicode-tests/mix-NFCé-café.tex
+testfiles/Unicode-tests/test-çß.txt
+testfiles/testCP.pl
 testfiles/test.bcf
 testfiles/test.bib
 testfiles/test.tex

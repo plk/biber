@@ -1,4 +1,14 @@
 \documentclass{article}
+
+\RequirePackage[backend=biber]{biblatex}
+\addbibresource{bibliographie.bib}
+
 \begin{document}
-Hello
+To test biber on file with a particularly tricky Unicode name.
+
+Cette variété a fait l'objet d'une description grammaticale \parencite{jacques21grammar} et un corpus d'enregistrements.
+
+\printbibliography
+
 \end{document}
+
