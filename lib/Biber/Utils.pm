@@ -1,7 +1,30 @@
 # JCC 2024-09-26
-# Issues: 1. Error: Tested on Linux with mixed NF bcf filename, and got file-not-found.
-#         2. NFC and NFD is done in glob_data_file, but no encoding and decoding of strings.
-#         3. Similar issues in slurp_switchr, file_exist_check, check_empty, check_exists
+# 1. Removed NFC and NFD applied to filenames, except in file_exist_chek.
+# 2. For file_exist_check, which tests for variants, I added a test for
+#    existence of the file name with the given form, as well as its NFC and
+#    NFD variants.
+#    A future version could do a more elaborate normalization insensitive
+#    test, with a suitably efficient algorithm.
+# 3. Remaining issues
+#    a. In glob_data_file, it's not clear whether the filename argument is
+#       decoded (i.e., a proper Unicode string) or encoded.
+#       In any case, for correct behavior glob needs to be given a byte
+#       string encoded in system_CS.  It's an accident of Perl's internal
+#       representations of strings and of UTF-8 file systems that decoded
+#       strings work. 
+#       Tests need to be made.
+#    b. It's not entirely clear whether it's worth using the
+#       Win32::Unicode::File module to use wide (Unicode) file system
+#       calls, now that we know how to use ordinary system calls with
+#       suitable encoding.
+#       Note that on a non-UTF-8 system (i.e., default Windows), command
+#       line arguments are restricted to characters representable in the
+#       system CP.  So we don't need to use wide system calls for files
+#       specified on command line. 
+#       One case where this matters is when data sources, as specified in
+#       the bcf file, e.g., for .bib files, have names beyond those in
+#       system CP.
+#       Again, tests are needed.
 
 package Biber::Utils;
 use v5.24;
@@ -96,7 +119,19 @@ sub glob_data_file {
     File::DosGlob->import('glob');
   }
 
-  push @sources, map {biber_decode_utf8($_)} glob NFC(qq("$source"));
+  # JCC: Removed NFC.
+  # JCC: ???IS THIS CORRECT??
+  #    Is $source a byte string or Unicode string?
+  #       If byte string, it is probably obtained from a file
+  #         and may well be encoded in UTF-8.
+  #         That will be fine if passed to glob on a UTF-8 system.
+  #         Otherwise it needs to be reencoded in system CS.
+  #     If it is a decoded string, then it needs to be encoded in system CS.
+  #       But it will work on a UTF-8 system (since the underlying byte
+  #       representation for a Unicode string in current Perl is UTF-8, and
+  #       it is (I think) the internal byte implementation that is passed
+  #       to glob.
+  push @sources, map {biber_decode_utf8($_)} glob( $source );
 
   $logger->info("Globbed data source '$source' to '" . join(',', @sources) . "'");
   return @sources;
@@ -115,7 +150,8 @@ sub slurp_switchr {
   $encoding //= 'UTF-8';
   if ($^O =~ /Win/ and not Biber::Config->getoption('winunicode')) {
     require Win32::Unicode::File;
-    my $fh = Win32::Unicode::File->new('<', NFC($filename));
+    # JCC ?? Removed NFC  
+    my $fh = Win32::Unicode::File->new('<', $filename);
     $fh->binmode(":encoding($encoding)");
     # 100MB block size as the loop over the default 1MB block size seems to fail for
     # files > 1Mb
@@ -139,14 +175,16 @@ sub slurp_switchw {
   my ($filename, $string) = @_;
   if ($^O =~ /Win/ and not Biber::Config->getoption('winunicode')) {
     require Win32::Unicode::File;
-    my $fh = Win32::Unicode::File->new('>', NFC($filename));
+    # JCC ?? Removed NFC  
+    my $fh = Win32::Unicode::File->new('>', $filename);
     $fh->binmode(':encoding(UTF-8)');
     $fh->write($string);
     $fh->flush;
     $fh->close;
   }
   else {
-    File::Slurper::write_text($filename, NFC($string));
+    # JCC ?? Removed NFC  
+    File::Slurper::write_text($filename, $string);
   }
   return;
 }
@@ -335,6 +373,10 @@ sub file_exist_check {
   my $filename = shift;
   if ($^O =~ /Win/ and not Biber::Config->getoption('winunicode')) {
     require Win32::Unicode::File;
+    # JCC ?? Add test without NF mapped filename.  
+    if (Win32::Unicode::File::statW($filename)) {
+      return $filename;
+    }
     if (Win32::Unicode::File::statW(NFC($filename))) {
       return NFC($filename);
     }
@@ -343,6 +385,10 @@ sub file_exist_check {
     }
   }
   else {
+    # JCC ?? Add test without NF mapped filename.  
+    if (-e "$filename") {
+      return $filename;
+    }
     if (-e NFC("$filename")) {
       return NFC("$filename");
     }
@@ -364,7 +410,8 @@ sub check_empty {
   my $filename = shift;
   if ($^O =~ /Win/ and not Biber::Config->getoption('winunicode')) {
     require Win32::Unicode::File;
-    return (Win32::Unicode::File::file_size(NFC($filename))) ? 1 : 0;
+    # JCC ?? Remove NFC  
+    return (Win32::Unicode::File::file_size($filename)) ? 1 : 0;
   }
   else {
     return (-s $filename) ? 1 : 0;
@@ -381,7 +428,8 @@ sub check_exists {
   my $filename = shift;
   if ($^O =~ /Win/ and not Biber::Config->getoption('winunicode')) {
     require Win32::Unicode::File;
-    return Win32::Unicode::File::statW(NFC($filename)) ? 1 : 0;
+    # JCC ?? Remove NFC  
+    return Win32::Unicode::File::statW($filename) ? 1 : 0;
   }
   else {
     return (-e $filename) ? 1 : 0;
