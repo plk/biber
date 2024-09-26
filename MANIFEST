@@ -207,6 +207,7 @@ t/tdata/uniqueness-nameparts.bib
 t/tdata/xdata.bcf
 t/tdata/xdata.bib
 t/tdata/xdata.bltxml
+testfiles/Unicode-tests/latexmkrc
 testfiles/Unicode-tests/Banana🍌.tex
 testfiles/Unicode-tests/Carrot-🥕.tex
 testfiles/Unicode-tests/NFC-café.tex
