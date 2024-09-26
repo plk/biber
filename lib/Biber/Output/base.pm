@@ -1,8 +1,13 @@
+#JCC 2024-09-26
+#     1. use Biber::CodePage,
+#     2. 
+
 package Biber::Output::base;
 use v5.24;
 use strict;
 use warnings;
 
+use Biber::CodePage;
 use Biber::Entry;
 use Biber::Utils;
 use Encode;
@@ -55,13 +60,15 @@ sub new {
 sub set_output_target_file {
   my ($self, $file, $init) = @_;
 
+  my $file_bytes = encode_CS_system( $file );
   $self->{output_target_file} = $file;
   my $enc_out;
   if (my $enc = Biber::Config->getoption('output_encoding')) {
     $enc_out = ":encoding($enc)";
   }
 
-  return IO::File->new($file, ">$enc_out");
+  # Calls to OS file system use byte strings encoded in the system CS:
+  return IO::File->new($file_bytes, ">$enc_out");
 }
 
 =head2 get_output_target_file

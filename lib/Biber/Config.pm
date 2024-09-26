@@ -1,6 +1,15 @@
+#JCC 2024-09-26
+#     1. Fix up for Windows CP.  I.e., use Biber::CodePage,
+#          and decode @ARGV according to system CP.
+#        Since @ARGV is always set by OS to be a byte string, and we
+#          use it as a Unicode string, we must decode it.
+#     2. Provide log file name to log4perl as a byte string (in system CS),
+#          since it is that string that log4perl uses to open the log file.
+
 package Biber::Config;
 use v5.24;
 
+use Biber::CodePage;
 use Biber::Constants;
 use Biber::Utils;
 use IPC::Cmd qw( can_run );
@@ -22,7 +31,7 @@ use Unicode::Normalize qw(normalize NFC NFD checkNFC checkNFD);
 use parent qw(Class::Accessor);
 __PACKAGE__->follow_best_practice;
 
-our $VERSION = '2.21';
+our $VERSION = '2.21 JCC';
 our $BETA_VERSION = 1; # Is this a beta version?
 
 our $logger  = Log::Log4perl::get_logger('main');
@@ -176,6 +185,11 @@ sub _initopts {
     }
   }
 
+  # Decode ARGV according to system CS.
+  # On entry to a program, @ARGV is always a byte string encoded by system CS.
+  # We use it as a proper Unicode string.
+  @ARGV = get_decoded_ARGV();
+
   # Record the $ARGV[0] name for future use
   if (Biber::Config->getoption('tool')) {
     # Set datasource file name. In a conditional as @ARGV might not be set in tests
@@ -195,6 +209,7 @@ sub _initopts {
 
   # Set log file name
   my $biberlog;
+  my $biberlog_bytes;
   if (my $log = Biber::Config->getoption('logfile')) { # user specified logfile name
     $log = Biber::Utils::biber_decode_utf8($log);
     # Sanitise user-specified log name
@@ -223,6 +238,10 @@ sub _initopts {
       my ($f, $fr) = $ofr =~ m/^([^:]+):([^:]+)$/;
       $CONFIG_OUTPUT_FIELDREPLACE{$f} = $fr;
     }
+  }
+
+  if ($biberlog) {
+      $biberlog_bytes = encode_CS_system( $biberlog ); 
   }
 
   # cache meta markers since they are referenced in the oft-called _get_handler
@@ -287,13 +306,15 @@ sub _initopts {
 |;
 
   # Only want a logfile appender if --nolog isn't set
+  # Use byte string for name of log file, since that is what is passed to 
+  # calls for opening files, etc.
   if ($LOGLEVEL_F ne 'OFF') {
     $l4pconf .= qq|
     log4perl.category.logfile                          = $LOGLEVEL_F, Logfile
     log4perl.appender.Logfile                          = Log::Log4perl::Appender::File
     log4perl.appender.Logfile.utf8                     = 1
     log4perl.appender.Logfile.Threshold                = $LOGLEVEL_F
-    log4perl.appender.Logfile.filename                 = $biberlog
+    log4perl.appender.Logfile.filename                 = $biberlog_bytes
     log4perl.appender.Logfile.mode                     = clobber
     log4perl.appender.Logfile.layout                   = Log::Log4perl::Layout::PatternLayout
     log4perl.appender.Logfile.layout.ConversionPattern = [%r] %F{1}:%L> %p - %m%n
