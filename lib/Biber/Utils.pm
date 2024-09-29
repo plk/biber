@@ -1,13 +1,15 @@
-# JCC 2024-09-26
-# Remaining issues
-#    a. In glob_data_file, it's not clear whether the filename argument is
-#       decoded (i.e., a proper Unicode string) or encoded.
-#       In any case, for correct behavior glob needs to be given a byte
-#       string encoded in system_CS.  It's an accident of Perl's internal
-#       representations of strings and of UTF-8 file systems that decoded
-#       strings work. 
-#       Tests need to be made.
-#    b. It's not entirely clear whether it's worth using the
+# JCC 2024-09-29
+#   glob_data_file is now working correct, AFAICS.
+#     It receives and returns Unicode strings.
+#     Argument to glob is encoded to system CS.
+#     Then I decode the returned array from system CS.
+#
+#   **BUT**, the argument to glob_data_file is coerced to NFD.
+#   This must result from coerced NFD when reading the .bcf file.
+#   AFAIK the only relevant code is in Biber::Input::bibtex and Biber::Input::biblatexml
+#
+# Remaining issue
+#    a. It's not entirely clear whether it's worth using the
 #       Win32::Unicode::File module to use wide (Unicode) file system
 #       calls, now that we know how to use ordinary system calls with
 #       suitable encoding.
@@ -18,7 +20,7 @@
 #       One case where this matters is when data sources, as specified in
 #       the bcf file, e.g., for .bib files, have names beyond those in
 #       system CP.
-#       Again, tests are needed.
+
 
 package Biber::Utils;
 use v5.24;
@@ -37,6 +39,7 @@ use File::Find;
 use File::Spec;
 use IPC::Cmd qw( can_run );
 use IPC::Run3; # This works with PAR::Packer and Windows. IPC::Run doesn't
+use Biber::CodePage qw ( :DEFAULT analyze_string );
 use Biber::Constants;
 use Biber::LaTeX::Recode;
 use Biber::Entry::Name;
@@ -96,11 +99,13 @@ our @EXPORT = qw{ check_empty check_exists slurp_switchr slurp_switchw
 sub glob_data_file {
   my ($source, $globflag) = @_;
   my @sources;
+analyze_string( "!!!!!!!!!!glob_data_file source", $source );
 
   # No globbing unless requested. No globbing for remote datasources.
   if ($source =~ m/\A(?:http|ftp)(s?):\/\//xms or
       not _bool_norm($globflag)) {
     push @sources, $source;
+analyze_string( "!!!!!!!!!!glob_data_file result", join( ' ', @sources ) );
     return @sources;
   }
 
@@ -125,9 +130,10 @@ sub glob_data_file {
   #       representation for a Unicode string in current Perl is UTF-8, and
   #       it is (I think) the internal byte implementation that is passed
   #       to glob.
-  push @sources, map {biber_decode_utf8($_)} glob( $source );
+  push @sources, map {decode_CS_system($_)} glob( encode_CS_system($source) );
 
   $logger->info("Globbed data source '$source' to '" . join(',', @sources) . "'");
+analyze_string( "!!!!!!!!!!glob_data_file result", join( ' ', @sources ) );
   return @sources;
 }
 
