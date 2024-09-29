@@ -3,7 +3,7 @@ use v5.24;
 use strict;
 use warnings;
 use parent qw(Exporter);
-our @EXPORT = qw( decode_CS_system encode_CS_system get_decoded_ARGV get_CS_system
+our @EXPORT = qw( decode_CS_system encode_CS_system get_CS_system
                   set_CP_Win_console set_CS_defaults  set_STD_encodings );
 our @EXPORT_OK = qw( analyze_string );
 
@@ -48,12 +48,6 @@ sub decode_CS_system($) {
 sub encode_CS_system($) {
     my $s = $_[0];
     return encode( $CS_system, $s );
-}
-
-#--------------------------
-
-sub get_decoded_ARGV() {
-    return map { decode( $CS_system, $_ )  } @ARGV;
 }
 
 #--------------------------
@@ -138,7 +132,7 @@ sub analyze_string {
     my $unicode_string = utf8::is_utf8($s);
     my $s1 = $s;
     if (! $bytes ) { $s1 = encode( 'UTF-8', $s ); }
-    say "=== $m Original string: '$s'. Encoded string: '$s1':";
+    say "=== $m Original string: '$s'.";
     say(
         'Perl flag = ',
         ($unicode_string ? 'utf8' : 'NOT utf8'),

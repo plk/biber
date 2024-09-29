@@ -1,7 +1,10 @@
+## See use of decode on Biber::Config->getoption('logfile')
+## at line 215.  Must arrange to exercise it.
+
 package Biber::Config;
 use v5.24;
 
-use Biber::CodePage;
+use Biber::CodePage qw( :DEFAULT analyze_string );
 use Biber::Constants;
 use Biber::Utils;
 use IPC::Cmd qw( can_run );
@@ -180,7 +183,7 @@ sub _initopts {
   # Decode ARGV according to system CS.
   # On entry to a program, @ARGV is always a byte string encoded by system CS.
   # We use it as a proper Unicode string.
-  @ARGV = get_decoded_ARGV();
+  @ARGV =  map { decode_CS_system( $_ );  } @ARGV;
 
   # Record the $ARGV[0] name for future use
   if (Biber::Config->getoption('tool')) {
@@ -203,7 +206,14 @@ sub _initopts {
   my $biberlog;
   my $biberlog_bytes;
   if (my $log = Biber::Config->getoption('logfile')) { # user specified logfile name
-    $log = Biber::Utils::biber_decode_utf8($log);
+
+    ###############???????????
+    #OLD:
+    #    $log = Biber::Utils::biber_decode_utf8($log);
+    # Try without NFD
+    analyze_string( "UNTESTED CODE in Utils.pm: decode aoplied to:", $log );  
+    $log = decode( 'UTF-8', $log );
+    ##############################    
     # Sanitise user-specified log name
     $log =~ s/\.blg\z//xms;
     $biberlog = $log . '.blg';
