@@ -1,6 +1,3 @@
-## See use of decode on Biber::Config->getoption('logfile')
-## at line 215.  Must arrange to exercise it.
-
 package Biber::Config;
 use v5.24;
 
@@ -206,14 +203,9 @@ sub _initopts {
   my $biberlog;
   my $biberlog_bytes;
   if (my $log = Biber::Config->getoption('logfile')) { # user specified logfile name
-
-    ###############???????????
-    #OLD:
-    #    $log = Biber::Utils::biber_decode_utf8($log);
-    # Try without NFD
-    analyze_string( "UNTESTED CODE in Utils.pm: decode aoplied to:", $log );  
-    $log = decode( 'UTF-8', $log );
-    ##############################    
+      # Note: $log is byte string in system CS obtained from @ARGV,
+      # presumably before @ARGV was decoded
+    $log = decode_CS_system( $log );
     # Sanitise user-specified log name
     $log =~ s/\.blg\z//xms;
     $biberlog = $log . '.blg';
