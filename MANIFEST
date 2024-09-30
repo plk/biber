@@ -207,7 +207,7 @@ t/tdata/uniqueness-nameparts.bib
 t/tdata/xdata.bcf
 t/tdata/xdata.bib
 t/tdata/xdata.bltxml
-testfiles/Unicode-tests/Unicode-tests-preserved-NF.zip
+testfiles/Unicode-tests-preserved-NF.zip
 testfiles/testCP.pl
 testfiles/test.bcf
 testfiles/test.bib
