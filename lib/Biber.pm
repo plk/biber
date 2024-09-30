@@ -690,16 +690,6 @@ sub parse_ctrlfile {
     }
   }
 
-  # my $ed;
-  # foreach my $scope ($bcfxml->{extradatespec}->{scope}->@*) {
-  #   my $fields;
-  #   foreach my $field (sort {$a->{order} <=> $b->{order}} $scope->{field}->@*) {
-  #     push $fields->@*, $field->{content};
-  #   }
-  #   push $ed->@*, $fields;
-  # }
-  # Biber::Config->setblxoption(undef, 'extradatespec', $ed);
-
   # INHERITANCE schemes for crossreferences (always global)
   Biber::Config->setblxoption(undef, 'inheritance', $bcfxml->{inheritance});
 
