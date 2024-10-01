@@ -17,10 +17,13 @@ use IPC::Cmd qw( can_run run );
 use Log::Log4perl qw(:no_extra_logdie_message);
 use Log::Log4perl::Level;
 use POSIX qw(strftime);
+
+# Put Biber::CodePage first, so its settings apply for everything later.
+use Biber::CodePage qw( :DEFAULT analyze_string );
 use Biber;
-use Biber::CodePage;
 use Biber::Utils;
 use Encode;
+
 use File::Spec;
 use Pod::Usage;
 use List::AllUtils qw( first );
@@ -341,7 +344,7 @@ $logfile->info("=== $time_string");
 my $bcf = Biber::Config->getoption('bcf');
 
 if (Biber::Config->getoption('output_file')) {
-  $outfile = Biber::Config->getoption('output_file')
+  $outfile = decode_CS_system( Biber::Config->getoption('output_file') );
 }
 else {
   if (Biber::Config->getoption('tool')) {
