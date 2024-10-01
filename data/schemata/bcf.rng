@@ -447,23 +447,33 @@
           </oneOrMore>
         </element>
       </oneOrMore>
-      <!-- Extradate specification -->
-      <element name="bcf:extradatespec">
-        <oneOrMore>
-          <!-- Scope of extradate tracking - an ordered set of fields to try -->
-          <element name="bcf:scope">
-            <oneOrMore>
-              <!-- A field used to track extradate -->
-              <element name="bcf:field">
-                <attribute name="order">
-                  <data type="integer"/>
-                </attribute>
-                <text/>
-              </element>
-            </oneOrMore>
-          </element>
-        </oneOrMore>
-      </element>
+      <oneOrMore>
+        <!-- Extradate specification -->
+        <element name="bcf:extradatespec">
+          <optional>
+            <attribute name="type">
+              <data type="string"/>
+            </attribute>
+          </optional>
+          <oneOrMore>
+            <!--
+              per-type?
+              Scope of extradate tracking - an ordered set of fields to try
+            -->
+            <element name="bcf:scope">
+              <oneOrMore>
+                <!-- A field used to track extradate -->
+                <element name="bcf:field">
+                  <attribute name="order">
+                    <data type="integer"/>
+                  </attribute>
+                  <text/>
+                </element>
+              </oneOrMore>
+            </element>
+          </oneOrMore>
+        </element>
+      </oneOrMore>
       <!-- Cross-reference inheritance specifications -->
       <element name="bcf:inheritance">
         <!-- Defaults -->

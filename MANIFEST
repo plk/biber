@@ -207,16 +207,7 @@ t/tdata/uniqueness-nameparts.bib
 t/tdata/xdata.bcf
 t/tdata/xdata.bib
 t/tdata/xdata.bltxml
-testfiles/Unicode-tests/latexmkrc
-testfiles/Unicode-tests/Banana🍌.tex
-testfiles/Unicode-tests/Carrot-🥕.tex
-testfiles/Unicode-tests/NFC-café.tex
-testfiles/Unicode-tests/NFD-café.tex
-testfiles/Unicode-tests/Renormalization-Перенормовка.tex
-testfiles/Unicode-tests/bibliographie.bib
-testfiles/Unicode-tests/chinese-中文.tex
-testfiles/Unicode-tests/mix-NFCé-café.tex
-testfiles/Unicode-tests/test-çß.txt
+testfiles/Unicode-tests-preserved-NF.zip
 testfiles/testCP.pl
 testfiles/test.bcf
 testfiles/test.bib

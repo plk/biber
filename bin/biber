@@ -7,8 +7,6 @@ use utf8;
 use FindBin;
 use lib $FindBin::RealBin;
 
-print "====!!! This is JCC's test version.  2024-09-26\n";
-
 use constant {
   EXIT_OK => 0,
   EXIT_ERROR => 2
