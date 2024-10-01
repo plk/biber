@@ -1,27 +1,3 @@
-# JCC 2024-09-29
-#   glob_data_file is now working correct, AFAICS.
-#     It receives and returns Unicode strings.
-#     Argument to glob is encoded to system CS.
-#     Then I decode the returned array from system CS.
-#
-#   **BUT**, the argument to glob_data_file is coerced to NFD.
-#   This must result from coerced NFD when reading the .bcf file.
-#   AFAIK the only relevant code is in Biber::Input::bibtex and Biber::Input::biblatexml
-#
-# Remaining issue
-#    a. It's not entirely clear whether it's worth using the
-#       Win32::Unicode::File module to use wide (Unicode) file system
-#       calls, now that we know how to use ordinary system calls with
-#       suitable encoding.
-#       Note that on a non-UTF-8 system (i.e., default Windows), command
-#       line arguments are restricted to characters representable in the
-#       system CP.  So we don't need to use wide system calls for files
-#       specified on command line. 
-#       One case where this matters is when data sources, as specified in
-#       the bcf file, e.g., for .bib files, have names beyond those in
-#       system CP.
-
-
 package Biber::Utils;
 use v5.24;
 use strict;
@@ -51,7 +27,7 @@ use Scalar::Util qw(looks_like_number);
 use Text::Balanced qw(extract_bracketed);
 use Text::CSV;
 use Text::Roman qw(isroman roman2int);
-use Unicode::Normalize;
+use Unicode::Normalize qw( :DEFAULT checkNFC checkNFD );
 use Unicode::GCString;
 my $logger = Log::Log4perl::get_logger('main');
 
@@ -70,7 +46,7 @@ All functions are exported by default.
 =cut
 
 our @EXPORT = qw{ check_empty check_exists slurp_switchr slurp_switchw
-  glob_data_file locate_data_file makenamesid makenameid stringify_hash
+  glob_data_file globU globU1 locate_data_file makenamesid makenameid stringify_hash
   normalise_string normalise_string_hash normalise_string_underscore
   normalise_string_sort normalise_string_label reduce_array remove_outer
   has_outer add_outer ucinit strip_nosort strip_nonamestring strip_noinit
@@ -90,6 +66,57 @@ our @EXPORT = qw{ check_empty check_exists slurp_switchr slurp_switchw
 
 
 
+=head2 globU1
+
+  Like glob, but takes a Unicode string as its argument.
+
+=cut
+
+sub globU1 {
+    my $source = $_[0];
+    my @sources = map {decode_CS_system($_)} glob( encode_CS_system($source) );
+    return @sources;
+}
+
+=head2 globU
+
+  Like glob, but: (1) Takes a Unicode string as its argument, and (2) tries
+  NFC and NFD variants of the pattern, to give a useful approximation to a
+  normalization insensitive glob, which works when filenames are known to
+  be pure NFC or pure NFD.
+
+  This covers among others:
+
+=over 4
+
+=item *
+     Apple's HFS+ file system, where filenames are coerced to NFD, and filenames
+     \addbibresource[glob] are NFC (which is natural for keyboard entry, with
+     typical keyboard layouts).
+
+=item *
+
+  Similar situation on APFS where **some** (not all) programs made files with
+     NFD names even when user types in NFC.
+
+=item *
+
+  Related issues when transfer between OSs changes NF of filenames but not
+     of contents of files, e.g., .tex files.
+
+=back
+
+=cut
+
+sub globU {
+    my $source = $_[0];
+    my @sources = globU1($source);
+    if ( ! checkNFC($source) ) { push @sources, globU1( NFC($source) ); }
+    if ( ! checkNFD($source) ) { push @sources, globU1( NFD($source) ); }
+    return @sources;
+}
+
+
 =head2 glob_data_file
 
   Expands a data file glob to a list of filenames
@@ -98,6 +125,9 @@ our @EXPORT = qw{ check_empty check_exists slurp_switchr slurp_switchw
 
 sub glob_data_file {
   my ($source, $globflag) = @_;
+  # Note: $source is a Unicode string, i.e., a decoded string,
+  #       and **not** an encoded byte string.
+  # Returned names in @sources must also be decoded.
   my @sources;
 analyze_string( "!!!!!!!!!!glob_data_file source", $source );
 
@@ -117,20 +147,7 @@ analyze_string( "!!!!!!!!!!glob_data_file result", join( ' ', @sources ) );
     require File::DosGlob;
     File::DosGlob->import('glob');
   }
-
-  # JCC: Removed NFC.
-  # JCC: ???IS THIS CORRECT??
-  #    Is $source a byte string or Unicode string?
-  #       If byte string, it is probably obtained from a file
-  #         and may well be encoded in UTF-8.
-  #         That will be fine if passed to glob on a UTF-8 system.
-  #         Otherwise it needs to be reencoded in system CS.
-  #     If it is a decoded string, then it needs to be encoded in system CS.
-  #       But it will work on a UTF-8 system (since the underlying byte
-  #       representation for a Unicode string in current Perl is UTF-8, and
-  #       it is (I think) the internal byte implementation that is passed
-  #       to glob.
-  push @sources, map {decode_CS_system($_)} glob( encode_CS_system($source) );
+  push @sources, globU($source);
 
   $logger->info("Globbed data source '$source' to '" . join(',', @sources) . "'");
 analyze_string( "!!!!!!!!!!glob_data_file result", join( ' ', @sources ) );
