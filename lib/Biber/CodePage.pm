@@ -132,7 +132,7 @@ sub analyze_string {
     my $unicode_string = utf8::is_utf8($s);
     my $s1 = $s;
     if (! $bytes ) { $s1 = encode( 'UTF-8', $s ); }
-    say "=== $m Original string: '$s'.";
+    say "=== $m\nGiven string is '$s'.";
     say(
         'Perl flag = ',
         ($unicode_string ? 'utf8' : 'NOT utf8'),
@@ -140,9 +140,10 @@ sub analyze_string {
         );
     my $isNFC = checkNFC($s);
     my $isNFD = checkNFD($s);
-    if ($isNFC) { say "Reported to be NFC"; }
-    if ($isNFD) { say "Reported to be NFD"; }
-    if (! ($isNFC || $isNFD) ) { say "Reported to be neither NFC nor NFD"; }
+    if ($isNFC && $isNFD) { say "Reported to be NFC and NFD, i.e., no relevantaccented characers"; }
+    elsif ($isNFC) { say "Reported to be NFC"; }
+    elsif ($isNFD) { say "Reported to be NFD"; }
+    else { say "Reported to be neither NFC nor NFD"; }
     if ($bytes) { say "Bytes:"; }
     elsif ($s1 eq $s) { say "ASCII string, code points = UTF-8 bytes"; }
     else { say "Code points:"; }
