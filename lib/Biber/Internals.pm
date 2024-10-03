@@ -1674,19 +1674,21 @@ sub _namestring {
                 # The namepart is padded to the longest namepart in the ref
                 # section as this is the only way to make sorting work
                 # properly. The padding is spaces as this sorts before all
-                # glyphs but it also of variable weight and ignorable in
+                # glyphs but is also of variable weight and ignorable in
                 # DUCET so we have to set U::C to variable=>'non-ignorable'
                 # as sorting default so that spaces are non-ignorable
                 $nps = normalise_string_sort(join('', $npistring->@*), $field);
 
                 # pad all nameparts
-                $nps = sprintf("%-*s", $section->get_np_length("${namepart}-i"), $nps);
+                # have to NFC for the padding otherwise the glyph length calculations are wrong
+                $nps = NFD(sprintf("%-*s", $section->get_np_length("${namepart}-i"), NFC($nps)));
               }
               else {
                 $nps = normalise_string_sort($npstring, $field);
 
                 # pad all nameparts
-                $nps = sprintf("%-*s", $section->get_np_length($namepart), $nps);
+                # have to NFC for the padding otherwise the glyph length calculations are wrong
+                $nps = NFD(sprintf("%-*s", $section->get_np_length($namepart), NFC($nps)));
               }
               $kps .= $nps;
             }
