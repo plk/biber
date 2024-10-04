@@ -419,7 +419,8 @@ sub parse_ctrlfile {
  LOADCF:
   $logger->info("Reading '$ctrl_file_path'");
   my $buf = slurp_switchr($ctrl_file_path)->$*;
-  $buf = NFD($buf);# Unicode NFD boundary
+  # Unicode NFD boundary, but not for filenames - leave these in OS form
+  $buf = join("\n", map {m/<bcf:datasource.+>([^<]+)/ ? $_ : NFD($_)} split(/\R\z/, $buf));
 
   # Read control file
   require XML::LibXML::Simple;
