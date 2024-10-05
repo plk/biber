@@ -18,8 +18,6 @@ use Log::Log4perl qw(:no_extra_logdie_message);
 use Log::Log4perl::Level;
 use POSIX qw(strftime);
 
-# Put Biber::CodePage first, so its settings apply for everything later.
-use Biber::CodePage qw( :DEFAULT analyze_string );
 use Biber;
 use Biber::Utils;
 use Encode;

@@ -12,8 +12,8 @@ our @EXPORT_OK = qw( analyze_string );
 
 use Encode qw( encode decode );
 use Unicode::Normalize qw( checkNFC checkNFD );
-use feature qw( say );
-
+use Log::Log4perl qw(:no_extra_logdie_message);
+my $logger = Log::Log4perl::get_logger('main');
 
 # My default CS for system (filenames for subroutine, @ARGV): UTF-8.
 # Then update according to system settings (if any).
@@ -79,7 +79,7 @@ sub set_CP_Win_console($) {
     # Set code page for console i/o on Windows 
     my $CP = shift;
     if ($^O eq "MSWin32") {
-        say "Setting Windows Console CPs to $CP, and matching encoding for STDOUT, etc.";
+        $logger->trace("Codepage info: Setting Windows Console CPs to $CP, and matching encoding for STDOUT, etc.");
         if ( ! Win32::SetConsoleOutputCP($CP) ) {
             warn "Cannot set Windows Console Output CP to $CP.\n";
         }
@@ -99,12 +99,12 @@ sub set_CP_Win_console($) {
 sub set_CS_defaults() {
     # Set console to use UTF-8
     if ($^O eq "MSWin32") {
-        say "Setting console, STDOUT etc to use UTF-8";
+        $logger->trace("Codepage info: Setting console, STDOUT etc to use UTF-8");
         set_CP_Win_console( 65001 );
     }
     else {
         set_STD_encodings( 'UTF-8' );
-    }    
+    }
 }
 
 #--------------------------
@@ -114,11 +114,11 @@ sub show_CPs() {
         my $CP_in  = Win32::GetConsoleCP();
         my $CP_out = Win32::GetConsoleOutputCP();
         my $CP_sys = Win32::GetACP();
-        say "Windows CPs: (in, out, system) = ($CP_in, $CP_out, $CP_sys)";
+        $logger->trace("Codepage info: Windows CPs: (in, out, system) = ($CP_in, $CP_out, $CP_sys)");
     }
     else {
-        say "CSs are UTF-8";
-    }    
+        $logger->trace("Codepage info: CSs are UTF-8");
+    }
 }
 
 #==================
@@ -132,29 +132,25 @@ sub analyze_string {
     my $unicode_string = utf8::is_utf8($s);
     my $s1 = $s;
     if (! $bytes ) { $s1 = encode( 'UTF-8', $s ); }
-    say "=== $m\nGiven string is '$s'.";
-    say(
-        'Perl flag = ',
-        ($unicode_string ? 'utf8' : 'NOT utf8'),
-          ", len = ", length($s)
-        );
+    $logger->trace("Codepage info: === $m\nGiven string is '$s'.");
+    $logger->trace('Codepage info: Perl flag = ' . ($unicode_string ? 'utf8' : 'NOT utf8') . ", len = " . length($s));
     my $isNFC = checkNFC($s);
     my $isNFD = checkNFD($s);
-    if ($isNFC && $isNFD) { say "Reported to be NFC and NFD, i.e., no relevantaccented characers"; }
-    elsif ($isNFC) { say "Reported to be NFC"; }
-    elsif ($isNFD) { say "Reported to be NFD"; }
-    else { say "Reported to be neither NFC nor NFD"; }
-    if ($bytes) { say "Bytes:"; }
-    elsif ($s1 eq $s) { say "ASCII string, code points = UTF-8 bytes"; }
-    else { say "Code points:"; }
+    if ($isNFC && $isNFD) { $logger->trace("Codepage info: Reported to be NFC and NFD, i.e., no relevantaccented characers"); }
+    elsif ($isNFC) { $logger->trace("Codepage info: Reported to be NFC"); }
+    elsif ($isNFD) { $logger->trace("Codepage info: Reported to be NFD"); }
+    else { $logger->trace("Codepage info: Reported to be neither NFC nor NFD"); }
+    if ($bytes) { $logger->trace("Codepage info: Bytes:"); }
+    elsif ($s1 eq $s) { $logger->trace("Codepage info: ASCII string, code points = UTF-8 bytes"); }
+    else { $logger->trace("Codepage info: Code points:"); }
     my @code = unpack( 'U*', $s );
     @code = map { sprintf('%4X', $_) }  @code;
-    say join( ' ', @code );
+    $logger->trace('Codepage info: ' . join( ' ', @code ));
     if($s1 ne $s) {
-        say "UTF-8:";
+        $logger->trace("Codepage info: UTF-8:");
         my @code1 = unpack( 'U*', $s1 );
         @code1 = map { sprintf('%4X', $_) }  @code1;
-        say join( ' ', @code1 );
+        $logger->trace('Codepage info: ' . join( ' ', @code1 ));
     }
 }
 

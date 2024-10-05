@@ -10,6 +10,7 @@ use constant {
 };
 
 use Biber::Config;
+use Biber::CodePage qw( :DEFAULT analyze_string );
 use Biber::DataLists;
 use Biber::DataList;
 use Biber::DataModel;
