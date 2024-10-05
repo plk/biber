@@ -420,8 +420,12 @@ sub parse_ctrlfile {
   $logger->info("Reading '$ctrl_file_path'");
   my $buf = slurp_switchr($ctrl_file_path)->$*;
   # Unicode NFD boundary, but not for filenames - leave these in OS form
-  $buf = join("\n", map {m/<bcf:datasource.+>([^<]+)/ ? $_ : NFD($_)} split(/\R\z/, $buf));
-
+  # Ensure $buf ends in new line.
+  $buf = join("\n",
+              map {m/<bcf:datasource.+>([^<]+)/ ? $_ : NFD($_)}
+              split(/\R/, $buf)
+          )
+          ."\n";
   # Read control file
   require XML::LibXML::Simple;
 
