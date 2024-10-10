@@ -486,7 +486,6 @@ sub parse_ctrlfile {
                                                            qr/\Acondition\z/,
                                                            qr/\Afilter(?:or)?\z/,
                                                            qr/\Aoptionscope\z/,
-                                                           qr/\Aextradatespec\z/
                                                           ],
                                           'NsStrip' => 1,
                                           'KeyAttr' => []);
@@ -674,27 +673,15 @@ sub parse_ctrlfile {
   }
 
   # EXTRADATE specification
-  foreach my $eds ($bcfxml->{extradatespec}->@*) {
-    my $edtype = $eds->{type};
-    my $ed;
-    foreach my $scope ($eds->{scope}->@*) {
-      my $fields;
-      foreach my $field (sort {$a->{order} <=> $b->{order}} $scope->{field}->@*) {
-        push $fields->@*, $field->{content};
-      }
-      push $ed->@*, $fields;
+  my $ed;
+  foreach my $scope ($bcfxml->{extradatespec}->{scope}->@*) {
+    my $fields;
+    foreach my $field (sort {$a->{order} <=> $b->{order}} $scope->{field}->@*) {
+      push $fields->@*, $field->{content};
     }
-
-    if ($edtype eq 'global') {
-      Biber::Config->setblxoption(undef, 'extradatespec', $ed);
-    }
-    else {
-      Biber::Config->setblxoption(undef, 'extradatespec',
-                                  $ed,
-                                  'ENTRYTYPE',
-                                  $edtype);
-    }
+    push $ed->@*, $fields;
   }
+  Biber::Config->setblxoption(undef, 'extradatespec', $ed);
 
   # INHERITANCE schemes for crossreferences (always global)
   Biber::Config->setblxoption(undef, 'inheritance', $bcfxml->{inheritance});
