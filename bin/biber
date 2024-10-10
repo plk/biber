@@ -20,6 +20,7 @@ use POSIX qw(strftime);
 
 use Biber;
 use Biber::Utils;
+use Biber::CodePage qw( :DEFAULT analyze_string );
 use Encode;
 
 use File::Spec;

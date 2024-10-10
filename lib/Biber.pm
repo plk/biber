@@ -681,6 +681,7 @@ sub parse_ctrlfile {
     }
     push $ed->@*, $fields;
   }
+  Biber::Config->setblxoption(undef, 'extradatespec', $ed);
 
   # INHERITANCE schemes for crossreferences (always global)
   Biber::Config->setblxoption(undef, 'inheritance', $bcfxml->{inheritance});
