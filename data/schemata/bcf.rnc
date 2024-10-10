@@ -54,7 +54,7 @@ start =
       singletitle,
       skipbib,
       skipbiblist,
-      skiplab,
+      skiplab,      
       sortalphaothers?,
       sortlocale,
       sortingtemplatename,
@@ -68,7 +68,7 @@ start =
       useprefix,
       usenames
     },
-
+    
     # Per-entrytype BibLaTeX options
     element bcf:options {
       attribute component { "biblatex" },
@@ -127,7 +127,7 @@ start =
       xsd:string
       }+
     }*,
-
+    
     # datafield sets
     element bcf:datafieldset {
       attribute name { text },
@@ -162,13 +162,13 @@ start =
         text
       }+
     }+,
-
+    
     # labelalpha template specification
     element bcf:labelalphatemplate {
       attribute type { xsd:string }?, # per-type?
       element bcf:labelelement {
         attribute order { xsd:integer },
-        element bcf:labelpart {
+        element bcf:labelpart {          
           attribute final { xsd:boolean }?,
           attribute pad_char { xsd:string {minLength="1"}}?,
           attribute pad_side { "left" | "right" }?,
@@ -187,7 +187,6 @@ start =
 
     # Extradate specification
     element bcf:extradatespec {
-      attribute type { xsd:string }?, # per-type?
       # Scope of extradate tracking - an ordered set of fields to try
       element bcf:scope {
         # A field used to track extradate
@@ -196,7 +195,7 @@ start =
           text
         }+
       }+
-    }+,
+    },
 
     # Cross-reference inheritance specifications
     element bcf:inheritance {
@@ -846,7 +845,7 @@ wrapline =
     attribute type { "singlevalued" },
     element bcf:key { "wrapline" },
     element bcf:value { xsd:integer }
-  }
+  }  
 output_encoding =
   element bcf:option {
     attribute type { "singlevalued" },
