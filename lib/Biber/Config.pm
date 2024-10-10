@@ -1,7 +1,7 @@
 package Biber::Config;
 use v5.24;
 
-use Biber::CodePage qw( :DEFAULT analyze_string );
+use Biber::CodePage qw( :DEFAULT );
 use Biber::Constants;
 use Biber::Utils;
 use IPC::Cmd qw( can_run );
@@ -328,6 +328,14 @@ sub _initopts {
 
   if (Biber::Config->getoption('debug')) {
     $screen->info("DEBUG mode: all messages are logged to '$biberlog'")
+  }
+  if ($^O eq 'MSWin32') {
+      # Find what CodePage did about code page settings, and add to biber's
+      # tracing information.
+      my $CPlog = Biber::CodePage::get_CS_log();
+      # Indent the lines:
+      $CPlog = join( "\n", map { "  $_" } split("\n", $CPlog, -1) );
+      $logger->trace( "CodePage log:\n$CPlog" );
   }
 
   return;

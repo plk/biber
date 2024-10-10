@@ -10,7 +10,11 @@ use Encode;
 use FindBin;
 use lib $FindBin::RealBin;
 
-use Biber::CodePage qw( :DEFAULT analyze_string );
+use Biber::CodePage qw( :DEFAULT string_analysis );
+sub analyze_string {
+    my ( $m, $s, $bytes ) = @_;
+    print "$m\n", string_analysis( 'PREFIX ', $s, $bytes );
+}
 
 say "===================\n-----**Demo of package CodePage**";
 
@@ -19,7 +23,7 @@ my $CS_system = get_CS_system();
 say "System CS = $CS_system";
 
 #----------------------
-my @ARGU = get_decoded_ARGV();
+my @ARGU = map { decode_CS_system($_) } @ARGV;
 say "===CL argument array is '@ARGU'";
 
 #----------------------

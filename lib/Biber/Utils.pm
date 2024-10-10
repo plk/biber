@@ -15,7 +15,7 @@ use File::Find;
 use File::Spec;
 use IPC::Cmd qw( can_run );
 use IPC::Run3; # This works with PAR::Packer and Windows. IPC::Run doesn't
-use Biber::CodePage qw ( :DEFAULT analyze_string );
+use Biber::CodePage qw ( :DEFAULT string_analysis );
 use Biber::Constants;
 use Biber::LaTeX::Recode;
 use Biber::Entry::Name;
@@ -129,13 +129,17 @@ sub glob_data_file {
   #       and **not** an encoded byte string.
   # Returned names in @sources must also be decoded.
   my @sources;
-analyze_string( "!!!!!!!!!!glob_data_file source", $source );
-
+$logger->trace(
+    "glob_data_file source:\n"
+    . string_analysis( '  ', $source )
+  );
   # No globbing unless requested. No globbing for remote datasources.
   if ($source =~ m/\A(?:http|ftp)(s?):\/\//xms or
       not _bool_norm($globflag)) {
     push @sources, $source;
-analyze_string( "!!!!!!!!!!glob_data_file result", join( ' ', @sources ) );
+$logger->trace(
+      "glob_data_file result:\n".
+      string_analysis( '  ', join( ' ', @sources ) ) );
     return @sources;
   }
 
@@ -150,7 +154,9 @@ analyze_string( "!!!!!!!!!!glob_data_file result", join( ' ', @sources ) );
   push @sources, globU($source);
 
   $logger->info("Globbed data source '$source' to '" . join(',', @sources) . "'");
-analyze_string( "!!!!!!!!!!glob_data_file result", join( ' ', @sources ) );
+$logger->trace(
+      "glob_data_file result:\n".
+      string_analysis( '  ', join( ' ', @sources ) ) );
   return @sources;
 }
 
