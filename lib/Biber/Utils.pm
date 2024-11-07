@@ -171,9 +171,8 @@ sub slurp_switchr {
   my ($filename, $encoding) = @_;
   my $slurp;
   $encoding //= 'UTF-8';
-  if ($^O =~ /Win/ and not Biber::Config->getoption('winunicode')) {
+  if ($^O =~ /Win/ and not is_Unicode_system() ) {
     require Win32::Unicode::File;
-    # JCC ?? Removed NFC  
     my $fh = Win32::Unicode::File->new('<', $filename);
     $fh->binmode(":encoding($encoding)");
     # 100MB block size as the loop over the default 1MB block size seems to fail for
@@ -196,9 +195,8 @@ sub slurp_switchr {
 
 sub slurp_switchw {
   my ($filename, $string) = @_;
-  if ($^O =~ /Win/ and not Biber::Config->getoption('winunicode')) {
+  if ($^O =~ /Win/ and not is_Unicode_system() ) {
     require Win32::Unicode::File;
-    # JCC ?? Removed NFC  
     my $fh = Win32::Unicode::File->new('>', $filename);
     $fh->binmode(':encoding(UTF-8)');
     $fh->write($string);
@@ -206,7 +204,6 @@ sub slurp_switchw {
     $fh->close;
   }
   else {
-    # JCC ?? Removed NFC  
     File::Slurper::write_text($filename, $string);
   }
   return;
@@ -394,9 +391,8 @@ sub locate_data_file {
 
 sub file_exist_check {
   my $filename = shift;
-  if ($^O =~ /Win/ and not Biber::Config->getoption('winunicode')) {
+  if ($^O =~ /Win/ and not is_Unicode_system() ) {
     require Win32::Unicode::File;
-    # JCC ?? Add test without NF mapped filename.  
     if (Win32::Unicode::File::statW($filename)) {
       return $filename;
     }
@@ -408,7 +404,6 @@ sub file_exist_check {
     }
   }
   else {
-    # JCC ?? Add test without NF mapped filename.  
     if (-e "$filename") {
       return $filename;
     }
@@ -431,9 +426,8 @@ sub file_exist_check {
 
 sub check_empty {
   my $filename = shift;
-  if ($^O =~ /Win/ and not Biber::Config->getoption('winunicode')) {
+  if ($^O =~ /Win/ and not is_Unicode_system() ) {
     require Win32::Unicode::File;
-    # JCC ?? Remove NFC  
     return (Win32::Unicode::File::file_size($filename)) ? 1 : 0;
   }
   else {
@@ -449,9 +443,8 @@ sub check_empty {
 
 sub check_exists {
   my $filename = shift;
-  if ($^O =~ /Win/ and not Biber::Config->getoption('winunicode')) {
+  if ($^O =~ /Win/ and not is_Unicode_system() ) {
     require Win32::Unicode::File;
-    # JCC ?? Remove NFC  
     return Win32::Unicode::File::statW($filename) ? 1 : 0;
   }
   else {

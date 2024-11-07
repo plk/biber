@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use parent qw(Exporter);
 our @EXPORT = qw( decode_CS_system encode_CS_system get_CS_system
+                  is_Unicode_system
                   set_CP_Win_console set_CS_defaults  set_STD_encodings );
 our @EXPORT_OK = qw( get_CS_log string_analysis );
 
@@ -88,6 +89,12 @@ sub get_CS_system() {
 
 sub get_CS_log() {
     return $log;
+}
+
+#--------------------------
+
+sub is_Unicode_system() {
+    return (uc($CS_system) eq 'UTF-8') || (uc($CS_system) eq 'CP65001');
 }
 
 #--------------------------
@@ -248,8 +255,5 @@ END {
     }
     # Don't worry about what to do with STDOUT, etc; it should be unimportant from here.
 }
-
-
-
 
 1;
