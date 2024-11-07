@@ -209,7 +209,9 @@ sub new {
           if ($c->{type} eq 'mandatory') {
             # field
             foreach my $f ($c->{field}->@*) {
-              push $self->{entrytypesbyname}{$es}{constraints}{mandatory}->@*, $f->{content};
+              if (not first {$f->{content} eq $_} $self->{entrytypesbyname}{$es}{constraints}{mandatory}->@*) {
+                push $self->{entrytypesbyname}{$es}{constraints}{mandatory}->@*, $f->{content};
+              }
             }
             # xor set of fields
             # [ XOR, field1, field2, ... , fieldn ]
