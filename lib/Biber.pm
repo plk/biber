@@ -952,11 +952,13 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
           $bib_section->set_allkeys_nocite(1);
         }
         $key_flag = 1; # There is at least one key, used for error reporting below
+        $bib_section->incr_seenkey($key); # increment cited key counter
       }
       elsif (not $bib_section->get_seenkey($key)) {
         # Dynamic set definition
         # Save dynamic key -> member keys mapping for set entry auto creation later
         # We still need to find these even if allkeys is set
+        # Don't increment cited key counter as this is not a cite
         if (exists($keyc->{type}) and $keyc->{type} eq 'set') {
           $bib_section->set_dynamic_set($key, split /\s*,\s*/, $keyc->{members});
           push @keys, $key;
@@ -979,9 +981,9 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
           }
           push @keys, $key;
           $key_flag = 1; # There is at least one key, used for error reporting below
+          $bib_section->incr_seenkey($key); # increment cited key counter
         }
       }
-      $bib_section->incr_seenkey($key); # always increment
     }
 
     # Get citecounts if present
