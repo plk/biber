@@ -108,6 +108,18 @@ sub incr_seenkey {
   return;
 }
 
+=head2 set_seenkey
+
+    Set the seen count of a key
+
+=cut
+
+sub set_seenkey {
+  my ($self, $key, $c) = @_;
+  $self->{seenkeys}{$key} = $c;
+  return;
+}
+
 =head2 reset_caches
 
     Reset section caches which need it

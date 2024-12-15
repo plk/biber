@@ -36,7 +36,7 @@ use File::Slurper;
 use File::Spec;
 use File::Temp;
 use IO::File;
-use List::AllUtils qw( first uniq max first_index );
+use List::AllUtils qw( first uniq min max first_index );
 use Log::Log4perl qw( :no_extra_logdie_message );
 use POSIX qw( locale_h ); # for lc()
 use Scalar::Util qw(looks_like_number);
@@ -1396,14 +1396,23 @@ sub instantiate_dynamic {
       $logger->debug("Created dynamic set entry '$dset' in section $secnum");
     }
 
+    my $minorder = min grep {defined} map {Biber::Config->get_keyorder($secnum, $_);} @members;
+
     foreach my $m (@members) {
-    # Save graph information if requested
+      # Save graph information if requested
       if (Biber::Config->getoption('output_format') eq 'dot') {
         Biber::Config->set_graph('set', $dset, $m);
       }
       # Instantiate any related entry clones we need from dynamic set members
       $section->bibentry($m)->relclone;
+
+      # Make any set have the same order as the least order of any cited set member
+      # This is needed in case a dynamic set is cited by one of its members when sorting=none
+      if ($minorder) {
+        Biber::Config->set_keyorder($secnum, $dset, $minorder);
+      }
     }
+
     # Setting dataonly options for members is handled by process_sets()
   }
 
