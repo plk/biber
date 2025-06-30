@@ -2191,6 +2191,13 @@ sub process_workuniqueness {
   # ignore settings from inheritance data?
   my $ignore = Biber::Config->get_uniq_ignore($citekey);
 
+  # If this is a data clone with skipbib set, don't record uniqueness info
+  if (my $options = $be->get_field('options')) {
+    if (grep {$_ eq 'skipbib'} $options->@*) {
+      return;
+    }
+  }
+
   # singletitle
   # Don't generate information for entries with no labelname or labeltitle
   # Use fullhash as this is not a test of uniqueness of only visible information
