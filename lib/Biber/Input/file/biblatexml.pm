@@ -919,7 +919,7 @@ sub _literal {
   }
 
   # eprint is special case
-  if ($f eq "$NS:eprint") {
+  if (fc(_norm($f) eq "$NS:eprint")) {
     $bibentry->set_datafield('eprinttype', $node->getAttribute('type'));
     if (my $ec = $node->getAttribute('class')) {
       $bibentry->set_datafield('eprintclass', $ec);
