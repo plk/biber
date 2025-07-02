@@ -113,20 +113,20 @@ fi
 # Build farm WMSWIN32
 # DON'T FORGET THAT installdeps WON'T WORK FOR STRAWBERRY INSIDE CYGWIN
 # SO YOU HAVE TO INSTALL MODULE UPDATES MANUALLY
-if [ ! -e $DIR/biber-MSWIN32.zip ]; then
-  vmon wxp32
-  sleep 10
-  ssh philkime@bbf-wxp32 "cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;perl Build install;cd dist/MSWIN32;$SCANCACHE./build.bat;cd ~/biblatex-biber;perl Build realclean"
-  scp philkime@bbf-wxp32:biblatex-biber/dist/MSWIN32/biber-MSWIN32.exe $DIR/
-  ssh philkime@bbf-wxp32 "\\rm -f biblatex-biber/dist/MSWIN32/biber-MSWIN32.exe"
-  vmoff wxp32
-  cd $DIR
-  mv biber-MSWIN32.exe $BINARYNAME.exe
-  chmod +x $BINARYNAME.exe
-  /usr/bin/zip biber-MSWIN32.zip $BINARYNAME.exe
-  \rm -f $BINARYNAME.exe
-  cd $BASE
-fi
+# if [ ! -e $DIR/biber-MSWIN32.zip ]; then
+#   vmon wxp32
+#   sleep 10
+#   ssh philkime@bbf-wxp32 "cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;perl Build install;cd dist/MSWIN32;$SCANCACHE./build.bat;cd ~/biblatex-biber;perl Build realclean"
+#   scp philkime@bbf-wxp32:biblatex-biber/dist/MSWIN32/biber-MSWIN32.exe $DIR/
+#   ssh philkime@bbf-wxp32 "\\rm -f biblatex-biber/dist/MSWIN32/biber-MSWIN32.exe"
+#   vmoff wxp32
+#   cd $DIR
+#   mv biber-MSWIN32.exe $BINARYNAME.exe
+#   chmod +x $BINARYNAME.exe
+#   /usr/bin/zip biber-MSWIN32.zip $BINARYNAME.exe
+#   \rm -f $BINARYNAME.exe
+#   cd $BASE
+# fi
 
 # Build farm WMSWIN64
 # DON'T FORGET THAT installdeps WON'T WORK FOR STRAWBERRY INSIDE CYGWIN
@@ -216,9 +216,9 @@ if [ -e $DIR/biber-darwin_x86_64.tar.gz ]; then
 fi
 
 # Windows 32-bit
-if [ -e $DIR/biber-MSWIN32.zip ]; then
-  scp biber-MSWIN32.zip philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/biblatex-biber/$RELEASE/binaries/Windows/biber-MSWIN32.zip
-fi
+# if [ -e $DIR/biber-MSWIN32.zip ]; then
+#   scp biber-MSWIN32.zip philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/biblatex-biber/$RELEASE/binaries/Windows/biber-MSWIN32.zip
+# fi
 
 # Windows 64-bit
 if [ -e $DIR/biber-MSWIN64.zip ]; then
