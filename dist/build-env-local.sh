@@ -50,12 +50,12 @@ fi
 # Build farm WMSWIN32
 # DON'T FORGET THAT installdeps WON'T WORK FOR STRAWBERRY INSIDE CYGWIN
 # SO YOU HAVE TO INSTALL MODULE UPDATES MANUALLY
-if [[ $@ =~ "w32" || $@ =~ "win" || $@ =~ "ALL" ]]; then
-  vmon wxp32
-  sleep 20
-  ssh philkime@bbf-wxp32 "$COMMANDS_WINDOWS"
-  vmoff wxp32
-fi
+# if [[ $@ =~ "w32" || $@ =~ "win" || $@ =~ "ALL" ]]; then
+#   vmon wxp32
+#   sleep 20
+#   ssh philkime@bbf-wxp32 "$COMMANDS_WINDOWS"
+#   vmoff wxp32
+# fi
 
 # Build farm WMSWIN64
 # DON'T FORGET THAT installdeps WON'T WORK FOR STRAWBERRY INSIDE CYGWIN

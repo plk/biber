@@ -12,7 +12,7 @@ cd ${ROOT}
 declare VER=$1
 declare RELEASE=${2:-"current"}
 declare PACKAGEEXT=""
-declare PLATFORMS=("linux_x86_32" "linux_x86_64" "MSWIN64" "MSWIN32" "darwinlegacy_x86_64" "darwin_universal")
+declare PLATFORMS=("linux_x86_32" "linux_x86_64" "MSWIN64" "darwinlegacy_x86_64" "darwin_universal")
 declare METAPLATFORMS=("linux" "linux" "windows" "windows" "macos" "macos")
 declare SFPLATFORMS=("Linux" "Linux" "Windows" "Windows" "MacOS" "MacOS")
 declare EXTS=("tar.gz" "tar.gz" "zip" "zip" "tar.gz" "tar.gz")
