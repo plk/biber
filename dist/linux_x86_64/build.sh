@@ -77,6 +77,7 @@ PAR_VERBATIM=1 /usr/local/perl/bin/pp \
   --link=/usr/local/lib/libexslt.so.0 \
   --link=/lib/x86_64-linux-gnu/libssl.so.1.0.0 \
   --link=/lib/x86_64-linux-gnu/libcrypto.so.1.0.0 \
+  --link=/lib/x86_64-linux-gnu/libcrypt.so.1 \
   --addfile="../../data/biber-tool.conf;lib/Biber/biber-tool.conf" \
   --addfile="../../data/schemata/config.rnc;lib/Biber/config.rnc" \
   --addfile="../../data/schemata/config.rng;lib/Biber/config.rng"\

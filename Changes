@@ -1,5 +1,8 @@
 Revision history for Biber
-
+2.21   (2025-07)
+       * Support for 32-bit Windows has been discontinued.
+       * Improved Unicode support for Windows (thanks to John Collins)
+       * Misc bug fixes
 2.20   (2024-03)
        * Added new option settings `minyearinit` and `minyearfull` for
          `uniquename`
