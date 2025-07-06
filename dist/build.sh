@@ -96,7 +96,7 @@ if [ ! -e $DIR/biber-darwin_x86_64.tar.gz ]; then
     # codesign in Xcode for osx1012 does not have the runtime hardening options
     # --------------------------------------------------------------------------
     scp $DIR/biber-darwin_x86_64 philkime@tree:/tmp/
-    ssh philkime@tree "cd /tmp;security unlock-keychain -p \$(</Users/philkime/.pw) login.keychain;codesign --verbose  --sign 45MA3H23TG --force --timestamp --options runtime biber-darwin_x86_64"
+    ssh philkime@tree "cd /tmp;security unlock-keychain -p \$(</Users/philkime/.pw) login.keychain;codesign --verbose --sign 45MA3H23TG --force --timestamp --options runtime biber-darwin_x86_64"
     \rm $DIR/biber-darwin_x86_64
     scp philkime@tree:/tmp/biber-darwin_x86_64 $DIR/
     ssh philkime@tree "\\rm -f /tmp/biber-darwin_x86_64"
