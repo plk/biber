@@ -1,6 +1,11 @@
 package Biber::Config;
 use v5.24;
 
+use constant {
+  EXIT_OK => 0,
+  EXIT_ERROR => 2
+};
+
 use Biber::CodePage qw( :DEFAULT );
 use Biber::Constants;
 use Biber::Utils;
@@ -165,10 +170,9 @@ sub _initopts {
     # If we don't we can get errors when constructing the sorting call to eval() later
     if (lc($copt) eq 'collate_options') {
       my $collopts = Biber::Config->getoption('collate_options');
-      my $copt_h = eval "{ $opts->{$copt} }" or croak('Bad command-line collation options');
       # Override defaults with any cmdline settings
-      foreach my $co (keys $copt_h->%*) {
-        $collopts->{$co} = $copt_h->{$co};
+      foreach my $co (keys $opts->{$copt}->%*) {
+        $collopts->{$co} = $opts->{$copt}{$co};
       }
       Biber::Config->setconfigfileoption('collate_options', $collopts);
     }

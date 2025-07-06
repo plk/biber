@@ -1,5 +1,11 @@
 Revision history for Biber
 2.21   (2025-07)
+       * **INCOMPATIBLE CHANGE** - the 'collate-options' option no longer
+         accepts a single string in perl hash notation as value. It now requires
+         the option to be used once per collate option in a more standardised
+         format, due to a code injection vulnerability. For example, instead of e.g:
+         --collate-options="level => 4, variable => 'non-ignorable'", the format
+         is: --collate-options level=4 --collate-options variable='non-ignorable'
        * Support for 32-bit Windows has been discontinued.
        * Improved Unicode support for Windows (thanks to John Collins)
        * Misc bug fixes

@@ -29,7 +29,8 @@ use List::AllUtils qw( first );
 use Unicode::Normalize qw(NFC);
 
 use Getopt::Long qw/:config no_ignore_case/;
-my $opts = {};
+my %collateoptions = (); # This is a special case
+my $opts = {'collate_options' => \%collateoptions};
 GetOptions(
            $opts,
            'annotation_marker|annotation-marker=s',
@@ -504,9 +505,9 @@ several times for different refsections.
 
 =item B<--collate-options|-c [options]>
 
-Options to pass to the C<Unicode::Collate> object used for sorting
-(default is 'level => "4", variable => "non-ignorable"').
-See C<perldoc Unicode::Collate> for details.
+Options to pass to the C<Unicode::Collate> object used for sorting (default is
+"--collate-options level=4 --collate-options variable='non-ignorable'"). See
+C<perldoc Unicode::Collate> for details.
 
 =item B<--configfile|-g [file]>
 
