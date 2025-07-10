@@ -163,10 +163,6 @@
 ** DONE create APA template, set as default, switch refcontext for \printbibliography to normal
 ** DONE Doc new \visibility option, bump .bcf version
 ** DONE doc \AtBeginRefsection, just after refsection number setting
-* TODO bibjson
-** TODO Add validate-bibjson option
-** TODO Generate bibjson schema option and add --no_bibjson_schema option
-** TODO CSL-JSON? https://github.com/citation-style-language/schema/blob/master/schemas/input/csl-data.json
 * DONE name hash template
 ** DONE doc \ifnamehashtemplatename \DeclareNamehashTemplate, nametemplates refcontext option, refcontext option
 
