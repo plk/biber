@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 # For some reason, PAR::Packer on linux is clever and when processing link lines
