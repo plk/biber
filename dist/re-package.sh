@@ -72,7 +72,7 @@ if [ ! -e biber$PACKAGEEXT-base.tgz ]; then
   [ $? -eq 0 ] || exit 1
   /opt/homebrew/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/$RELEASE/documentation/utf8-macro-map.html -O documentation/utf8-macro-map.html >/dev/null 2>&1
   [ $? -eq 0 ] || exit 1
-  /opt/homebrew/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/README.md -O README.md >/dev/null 2>&1
+  /opt/homebrew/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/README.md -O README.md >/dev/null 2>&1
   cd ..
   tar zcf biber$PACKAGEEXT-base.tgz biber$PACKAGEEXT
   \rm -rf biber$PACKAGEEXT

@@ -100,3 +100,7 @@ modify it under the terms of the Artistic License 2.0.
 This program is distributed in the hope that it will be useful,
 but without any warranty; without even the implied warranty of
 merchantability or fitness for a particular purpose.
+
+## AUTHOR/MAINTAINER
+
+The current maintainer is Philip Kime, originally conceived by François Charette.
