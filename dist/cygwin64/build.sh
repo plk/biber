@@ -20,7 +20,7 @@
 
 cp /usr/local/bin/biber /tmp/biber-cygwin
 
-declare -r perlv='5.36'
+declare -r perlv='5.40'
 declare ucpath="/usr/share/perl5/${perlv}/Unicode/Collate"
 
 # Unicode::Collate has a vendor_perl version so has been updated since this
@@ -81,6 +81,7 @@ PAR_VERBATIM=1 pp \
    --addfile="/usr/lib/perl5/${perlv}/x86_64-cygwin-threads/PerlIO;lib/PerlIO" \
    --addfile="/usr/lib/perl5/${perlv}/x86_64-cygwin-threads/auto/PerlIO;lib/auto/PerlIO" \
    --addfile="/usr/share/perl5/vendor_perl/${perlv}/Business/ISBN/RangeMessage.xml;lib/Business/ISBN/RangeMessage.xml" \
+   --addfile="/usr/share/perl5/vendor_perl/${perlv}/Specio;lib/Specio" \
    --cachedeps=scancache \
    --output=biber-cygwin64.exe \
    /tmp/biber-cygwin
