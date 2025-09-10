@@ -877,7 +877,7 @@ As B<--xdatasep> but for tool mode output. Default is '-'.
 
 =item B<--output-xname>
 
-When output is a .bib BibTeX file in tool mode, whether to output names the
+When output is a .bib BibTeX file in tool mode, whether to output names in the
 eXtended BibTeX name field format.
 
 =item B<--output-xnamesep=[sep]>
@@ -927,7 +927,7 @@ to find the CA certs.
 =item B<--ssl-noverify-host>
 
 Turn off host verification when using HTTPS to fetch remote data sources.
-You may need this if the SSL certificate is self-signed for example.
+You may need this if the SSL certificate is self-signed, for example.
 
 =item B<--strip-comments>
 
