@@ -80,7 +80,7 @@ CALL pp ^
   --addfile="%UCPATH%/CJK;lib/Unicode/Collate/CJK" ^
   --addfile="%UCPATH%/allkeys.txt;lib/Unicode/Collate/allkeys.txt" ^
   --addfile="%UCPATH%/keys.txt;lib/Unicode/Collate/keys.txt" ^
-  --addfile="C:/strawberry/perl/vendor/lib/Mozilla/CA/cacert.pem;lib/Mozilla/CA/cacert.pem" ^
+  --addfile="C:/strawberry/perl/site/lib/Mozilla/CA/cacert.pem;lib/Mozilla/CA/cacert.pem" ^
   --addfile="C:/strawberry/perl/site/lib/Business/ISBN/RangeMessage.xml;lib/Business/ISBN/RangeMessage.xml" ^
   --cachedeps=scancache ^
   --output=biber-MSWIN64.exe ^
