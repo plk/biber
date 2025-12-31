@@ -2039,11 +2039,10 @@
   </bcf:datamodel>
   <!-- SECTION 0 -->
   <bcf:bibdata section="0">
-    <bcf:datasource type="file" datatype="bibtex">https://webspace.science.uu.nl/~bodla101/graphs-bib/definitions.bib</bcf:datasource>
-    <bcf:datasource type="file" datatype="bibtex">https://www.staff.science.uu.nl/~bodla101/graphs-bib/papers.bib</bcf:datasource>
+    <bcf:datasource type="file" datatype="bibtex">https://raw.githubusercontent.com/twschiller/public-bib/refs/heads/master/schiller.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey order="1" intorder="1">AbdelbarH98</bcf:citekey>
+    <bcf:citekey order="1" intorder="1">SchillerCND2010</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="nty">

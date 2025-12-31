@@ -295,7 +295,7 @@ sub locate_data_file {
       my $response = $ua->request($request, $tf->filename);
 
       unless ($response->is_success) {
-        biber_error("Could not fetch '$source' (HTTP code: " . $response->code. ")");
+        biber_error("Could not fetch '$source' (HTTP error: " . $response->status_line. ")");
       }
       $sourcepath = $tf->filename;
       # cache any remote so it persists and so we don't fetch it again

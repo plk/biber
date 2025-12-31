@@ -209,6 +209,9 @@ sub latex_decode {
     my $norm      = exists $opts{normalize} ? $opts{normalize} : 1;
     my $norm_form = exists $opts{normalization} ? $opts{normalization} : 'NFD';
 
+    # Special case for \h?box which requires braces around single chars
+    $text =~ s/\\(h?box)\s+\{(\X)\}/\\$1\{$2\}/g;
+
     # Deal with raw TeX \char macros.
     $text =~ s/\\char"(\p{ASCII_Hex_Digit}+)/"chr(0x$1)"/gee; # hex chars
     $text =~ s/\\char'(\d+)/"chr(0$1)"/gee;  # octal chars

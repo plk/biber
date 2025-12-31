@@ -5,7 +5,7 @@ use utf8;
 no warnings 'utf8' ;
 use open qw/:std :utf8/;
 
-use Test::More tests => 88;
+use Test::More tests => 89;
 use Test::Differences;
 unified_diff;
 
@@ -142,6 +142,8 @@ eq_or_diff(latex_encode(NFD('÷')), '{$\\div$}', 'latex different encode/decode 
 Biber::LaTeX::Recode->init_sets('null', 'full'); # Need to do this to reset
 eq_or_diff(latex_decode('\i'), '\i', 'latex null decode 1');
 eq_or_diff(latex_encode(NFD('ı')), '\i{}', 'latex null encode 2');
+# Special case for \hbox
+eq_or_diff(latex_decode('{$\hbox {N}^3$}'), '{$\hbox{N}^3$}', 'latex null decode 2');
 
 eq_or_diff(rangelen([[10,15]]), 6, 'Rangelen test 1');
 eq_or_diff(rangelen([[10,15],[47, 53]]), 13, 'Rangelen test 2');
