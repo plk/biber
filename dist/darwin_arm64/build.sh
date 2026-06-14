@@ -68,6 +68,7 @@ PAR_VERBATIM=1 /opt/homebrew/Cellar/perl/${perlv}/bin/pp \
   --module=List::MoreUtils::PP \
   --module=HTTP::Status \
   --module=HTTP::Date \
+  --module=Specio::XS \
   --module=Encode:: \
   --module=File::Find::Rule \
   --module=IO::Socket::SSL \
