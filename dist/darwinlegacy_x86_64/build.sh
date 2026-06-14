@@ -50,7 +50,6 @@ PAR_VERBATIM=1 pp \
   --module=IO::Socket::SSL \
   --module=IO::String \
   --module=PerlIO::utf8_strict \
-  --module=Specio::XS \
   --module=Text::CSV_XS \
   --module=DateTime \
   --link=/opt/local/lib/libz.1.dylib \
