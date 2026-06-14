@@ -11,7 +11,7 @@
 # <binaryname> is the name of the biber binary to use for the release.
 # <justbuild> is a boolean which says to just build and stop without uploading
 # <deletescancache> is a boolean which says to delete the scancache
-# <codesign> is a boolean which says to not codesign OSX binary
+# <codesign> is a boolean which says to codesign OSX binary
 
 BASE=~/extcode/biber
 DOCDIR=$BASE/doc
