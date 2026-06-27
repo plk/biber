@@ -23,6 +23,7 @@ use Data::Uniqid qw ( suniqid );
 use Regexp::Common qw( balanced );
 use List::AllUtils qw( first );
 use Log::Log4perl qw(:no_extra_logdie_message);
+use Safe;
 use Scalar::Util qw(looks_like_number);
 use Text::Balanced qw(extract_bracketed);
 use Text::CSV;
@@ -1164,26 +1165,24 @@ sub imatch {
 
 =head2 ireplace
 
-    Do an interpolating match/replace using a match RE, replacement RE
+    Do a relatively safe interpolating match/replace using a match RE, replacement RE
     and string passed in as variables
 
 =cut
 
 sub ireplace {
-  my ($value, $val_match, $val_replace, $ci) = @_;
-  return $value unless $val_match;
-  if ($ci) {
-    $val_match = qr/$val_match/i;
-  }
-  else {
-    $val_match = qr/$val_match/;
-  }
-  # Tricky quoting because of later evals
-  $val_replace = '"' . $val_replace . '"';
-  $value =~ s/$val_match/$val_replace/eegxms;
-  return $value;
-}
+    my ($value, $val_match, $val_replace, $ci) = @_;
+    return $value unless length $val_match;
+    $val_match = $ci ? qr/$val_match/i : qr/$val_match/;
 
+    my $cpt = Safe->new;
+    $cpt->permit_only(qw(:default));
+    $value =~ s{$val_match}{
+        my $r = $cpt->reval(qq{"$val_replace"});
+        $@ ? $val_match : $r;
+      }egxms;
+    return $value;
+}
 
 =head2 validate_biber_xml
 
