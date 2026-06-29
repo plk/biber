@@ -1480,12 +1480,12 @@ sub _sort_literal {
 
 # This is a meta-sub which uses the optional arguments to the dispatch code
 # It's done to avoid having many repetitions of almost identical sorting code
-# for literal strings which need no normalising/translit. Nosort is still honoured.
+# for literal strings which need no normalising/translit.
 sub _sort_verbatim {
   my ($self, $citekey, $secnum, $section, $be, $dlist, $sortelementattributes, $args) = @_;
   my $literal = $args->[0]; # get actual field
   if (my $field = $be->get_field($literal)) {
-    my $string = strip_nosort($field, $literal);
+    my $string = normalise_string_sort($field, $literal);
     return _process_sort_attributes($field, $sortelementattributes);
   }
   else {
