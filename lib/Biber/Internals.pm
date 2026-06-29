@@ -1483,10 +1483,10 @@ sub _sort_literal {
 # for literal strings which need no normalising/translit.
 sub _sort_verbatim {
   my ($self, $citekey, $secnum, $section, $be, $dlist, $sortelementattributes, $args) = @_;
-  my $literal = $args->[0]; # get actual field
-  if (my $field = $be->get_field($literal)) {
-    my $string = normalise_string_sort($field, $literal);
-    return _process_sort_attributes($field, $sortelementattributes);
+  my $verb = $args->[0]; # get actual field
+  if (my $field = $be->get_field($verb)) {
+    my $string = normalise_string_sort($field, $verb);
+    return _process_sort_attributes($string, $sortelementattributes);
   }
   else {
     return '';
