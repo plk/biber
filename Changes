@@ -1,4 +1,6 @@
 Revision history for Biber
+2.22   (2025-08)
+       * Fixed security issues with evals
 2.21   (2025-07)
        * **INCOMPATIBLE CHANGE** - the 'collate-options' option no longer
          accepts a single string in perl hash notation as value. It now requires
