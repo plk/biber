@@ -35,7 +35,7 @@
 # by looking to see if there is a site_perl directory for the module. If there is, we use that
 # version.
 
-declare -r perlv='5.36.0'
+declare -r perlv='5.40.4'
 declare ucpath="/usr/share/perl5/core_perl/Unicode/Collate"
 
 # Unicode::Collate has a site_perl version so has been updated since this
@@ -69,10 +69,12 @@ PAR_VERBATIM=1 /usr/local/bin/pp \
   --module=IO::String \
   --module=PerlIO::utf8_strict \
   --module=Text::CSV_XS \
+  --module=Specio::PP \
+  --module=Specio::XS \
   --module=DateTime \
   --link=/usr/local/lib/libbtparse.so \
   --link=/usr/lib/libxml2.so \
-  --link=/lib/libz.so \
+  --link=/usr/lib/libz.so \
   --link=/usr/lib/liblzma.so \
   --link=/usr/lib/libxslt.so \
   --link=/usr/lib/libexslt.so \
