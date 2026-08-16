@@ -78,7 +78,6 @@ PAR_VERBATIM=1 /opt/homebrew/Cellar/perl/${perlv}/bin/pp \
   --module=DateTime \
   --link=/opt/homebrew/lib/libgdbm.dylib \
   --link=/opt/homebrew/lib/libintl.8.dylib \
-  --link=/opt/homebrew/opt/libthai/lib/libthai.0.dylib \
   --link=/tmp/libraries/usr/lib/libz.1.dylib \
   --link=/tmp/libraries/usr/lib/libiconv.2.dylib \
   --link=/tmp/libraries/usr/lib/libssl.dylib \
