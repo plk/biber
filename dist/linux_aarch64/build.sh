@@ -5,7 +5,7 @@
 # We directly use Unicode::Collate from site_perl (must be updated by cpan Unicode::Collate!).
 
 # -r: Readonly.
-declare -r PERL_VERSION='5.36.0'
+declare -r PERL_VERSION='5.40.5'
 
 PAR_VERBATIM=1 /usr/local/bin/pp \
   --module=deprecate \
