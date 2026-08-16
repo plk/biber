@@ -5,7 +5,7 @@
 # We directly use Unicode::Collate from site_perl (must be updated by cpan Unicode::Collate!).
 
 # -r: Readonly.
-declare -r PERL_VERSION='5.36.0'
+declare -r PERL_VERSION='5.40.5'
 
 PAR_VERBATIM=1 /usr/local/bin/pp \
   --module=deprecate \
@@ -28,6 +28,8 @@ PAR_VERBATIM=1 /usr/local/bin/pp \
   --module=IO::Socket::SSL \
   --module=IO::String \
   --module=PerlIO::utf8_strict \
+  --module=Specio::PP \
+  --module=Specio::XS \
   --module=Text::CSV_XS \
   --module=DateTime \
   --link=/lib/aarch64-linux-gnu/libz.so.1 \
@@ -38,7 +40,7 @@ PAR_VERBATIM=1 /usr/local/bin/pp \
   --link=/usr/lib/aarch64-linux-gnu/libxslt.so \
   --link=/usr/lib/aarch64-linux-gnu/libexslt.so \
   --link=/usr/lib/aarch64-linux-gnu/libxml2.so \
-  --link=/usr/lib/aarch64-linux-gnu/libicui18n.so.63 \
+  --link=/usr/lib/aarch64-linux-gnu/libicui18n.so \
   --link=/usr/lib/aarch64-linux-gnu/libicuuc.so \
   --link=/usr/lib/aarch64-linux-gnu/libicudata.so \
   --link=/usr/lib/aarch64-linux-gnu/liblzma.so \
