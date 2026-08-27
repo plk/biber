@@ -123,7 +123,7 @@ fi
 #   cd $DIR
 #   mv biber-MSWIN32.exe $BINARYNAME.exe
 #   chmod +x $BINARYNAME.exe
-#   /usr/bin/zip biber-MSWIN32.zip $BINARYNAME.exe
+#   gzip biber-MSWIN32.zip $BINARYNAME.exe
 #   \rm -f $BINARYNAME.exe
 #   cd $BASE
 # fi
@@ -141,7 +141,7 @@ if [ ! -e $DIR/biber-MSWIN64.zip ]; then
   cd $DIR
   mv biber-MSWIN64.exe $BINARYNAME.exe
   chmod +x $BINARYNAME.exe
-  /usr/bin/zip biber-MSWIN64.zip $BINARYNAME.exe
+  gzip biber-MSWIN64.zip $BINARYNAME.exe
   \rm -f $BINARYNAME.exe
   cd $BASE
 fi
