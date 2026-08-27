@@ -34,7 +34,7 @@ function vmoff {
   VBoxManage controlvm bbf-$1 savestate
 }
 
-BASE="/usr/local/data/code/biblatex-biber"
+BASE="/data/biblatex-biber"
 DOCDIR=$BASE/doc
 BINDIR=$BASE/dist
 XSLDIR=$BASE/data
