@@ -68,7 +68,7 @@ fi
 # time difference is too great between boots
 if [ ! -e $DIR/biber-darwinlegacy_x86_64.tar.gz ]; then
   vmon osx10.6
-  sleep 5
+  until ping -c1 -W1 bbf-osx106 &>/dev/null; do sleep 1; done; echo "bbf-osx106 up"
   ssh philkime@bbf-osx106 "sudo ntpdate ch.pool.ntp.org;cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/darwinlegacy_x86_64;$SCANCACHE./build.sh;~/pp_osx_codesign_fix biber-darwinlegacy_x86_64;cd ~/biblatex-biber;sudo ./Build realclean"
   scp philkime@bbf-osx106:biblatex-biber/dist/darwinlegacy_x86_64/biber-darwinlegacy_x86_64 $DIR/
   ssh philkime@bbf-osx106 "\\rm -f biblatex-biber/dist/darwinlegacy_x86_64/biber-darwinlegacy_x86_64"
@@ -85,7 +85,7 @@ fi
 # Build farm OSX 64-bit intel
 if [ ! -e $DIR/biber-darwin_x86_64.tar.gz ]; then
   vmon osx10.12 # VM name contains a '.' hostname does not
-  sleep 5
+  until ping -c1 -W1 bbf-osx1012 &>/dev/null; do sleep 1; done; echo "bbf-osx1012 up"
   ssh philkime@bbf-osx1012 "cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/darwin_x86_64;$SCANCACHE./build.sh;~/pp_osx_codesign_fix biber-darwin_x86_64;cd ~/biblatex-biber;sudo ./Build realclean"
   scp philkime@bbf-osx1012:biblatex-biber/dist/darwin_x86_64/biber-darwin_x86_64 $DIR/
   ssh philkime@bbf-osx1012 "\\rm -f biblatex-biber/dist/darwin_x86_64/biber-darwin_x86_64"
@@ -133,7 +133,7 @@ fi
 # SO YOU HAVE TO INSTALL MODULE UPDATES MANUALLY
 if [ ! -e $DIR/biber-MSWIN64.zip ]; then
   vmon w1064
-  sleep 10
+  until ping -c1 -W1 bbf-w1064 &>/dev/null; do sleep 1; done; echo "bbf-w1064 up"
   ssh phili@bbf-w1064 "cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;perl Build install;cd dist/MSWIN64;$SCANCACHE./build.bat;cd ~/biblatex-biber;perl Build realclean"
   scp phili@bbf-w1064:biblatex-biber/dist/MSWIN64/biber-MSWIN64.exe $DIR/
   ssh phili@bbf-w1064 "\\rm -f biblatex-biber/dist/MSWIN64/biber-MSWIN64.exe"
@@ -150,7 +150,7 @@ fi
 # Build farm Linux 32-bit (built on Ubuntu 14.04.6)
 if [ ! -e $DIR/biber-linux_x86_32.tar.gz ]; then
   vmon l32
-  sleep 10
+  until ping -c1 -W1 bbf-l32 &>/dev/null; do sleep 1; done; echo "bbf-l32 up"
   ssh philkime@bbf-l32 "sudo ntpdate ch.pool.ntp.org;cd biblatex-biber;git checkout $BRANCH;git pull;/usr/local/perl/bin/perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/linux_x86_32;$SCANCACHE./build.sh;cd ~/biblatex-biber;sudo ./Build realclean"
   scp philkime@bbf-l32:biblatex-biber/dist/linux_x86_32/biber-linux_x86_32 $DIR/
   ssh philkime@bbf-l32 "\\rm -f biblatex-biber/dist/linux_x86_32/biber-linux_x86_32"
@@ -167,7 +167,7 @@ fi
 # Build farm Linux 64-bit (built on Ubuntu 16.04)
 if [ ! -e $DIR/biber-linux_x86_64.tar.gz ]; then
   vmon l64
-  sleep 10
+  until ping -c1 -W1 bbf-l64 &>/dev/null; do sleep 1; done; echo "bbf-l64 up"
   ssh philkime@bbf-l64 "sudo ntpdate ch.pool.ntp.org;cd biblatex-biber;git checkout $BRANCH;git pull;/usr/local/perl/bin/perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/linux_x86_64;$SCANCACHE./build.sh;cd ~/biblatex-biber;sudo ./Build realclean"
   scp philkime@bbf-l64:biblatex-biber/dist/linux_x86_64/biber-linux_x86_64 $DIR/
   ssh philkime@bbf-l64 "\\rm -f biblatex-biber/dist/linux_x86_64/biber-linux_x86_64"
