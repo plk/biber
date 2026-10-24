@@ -110,24 +110,6 @@ if [ ! -e $DIR/biber-darwin_x86_64.tar.gz ]; then
   cd $BASE
 fi
 
-# Build farm WMSWIN32
-# DON'T FORGET THAT installdeps WON'T WORK FOR STRAWBERRY INSIDE CYGWIN
-# SO YOU HAVE TO INSTALL MODULE UPDATES MANUALLY
-# if [ ! -e $DIR/biber-MSWIN32.zip ]; then
-#   vmon wxp32
-#   sleep 10
-#   ssh philkime@bbf-wxp32 "cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;perl Build install;cd dist/MSWIN32;$SCANCACHE./build.bat;cd ~/biblatex-biber;perl Build realclean"
-#   scp philkime@bbf-wxp32:biblatex-biber/dist/MSWIN32/biber-MSWIN32.exe $DIR/
-#   ssh philkime@bbf-wxp32 "\\rm -f biblatex-biber/dist/MSWIN32/biber-MSWIN32.exe"
-#   vmoff wxp32
-#   cd $DIR
-#   mv biber-MSWIN32.exe $BINARYNAME.exe
-#   chmod +x $BINARYNAME.exe
-#   gzip biber-MSWIN32.zip $BINARYNAME.exe
-#   \rm -f $BINARYNAME.exe
-#   cd $BASE
-# fi
-
 # Build farm WMSWIN64
 # DON'T FORGET THAT installdeps WON'T WORK FOR STRAWBERRY INSIDE CYGWIN
 # SO YOU HAVE TO INSTALL MODULE UPDATES MANUALLY
@@ -146,6 +128,22 @@ if [ ! -e $DIR/biber-MSWIN64.zip ]; then
   cd $BASE
 fi
 
+# Build farm cygwin64
+if [ ! -e $DIR/biber-cygwin64.zip ]; then
+  vmon w1064
+  sleep 10
+  ssh philkime@bbf-w1064 "cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;perl Build install;cd dist/cygwin64;$SCANCACHE./build.bat;cd ~/biblatex-biber;perl Build realclean"
+  scp philkime@bbf-w1064:biblatex-biber/dist/cygwin64/biber-cygwin64.exe $DIR/
+  ssh philkime@bbf-w1064 "\\rm -f biblatex-biber/dist/cygwin64/biber-cygwin64.exe"
+  vmoff w1064
+  cd $DIR
+  mv biber-cygwin64.exe $BINARYNAME.exe
+  chmod +x $BINARYNAME.exe
+  tar cf biber-cygwin64.tar $BINARYNAME.exe
+  gzip biber-cygwin64.tar
+  \rm -f $BINARYNAME.exe
+  cd $BASE
+fi
 
 # Build farm Linux 32-bit (built on Ubuntu 14.04.6)
 if [ ! -e $DIR/biber-linux_x86_32.tar.gz ]; then
@@ -198,10 +196,10 @@ if [ -e $DIR/biber-darwin_x86_64.tar.gz ]; then
   scp biber-darwin_x86_64.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/biblatex-biber/$RELEASE/binaries/MacOS/biber-darwin_x86_64.tar.gz
 fi
 
-# Windows 32-bit
-# if [ -e $DIR/biber-MSWIN32.zip ]; then
-#   scp biber-MSWIN32.zip philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/biblatex-biber/$RELEASE/binaries/Windows/biber-MSWIN32.zip
-# fi
+# Windows cygwin64
+if [ -e $DIR/biber-cygwin64.tar.gz ]; then
+  scp biber-cygwin64.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/biblatex-biber/$RELEASE/binaries/Cygwin/biber-cygwin64.tar.gz
+fi
 
 # Windows 64-bit
 if [ -e $DIR/biber-MSWIN64.zip ]; then
