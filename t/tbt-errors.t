@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 7;
+use Test::More tests => 9;
 
 use Biber;
 use Biber::Output::bbl;
@@ -32,12 +32,15 @@ my @perlwarnings;
   $biber->prepare;
 }
 
-my @warnings = grep { /BibTeX subsystem/ } $biber->{warnings}->@*;
+# (entries are processed in no particular order)
+my @warnings = sort grep { /BibTeX subsystem/ } $biber->{warnings}->@*;
+my @nofamily = grep { /no family part/ } $biber->{warnings}->@*;
 my $log = Log::Log4perl::Appender::TestBuffer->by_name('Buffer')->buffer;
 
 is_deeply(\@warnings,
-          ['BibTeX subsystem: tbt-errors.bib, line 12, warning: undefined macro "nosuchmacro"',
-           'BibTeX subsystem: tbt-errors.bib, line 17, name 2, warning: empty name'],
+          [sort 'BibTeX subsystem: tbt-errors.bib, line 12, warning: undefined macro "nosuchmacro"',
+                'BibTeX subsystem: tbt-errors.bib, line 17, name 2, warning: empty name',
+                'BibTeX subsystem: tbt-errors.bib, line 39, name 2, warning: name has no last name'],
           'Text::BibTeX warnings with original file name and line');
 
 like($log, qr/^ERROR - BibTeX subsystem: tbt-errors\.bib, line 24, syntax error: found "\{No equals sign\}", expected "="$/m,
@@ -49,5 +52,9 @@ unlike($log, qr/\.utf8\b/, 'the preprocessed temporary file is not mentioned');
 my @keys = sort $biber->sections->get_section(0)->get_citekeys;
 ok((grep { $_ eq 'afterunclosed' } @keys), 'entry after an unclosed entry is still read');
 ok((grep { $_ eq 'good' } @keys), 'good entry read');
+
+is_deeply(\@nofamily, [q{Name ", M.F." in key 'nofamily' has no family part: skipping entry 'nofamily'}],
+          'name without a family part is warned about');
+ok(!(grep { $_ eq 'nofamily' } @keys), '...and its entry skipped');
 
 is_deeply(\@perlwarnings, [], 'no Perl warnings');

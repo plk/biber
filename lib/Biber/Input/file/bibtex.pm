@@ -1277,6 +1277,13 @@ sub _name {
                                    num      => $i + 1});
     }
 
+    # A name must have a family part (eg. ", M.F." doesn't)
+    if ($no->get_namepart('family') eq '') {
+      biber_warn("Name \"$name\" in key '$key' has no family part: skipping entry '$key'", $bibentry);
+      $section->del_citekey($key);
+      return 'BIBER_SKIP_ENTRY';
+    }
+
     # Deal with implied "et al" in data source
     if (lc($no->get_rawstring) eq Biber::Config->getoption('others_string')) {
       $names->set_morenames;

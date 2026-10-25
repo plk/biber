@@ -8,6 +8,9 @@ Revision history for Biber
          file and line information.
        * Perl warnings that used to be hidden by the STDERR redirection
          are no longer hidden; several such undefined value warnings fixed.
+       * Entries with a name that has no family part (eg. ", M.F.") are
+         now skipped with a warning (Text::BibTeX also warns about such
+         names, with the file and line).
        * Sourcemap steps that match an entry type without a type target no
          longer blank the entry type.
        * Fixed @string entries with more than one macro not being re-read
