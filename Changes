@@ -1,5 +1,8 @@
 Revision history for Biber
 2.23   (unreleased)
+       * New option --dieonwarning (also in the config file): biber runs to
+         completion as usual but exits with status 1 if there were any
+         warnings (errors still give status 2).
        * Requires Text::BibTeX 1.00. Text::BibTeX errors and warnings are
          now collected as error objects instead of by redirecting STDERR to
          a temporary file, and are reported with the name of the original

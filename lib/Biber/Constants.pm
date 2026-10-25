@@ -241,6 +241,7 @@ our $CONFIG_DEFAULT_BIBER = {
   graph                                       => { content => 0 },
   debug                                       => { content => 0 },
   dieondatamodel                              => { content => 0 },
+  dieonwarning                                => { content => 0 },
   decodecharsset                              => { content => 'base' },
   dot_include                                 => { option => {section => 1, xdata => 1, crossref => 1, xref => 1 }},
   fixinits                                    => { content => 0 },
