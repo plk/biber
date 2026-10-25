@@ -36,7 +36,7 @@ COPY C:\strawberry\perl\site\bin\biber %TEMP%\biber-MSWIN64
 
 SET PAR_VERBATIM=1
 
-CALL C:\Strawberry\perl\site\bin\pp.bat ^
+CALL /cygdrive/c/Strawberry/perl/site/bin/pp.bat ^
   --module=deprecate ^
   --module=Biber::Input::file::bibtex ^
   --module=Biber::Input::file::biblatexml ^
