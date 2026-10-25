@@ -388,7 +388,7 @@ sub set_output_entry {
     my $outenc = Biber::Config->getoption('output_encoding');
     if ($outenc ne 'UTF-8') {
       # Can this entry be represented in the output encoding?
-      if (encode($outenc, NFC($acc)) =~ /\?/) { # Malformed data encoding char
+      if (not eval { encode($outenc, NFC($acc), Encode::FB_CROAK | Encode::LEAVE_SRC); 1 }) { # Malformed data encoding char
         # So convert to macro
         $acc = latex_recode_output($acc);
         biber_warn("The entry '$key' has characters which cannot be encoded in '$outenc'. Recoding problematic characters into macros.");
