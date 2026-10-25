@@ -495,7 +495,7 @@ sub set_uniquename {
 
   my $currval = $self->{state}{namelistdata}{$nlid}{$nid}{un};
   # Set modified flag to positive if we changed something
-  if (not defined($currval) or not Compare($currval, $s)) {
+  if (not Compare($currval, $s)) {
     $self->set_unul_changed(1);
   }
   $self->{state}{namelistdata}{$nlid}{$nid}{un} = $s;
