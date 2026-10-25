@@ -23,7 +23,6 @@ use Biber::Config;
 use Encode;
 use File::Spec;
 use File::Slurper;
-use File::Temp;
 use Log::Log4perl qw(:no_extra_logdie_message);
 use List::AllUtils qw( :all );
 use Scalar::Util qw(looks_like_number);
@@ -151,24 +150,22 @@ sub extract_entries {
     }
   }
 
-  # Text::BibTeX can't be controlled by Log4perl so we have to do something clumsy
-  # We can't redirect STDERR to a variable as libbtparse doesn't use PerlIO, just stdio
-  # so it doesn't understand this. It does understand normal file redirection though as
-  # that's standard stdio.
-  # The Log4Perl setup outputs only to STDOUT so redirecting all STDERR like this is
-  # ok since only libbtparse will be writing there
-  # Don't do this if we are debugging or tracing because some errors in libbtparse cause
-  # sudden death and can't be output as the read/output of the saved STDERR is never reached.
-  # so, if debugging/tracing, output STDERR errors immediately.
-  my $tberr;
-  my $tberr_name;
-  unless ($logger->is_debug() or $logger->is_trace()) {
-    $tberr = File::Temp->new(TEMPLATE => 'biber_Text_BibTeX_STDERR_XXXXX',
-                             DIR      => $Biber::MASTER->biber_tempdir);
-    $tberr_name = $tberr->filename;
-    open OLDERR, '>&', \*STDERR;
-    open STDERR, '>', $tberr_name;
-  }
+  # Collect Text::BibTeX errors and warnings (Text::BibTeX::Error objects,
+  # which carry the file name, line number and message) instead of letting
+  # Text::BibTeX print them, so that they go through the biber logger.
+  # They are reported once the data source has been read, except for fatal
+  # errors (misuse of the library), which are reported immediately.
+  my @tberrors;
+  local $Text::BibTeX::Error::Handler = sub {
+    my $err = shift;
+    if ($err->is_fatal) {
+      biber_error("BibTeX subsystem: " . $err->as_string);
+    }
+    if ($logger->is_debug()) {# performance tune
+      $logger->debug("BibTeX subsystem: " . $err->as_string);
+    }
+    push @tberrors, $err;
+  };
 
   # Increment the number of times each datafile has been referenced
   # For example, a datafile might be referenced in more than one section.
@@ -301,31 +298,18 @@ sub extract_entries {
     }
   }
 
-  unless ($logger->is_debug() or $logger->is_trace()) {
-    open STDERR, '>&', \*OLDERR;
-    close OLDERR;
-
-    # Put any Text::BibTeX errors into the biber warnings/errors collections
-    # We are parsing the libbtparse library error/warning strings a little here
-    # This is not so bad as they have a clean structure (see error.c in libbtparse)
-    open my $tbe, '<', $tberr_name;
-    while (<$tbe>) {
-      next if /overriding\sexisting\sdefinition\sof\smacro/; # ignore macro redefs
-      if (/error:/) {
-        chomp;
-        if (/skipping\sto\snext\s"\@"/) {
-          biber_error("BibTeX subsystem: $_");
-        }
-        else {
-          biber_error("BibTeX subsystem: $_");
-        }
-      }
-      elsif (/warning:/) {
-        chomp;
-        biber_warn("BibTeX subsystem: $_");
-      }
+  # Put any Text::BibTeX errors into the biber warnings/errors collections.
+  # Their string form is "file, line N, warning: message" (with the
+  # original data source file name and line number)
+  foreach my $err (@tberrors) {
+    next if $err->is_fatal; # already reported
+    next if $err->message =~ /^overriding existing definition of macro/; # ignore macro redefs
+    if ($err->severity eq 'error') {
+      biber_error("BibTeX subsystem: " . $err->as_string);
     }
-    close($tbe);
+    elsif ($err->severity eq 'warning') {
+      biber_warn("BibTeX subsystem: " . $err->as_string);
+    }
   }
 
   # Only push the preambles from the file if we haven't seen this data file before
@@ -559,11 +543,13 @@ sub create_entry {
               }
               # Change entrytype if requested
               $last_type = $etarget->type;
-              my $t = fc(maploopreplace($step->{map_type_target}, $maploop));
-              if ($logger->is_debug()) { # performance tune
-                $logger->debug("Source mapping (type=$level, key=$etargetkey): Changing entry type from '$last_type' to $t");
+              if (defined(my $tt = maploopreplace($step->{map_type_target}, $maploop))) {
+                my $t = fc($tt);
+                if ($logger->is_debug()) { # performance tune
+                  $logger->debug("Source mapping (type=$level, key=$etargetkey): Changing entry type from '$last_type' to $t");
+                }
+                $etarget->set_type(encode('UTF-8', NFC($t)));
               }
-              $etarget->set_type(encode('UTF-8', NFC($t)));
             }
 
             my $fieldcontinue = 0;
@@ -723,7 +709,10 @@ sub create_entry {
               $last_field = $fieldsource;
               # $fieldsource is already casefolded, which is correct as it does not come
               # from Text::BibTeX's list of fields
-              $last_fieldval = $fieldsource eq 'entrykey' ? $etarget->key : $etarget->get(encode('UTF-8', NFC($fieldsource)));
+              # (a step with only a negated field match has no source field)
+              $last_fieldval = !defined($fieldsource) ? undef
+                : $fieldsource eq 'entrykey' ? $etarget->key
+                : $etarget->get(encode('UTF-8', NFC($fieldsource)));
 
               my $negmatch = 0;
               my $nm;
@@ -1211,13 +1200,13 @@ sub _name {
 
   my @tmp = Text::BibTeX::split_list(NFC($value),# Unicode NFC boundary
                                      Biber::Config->getoption('namesep'),
-                                     undef,
-                                     undef,
-                                     undef,
+                                     $entry->filename,
+                                     $entry->line($field),
+                                     'name',
                                      {binmode => 'utf-8', normalization => 'NFD'});
 
   for (my $i = 0; $i <= $#tmp; $i++) {
-    my $name = $tmp[$i];
+    my $name = $tmp[$i] // ''; # empty names (eg. "and and") are undef
 
     # Record any XDATA and skip if we did
     if ($bibentry->add_xdata_ref($field, $name, $i)) {
@@ -1241,7 +1230,7 @@ sub _name {
       }
     }
 
-    # Consecutive "and" causes Text::BibTeX::Name to segfault
+    # Consecutive "and" gives an empty name
     unless ($name) {
       biber_warn("Name in key '$key' is empty (probably consecutive 'and'): skipping entry '$key'", $bibentry);
       $section->del_citekey($key);
@@ -1271,7 +1260,7 @@ sub _name {
           return 'BIBER_SKIP_ENTRY';
         }
 
-        # Consecutive commas cause Text::BibTeX::Name to segfault
+        # Consecutive commas would be silently treated as one comma
         if ($name =~ /,,/) {
           biber_error("Name \"$name\" is malformed (consecutive commas): skipping entry '$key'", 1);
           $section->del_citekey($key);
@@ -1282,7 +1271,10 @@ sub _name {
       # Skip names that don't parse for some reason
       # unique name defaults to 0 just in case we are in tool mode otherwise there are spurious
       # uninitialised warnings
-      next unless $no = parsename($section, $name, $fc);
+      next unless $no = parsename($section, $name, $fc,
+                                  {filename => $entry->filename,
+                                   line     => $entry->line($field),
+                                   num      => $i + 1});
     }
 
     # Deal with implied "et al" in data source
@@ -1448,9 +1440,9 @@ sub _list {
 
   my @tmp = Text::BibTeX::split_list(NFC($value),# Unicode NFC boundary
                                      Biber::Config->getoption('listsep'),
-                                     undef,
-                                     undef,
-                                     undef,
+                                     $entry->filename,
+                                     $entry->line($field),
+                                     'list item',
                                      {binmode => 'utf-8', normalization => 'NFD'});
   @tmp = map { (remove_outer($_))[1] } @tmp;
   my @result;
@@ -1475,9 +1467,9 @@ sub _urilist {
   # Unicode NFC boundary (passing to external library)
   my @tmp = Text::BibTeX::split_list(NFC($value),
                                      Biber::Config->getoption('listsep'),
-                                     undef,
-                                     undef,
-                                     undef,
+                                     $entry->filename,
+                                     $entry->line($field),
+                                     'list item',
                                      {binmode => 'utf-8', normalization => 'NFD'});
   my @result;
 
@@ -1512,8 +1504,10 @@ sub cache_data {
   # Convert/decode file
   my $pfilename = preprocess_file($filename, $encoding);
 
+  # Text::BibTeX reports errors with the original data source name (the
+  # preprocessed file keeps its line numbers)
   my $bib = Text::BibTeX::File->new();
-  $bib->open($pfilename, {binmode => 'utf-8', normalization => 'NFD'}) or biber_error("Cannot create Text::BibTeX::File object from $pfilename: $!");
+  $bib->open($pfilename, {binmode => 'utf-8', normalization => 'NFD', filename => $filename}) or biber_error("Cannot create Text::BibTeX::File object from $pfilename: $!");
 
   # Log that we found a data file
   $logger->info("Found BibTeX data source '$filename'");
@@ -1545,7 +1539,7 @@ sub cache_data {
 
     # If an entry has no key, ignore it and warn
     unless ($entry->key) {
-      biber_warn("Invalid or undefined BibTeX entry key in file '$pfilename', skipping ...");
+      biber_warn("Invalid or undefined BibTeX entry key in file '$filename', skipping ...");
       next;
     }
 
@@ -1682,7 +1676,7 @@ sub preprocess_file {
 
   slurp_switchw($ufilename, $buf);# Unicode NFC boundary
 
-  my $lbuf = parse_decode($ufilename);
+  my $lbuf = parse_decode($ufilename, $filename);
 
   if ($logger->is_trace()) {# performance tune
     $logger->trace("Buffer after decoding -> '$lbuf'");
@@ -1703,50 +1697,73 @@ sub preprocess_file {
 =cut
 
 sub parse_decode {
-  my $ufilename = shift;
+  my ($ufilename, $filename) = @_;
   my $dmh = Biber::Config->get_dm_helpers;
-  my $lbuf;
+  my $lbuf = '';
 
   my $bib = Text::BibTeX::File->new();
-  $bib->open($ufilename, {binmode => 'utf-8', normalization => 'NFD'}) or biber_error("Cannot create Text::BibTeX::File object from $ufilename: $!");
+  $bib->open($ufilename, {binmode => 'utf-8', normalization => 'NFD', filename => $filename // $ufilename}) or biber_error("Cannot create Text::BibTeX::File object from $ufilename: $!");
 
   $logger->info("LaTeX decoding ...");
 
+  # The decoded buffer is laid out so that every entry and field starts on
+  # the same line as in the original file, so that Text::BibTeX can report
+  # the original line numbers when the buffer is parsed again.
+  my $curline = 1;
+  my $at_line = sub { # Move to line $l, or add a separator if we are past it
+    my $l = shift;
+    if (defined($l) and $l > $curline) {
+      $lbuf .= "\n" x ($l - $curline);
+      $curline = $l;
+    }
+    elsif (length($lbuf) and $lbuf !~ m/\n\z/) {
+      $lbuf .= ' ';
+    }
+  };
+  my $put = sub {
+    my $text = shift;
+    $lbuf .= $text;
+    $curline += ($text =~ tr/\n//);
+  };
+
   while ( my $entry = Text::BibTeX::Entry->new($bib) ) {
-  if ( $entry->metatype == BTE_REGULAR ) {
-      $lbuf .= '@' . $entry->type . '{' . $entry->key . ',' . "\n";
+    my ($startline) = $entry->line;
+    $at_line->($startline);
+    if ( $entry->metatype == BTE_REGULAR ) {
+      $put->('@' . $entry->type . '{' . $entry->key . ',');
       foreach my $f ($entry->fieldlist) {
-        my $fv = $entry->get(encode('UTF-8', NFC($f))); # NFC boundary: $f is "output" to Text::BibTeX
+        my $fv = $entry->get($f) // ''; # undef for an undefined macro
 
         # Don't decode verbatim fields
         if (not first {fc($f) eq fc($_)} $dmh->{verbs}->@*) {
           $fv = Biber::LaTeX::Recode::latex_decode($fv);
         }
-        $lbuf .= "  $f = {$fv},\n";
+        $at_line->($entry->line($f));
+        $put->("  $f = {$fv},");
       }
-      $lbuf .= "\n" . '}' . "\n\n";
+      $put->('}');
     }
     elsif ($entry->metatype == BTE_PREAMBLE) {
-      $lbuf .= '@PREAMBLE{"';
-      $lbuf .= $entry->value;
-      $lbuf .=  '"}' . "\n";
+      $put->('@PREAMBLE{"' . $entry->value . '"}');
     }
     elsif ($entry->metatype == BTE_COMMENT) {
-      $lbuf .= '@COMMENT{';
-      $lbuf .= $entry->value;
-      $lbuf .=  '}' . "\n";
+      $put->('@COMMENT{' . $entry->value . '}');
     }
     elsif ($entry->metatype == BTE_MACRODEF) {
-      $lbuf .= '@STRING{';
+      $put->('@STRING{');
+      my $sep = '';
       foreach my $f ($entry->fieldlist) {
-        $lbuf .= $f . ' = {' . $entry->get(encode('UTF-8', NFC($f))) . '}';
+        $at_line->($entry->line($f)) if $sep;
+        $put->($sep . $f . ' = {' . ($entry->get($f) // '') . '}');
+        $sep = ',';
       }
-      $lbuf .= "}\n";
+      $put->('}');
     }
     else {
-      $lbuf .= Biber::LaTeX::Recode::latex_decode($entry->print_s);
+      $put->(Biber::LaTeX::Recode::latex_decode($entry->print_s));
     }
   }
+  $put->("\n");
 
   # (Re-)define the old BibTeX month macros to what biblatex wants unless user stops this
   unless (Biber::Config->getoption('nostdmacros')) {
@@ -1782,7 +1799,8 @@ sub parse_decode {
 =cut
 
 sub parsename {
-  my ($section, $namestr, $fieldname) = @_;
+  my ($section, $namestr, $fieldname, $loc) = @_;
+  $loc //= {};
 
   # First sanitise the namestring due to Text::BibTeX::Name limitations on whitespace
   $namestr =~ s/\A\s*|\s*\z//xms; # leading and trailing whitespace
@@ -1796,7 +1814,8 @@ sub parsename {
   $namestr =~ s/(\w)\.(\w)/$1. $2/g if Biber::Config->getoption('fixinits');
 
   my %namec;
-  my $name = Text::BibTeX::Name->new({binmode => 'utf-8', normalization => 'NFD'}, NFC($namestr));
+  my $name = Text::BibTeX::Name->new({binmode => 'utf-8', normalization => 'NFD'}, NFC($namestr),
+                                     $loc->{filename}, $loc->{line}, $loc->{num});
 
   # Formats so we can get BibTeX compatible nbsp inserted
   my $l_f = Text::BibTeX::NameFormat->new('l', 0);

@@ -59,7 +59,6 @@ PAR_VERBATIM=1 pp \
    --link=/bin/cyggcrypt-20.dll \
    --link=/bin/cygiconv-2.dll \
    --link=/bin/cyggpg-error-0.dll \
-   --link=/usr/local/bin/libbtparse.dll \
    --link=/bin/cygxml2-2.dll \
    --link=/bin/cygxslt-1.dll \
    --link=/bin/cygexslt-0.dll \

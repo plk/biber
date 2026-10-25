@@ -14,9 +14,8 @@
 # for file in `find /usr/local/perl/lib* -name \*.so`; do echo $file >> /tmp/out ;readelf -d $file >> /tmp/out; done
 # and then grep the file for "RPATH"
 
-# Had to add /etc/ld.so.conf.d/biber.conf and put "/usr/local/perl/lib64" in there
-# and then run "sudo ldconfig" so that libbtparse.so is found. Doesn't really make
-# a difference to the build, just the running of Text::BibTeX itself.
+# Text::BibTeX >= 1.00 has btparse compiled into its XS module, so there is
+# no separate libbtparse.so to link or to make findable with ldconfig.
 
 # Using a newer locally built libz and libxml2 (and rebuilt XML::LibXML) in /usr/local because
 # beginning with 32-bit Debian Wheezy, the older ones would segfault
@@ -72,7 +71,6 @@ PAR_VERBATIM=1 /usr/local/bin/pp \
   --module=Specio::PP \
   --module=Specio::XS \
   --module=DateTime \
-  --link=/usr/local/lib/libbtparse.so \
   --link=/usr/lib/libxml2.so \
   --link=/usr/lib/libz.so \
   --link=/usr/lib/liblzma.so \

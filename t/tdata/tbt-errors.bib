@@ -1,0 +1,36 @@
+% Text::BibTeX error reporting: the line numbers below are checked by
+% t/tbt-errors.t, so don't move things around.
+@BOOK{good,
+  author    = {Ana Caf{\'e}},
+  title     = {A {\"U}ber
+               multi-line title},
+  year      = {2001},
+}
+
+@BOOK{undefmacro,
+  author    = {Bob Builder},
+  title     = nosuchmacro,
+  year      = {2002},
+}
+
+@BOOK{emptyname,
+  author    = {Smith, John and and Jones, Jane},
+  title     = {Empty name},
+  year      = {2003},
+}
+
+@BOOK{missingeq,
+  author    = {Carl Carlson},
+  title       {No equals sign},
+  year      = {2004},
+}
+
+@BOOK{unclosed,
+  author    = {Dora Dee},
+  title     = {Never closed},
+
+@BOOK{afterunclosed,
+  author    = {Eve Evans},
+  title     = {Still found},
+  year      = {2005},
+}

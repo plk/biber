@@ -1414,7 +1414,7 @@ sub parse_date_range {
   }
 
   my $unspec;
-  if ($sd =~ /X/) {# ISO8601-2 4.3 unspecified format
+  if (defined($sd) and $sd =~ /X/) {# ISO8601-2 4.3 unspecified format
     ($sd, $sep, $ed, $unspec) = parse_date_unspecified($sd);
   }
   # Set start date unknown flag

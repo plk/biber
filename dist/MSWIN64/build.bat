@@ -62,7 +62,6 @@ CALL C:\Strawberry\perl\site\bin\pp.bat ^
   --module=Text::CSV_XS ^
   --module=DateTime ^
   --module=C:/Strawberry/perl/site/lib/Win32/Unicode.pm ^
-  --link=C:/strawberry/c/bin/libbtparse.dll ^
   --link=C:/strawberry/c/bin/libxslt-1__.dll ^
   --link=C:/strawberry/c/bin/libexslt-0__.dll ^
   --link=C:/strawberry/c/bin/zlib1__.dll ^

@@ -1,4 +1,19 @@
 Revision history for Biber
+2.23   (unreleased)
+       * Requires Text::BibTeX 1.00. Text::BibTeX errors and warnings are
+         now collected as error objects instead of by redirecting STDERR to
+         a temporary file, and are reported with the name of the original
+         data source and line numbers in it (rather than those of the
+         preprocessed temporary file). Name and list warnings now also have
+         file and line information.
+       * Perl warnings that used to be hidden by the STDERR redirection
+         are no longer hidden; several such undefined value warnings fixed.
+       * Sourcemap steps that match an entry type without a type target no
+         longer blank the entry type.
+       * Fixed @string entries with more than one macro not being re-read
+         correctly after LaTeX decoding.
+       * PAR build scripts no longer link libbtparse (it is part of the
+         Text::BibTeX module now).
 2.22   (2025-08)
        * Fixed security issues with evals
 2.21   (2025-07)

@@ -36,7 +36,6 @@ PAR_VERBATIM=1 /usr/local/bin/pp \
   --link=/lib/aarch64-linux-gnu/libgpg-error.so.0 \
   --link=/lib/aarch64-linux-gnu/libcrypt.so.1 \
   --link=/lib/aarch64-linux-gnu/libgcrypt.so.20 \
-  --link=/usr/local/lib/libbtparse.so \
   --link=/usr/lib/aarch64-linux-gnu/libxslt.so \
   --link=/usr/lib/aarch64-linux-gnu/libexslt.so \
   --link=/usr/lib/aarch64-linux-gnu/libxml2.so \

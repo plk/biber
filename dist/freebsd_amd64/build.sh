@@ -30,7 +30,6 @@ export PAR_VERBATIM
   --module=File::Find::Rule \
   --module=Text::CSV_XS \
   --module=DateTime \
-  --link=/usr/local/lib/libbtparse.so \
   --link=/usr/local/lib/libiconv.so.3 \
   --link=/usr/local/lib/libxml2.so.5 \
   --link=/usr/local/lib/libxslt.so.2 \

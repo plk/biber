@@ -28,7 +28,6 @@ PAR_VERBATIM=1 /usr/perl5/5.24/bin/pp \
   --module=PerlIO::utf8_strict \
   --module=Text::CSV_XS \
   --module=DateTime \
-  --link=/usr/perl5/5.24/lib/libbtparse.so \
   --link=/usr/lib/amd64/libxml2.so.2 \
   --link=/usr/lib/amd64/libz.so.1 \
   --link=/usr/lib/amd64/libxslt.so.1 \

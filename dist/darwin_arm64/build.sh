@@ -87,7 +87,6 @@ PAR_VERBATIM=1 /opt/homebrew/Cellar/perl/${perlv}/bin/pp \
   --link=/tmp/libraries/usr/lib/libxslt.1.dylib \
   --link=/tmp/libraries/usr/lib/libcrypto.dylib \
   --link=/tmp/libraries/usr/lib/liblzma.5.dylib \
-  --link=/opt/homebrew/Cellar/perl/${perlv}/lib/libbtparse.dylib \
   --link=/opt/homebrew/Cellar/icu4c@78/78.2/lib/libicui18n.78.dylib \
   --link=/opt/homebrew/Cellar/icu4c@78/78.2/lib/libicuuc.78.dylib \
   --link=/opt/homebrew/Cellar/icu4c@78/78.2/lib/libicudata.78.dylib \

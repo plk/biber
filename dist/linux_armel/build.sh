@@ -26,7 +26,6 @@ PAR_VERBATIM=1 /usr/local/perl-5.24.0/bin/pp \
   --module=PerlIO::utf8_strict \
   --module=Text::CSV_XS \
   --module=DateTime \
-  --link=/usr/local/perl-5.24.0/lib/libbtparse.so \
   --link=/usr/lib/arm-linux-gnueabi/libxml2.so.2 \
   --link=/lib/arm-linux-gnueabi/libz.so.1 \
   --link=/usr/lib/arm-linux-gnueabi/libxslt.so.1 \

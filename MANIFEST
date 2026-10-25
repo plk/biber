@@ -84,6 +84,7 @@ t/datalists.t
 t/sort-order.t
 t/sort-names.t
 t/sort-uc.t
+t/tbt-errors.t
 t/tool.t
 t/tool-bltxml.t
 t/tool-bltxml-inout.t
@@ -174,6 +175,8 @@ t/tdata/sort.bib
 t/tdata/sort-case.bcf
 t/tdata/sort-case.bib
 t/tdata/sort-complex.bcf
+t/tdata/tbt-errors.bcf
+t/tdata/tbt-errors.bib
 t/tdata/translit.bib
 t/tdata/translit.bcf
 t/tdata/datalists.bcf

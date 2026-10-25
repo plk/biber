@@ -54,7 +54,6 @@ PAR_VERBATIM=1 pp \
   --module=DateTime \
   --link=/opt/local/lib/libz.1.dylib \
   --link=/opt/local/lib/libiconv.2.dylib \
-  --link=/opt/local/libexec/perl${perlv}/sitebin/libbtparse.dylib \
   --link=/opt/local/lib/libxml2.2.dylib \
   --link=/opt/local/lib/libxslt.1.dylib \
   --link=/opt/local/lib/libgdbm.6.dylib \
