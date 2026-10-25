@@ -84,7 +84,7 @@ sub create_output_misc {
       my $outenc = Biber::Config->getoption('output_encoding');
       if ($outenc ne 'UTF-8') {
         # Can this entry be represented in the output encoding?
-        if (encode($outenc, NFC($pa), sub {"\0"}) =~ /\0/) { # Malformed data encoding char
+        if (not eval { encode($outenc, NFC($pa), Encode::FB_CROAK | Encode::LEAVE_SRC); 1 }) { # Malformed data encoding char
           # So convert to macro
           $pa = latex_recode_output($pa);
         }
@@ -736,9 +736,7 @@ sub output {
           my $outenc = Biber::Config->getoption('output_encoding');
           if ($outenc ne 'UTF-8') {
             # Can this entry be represented in the output encoding?
-            # We must have an ASCII-safe replacement string for encode which is unlikely to be
-            # in the string. Default is "?" which could easily be in URLS so we choose ASCII null
-            if (encode($outenc, NFC($entry_string), sub {"\0"})  =~ /\0/) { # Malformed data encoding char
+            if (not eval { encode($outenc, NFC($entry_string), Encode::FB_CROAK | Encode::LEAVE_SRC); 1 }) { # Malformed data encoding char
               # So convert to macro
               $entry_string = latex_recode_output($entry_string);
               biber_warn("The entry '$k' has characters which cannot be encoded in '$outenc'. Recoding problematic characters into macros.");
