@@ -46,6 +46,7 @@ GetOptions(
            'debug|D',
            'decodecharsset=s',
            'dieondatamodel',
+           'dieonwarning|die-on-warning',
            'dot_include|dot-include:s@',
            'fastsort|f', # does nothing now
            'fixinits',
@@ -559,6 +560,13 @@ Turn on debugging for C<biber>.
 
 Exit immediately with error if using C<--validate-datamodel> and a datamodel validation
 error is found. Default is to warn and continue.
+
+=item B<--dieonwarning>
+
+Treat warnings as failures: biber runs to completion as usual (writing its
+output and reporting all warnings), but exits with status 1 if there were any
+warnings. This is useful for checking data in scripts and automated builds.
+Errors still take precedence and give exit status 2.
 
 =item B<--dot-include=section,field,xdata,crossref,xref,related>
 

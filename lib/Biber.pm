@@ -6,6 +6,7 @@ use parent qw(Class::Accessor Biber::Internals);
 
 use constant {
   EXIT_OK => 0,
+  EXIT_WARNING => 1,
   EXIT_ERROR => 2
 };
 
@@ -136,6 +137,12 @@ sub display_end {
   if ($self->{errors}) {
     $logger->info('ERRORS: ' . $self->{errors});
     exit EXIT_ERROR;
+  }
+  # With --dieonwarning, any warning is a failure (once everything is done)
+  if ($self->{warnings} and $self->{warnings}->@* and
+      Biber::Config->getoption('dieonwarning')) {
+    $logger->error('Exiting with failure status because of warnings (--dieonwarning)');
+    exit EXIT_WARNING;
   }
 }
 
