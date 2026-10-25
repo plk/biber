@@ -129,7 +129,7 @@ if [ ! -e $DIR/biber-MSWIN64.zip ]; then
 fi
 
 # Build farm cygwin64
-if [ ! -e $DIR/biber-cygwin64.zip ]; then
+if [ ! -e $DIR/biber-cygwin64.tar.gz ]; then
   vmon w1064
   until ping -c1 -W1 bbf-w1064 &>/dev/null; do sleep 1; done; echo "bbf-w1064 up"
   ssh phili@bbf-w1064 ". bin/set-biber-cyg-build-env.sh;cd biblatex-biber;git checkout $BRANCH;git pull;/bin/perl ./Build.PL;./Build installdeps;./Build install;cd dist/cygwin64;./build.sh;cd ~/biblatex-biber;./Build realclean"
