@@ -1662,7 +1662,7 @@ sub rangelen {
           my @m = reverse split(//,$m);
           my @n = reverse split(//,$n);
           for (my $i=0;$i<=$#m;$i++) {
-            next if $n[$i];
+            next if defined $n[$i];
             $n[$i] = $m[$i];
           }
           $n = join('', reverse @n);
