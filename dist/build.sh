@@ -116,7 +116,7 @@ fi
 if [ ! -e $DIR/biber-MSWIN64.zip ]; then
   vmon w1064
   until ping -c1 -W1 bbf-w1064 &>/dev/null; do sleep 1; done; echo "bbf-w1064 up"
-  ssh phili@bbf-w1064 "cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;perl Build install;cd dist/MSWIN64;$SCANCACHE./build.bat;cd ~/biblatex-biber;perl Build realclean"
+  ssh phili@bbf-w1064 "cd biblatex-biber;git checkout $BRANCH;git pull;/cygdrive/c/Strawberry/perl/bin/perl ./Build.PL;/cygdrive/c/Strawberry/perl/bin/perl Build install;cd dist/MSWIN64;$SCANCACHE./build.bat;cd ~/biblatex-biber;/cygdrive/c/Strawberry/perl/bin/perl Build realclean"
   scp phili@bbf-w1064:biblatex-biber/dist/MSWIN64/biber-MSWIN64.exe $DIR/
   ssh phili@bbf-w1064 "\\rm -f biblatex-biber/dist/MSWIN64/biber-MSWIN64.exe"
   vmoff w1064
