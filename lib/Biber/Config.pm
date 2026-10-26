@@ -389,6 +389,8 @@ sub _config_file_set {
                                                             qr/\A(?:or)?filter\z/,
                                                             qr/\Asortexclusion\z/,
                                                             qr/\Aexclusion\z/,
+                                                            qr/\Asortinclusion\z/,
+                                                            qr/\Ainclusion\z/,
                                                             qr/\Asortingtemplate\z/,
                                                             qr/\Aconstant\z/,
                                                             qr/\Asort\z/,
@@ -554,10 +556,13 @@ sub _config_file_set {
       }
     }
     # mildly complex options - nosort/collate_options
-    elsif (lc($k) eq 'nosort' or
-           lc($k) eq 'noinit' or
-           lc($k) eq 'nolabel' ) {
+    elsif (lc($k) eq 'nosort') {
       Biber::Config->setconfigfileoption($k, $v->{option});
+    }
+    # noinit and nolabel are in ForceArray, so $v is an array
+    elsif (lc($k) eq 'noinit' or
+           lc($k) eq 'nolabel' ) {
+      Biber::Config->setconfigfileoption($k, $v->[0]{option});
     }
     # rather complex options
     elsif (lc($k) eq 'collate_options') {

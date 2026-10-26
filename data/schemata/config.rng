@@ -237,9 +237,9 @@
         </optional>
         <optional>
           <!-- noinit specification -->
-          <element name="noinits">
+          <element name="noinit">
             <oneOrMore>
-              <element name="noinit">
+              <element name="option">
                 <attribute name="value">
                   <data type="string"/>
                 </attribute>
@@ -250,9 +250,9 @@
         </optional>
         <optional>
           <!-- nolabel specification -->
-          <element name="nolabels">
+          <element name="nolabel">
             <oneOrMore>
-              <element name="nolabel">
+              <element name="option">
                 <attribute name="value">
                   <data type="string"/>
                 </attribute>

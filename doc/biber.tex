@@ -664,7 +664,7 @@ an example config file which displays the \biber\ defaults:
   </noinit>
   <nolabel>
     <!-- strip punctuation, symbols, separator and control characters -->
-    <option value="[\p{P}\p{S}\p{C}]+"/> 
+    <option value="[\p{Pc}\p{Ps}\p{Pe}\p{Pi}\p{Pf}\p{Po}\p{S}\p{C}]+"/> 
   </nolabel>
   <nolog>0</nolog>
   <nostdmacros>0</nostdmacros>
@@ -1397,7 +1397,7 @@ and separator characters when generation labels. Given (the default):
 \begin{lstlisting}[language=xml]
   <nolabel>
     <!-- strip punctuation, symbols, separator and control characters-->
-    <option value="[\p{P}\p{S}\p{C}]+"/> 
+    <option value="[\p{Pc}\p{Ps}\p{Pe}\p{Pi}\p{Pf}\p{Po}\p{S}\p{C}]+"/> 
   </nolabel>
 \end{lstlisting}
 
