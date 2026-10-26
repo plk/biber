@@ -1894,7 +1894,7 @@ sub instantiate_entry {
           $entry_string =~ s|<BDS>UNP-$nid</BDS>|$str|gxms;
           foreach my $np ($n->get_nameparts) {
             if ($self->is_unbasepart($nlid, $nid, $np)) {
-              $entry_string =~ s|\s+<BDS>UNP-$np-$nid</BDS>,?||gxms;
+              $entry_string =~ s|,\s+<BDS>UNP-$np-$nid</BDS>||gxms;
             }
             else {
               $str = "${np}un=" . $self->get_unparts($nlid, $nid, $np);
@@ -1905,7 +1905,7 @@ sub instantiate_entry {
         else {
           $entry_string =~ s|<BDS>UN[SP]-$nid</BDS>,?||gxms;
           foreach my $np ($n->get_nameparts) {
-            $entry_string =~ s|\s+<BDS>UNP-$np-$nid</BDS>,?||gxms;
+            $entry_string =~ s|,\s+<BDS>UNP-$np-$nid</BDS>||gxms;
           }
         }
       }
@@ -2222,9 +2222,6 @@ sub instantiate_entry {
       $entry_string =~ s|\ssingletitle="\[BDS\]SINGLETITLE\[/BDS\]"||gxms;
     }
   }
-
-  # Clean up dangling commas
-  $entry_string =~ s|,(?:\n\s+)?\}\}|}}|gxms;
 
   # Clean up generic metadata which was not replaced
   $entry_string =~ s|^\s+<BDS>[^<]+</BDS>\n||gxms;
