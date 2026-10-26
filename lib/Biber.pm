@@ -4626,8 +4626,6 @@ sub fetch_data {
 
   # Now actually fetch data with expanded list of data sources
   foreach my $datasource ($section->get_datasources->@*) {
-    # shortcut if we have found all the keys now
-    last unless (@remaining_keys or $section->is_allkeys);
     my $type = $datasource->{type};
     my $name = $datasource->{name};
     my $encoding = $datasource->{encoding};
