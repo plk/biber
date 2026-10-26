@@ -1,5 +1,7 @@
 Revision history for Biber
 2.23   (unreleased)
+       * Config file fix - noinits->noinit nolabels->nolabel and these both only
+         contain "<option>" params now, in line with the other similar options.
        * New option --dieonwarning (also in the config file): biber runs to
          completion as usual but exits with status 1 if there were any
          warnings (errors still give status 2).

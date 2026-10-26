@@ -1078,8 +1078,14 @@ sub _literal {
       $value = $isbn->isbn;
     }
     elsif (Biber::Config->getoption('isbn10')) {
-      $isbn = $isbn->as_isbn10;
-      $value = $isbn->isbn;
+      # 979 ISBNs have no ISBN-10 form
+      if (my $isbn10 = $isbn->as_isbn10) {
+        $isbn = $isbn10;
+        $value = $isbn->isbn;
+      }
+      else {
+        biber_warn("ISBN '$value' in entry '$key' has no ISBN-10 form - leaving it as ISBN-13");
+      }
     }
 
     # Normalise if requested

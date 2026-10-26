@@ -63,15 +63,15 @@ start =
     element nodieonerror         { "0" | "1" }? &
     element nolog                { "0" | "1" }? &
     # noinit specification
-    element noinits {
-      element noinit {
+    element noinit {
+      element option {
         attribute value { xsd:string },
         empty
       }+
     }? &
     # nolabel specification
-    element nolabels {
-      element nolabel {
+    element nolabel {
+      element option {
         attribute value { xsd:string },
         empty
       }+
