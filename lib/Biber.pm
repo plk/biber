@@ -2152,7 +2152,7 @@ sub process_uniqueprimaryauthor {
   my $bee = $be->get_field('entrytype');
 
   if (my $lni = $be->get_labelname_info) {
-    if (Biber::Config->getblxoption(undef, 'uniqueprimaryauthor', $bee, $citekey)) {
+    if (Biber::Config->getblxoption($secnum, 'uniqueprimaryauthor', $bee, $citekey)) {
       my $nl = $be->get_field($lni);
       if ($logger->is_trace()) {# performance tune
         $logger->trace("Creating uniqueprimaryauthor information for '$citekey'");
@@ -2208,7 +2208,7 @@ sub process_workuniqueness {
   # singletitle
   # Don't generate information for entries with no labelname or labeltitle
   # Use fullhash as this is not a test of uniqueness of only visible information
-  if ($lni and Biber::Config->getblxoption(undef, 'singletitle', $bee, $citekey)) {
+  if ($lni and Biber::Config->getblxoption($secnum, 'singletitle', $bee, $citekey)) {
     $identifier = $self->_getfullhash($citekey, $be->get_field($lni), $dlist);
 
     # Skip due to ignore settings?
@@ -2225,7 +2225,7 @@ sub process_workuniqueness {
 
   # uniquetitle
   # Don't generate information for entries with no labeltitle
-  if ($lti and Biber::Config->getblxoption(undef, 'uniquetitle', $bee, $citekey)) {
+  if ($lti and Biber::Config->getblxoption($secnum, 'uniquetitle', $bee, $citekey)) {
     $identifier = $be->get_field($lti);
 
     # Skip due to ignore settings?
@@ -2237,7 +2237,7 @@ sub process_workuniqueness {
 
   # uniquebaretitle
   # Don't generate information for entries with no labeltitle and with labelname
-  if ($lti and not $lni and Biber::Config->getblxoption(undef, 'uniquebaretitle', $bee, $citekey)) {
+  if ($lti and not $lni and Biber::Config->getblxoption($secnum, 'uniquebaretitle', $bee, $citekey)) {
     $identifier = $be->get_field($lti);
 
     # Skip due to ignore settings?
@@ -2250,7 +2250,7 @@ sub process_workuniqueness {
   # uniquework
   # Don't generate information for entries with no labelname and labeltitle
   # Should use fullhash this is not a test of uniqueness of only visible information
-  if ($lni and $lti and Biber::Config->getblxoption(undef, 'uniquework', $bee, $citekey)) {
+  if ($lni and $lti and Biber::Config->getblxoption($secnum, 'uniquework', $bee, $citekey)) {
     $identifier = $self->_getfullhash($citekey, $be->get_field($lni), $dlist) . $be->get_field($lti);
 
     # Skip due to ignore settings?
@@ -4125,7 +4125,7 @@ sub generate_singletitle {
   my $be = $bibentries->entry($citekey);
   my $bee = $be->get_field('entrytype');
 
-  if (Biber::Config->getblxoption(undef, 'singletitle', $bee, $citekey)) {
+  if (Biber::Config->getblxoption($secnum, 'singletitle', $bee, $citekey)) {
     my $sn = $dlist->get_entryfield($citekey, 'seenname');
     if (defined($sn) and $dlist->get_seenname($sn) < 2 ) {
       $dlist->set_entryfield($citekey, 'singletitle', 1);
@@ -4149,7 +4149,7 @@ sub generate_uniquetitle {
   my $be = $bibentries->entry($citekey);
   my $bee = $be->get_field('entrytype');
 
-  if (Biber::Config->getblxoption(undef, 'uniquetitle', $bee, $citekey)) {
+  if (Biber::Config->getblxoption($secnum, 'uniquetitle', $bee, $citekey)) {
     my $ut = $dlist->get_entryfield($citekey, 'seentitle');
     if (defined($ut) and $dlist->get_seentitle($ut) < 2 ) {
       $dlist->set_entryfield($citekey, 'uniquetitle', 1);
@@ -4173,7 +4173,7 @@ sub generate_uniquebaretitle {
   my $be = $bibentries->entry($citekey);
   my $bee = $be->get_field('entrytype');
 
-  if (Biber::Config->getblxoption(undef, 'uniquebaretitle', $bee, $citekey)) {
+  if (Biber::Config->getblxoption($secnum, 'uniquebaretitle', $bee, $citekey)) {
     my $ubt = $dlist->get_entryfield($citekey, 'seenbaretitle');
     if (defined($ubt) and $dlist->get_seenbaretitle($ubt) < 2 ) {
       $dlist->set_entryfield($citekey, 'uniquebaretitle', 1);
@@ -4197,7 +4197,7 @@ sub generate_uniquework {
   my $be = $bibentries->entry($citekey);
   my $bee = $be->get_field('entrytype');
 
-  if (Biber::Config->getblxoption(undef, 'uniquework', $bee, $citekey)) {
+  if (Biber::Config->getblxoption($secnum, 'uniquework', $bee, $citekey)) {
     if ($dlist->get_entryfield($citekey, 'seenwork') and
         $dlist->get_seenwork($dlist->get_entryfield($citekey, 'seenwork')) < 2 ) {
       if ($logger->is_trace()) { # performance tune
@@ -4229,7 +4229,7 @@ sub generate_uniquepa {
   my $be = $bibentries->entry($citekey);
   my $bee = $be->get_field('entrytype');
 
-  if (Biber::Config->getblxoption(undef, 'uniqueprimaryauthor', $bee, $citekey)) {
+  if (Biber::Config->getblxoption($secnum, 'uniqueprimaryauthor', $bee, $citekey)) {
     if ($dlist->get_entryfield($citekey, 'seenprimaryauthor') and
         $dlist->get_seenpa($dlist->get_entryfield($citekey, 'seenprimaryauthor')) < 2 ) {
       if ($logger->is_trace()) { # performance tune
