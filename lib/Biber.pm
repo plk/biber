@@ -4296,7 +4296,8 @@ sub sort_list {
     biber_warn("fastsort option no longer required/supported, defaulting to UCA");
   }
 
-  my $collopts = Biber::Config->getoption('collate_options');
+  # Copy the options: the changes below are for this sort only
+  my $collopts = {Biber::Config->getoption('collate_options')->%*};
 
   # UCA level 2 if case insensitive sorting is requested
   unless (Biber::Config->getoption('sortcase')) {
@@ -4321,65 +4322,45 @@ sub sort_list {
     $logger->info("No sort tailoring available for locale '$thislocale'");
   }
 
-  # For collecting the collation object settings for retrieval in the sort key extractor
+  # The collator and collation options for each sorting field
   my @collateobjs;
+  my %localecollators;
 
   # Instantiate Sort::Key sorter with correct data schema
   my $sorter = multikeysorter(map {$_->{spec}} $lsds->@*);
 
-  # Sorting cache to shortcut expensive UCA keygen
-  my $cache;
+  # Sorting cache to shortcut expensive UCA keygen, per sorting field
+  my @cache;
 
   # Construct data needed for sort key extractor
   foreach my $sortset ($sortingtemplate->{spec}->@*) {
-    my $fc = '';
-    my @fc;
-
-    # Re-instantiate collation object if a different locale is required for this sort item.
-    # This can't be done in a ->change() method, has to be a new object.
-    my $cobj;
+    # A different locale for this sort item needs its own collation object, as this
+    # can't be done with ->change(). Make it once per locale.
+    my $cobj = $Collator;
     my $sl = locale2bcp47($sortset->[0]{locale});
     if (defined($sl) and $sl ne $thislocale) {
-      $cobj = 'Biber::UCollate->new(' . "'$sl'" . ",'" . join("','", $collopts->%*) . "')";
-    }
-    else {
-      $cobj = '$Collator';
+      $cobj = $localecollators{$sl} //= Biber::UCollate->new($sl, $collopts->%*);
     }
 
-    # If the case or upper option on a field is not the global default
-    # set it locally on the $Collator by constructing a change() method call
+    # The global case and upper options, unless the field overrides them. These are set
+    # with ->change() before each use, as the collation objects are shared.
+    my %fc = (level              => $collopts->{level},
+              upper_before_lower => $collopts->{upper_before_lower});
     my $sc = $sortset->[0]{sortcase};
     if (defined($sc) and $sc != Biber::Config->getoption('sortcase')) {
-      push @fc, $sc ? 'level => 4' : 'level => 2';
+      $fc{level} = $sc ? 4 : 2;
     }
     my $su = $sortset->[0]{sortupper};
     if (defined($su) and $su != Biber::Config->getoption('sortupper')) {
-      push @fc, $su ? 'upper_before_lower => 1' : 'upper_before_lower => 0';
+      $fc{upper_before_lower} = $su ? 1 : 0;
     }
+    delete $fc{level} unless defined($fc{level});
 
-    if (@fc) {
-      # This field has custom collation options
-      $fc = '->change(' . join(',', @fc) . ')';
-    }
-    else {
-      # Reset collation options to global defaults if there are no field options
-      # We have to do this as ->change modifies the Collation object
-      $fc = '->change(level => '
-        . $collopts->{level}
-          . ' ,upper_before_lower => '
-            . $collopts->{upper_before_lower}
-              . ')';
-    }
-
-    push @collateobjs, $cobj . $fc;
+    push @collateobjs, [$cobj, \%fc];
   }
 
   # Sort::Key sort key extractor called on each element of array to be sorted and
-  # returns an array of the sorting keys for each sorting field. We have to construct
-  # the collator strings and then eval() because passing the collation
-  # objects in directly by reference means that the wrong settings are present on some of them
-  # since they point to the same object and the ->change() calls in later references
-  # therefore change earlier sorting field sorts. So, we have to defer until actual use time.
+  # returns an array of the sorting keys for each sorting field.
   my $extract = sub {
     my @d;
     my $key = $keys[$_];
@@ -4400,11 +4381,11 @@ sub sort_list {
         push @d, looks_like_number($sortfield) ? $sortfield : 2000000000;
       }
       else {
-        # Don't do '$sortfield' or "$sortfield" because it might contain quotes
-        my $a = $collateobjs[$i] . "->getSortKey(q{$sortfield})";
-        # Cache index is just the collation object opts and key gen call in string form
-        # since this should be unique for a key/collopts combination
-        push @d, $cache->{$a} ||= eval $a;
+        push @d, $cache[$i]{$sortfield} //= do {
+          my ($cobj, $fc) = $collateobjs[$i]->@*;
+          $cobj->change($fc->%*);
+          $cobj->getSortKey($sortfield);
+        };
       }
     }
     return @d;
