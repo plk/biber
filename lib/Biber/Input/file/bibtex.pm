@@ -1286,13 +1286,15 @@ sub _name {
                                   {filename => $entry->filename,
                                    line     => $entry->line($field),
                                    num      => $i + 1});
-    }
 
-    # A name must have a family part (eg. ", M.F." doesn't)
-    if ($no->get_namepart('family') eq '') {
-      biber_warn("Name \"$name\" in key '$key' has no family part: skipping entry '$key'", $bibentry);
-      $section->del_citekey($key);
-      return 'BIBER_SKIP_ENTRY';
+      # A BibTeX format name must have a family part (eg. ", M.F." doesn't).
+      # Extended format names give their parts explicitly, and may have no
+      # family part (eg. with custom nameparts like patronymic/papponymic).
+      if ($no->get_namepart('family') eq '') {
+        biber_warn("Name \"$name\" in key '$key' has no family part: skipping entry '$key'", $bibentry);
+        $section->del_citekey($key);
+        return 'BIBER_SKIP_ENTRY';
+      }
     }
 
     # Deal with implied "et al" in data source
