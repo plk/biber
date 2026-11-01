@@ -1264,7 +1264,7 @@ sub _generatesortinfo {
     my $pre = Biber::Config->getblxoption($secnum, 'presort', $be->get_field('entrytype'), $citekey);
 
     # Strip off the prefix
-    $ss =~ s/\A$pre$sorting_sep+//;
+    $ss =~ s/\A\Q$pre\E$sorting_sep+//;
     my $init = Unicode::GCString->new(normalise_string($ss))->substr(0, 1)->as_string;
     $dlist->set_sortinitdata_for_key($citekey, $init);
   }
