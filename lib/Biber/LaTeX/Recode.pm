@@ -85,16 +85,19 @@ sub init_sets {
     if ( can_run('kpsewhich') ) {
       run3 [ 'kpsewhich', $rdata ], \undef, \$mapdata, \$err, { return_if_system_error => 1};
       if ($? == -1) {
-        biber_error("Error running kpsewhich to look for output_safechars data file: $err");
+        Biber::Utils::biber_error("Error running kpsewhich to look for recode data file: $err");
       }
 
       chomp $mapdata;
       $mapdata =~ s/\cM\z//xms; # kpsewhich in cygwin sometimes returns ^M at the end
       $mapdata = undef unless $mapdata; # sanitise just in case it's an empty string
     }
-    else {
-      biber_error("Can't run kpsewhich to look for output_safechars data file: $err");
+    # Without kpsewhich, or if it didn't find the file, try the name as given
+    $mapdata //= $rdata if -f $rdata;
+    unless (defined($mapdata)) {
+      Biber::Utils::biber_error("Cannot find recode data file '$rdata'");
     }
+
     $logger->info("Using user-defined recode data file '$mapdata'");
   }
   else {

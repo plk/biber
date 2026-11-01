@@ -1064,13 +1064,15 @@ sub stringify_hash {
 =cut
 
 sub normalise_utf8 {
-  if (defined(Biber::Config->getoption('input_encoding')) and
-      Biber::Config->getoption('input_encoding') =~ m/\Autf-?8\z/xmsi) {
-    Biber::Config->setoption('input_encoding', 'UTF-8');
-  }
-  if (defined(Biber::Config->getoption('output_encoding')) and
-      Biber::Config->getoption('output_encoding') =~ m/\Autf-?8\z/xmsi) {
-    Biber::Config->setoption('output_encoding', 'UTF-8');
+  foreach my $opt ('input_encoding', 'output_encoding') {
+    my $enc = Biber::Config->getoption($opt);
+    next unless defined($enc);
+    if ($enc =~ m/\Autf-?8\z/xmsi) {
+      Biber::Config->setoption($opt, 'UTF-8');
+    }
+    elsif (not find_encoding($enc)) {
+      biber_error("Unknown encoding '$enc' for option '$opt'");
+    }
   }
 }
 

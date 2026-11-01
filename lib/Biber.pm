@@ -87,11 +87,11 @@ sub new {
                                         CLEANUP => (Biber::Config->getoption('noremove_tmp_dir') ? 0 : 1));
   $self->{TEMPDIRNAME} = $self->{TEMPDIR}->dirname;
 
+  $MASTER = $self;
+
   # Initialise recoding schemes
   Biber::LaTeX::Recode->init_sets(Biber::Config->getoption('decodecharsset'),
                                   Biber::Config->getoption('output_safecharsset'));
-
-  $MASTER = $self;
 
   # Validate if asked to.
   # This has to be here, after config file is read and options
@@ -288,6 +288,7 @@ sub get_current_section {
 
 sub tool_mode_setup {
   my $self = shift;
+  normalise_utf8();
   my $bib_sections = new Biber::Sections;
   # There are no sections in tool mode so create a pseudo-section
   my $bib_section = new Biber::Section('number' => 99999);
