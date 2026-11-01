@@ -441,6 +441,11 @@ sub create_entry {
               if ($logger->is_debug()) { # performance tune
                 $logger->debug("Source mapping (type=$level, key=$key): Ignoring entry completely");
               }
+              # Entries created by earlier steps are still created as their keys
+              # may already have been added to the section
+              while (my ($k, $e) = each %newentries) {
+                _create_entry($k, $e);
+              }
               return 0;         # don't create an entry at all
             }
 
