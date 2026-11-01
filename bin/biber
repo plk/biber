@@ -139,6 +139,15 @@ GetOptions(
           ) or pod2usage(-verbose => 0,
                          -exitval => EXIT_ERROR);
 
+# Since biber 2.21, collation options are given as --collate-options key=value, once
+# per option. Reject the old "key => value" syntax instead of silently ignoring it.
+foreach my $k (keys %collateoptions) {
+  unless ($k =~ /\A\w+\z/) {
+    say STDERR "Biber: Invalid collation option '$k=$collateoptions{$k}': use --collate-options key=value, once for each option";
+    exit EXIT_ERROR;
+  }
+}
+
 # verbose > 1 uses external perldoc, this doesn't work with PAR::Packer binaries
 # so use "-noperldoc" to use built-in POD::Text
 if (exists $opts->{'help'}) {

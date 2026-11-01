@@ -1921,7 +1921,7 @@ The locale used for collating a particular field in the bibliography is
 determined by the following resource chain which is given
 in decreasing precedence order:\\[2ex]
 
-\noindent\opt{--collate-options|-c} (e.g. \opt{-c 'locale => "de\_DE"'}) $\rightarrow$\\
+\noindent\opt{--collate-options|-c} (e.g. \opt{-c locale=de\_DE}) $\rightarrow$\\
 \hspace*{1em}\opt{--sortlocale|-l} $\rightarrow$\\
 \hspace*{2em}\biblatex per-sortset \opt{locale} option $\rightarrow$\\
 \hspace*{3em}\biblatex per-sortscheme \opt{locale} option$\rightarrow$\\
@@ -1972,9 +1972,9 @@ Users should see the the documentation to the module for the various
 options, most of which the vast majority of users will never
 need\footnote{For details on the various options, see
   \url{http://search.cpan.org/search?query=Unicode\%3A\%3ACollate&mode=all}}.
-Options are passed using the \opt{--collate-options|-c} option as a
-single quoted string, each option separated by comma, each key and
-value separated by «\verb+=>+». See examples.
+Options are passed using the \opt{--collate-options|-c} option, once
+for each option, with the key and value separated by «\verb+=+». See
+examples.
 
 \textbf{Note:} \biber\ sets the Unicode collation option
 «variable» to «non-ignorable». Effectively, this means that punctuation is
@@ -2003,12 +2003,12 @@ not used to override the \verb+.bcf+
 
 \noindent Case insensitive sorting.
 
-\biberex{biber --sortupper=false --collate-options="backwards => 2"}
+\biberex{biber --sortupper=false --collate-options backwards=2}
 
 \noindent Collate lowercase before upper and collate French accents in
 reverse order at UCA level 2.
 
-\biberex{biber --collate-options="variable => 'shifted'"}
+\biberex{biber --collate-options variable=shifted}
 
 \noindent Use the UCA default setting for variable weight punctuation
 (which is to ignore it for sorting, effectively).
