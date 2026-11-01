@@ -902,6 +902,7 @@ sub parse_ctrlfile {
   # Be friendly to latexmk etc.
   unless (%bibdatasources) {
     biber_warn("No data sources defined!");
+    $self->display_end;
     exit EXIT_OK;
   }
 
@@ -4592,10 +4593,11 @@ sub fetch_data {
   }
 
   # Process datasource globs
-  my $ds;
-  foreach my $datasource ($section->get_datasources->@*) {
+  my $ds = [];
+  foreach my $datasource (($section->get_datasources // [])->@*) {
     unless ($datasource->{type} eq 'file') {
       push $ds->@*, $datasource;
+      next;
     }
     foreach my $gds (glob_data_file($datasource->{name}, $datasource->{glob})) {
       push $ds->@*, { type     => $datasource->{type},

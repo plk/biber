@@ -139,6 +139,15 @@ GetOptions(
           ) or pod2usage(-verbose => 0,
                          -exitval => EXIT_ERROR);
 
+# Since biber 2.21, collation options are given as --collate-options key=value, once
+# per option. Reject the old "key => value" syntax instead of silently ignoring it.
+foreach my $k (keys %collateoptions) {
+  unless ($k =~ /\A\w+\z/) {
+    say STDERR "Biber: Invalid collation option '$k=$collateoptions{$k}': use --collate-options key=value, once for each option";
+    exit EXIT_ERROR;
+  }
+}
+
 # verbose > 1 uses external perldoc, this doesn't work with PAR::Packer binaries
 # so use "-noperldoc" to use built-in POD::Text
 if (exists $opts->{'help'}) {
@@ -292,10 +301,6 @@ if (exists($opts->{output_indent}) and $opts->{output_indent} !~ /^\d+t?$/) {
   say STDERR "Biber: Invalid non-numeric argument for 'output_indent' option!";
   exit EXIT_ERROR;
 }
-if (exists($opts->{output_fieldcase}) and $opts->{output_fieldcase} !~ /^(?:upper|lower|title)$/i) {
-  say STDERR "Biber: Invalid argument for 'output_fieldcase' option - must be one of 'upper', 'lower' or 'title'!";
-  exit EXIT_ERROR;
-}
 
 # Check the dot_include option
 if (exists($opts->{dot_include}) and (not exists($opts->{output_format})
@@ -331,6 +336,15 @@ if (exists($opts->{input_format}) and
 
 # Create Biber object, passing command-line options
 my $biber = Biber->new($opts->%*);
+
+# Check output_fieldcase only now, as it can also be set in the config file, and
+# normalise its case as the output code compares it case-sensitively
+my $fieldcase = Biber::Config->getoption('output_fieldcase') // '';
+unless ($fieldcase =~ /^(?:upper|lower|title)$/i) {
+  say STDERR "Biber: Invalid argument for 'output_fieldcase' option - must be one of 'upper', 'lower' or 'title'!";
+  exit EXIT_ERROR;
+}
+Biber::Config->setoption('output_fieldcase', lc($fieldcase));
 
 # get the logger object
 my $logger  = Log::Log4perl::get_logger('main');

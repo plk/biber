@@ -42,15 +42,18 @@ sub new {
   # Remove locale from options as we need this to make the object
   my $coll_locale = delete $collopts{locale};
 
-  # Now create the collator object
-  my $Collator = $class->SUPER::new(locale => $coll_locale)
-    or $logger->logcarp("Problem creating Unicode::Collate::Locale object: $@");
-
   # Fix the old "alternate" alias otherwise we have problems as U::C->change() always
   # returns the new "variable" option and we get confused.
   if (my $alt = delete $collopts{alternate}) {
     $collopts{variable} = $alt;
   }
+
+  # Some options can only be set when creating the object
+  my %newopts = map {exists($collopts{$_}) ? ($_ => delete $collopts{$_}) : ()} @Unicode::Collate::ChangeNG;
+
+  # Now create the collator object
+  my $Collator = eval {$class->SUPER::new(locale => $coll_locale, %newopts)}
+    or Biber::Utils::biber_error("Problem creating collation object: " . _collerr($@));
 
   # Show the collation options when debugging
   if ($logger->is_debug()) {# performance tune
@@ -60,7 +63,10 @@ sub new {
   # Tailor the collation object and report differences from defaults for locale
   # Have to do this in ->change method as ->new can croak with conflicting tailoring
   # for locales which enforce certain tailorings
-  my %coll_changed = $Collator->change( %collopts );
+  my %coll_changed = eval {$Collator->change( %collopts )};
+  if ($@) {
+    Biber::Utils::biber_error("Invalid collation options: " . _collerr($@));
+  }
   while (my ($k, $v) = each %coll_changed) {
     # If we are changing something that has no override tailoring in the locale, it
     # is undef in this hash and we don't care about such things
@@ -71,6 +77,13 @@ sub new {
   }
 
   return $Collator;
+}
+
+# Error message from Unicode::Collate without the location
+sub _collerr {
+  my $err = shift;
+  $err =~ s/\s+at\s+\S+\s+line\s+\d+\.?\s*\z//;
+  return $err;
 }
 
 1;

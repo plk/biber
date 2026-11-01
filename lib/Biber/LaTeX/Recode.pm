@@ -215,10 +215,8 @@ sub latex_decode {
     # Special case for \h?box which requires braces around single chars
     $text =~ s/\\(h?box)\s+\{(\X)\}/\\$1\{$2\}/g;
 
-    # Deal with raw TeX \char macros.
-    $text =~ s/\\char"(\p{ASCII_Hex_Digit}+)/"chr(0x$1)"/gee; # hex chars
-    $text =~ s/\\char'(\d+)/"chr(0$1)"/gee;  # octal chars
-    $text =~ s/\\char(\d+)/"chr($1)"/gee;    # decimal chars
+    # Deal with raw TeX \char macros: \char"7B (hex), \char'173 (octal), \char123 (decimal)
+    $text =~ s/(\\char(?:"([0-9A-Fa-f]+)|'([0-7]+)|([0-9]+)))/_tex_char($1, $2, $3, $4)/ge;
 
     $text =~ s/(\\[a-zA-Z]+)\\(\s+)/$1\{\}$2/g;    # \foo\ bar -> \foo{} bar
     $text =~ s/([^{]\\\w)([;,.:%])/$1\{\}$2/g;     #} Aaaa\o,  -> Aaaa\o{},
@@ -347,6 +345,21 @@ sub latex_decode {
     else {
       return $text;
     }
+}
+
+# Convert the number of a TeX \char to a character. Leave the macro alone if the number
+# is not a Unicode character, is a control character (whose meaning in TeX depends on the
+# font), or would be a brace or backslash, which would change the structure of the data.
+sub _tex_char {
+  my ($orig, $hex, $oct, $dec) = @_;
+  my ($digits, $base) = defined($hex) ? ($hex, 16) : defined($oct) ? ($oct, 8) : ($dec, 10);
+  $digits =~ s/^0+(?=.)//;
+  return $orig if length($digits) > 7;
+  my $n = $base == 16 ? hex($digits) : $base == 8 ? oct($digits) : $digits + 0;
+  return $orig if $n > 0x10FFFF or $n < 0x20 or $n == 0x7F or ($n >= 0xD800 and $n <= 0xDFFF);
+  my $c = chr($n);
+  return $orig if $c =~ /[{}\\]/;
+  return $c;
 }
 
 =head2 latex_encode($text, @options)

@@ -163,7 +163,7 @@ sub add_uniquenamecount_all {
 
 sub get_uniquelistcount {
   my ($self, $namelist) = @_;
-  return $self->{state}{uniquelistcount}{global}{join("\x{10FFFD}", $namelist->@*)};
+  return $self->{state}{uniquelistcount}{partial}{join("\x{10FFFD}", $namelist->@*)};
 }
 
 =head2 add_uniquelistcount
@@ -174,7 +174,7 @@ sub get_uniquelistcount {
 
 sub add_uniquelistcount {
   my ($self, $namelist) = @_;
-  $self->{state}{uniquelistcount}{global}{join("\x{10FFFD}", $namelist->@*)}++;
+  $self->{state}{uniquelistcount}{partial}{join("\x{10FFFD}", $namelist->@*)}++;
   return;
 }
 
@@ -187,9 +187,9 @@ sub add_uniquelistcount {
 
 sub add_uniquelistcount_final {
   my ($self, $namelist, $labelyear) = @_;
-  $self->{state}{uniquelistcount}{global}{final}{join("\x{10FFFD}", $namelist->@*)}++;
+  $self->{state}{uniquelistcount}{final}{join("\x{10FFFD}", $namelist->@*)}++;
   if ($labelyear) { # uniquelist=minyear
-    $self->{state}{uniquelistcount}{global}{final}{$labelyear}{join("\x{10FFFD}", $namelist->@*)}++;
+    $self->{state}{uniquelistcount}{finalyear}{$labelyear}{join("\x{10FFFD}", $namelist->@*)}++;
   }
   return;
 }
@@ -229,7 +229,7 @@ sub get_uniquelistcount_minyear {
 
 sub get_uniquelistcount_final {
   my ($self, $namelist) = @_;
-  my $c = $self->{state}{uniquelistcount}{global}{final}{join("\x{10FFFD}", $namelist->@*)};
+  my $c = $self->{state}{uniquelistcount}{final}{join("\x{10FFFD}", $namelist->@*)};
   return $c // 0;
 }
 
@@ -2249,7 +2249,7 @@ sub namelist_differs_index {
   my $self = shift;
   my @list = shift->@*;
   my $index;
-  foreach my $l_s (keys $self->{state}{uniquelistcount}{global}{final}->%*) {
+  foreach my $l_s (keys $self->{state}{uniquelistcount}{final}->%*) {
     my @l = split("\x{10FFFD}", $l_s);
     next if Compare(\@list, \@l);# Ignore identical lists
     for (my $i=0;$i<=$#list;$i++) {
@@ -2303,9 +2303,9 @@ sub namelist_differs_nth {
 
   # uniquelist=minyear should only disambiguate from entries with the
   # same labelyear
-  my $unames = $self->{state}{uniquelistcount}{global}{final};
+  my $unames = $self->{state}{uniquelistcount}{final};
   if ($ul eq 'minyear') {
-    $unames = $self->{state}{uniquelistcount}{global}{final}{$labelyear};
+    $unames = $self->{state}{uniquelistcount}{finalyear}{$labelyear};
   }
 
   foreach my $l_s (keys $unames->%*) {
