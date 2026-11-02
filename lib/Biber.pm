@@ -1081,7 +1081,7 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
     # Potentially, the locale could be different for the first field in the sort spec in which
     # case that might give wrong results but this is highly unlikely as it is only used to
     # determine sortinithash in DataList.pm and that only changes \bibinitsep in biblatex.
-    $datalist->set_sortinit_collator(Unicode::Collate::Locale->new(locale => Biber::Config->getblxoption(undef, 'sortingtemplate')->{$datalist->get_sortingtemplatename}->{locale}, level => 1));
+    $datalist->set_sortinit_collator(Unicode::Collate::Locale->new(locale => Biber::Config->getoption('sortlocale') || Biber::Config->getblxoption(undef, 'sortingtemplate')->{$datalist->get_sortingtemplatename}->{locale}, level => 1));
 
     if ($logger->is_debug()) {# performance tune
       $logger->debug("Adding datalist of type '$ltype' with sortingtemplate '$lstn', sortingnamekeytemplatename '$lsnksn', labelprefix '$lpn', uniquenametemplate '$luntn', labelalphanametemplate '$llantn' and name '$lname' for section $lsection");
@@ -1116,7 +1116,7 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
       $datalists->add_list($datalist);
       # See comment above
 
-      $datalist->set_sortinit_collator(Unicode::Collate::Locale->new(locale => Biber::Config->getblxoption(undef, 'sortingtemplate')->{$datalist->get_sortingtemplatename}->{locale}, level => 1));
+      $datalist->set_sortinit_collator(Unicode::Collate::Locale->new(locale => Biber::Config->getoption('sortlocale') || Biber::Config->getblxoption(undef, 'sortingtemplate')->{$datalist->get_sortingtemplatename}->{locale}, level => 1));
     }
   }
 
@@ -1216,7 +1216,7 @@ sub process_setup {
       $datalist->set_section($secnum);
       $self->datalists->add_list($datalist);
       # See comment for same call in .bcf instantiation of datalists
-      $datalist->set_sortinit_collator(Unicode::Collate::Locale->new(locale => Biber::Config->getblxoption(undef, 'sortingtemplate')->{$datalist->get_sortingtemplatename}->{locale}, level => 1));
+      $datalist->set_sortinit_collator(Unicode::Collate::Locale->new(locale => Biber::Config->getoption('sortlocale') || Biber::Config->getblxoption(undef, 'sortingtemplate')->{$datalist->get_sortingtemplatename}->{locale}, level => 1));
     }
   }
 
@@ -4336,10 +4336,11 @@ sub sort_list {
   # Construct data needed for sort key extractor
   foreach my $sortset ($sortingtemplate->{spec}->@*) {
     # A different locale for this sort item needs its own collation object, as this
-    # can't be done with ->change(). Make it once per locale.
+    # can't be done with ->change(). Make it once per locale. The biber sortlocale
+    # option overrides sortset locales (see the priority order above).
     my $cobj = $Collator;
     my $sl = locale2bcp47($sortset->[0]{locale});
-    if (defined($sl) and $sl ne $thislocale) {
+    if (defined($sl) and $sl ne $thislocale and not Biber::Config->getoption('sortlocale')) {
       $cobj = $localecollators{$sl} //= Biber::UCollate->new($sl, $collopts->%*);
     }
 
