@@ -3161,10 +3161,11 @@ sub process_lists {
       }
 
       # Now add set members of sets which have not been filtered out
-      my @sets = grep {$section->bibentry($_)->get_field('entrytype') eq 'set'} $flist->@*;
+      my %sets = map {$_ => 1} grep {$section->bibentry($_)->get_field('entrytype') eq 'set'} $flist->@*;
       foreach my $k ($list->get_keys->@*) {
         my $be = $section->bibentry($k);
-        if (first {$be->get_field('entryset')} @sets) {
+        next if $be->get_field('entrytype') eq 'set'; # sets are filtered like other entries
+        if (grep {$sets{$_}} ($be->get_field('entryset') // [])->@*) {
           push $flist->@*, $k;
         }
       }
