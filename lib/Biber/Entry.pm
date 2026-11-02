@@ -11,6 +11,7 @@ use Digest::MD5 qw( md5_hex );
 use Encode;
 use Log::Log4perl qw( :no_extra_logdie_message );
 use List::Util qw( first );
+use Scalar::Util qw( blessed );
 
 my $logger = Log::Log4perl::get_logger('main');
 
@@ -162,7 +163,7 @@ sub clone {
   my $dmh = Biber::Config->get_dm_helpers;
 
   while (my ($k, $v) = each(%{$self->{datafields}})) {
-    $new->{datafields}{$k} = $v;
+    $new->{datafields}{$k} = inherited_value($v);
   }
   while (my ($k, $v) = each(%{$self->{origfields}})) {
     $new->{origfields}{$k} = $v;
@@ -462,6 +463,26 @@ sub get_field {
          $self->{derivedfields}{$key};
 }
 
+=head2 inherited_value
+
+    Return a copy of a field value for inheritance by another entry. Values must
+    not be shared between entries: lists are changed in place (eg. when "others"
+    is removed on output) and per-list and per-name state is keyed by the ids of
+    name lists and names.
+
+=cut
+
+sub inherited_value {
+  my $val = shift;
+  if (blessed($val) and $val->isa('Biber::Entry::Names')) {
+    return $val->clone;
+  }
+  elsif (ref($val) eq 'ARRAY') {
+    return [ $val->@* ];
+  }
+  return $val;
+}
+
 =head2 set_datafield
 
     Set a field which is in the .bib data file
@@ -688,7 +709,7 @@ sub set_inherit_from {
     # sets can have their own shorthands and it's not useful to inherit this anyway
     next if fc($field) eq fc('shorthand');
 
-    $self->set_datafield($field, $parent->get_field($field));
+    $self->set_datafield($field, inherited_value($parent->get_field($field)));
   }
 
   # Datesplit is a special non datafield and needs to be inherited for any
@@ -775,7 +796,7 @@ sub resolve_xdata {
           if (not defined($xdatum->{xdatafield})) {
             foreach my $field ($xdataentry->datafields()) { # set fields
               next if $field eq 'ids'; # Never inherit aliases
-              $self->set_datafield($field, $xdataentry->get_field($field));
+              $self->set_datafield($field, inherited_value($xdataentry->get_field($field)));
               # Inherit field annotations too
               Biber::Annotation->inherit_annotations($xdataentry->get_field('citekey'),
                                                      $self->get_field('citekey'),
@@ -900,7 +921,7 @@ sub resolve_xdata {
             # Non-list
             else {
 
-              $self->set_datafield($reffield, $xdataentry->get_field($xdatafield));
+              $self->set_datafield($reffield, inherited_value($xdataentry->get_field($xdatafield)));
 
               # Inherit annotations for the field and remap indices to new positions in target
               Biber::Annotation->inherit_annotations($xdataentry->get_field('citekey'),
@@ -1014,7 +1035,7 @@ sub inherit_from {
                              "' from entry '$source_key'");
             }
 
-            $self->set_datafield($field->{target}, $parent->get_field($field->{source}));
+            $self->set_datafield($field->{target}, inherited_value($parent->get_field($field->{source})));
             Biber::Annotation->inherit_annotations($source_key,
                                                    $target_key,
                                                    $field->{source},
@@ -1104,7 +1125,7 @@ sub inherit_from {
           $logger->debug("$tbee entry '$target_key' is inheriting field '$field' from $bee entry '$source_key'");
         }
 
-        $self->set_datafield($field, $parent->get_field($field));
+        $self->set_datafield($field, inherited_value($parent->get_field($field)));
         Biber::Annotation->inherit_annotations($source_key,
                                                $target_key,
                                                $field,
