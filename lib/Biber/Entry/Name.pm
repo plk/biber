@@ -14,6 +14,7 @@ use Data::Dump qw( pp );
 use Data::Uniqid qw (suniqid);
 use Log::Log4perl qw( :no_extra_logdie_message );
 use List::Util qw( first );
+use Storable qw( dclone );
 use Unicode::Normalize;
 no autovivification;
 my $logger = Log::Log4perl::get_logger('main');
@@ -80,6 +81,20 @@ sub new {
   else {
     return bless {id => suniqid}, $class;
   }
+}
+
+=head2 clone
+
+    Copy a Biber::Entry::Name object, with a new id so that per-name state is
+    not shared with the original
+
+=cut
+
+sub clone {
+  my $self = shift;
+  my $new = dclone($self);
+  $new->{id} = suniqid;
+  return $new;
 }
 
 =head2 notnull

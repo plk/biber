@@ -11,6 +11,7 @@ use Digest::MD5 qw( md5_hex );
 use Encode;
 use Log::Log4perl qw( :no_extra_logdie_message );
 use List::Util qw( first );
+use Scalar::Util qw( blessed );
 
 my $logger = Log::Log4perl::get_logger('main');
 
@@ -162,7 +163,7 @@ sub clone {
   my $dmh = Biber::Config->get_dm_helpers;
 
   while (my ($k, $v) = each(%{$self->{datafields}})) {
-    $new->{datafields}{$k} = $v;
+    $new->{datafields}{$k} = inherited_value($v);
   }
   while (my ($k, $v) = each(%{$self->{origfields}})) {
     $new->{origfields}{$k} = $v;
@@ -172,8 +173,8 @@ sub clone {
   $new->{xdatarefs} = $self->{xdatarefs};
 
   # clone derived date fields
-  foreach my $df ($dmh->{datefields}->@*) {
-    $df =~ s/date$//;
+  foreach my $datefield ($dmh->{datefields}->@*) {
+    my $df = $datefield =~ s/date$//r;
     foreach my $dsf ('dateunspecified', 'datesplit', 'datejulian',
                      'enddatejulian', 'dateapproximate', 'enddateapproximate',
                      'dateuncertain', 'enddateuncertain', 'yeardivision', 'yeardivision',
@@ -462,6 +463,26 @@ sub get_field {
          $self->{derivedfields}{$key};
 }
 
+=head2 inherited_value
+
+    Return a copy of a field value for inheritance by another entry. Values must
+    not be shared between entries: lists are changed in place (eg. when "others"
+    is removed on output) and per-list and per-name state is keyed by the ids of
+    name lists and names.
+
+=cut
+
+sub inherited_value {
+  my $val = shift;
+  if (blessed($val) and $val->isa('Biber::Entry::Names')) {
+    return $val->clone;
+  }
+  elsif (ref($val) eq 'ARRAY') {
+    return [ $val->@* ];
+  }
+  return $val;
+}
+
 =head2 set_datafield
 
     Set a field which is in the .bib data file
@@ -688,13 +709,13 @@ sub set_inherit_from {
     # sets can have their own shorthands and it's not useful to inherit this anyway
     next if fc($field) eq fc('shorthand');
 
-    $self->set_datafield($field, $parent->get_field($field));
+    $self->set_datafield($field, inherited_value($parent->get_field($field)));
   }
 
   # Datesplit is a special non datafield and needs to be inherited for any
   # validation checks which may occur later
-  foreach my $df ($dmh->{datefields}->@*) {
-    $df =~ s/date$//;
+  foreach my $datefield ($dmh->{datefields}->@*) {
+    my $df = $datefield =~ s/date$//r;
     if (my $ds = $parent->get_field("${df}datesplit")) {
       $self->set_field("${df}datesplit", $ds);
     }
@@ -718,6 +739,11 @@ sub resolve_xdata {
   my $entry_key = $self->get_field('citekey');
   my $bee = $self->get_field('entrytype');
   my $dm = Biber::Config->get_dm;
+
+  # An XDATA entry which itself has XDATA references is resolved when it is first
+  # referenced. Don't do this again for later referrers, as granular references
+  # splice into its fields.
+  return if $self->{xdata_resolved};
 
   # $xdata =
   # [
@@ -770,7 +796,7 @@ sub resolve_xdata {
           if (not defined($xdatum->{xdatafield})) {
             foreach my $field ($xdataentry->datafields()) { # set fields
               next if $field eq 'ids'; # Never inherit aliases
-              $self->set_datafield($field, $xdataentry->get_field($field));
+              $self->set_datafield($field, inherited_value($xdataentry->get_field($field)));
               # Inherit field annotations too
               Biber::Annotation->inherit_annotations($xdataentry->get_field('citekey'),
                                                      $self->get_field('citekey'),
@@ -847,7 +873,8 @@ sub resolve_xdata {
               }
             }
             # Non-name lists
-            elsif ($dm->field_is_fieldtype('list', $reffield)) {
+            elsif ($dm->field_is_fieldtype('list', $reffield) or
+                   ($dm->get_fieldformat($reffield) // '') eq 'xsv') { # xsv fields are lists too
               if ($xdatum->{xdataposition} eq '*') { # insert all positions from XDATA field
                 my $bibentries = $section->bibentries;
                 my $be = $bibentries->entry($xdatum->{xdataentries}[0]);
@@ -894,7 +921,7 @@ sub resolve_xdata {
             # Non-list
             else {
 
-              $self->set_datafield($reffield, $xdataentry->get_field($xdatafield));
+              $self->set_datafield($reffield, inherited_value($xdataentry->get_field($xdatafield)));
 
               # Inherit annotations for the field and remap indices to new positions in target
               Biber::Annotation->inherit_annotations($xdataentry->get_field('citekey'),
@@ -915,6 +942,7 @@ sub resolve_xdata {
       }
     }
   }
+  $self->{xdata_resolved} = 1;
 }
 
 =head2 inherit_from
@@ -1007,7 +1035,7 @@ sub inherit_from {
                              "' from entry '$source_key'");
             }
 
-            $self->set_datafield($field->{target}, $parent->get_field($field->{source}));
+            $self->set_datafield($field->{target}, inherited_value($parent->get_field($field->{source})));
             Biber::Annotation->inherit_annotations($source_key,
                                                    $target_key,
                                                    $field->{source},
@@ -1044,16 +1072,17 @@ sub inherit_from {
     # ONLY DO THIS FOR ENTRIES WITH xDATE FIELDS - LEGACY YEAR/MONTH MESS THINGS UP
     # AND WE JUST IGNORE THEM FOR THIS PRE-PROCESSING STEP
     my @filtered_fields;
-    my @removed_fields;
+    my %removed_dates; # date types (eg. '' or 'orig') whose parts we skipped
     foreach my $field (@fields) {
       if (first {$_ eq $field} $dmh->{dateparts}->@*) {
-        if ($parent->get_field('datesplit') and $self->get_field('datesplit')) {
+        my $t = $field =~ s/(?:end)?(?:year|month|day|hour|minute|second|yeardivision|timezone)$//r;
+        if ($parent->get_field("${t}datesplit") and $self->get_field("${t}datesplit")) {
           if ($self->date_fields_exist($field)) {
             if ($override_target eq 'true') {
               $self->delete_date_fields($field); # clear out all date field parts in target
             }
             else {
-              push @removed_fields, $field;
+              $removed_dates{$t} = 1;
               next;
             }
           }
@@ -1068,7 +1097,7 @@ sub inherit_from {
       my $df = $datefield =~ s/date$//r;
       # Ignore derived date special fields from date fields which we have skipped
       # because they already exist in the child.
-      next if first {$_ eq $datefield} @removed_fields;
+      next if $removed_dates{$df};
       foreach my $dsf ('dateunspecified', 'datesplit', 'datejulian',
                        'enddatejulian', 'dateapproximate', 'enddateapproximate',
                        'dateuncertain', 'enddateuncertain', 'yeardivision', 'endyeardivision',
@@ -1096,7 +1125,7 @@ sub inherit_from {
           $logger->debug("$tbee entry '$target_key' is inheriting field '$field' from $bee entry '$source_key'");
         }
 
-        $self->set_datafield($field, $parent->get_field($field));
+        $self->set_datafield($field, inherited_value($parent->get_field($field)));
         Biber::Annotation->inherit_annotations($source_key,
                                                $target_key,
                                                $field,
@@ -1114,8 +1143,8 @@ sub inherit_from {
   }
   # Datesplit is a special non datafield and needs to be inherited for any
   # validation checks which may occur later
-  foreach my $df ($dmh->{datefields}->@*) {
-    $df =~ s/date$//;
+  foreach my $datefield ($dmh->{datefields}->@*) {
+    my $df = $datefield =~ s/date$//r;
     if (my $ds = $parent->get_field("${df}datesplit")) {
       $self->set_field("${df}datesplit", $ds);
     }

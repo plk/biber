@@ -331,7 +331,8 @@ sub set_output_entry {
   # Output list fields
   foreach my $listfield ($dmh->{lists}->@*) {
     # Performance - as little as possible here - loop over DM fields for every entry
-    if (my $lf = $be->get_field($listfield)) {
+    if (my $lfield = $be->get_field($listfield)) {
+      my $lf = [ $lfield->@* ]; # copy: the list may be shared with other entries
       if ( lc($lf->[-1]) eq Biber::Config->getoption('others_string') ) {
         $acc .= "      \\true{more$listfield}\n";
         pop $lf->@*; # remove the last element in the array
@@ -454,8 +455,8 @@ sub set_output_entry {
   }
 
   # Date meta-information
-  foreach my $d ($dmh->{datefields}->@*) {
-    $d =~ s/date$//;
+  foreach my $datefield ($dmh->{datefields}->@*) {
+    my $d = $datefield =~ s/date$//r;
 
     # Unspecified granularity
     if (my $unspec = $be->get_field("${d}dateunspecified")) {
@@ -563,7 +564,8 @@ sub set_output_entry {
 
   # verbatim lists
   foreach my $vlist ($dmh->{vlists}->@*) {
-    if ( my $vlf = $be->get_field($vlist) ) {
+    if ( my $vlfield = $be->get_field($vlist) ) {
+      my $vlf = [ $vlfield->@* ]; # copy: the list may be shared with other entries
       if ( lc($vlf->[-1]) eq Biber::Config->getoption('others_string') ) {
         $acc .= "      \\true{more$vlist}\n";
         pop $vlf->@*; # remove the last element in the array

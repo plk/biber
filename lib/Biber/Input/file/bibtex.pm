@@ -1133,7 +1133,14 @@ sub _xsv {
   my $value = [ split(/$S/, $entry->get(encode('UTF-8', NFC($field)))) ];
 
   # Record any XDATA
-  $bibentry->add_xdata_ref($field, $value);
+  if ($field eq 'xdata') { # the list of XDATA entries itself
+    $bibentry->add_xdata_ref($field, $value);
+  }
+  else { # granular XDATA references in the items
+    for (my $i = 0; $i <= $value->$#*; $i++) {
+      $bibentry->add_xdata_ref($field, $value->[$i], $i);
+    }
+  }
 
   return $value ;
 }

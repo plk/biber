@@ -39,6 +39,21 @@ sub new {
                 %params}, $class;
 }
 
+=head2 clone
+
+    Copy a Biber::Entry::Names object and its names, with new ids so that
+    per-list and per-name state is not shared with the original
+
+=cut
+
+sub clone {
+  my $self = shift;
+  my $new = bless {$self->%*}, ref($self);
+  $new->{id} = suniqid;
+  $new->{namelist} = [ map {$_->clone} $self->{namelist}->@* ];
+  return $new;
+}
+
 =head2 notnull
 
     Test for an empty object
@@ -87,7 +102,8 @@ sub add_name {
 
 sub replace_name {
   my ($self, $name_obj, $position) = @_;
-  $name_obj->set_index($position-1);
+  $name_obj = $name_obj->clone; # the name may belong to another entry
+  $name_obj->set_index($position);
   $self->{namelist}->[$position-1] = $name_obj;
   return;
 }
@@ -101,10 +117,10 @@ sub replace_name {
 
 sub splice {
   my ($self, $names, $position) = @_;
-  splice($self->{namelist}->@*, $position-1, 1, $names->{namelist}->@*);
-  # now re-index all names in list
-  foreach (my $i=0;$i<$#{$self->{namelist}};$i++) {
-    $self->{namelist}->[$i]->set_index($i);
+  splice($self->{namelist}->@*, $position-1, 1, map {$_->clone} $names->{namelist}->@*);
+  # now re-index all names in list (indices are 1-based, as in add_name())
+  foreach (my $i=0;$i<=$#{$self->{namelist}};$i++) {
+    $self->{namelist}->[$i]->set_index($i+1);
   }
   return;
 }

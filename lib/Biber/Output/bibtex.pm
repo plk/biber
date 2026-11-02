@@ -231,8 +231,8 @@ sub set_output_entry {
   $acc{$outmap->('options')} = join(',', @entryoptions) if @entryoptions;
 
   # Date fields
-  foreach my $d ($dmh->{datefields}->@*) {
-    $d =~ s/date$//;
+  foreach my $datefield ($dmh->{datefields}->@*) {
+    my $d = $datefield =~ s/date$//r;
     next unless $be->get_field("${d}year");
 
     # Output legacy dates for YEAR/MONTH if requested
