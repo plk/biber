@@ -719,6 +719,11 @@ sub resolve_xdata {
   my $bee = $self->get_field('entrytype');
   my $dm = Biber::Config->get_dm;
 
+  # An XDATA entry which itself has XDATA references is resolved when it is first
+  # referenced. Don't do this again for later referrers, as granular references
+  # splice into its fields.
+  return if $self->{xdata_resolved};
+
   # $xdata =
   # [
   #  { # xdata info for an actual XDATA field (XDATA = {key, key})
@@ -847,7 +852,8 @@ sub resolve_xdata {
               }
             }
             # Non-name lists
-            elsif ($dm->field_is_fieldtype('list', $reffield)) {
+            elsif ($dm->field_is_fieldtype('list', $reffield) or
+                   ($dm->get_fieldformat($reffield) // '') eq 'xsv') { # xsv fields are lists too
               if ($xdatum->{xdataposition} eq '*') { # insert all positions from XDATA field
                 my $bibentries = $section->bibentries;
                 my $be = $bibentries->entry($xdatum->{xdataentries}[0]);
@@ -915,6 +921,7 @@ sub resolve_xdata {
       }
     }
   }
+  $self->{xdata_resolved} = 1;
 }
 
 =head2 inherit_from

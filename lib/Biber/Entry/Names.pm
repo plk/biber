@@ -87,7 +87,7 @@ sub add_name {
 
 sub replace_name {
   my ($self, $name_obj, $position) = @_;
-  $name_obj->set_index($position-1);
+  $name_obj->set_index($position);
   $self->{namelist}->[$position-1] = $name_obj;
   return;
 }
@@ -102,9 +102,9 @@ sub replace_name {
 sub splice {
   my ($self, $names, $position) = @_;
   splice($self->{namelist}->@*, $position-1, 1, $names->{namelist}->@*);
-  # now re-index all names in list
-  foreach (my $i=0;$i<$#{$self->{namelist}};$i++) {
-    $self->{namelist}->[$i]->set_index($i);
+  # now re-index all names in list (indices are 1-based, as in add_name())
+  foreach (my $i=0;$i<=$#{$self->{namelist}};$i++) {
+    $self->{namelist}->[$i]->set_index($i+1);
   }
   return;
 }
