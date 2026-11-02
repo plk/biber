@@ -454,8 +454,8 @@ sub set_output_entry {
   }
 
   # Date meta-information
-  foreach my $d ($dmh->{datefields}->@*) {
-    $d =~ s/date$//;
+  foreach my $datefield ($dmh->{datefields}->@*) {
+    my $d = $datefield =~ s/date$//r;
 
     # Unspecified granularity
     if (my $unspec = $be->get_field("${d}dateunspecified")) {

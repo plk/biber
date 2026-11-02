@@ -172,8 +172,8 @@ sub clone {
   $new->{xdatarefs} = $self->{xdatarefs};
 
   # clone derived date fields
-  foreach my $df ($dmh->{datefields}->@*) {
-    $df =~ s/date$//;
+  foreach my $datefield ($dmh->{datefields}->@*) {
+    my $df = $datefield =~ s/date$//r;
     foreach my $dsf ('dateunspecified', 'datesplit', 'datejulian',
                      'enddatejulian', 'dateapproximate', 'enddateapproximate',
                      'dateuncertain', 'enddateuncertain', 'yeardivision', 'yeardivision',
@@ -693,8 +693,8 @@ sub set_inherit_from {
 
   # Datesplit is a special non datafield and needs to be inherited for any
   # validation checks which may occur later
-  foreach my $df ($dmh->{datefields}->@*) {
-    $df =~ s/date$//;
+  foreach my $datefield ($dmh->{datefields}->@*) {
+    my $df = $datefield =~ s/date$//r;
     if (my $ds = $parent->get_field("${df}datesplit")) {
       $self->set_field("${df}datesplit", $ds);
     }
@@ -1122,8 +1122,8 @@ sub inherit_from {
   }
   # Datesplit is a special non datafield and needs to be inherited for any
   # validation checks which may occur later
-  foreach my $df ($dmh->{datefields}->@*) {
-    $df =~ s/date$//;
+  foreach my $datefield ($dmh->{datefields}->@*) {
+    my $df = $datefield =~ s/date$//r;
     if (my $ds = $parent->get_field("${df}datesplit")) {
       $self->set_field("${df}datesplit", $ds);
     }
