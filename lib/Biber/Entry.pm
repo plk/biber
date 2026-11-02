@@ -1044,16 +1044,17 @@ sub inherit_from {
     # ONLY DO THIS FOR ENTRIES WITH xDATE FIELDS - LEGACY YEAR/MONTH MESS THINGS UP
     # AND WE JUST IGNORE THEM FOR THIS PRE-PROCESSING STEP
     my @filtered_fields;
-    my @removed_fields;
+    my %removed_dates; # date types (eg. '' or 'orig') whose parts we skipped
     foreach my $field (@fields) {
       if (first {$_ eq $field} $dmh->{dateparts}->@*) {
-        if ($parent->get_field('datesplit') and $self->get_field('datesplit')) {
+        my $t = $field =~ s/(?:end)?(?:year|month|day|hour|minute|second|yeardivision|timezone)$//r;
+        if ($parent->get_field("${t}datesplit") and $self->get_field("${t}datesplit")) {
           if ($self->date_fields_exist($field)) {
             if ($override_target eq 'true') {
               $self->delete_date_fields($field); # clear out all date field parts in target
             }
             else {
-              push @removed_fields, $field;
+              $removed_dates{$t} = 1;
               next;
             }
           }
@@ -1068,7 +1069,7 @@ sub inherit_from {
       my $df = $datefield =~ s/date$//r;
       # Ignore derived date special fields from date fields which we have skipped
       # because they already exist in the child.
-      next if first {$_ eq $datefield} @removed_fields;
+      next if $removed_dates{$df};
       foreach my $dsf ('dateunspecified', 'datesplit', 'datejulian',
                        'enddatejulian', 'dateapproximate', 'enddateapproximate',
                        'dateuncertain', 'enddateuncertain', 'yeardivision', 'endyeardivision',
