@@ -2199,11 +2199,10 @@ sub process_workuniqueness {
   # ignore settings from inheritance data?
   my $ignore = Biber::Config->get_uniq_ignore($citekey);
 
-  # If this is a data clone with skipbib set, don't record uniqueness info
-  if (my $options = $be->get_field('options')) {
-    if (grep {$_ eq 'skipbib'} $options->@*) {
-      return;
-    }
+  # Entries not in the bibliography (skipbib in any form, dataonly, set members)
+  # don't take part in work uniqueness
+  if (Biber::Config->getblxoption($secnum, 'skipbib', undef, $citekey)) {
+    return;
   }
 
   # singletitle
