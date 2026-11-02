@@ -67,15 +67,13 @@ sub _getnamehash {
       next;
     }
 
-    # Per-name namehashtemplate
-    if (defined($n->get_namehashtemplatename)) {
-      $nhtname = $n->get_namehashtemplatename;
-    }
+    # Per-name namehashtemplate (for this name only)
+    my $nnhtname = $n->get_namehashtemplatename // $nhtname;
 
-    my $nht = Biber::Config->getblxoption($secnum, 'namehashtemplate')->{$nhtname};
+    my $nht = Biber::Config->getblxoption($secnum, 'namehashtemplate')->{$nnhtname};
 
     unless ($nht) {
-      biber_error("No namehash template called '$nhtname'");
+      biber_error("No namehash template called '$nnhtname'");
     }
 
     foreach my $nt (@nps) {# list type so returns list
@@ -124,15 +122,13 @@ sub _getfullhash {
       next;
     }
 
-    # Per-name namehashtemplate
-    if (defined($n->get_namehashtemplatename)) {
-      $nhtname = $n->get_namehashtemplatename;
-    }
+    # Per-name namehashtemplate (for this name only)
+    my $nnhtname = $n->get_namehashtemplatename // $nhtname;
 
-    my $nht = Biber::Config->getblxoption($secnum, 'namehashtemplate')->{$nhtname};
+    my $nht = Biber::Config->getblxoption($secnum, 'namehashtemplate')->{$nnhtname};
 
     unless ($nht) {
-      biber_error("No namehash template called '$nhtname'");
+      biber_error("No namehash template called '$nnhtname'");
     }
 
     foreach my $nt (@nps) {# list type so returns list
@@ -203,13 +199,11 @@ sub _getnamehash_u {
   foreach my $n ($names->first_n_names($visible)->@*) {
     my $nid = $n->get_id;
 
-    # Per-name uniquenametemplate
-    if (defined($n->get_uniquenametemplatename)) {
-      $untname = $n->get_uniquenametemplatename;
-    }
+    # Per-name uniquenametemplate (for this name only)
+    my $nuntname = $n->get_uniquenametemplatename // $untname;
 
     # Use nameuniqueness template to construct hash
-    foreach my $nps (Biber::Config->getblxoption($secnum, 'uniquenametemplate')->{$untname}->@*) {
+    foreach my $nps (Biber::Config->getblxoption($secnum, 'uniquenametemplate')->{$nuntname}->@*) {
       # Same as omitting this
       next if defined($nps->{disambiguation}) and ($nps->{disambiguation} eq 'none');
       my $npn = $nps->{namepart};
@@ -580,22 +574,16 @@ sub _label_name {
 
     foreach my $name ($names->names->@*) {
 
-      # name scope labelalphanametemplate
-      if (defined($name->get_labelalphanametemplatename)) {
-        $lantname = $name->get_labelalphanametemplatename;
-      }
-
-      # name scope useprefix
-      if (defined($name->get_useprefix)) {
-        $useprefix = $name->get_useprefix;
-      }
+      # name scope labelalphanametemplate and useprefix (for this name only)
+      my $nlantname = $name->get_labelalphanametemplatename // $lantname;
+      my $nuseprefix = $name->get_useprefix // $useprefix;
 
       # In future, perhaps there will be a need for more namepart use* options and
       # therefore $opts will come from somewhere else
-      $opts->{useprefix} = $useprefix;
+      $opts->{useprefix} = $nuseprefix;
 
       # Now extract the template to use from the global hash of templates
-      my $lnat = Biber::Config->getblxoption(undef, 'labelalphanametemplate')->{$lantname};
+      my $lnat = Biber::Config->getblxoption(undef, 'labelalphanametemplate')->{$nlantname};
 
       my $preacc; # arrayref accumulator for "pre" nameparts
       my $mainacc; # arrayref accumulator for main non "pre" nameparts
@@ -1630,19 +1618,17 @@ sub _namestring {
 
   foreach my $n ($names->first_n_names($visible)->@*) {
 
-    # Name scope useprefix option
-    if (defined($n->get_useprefix)) {
-      $useprefix = $n->get_useprefix;
-    }
+    # Name scope useprefix option (for this name only)
+    my $nuseprefix = $n->get_useprefix // $useprefix;
 
     # Override with any name scope sorting name key template option
     # This won't override the visibility type selection already taken from higher-level
     # sorting namekey templates since this option only applies at name list level and higher
     # anyway and this is individual name scope
-    $snkname = $n->get_sortingnamekeytemplatename // $snkname;
+    my $nsnkname = $n->get_sortingnamekeytemplatename // $snkname;
 
     # Now get the actual sorting name key template
-    my $snk = Biber::Config->getblxoption(undef, 'sortingnamekeytemplate')->{$snkname};
+    my $snk = Biber::Config->getblxoption(undef, 'sortingnamekeytemplate')->{$nsnkname};
 
     # Get the sorting name key specification and use it to construct a sorting key for each name
     my $kpa = [];
@@ -1657,7 +1643,7 @@ sub _namestring {
 
           # useprefix can be name list or name local
           if ($useopt and $useopt eq 'useprefix') {
-            $useoptval = map_boolean('useprefix', $useprefix, 'tonum');
+            $useoptval = map_boolean('useprefix', $nuseprefix, 'tonum');
           }
 
           if (my $npstring = $n->get_namepart($namepart)) {

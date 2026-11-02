@@ -1804,20 +1804,10 @@ MAIN:  foreach my $pn ($dmh->{namelistsall}->@*) {
     next unless my $nl = $be->get_field($pn);
     my $nlid = $nl->get_id;
 
-    # per-namelist uniquenametemplatename
-    if (defined($nl->get_uniquenametemplatename)) {
-      $untname = $nl->get_uniquenametemplatename;
-    }
-
-    # per-namelist uniquelist
-    if (defined($nl->get_uniquelist)) {
-      $ul = $nl->get_uniquelist;
-    }
-
-    # per-namelist uniquename
-    if (defined($nl->get_uniquename)) {
-      $un = $nl->get_uniquename;
-    }
+    # per-namelist uniquenametemplatename, uniquelist and uniquename (for this list only)
+    my $nluntname = $nl->get_uniquenametemplatename // $untname;
+    my $nlul = $nl->get_uniquelist // $ul;
+    my $nlun = $nl->get_uniquename // $un;
 
     foreach my $n ($nl->names->@*) {
       my $nid = $n->get_id;
@@ -1826,29 +1816,23 @@ MAIN:  foreach my $pn ($dmh->{namelistsall}->@*) {
       my $namestrings = [];
       my $namedisschema = [];
 
-      # per-name uniquenametemplatename
-      if (defined($n->get_uniquenametemplatename)) {
-        $untname = $n->get_uniquenametemplatename;
-      }
+      # per-name uniquenametemplatename (for this name only)
+      my $nuntname = $n->get_uniquenametemplatename // $nluntname;
 
       # Die if no uniquenametemplate found as this results in an infinite loop
       # in the disambiguation code
-      unless (Biber::Config->getblxoption(undef, 'uniquenametemplate')->{$untname}) {
-        biber_error("No uniquenametemplate called '$untname' found, cannot continue.");
+      unless (Biber::Config->getblxoption(undef, 'uniquenametemplate')->{$nuntname}) {
+        biber_error("No uniquenametemplate called '$nuntname' found, cannot continue.");
       }
 
-      # per-name uniquename
-      if (defined($n->get_uniquename)) {
-        $un = $n->get_uniquename;
-      }
-
-      my $nameun = $un;
+      # per-name uniquename (for this name only)
+      my $nameun = $n->get_uniquename // $nlun;
 
       # First construct base part ...
       my $base = ''; # Might not be any base parts at all so make sure it's not undefined
       my $baseparts;
 
-      foreach my $np (Biber::Config->getblxoption(undef, 'uniquenametemplate')->{$untname}->@*) {
+      foreach my $np (Biber::Config->getblxoption(undef, 'uniquenametemplate')->{$nuntname}->@*) {
         next unless $np->{base};
         my $npn = $np->{namepart};
 
@@ -1878,13 +1862,13 @@ MAIN:  foreach my $pn ($dmh->{namelistsall}->@*) {
       push $namedisschema->@*, ['base' => $baseparts] if defined($baseparts);
 
       # ... then add non-base parts by incrementally adding to the last disambiguation level
-      foreach my $np (Biber::Config->getblxoption(undef, 'uniquenametemplate')->{$untname}->@*) {
+      foreach my $np (Biber::Config->getblxoption(undef, 'uniquenametemplate')->{$nuntname}->@*) {
         next if $np->{base};
         next if defined($np->{disambiguation}) and ($np->{disambiguation} eq 'none');
 
         my $npn = $np->{namepart};
 
-        my $level = $np->{disambiguation} // $UNIQUENAME_CONTEXTS{$un // 'false'};
+        my $level = $np->{disambiguation} // $UNIQUENAME_CONTEXTS{$nameun // 'false'};
         my $lastns = $namestrings->[$namestrings->$#*];
 
         if (my $p = $n->get_namepart($npn)) {
@@ -1935,7 +1919,7 @@ MAIN:  foreach my $pn ($dmh->{namelistsall}->@*) {
       # of the list in which the name occurs. It's useful to know this where the results
       # of the sub are used
       $namedis->{$nlid}{$nid} = {nameun        => $nameun,
-                                 namelistul    => $ul,
+                                 namelistul    => $nlul,
                                  namestring    => strip_nonamestring($namestring, $nl->get_type),
                                  namestrings   => [map {strip_nonamestring($_, $nl->get_type)} $namestrings->@*],
                                  namedisschema => $namedisschema};
@@ -3545,12 +3529,10 @@ sub create_uniquename_info {
     foreach my $n ($names->@*) {
       my $nid = $n->get_id;
 
-      # Per-name uniquename
-      if (defined($n->get_uniquename)) {
-        $un = $n->get_uniquename;
-      }
+      # Per-name uniquename (for this name only)
+      my $nun = $n->get_uniquename // $un;
 
-      next MAIN if $un eq 'false';
+      next if $nun eq 'false';
 
       # We need to track two types of uniquename disambiguation here:
       #
@@ -3570,14 +3552,14 @@ sub create_uniquename_info {
       # Uniquelist is not set, a name list is longer than the maxcitenames truncation
       #   and the name appears before the mincitenames truncation
 
-      if ($un eq 'allinit' or $un eq 'allfull' or $un eq 'minyearinit' or $un eq 'minyearfull' or
+      if ($nun eq 'allinit' or $nun eq 'allfull' or $nun eq 'minyearinit' or $nun eq 'minyearfull' or
           ($ul and $n->get_index <= $ul) or
           $morenames or
           $num_names <= $maxcn or
           $n->get_index <= $mincn) { # implicitly, $num_names > $maxcn here
 
         $truncnames{$nid} = 1;
-        if ($un eq 'mininit' or $un eq 'minfull' or $un eq 'minyearinit' or $un eq 'minyearfull') {
+        if ($nun eq 'mininit' or $nun eq 'minfull' or $nun eq 'minyearinit' or $nun eq 'minyearfull') {
           push @basenames, $dlist->get_basenamestring($nlid, $nid);
           push @allnames, $dlist->get_namestring($nlid, $nid);
         }
@@ -3588,7 +3570,7 @@ sub create_uniquename_info {
     # and non-basename is all names in the namelist, not just the current name
     my $min_basename;
     my $min_namestring;
-    if ($un eq 'mininit' or $un eq 'minfull' or $un eq 'minyearinit' or $un eq 'minyearfull') {
+    if (@basenames) {
       $min_basename = join("\x{10FFFD}", @basenames);
       $min_namestring = join("\x{10FFFD}", @allnames);
       if ($#basenames + 1 < $num_names or $morenames) {
@@ -3605,17 +3587,22 @@ sub create_uniquename_info {
       my $namedisamiguationscope;
       my $nskey;
 
+      # Per-name uniquename (for this name only)
+      my $nun = $n->get_uniquename // $un;
+
+      next if $nun eq 'false';
+
       # Disambiguation scope and key depend on the uniquename setting
-      if ($un eq 'init' or $un eq 'full' or $un eq 'allinit' or $un eq 'allfull') {
+      if ($nun eq 'init' or $nun eq 'full' or $nun eq 'allinit' or $nun eq 'allfull') {
         $namedisamiguationscope = 'global';
         $nskey = join("\x{10FFFD}", $namestrings->@*);
       }
-      elsif ($un eq 'mininit' or $un eq 'minfull') {
+      elsif ($nun eq 'mininit' or $nun eq 'minfull') {
         $namedisamiguationscope = $min_basename;
         $nskey = $min_namestring;
         $dlist->set_unmininfo($nlid, $nid, $min_basename);
       }
-      elsif ($un eq 'minyearinit' or $un eq 'minyearfull') {
+      elsif ($nun eq 'minyearinit' or $nun eq 'minyearfull') {
         my $lyear = $be->get_field('labelyear') // '';
         $namedisamiguationscope = $min_basename . $lyear;
         $nskey = $min_namestring . $lyear;
@@ -3702,14 +3689,12 @@ MAIN:  foreach my $citekey ( $section->get_citekeys ) {
     foreach my $n ($names->@*) {
       my $nid = $n->get_id;
 
-      # Per-name uniquename
-      if (defined($n->get_uniquename)) {
-        $un = $n->get_uniquename;
-      }
+      # Per-name uniquename (for this name only)
+      my $nun = $n->get_uniquename // $un;
 
-      next MAIN if $un eq 'false';
+      next if $nun eq 'false';
 
-      if ($un eq 'allinit' or $un eq 'allfull' or
+      if ($nun eq 'allinit' or $nun eq 'allfull' or
           ($ul and $n->get_index <= $ul) or
           $morenames or
           $num_names <= $maxcn or
@@ -3729,7 +3714,12 @@ MAIN:  foreach my $citekey ( $section->get_citekeys ) {
       my $namedisschema = $dlist->get_namedisschema($nlid, $nid);
       my $namescope = 'global'; # default
 
-      if ($un eq 'mininit' or $un eq 'minfull' or $un eq 'minyearinit' or $un eq 'minyearfull') {
+      # Per-name uniquename (for this name only)
+      my $nun = $n->get_uniquename // $un;
+
+      next if $nun eq 'false';
+
+      if ($nun eq 'mininit' or $nun eq 'minfull' or $nun eq 'minyearinit' or $nun eq 'minyearfull') {
         $namescope = $dlist->get_unmininfo($nlid, $nid);
       }
 
