@@ -142,7 +142,8 @@ sub _pre {
     }
   }
   if (defined($p{self}{scriptmap})) {
-    $p{input} =~ s/(\d+)/$p{self}{scriptmap}{stoa}{$1}/xge;
+    # ASCII digit runs aren't in the map and are kept as they are
+    $p{input} =~ s/(\d+)/$p{self}{scriptmap}{stoa}{$1} \/\/ $1/xge;
   }
 
   # ISO 8601-2:2016 4.2.1 (uncertain)
