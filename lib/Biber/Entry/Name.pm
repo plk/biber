@@ -620,6 +620,10 @@ sub name_to_xname {
   foreach my $np (sort $dm->get_constant_value('nameparts')) {# list type so returns list
     if ($parts->{$np} = $self->get_namepart($np)) {
       $parts->{$np} =~ s/~/ /g;
+      # Restore any braces around the part in the original
+      if ($self->was_stripped($np)) {
+        $parts->{$np} = Biber::Utils::add_outer($parts->{$np});
+      }
       push @namestring, "$np$xns" . $parts->{$np};
     }
   }
