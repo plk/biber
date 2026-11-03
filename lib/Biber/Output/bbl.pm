@@ -713,7 +713,9 @@ sub output {
 
   out($target, $data->{HEAD});
 
-  foreach my $secnum (sort keys $data->{ENTRIES}->%*) {
+  # A section with no found entries still needs its block for its missing keys and aliases
+  my %secnums = map {$_ => 1} map {keys(($data->{$_} // {})->%*)} qw(ENTRIES ALIAS_ENTRIES MISSING_ENTRIES);
+  foreach my $secnum (sort keys %secnums) {
     if ($logger->is_debug()) {# performance tune
       $logger->debug("Writing entries for section $secnum");
     }

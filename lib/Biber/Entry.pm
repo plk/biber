@@ -177,7 +177,7 @@ sub clone {
     my $df = $datefield =~ s/date$//r;
     foreach my $dsf ('dateunspecified', 'datesplit', 'datejulian',
                      'enddatejulian', 'dateapproximate', 'enddateapproximate',
-                     'dateuncertain', 'enddateuncertain', 'yeardivision', 'yeardivision',
+                     'dateuncertain', 'enddateuncertain', 'yeardivision', 'endyeardivision',
                      'era', 'endera') {
       if (my $ds = $self->{derivedfields}{"$df$dsf"}) {
         $new->{derivedfields}{"$df$dsf"} = $ds;
