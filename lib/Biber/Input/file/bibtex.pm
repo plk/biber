@@ -336,8 +336,9 @@ sub extract_entries {
 
   # Save comments if in tool mode
   if (Biber::Config->getoption('tool')) {
-    if ($cache->{comments}{$filename}) {
-      $Biber::MASTER->{comments} = $cache->{comments}{$filename};
+    # Keep the comments of every data file, but each file only once
+    if ($cache->{counts}{$filename} < 2 and $cache->{comments}{$filename}) {
+      push(($Biber::MASTER->{comments} //= [])->@*, $cache->{comments}{$filename}->@*);
     }
   }
 

@@ -4539,6 +4539,7 @@ sub prepare_tool {
   $self->process_lists;        # process the output lists (sort and filtering)
   $out->create_output_section; # Generate and push the section output into the
                                # into the output object ready for writing
+  $out->create_output_misc;    # Preambles
   return;
 }
 
