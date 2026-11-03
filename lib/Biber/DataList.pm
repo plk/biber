@@ -1986,7 +1986,7 @@ sub instantiate_entry {
           $entry_string =~ s|<BDS>$nid-PERNAMEHASH</BDS>|$str|gxms;
         }
         else {
-          $entry_string =~ s|<BDS>$nid-PERNAMEHASH</BDS>,?||gxms;
+          $entry_string =~ s|,?<BDS>$nid-PERNAMEHASH</BDS>||gxms; # the hash is the last option
         }
       }
     }

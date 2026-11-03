@@ -38,7 +38,7 @@ regular: 'art-lojban'|'cel-gaulish'|'no-bok'|'no-nyn'|'zh-guoyu'|'zh-hakka'|'zh-
 
 alphanum: ALPHA|DIGIT
 
-ALPHA: /[a-zA-z]/
+ALPHA: /[a-zA-Z]/
 
 DIGIT: /[0-9]/
 

@@ -1816,8 +1816,16 @@ sub maploopreplace {
 
 =cut
 
+my %TRANSLITERATORS; # cache, so that each pair is set up (and warned about) only once
+
 sub get_transliterator {
   my ($target, $from, $to) = map {lc} @_;
+  return $TRANSLITERATORS{"$from\x{10FFFD}$to"} if exists($TRANSLITERATORS{"$from\x{10FFFD}$to"});
+  return $TRANSLITERATORS{"$from\x{10FFFD}$to"} = _get_transliterator($target, $from, $to);
+}
+
+sub _get_transliterator {
+  my ($target, $from, $to) = @_;
   my @valid_from = ('iast', 'russian');
   my @valid_to   = ('devanagari', 'ala-lc', 'bgn/pcgn-standard');
   unless (first {$from eq $_} @valid_from and

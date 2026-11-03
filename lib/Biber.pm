@@ -3873,12 +3873,8 @@ sub create_uniquelist_info {
     # one count. We therefore need to distinguish counts which are of the final, complete
     # list of names. If there is more than one count for these, (meaning that there are
     # two or more identical name lists), we don't expand them at all as there is no point.
-    $dlist->add_uniquelistcount_final($namelist);
-
-    # uniquelist=minyear needs tracking only of namelists in same labelyear
-    if ($ul eq 'minyear') {
-      $dlist->add_uniquelistcount_final($namelist, $labelyear);
-    }
+    # uniquelist=minyear also needs tracking of namelists in the same labelyear
+    $dlist->add_uniquelistcount_final($namelist, $ul eq 'minyear' ? $labelyear : undef);
 
     # Add count for uniquelist=minyear
     unless (Compare($ulminyear_namelist, [])) {

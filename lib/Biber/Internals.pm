@@ -704,7 +704,7 @@ sub _process_label_attributes {
             $logger->debug("Using label disambiguation cache (name) for '$field' in section $secnum");
           }
           # Use the global index override if set (substring_width =~ /f/)
-          $field_string = ${$lcache->{$field_string}{data}}[$lcache->{globalindices}{$field_string} || $lcache->{$field_string}{index}];
+          $field_string = ${$lcache->{$field_string}{data}}[$lcache->{globalindices}{$field_string} // $lcache->{$field_string}{index}];
         }
         else {
           # This contains a mapping of strings to substrings of increasing lengths
@@ -770,7 +770,7 @@ sub _process_label_attributes {
           }
 
           # Use the global index override if set (substring_width =~ /f/)
-          $field_string = ${$lcache->{$field_string}{data}}[$lcache->{globalindices}{$field_string} || $lcache->{$field_string}{index}];
+          $field_string = ${$lcache->{$field_string}{data}}[$lcache->{globalindices}{$field_string} // $lcache->{$field_string}{index}];
           if ($logger->is_trace()) { # performance tune
             $logger->trace("Label disambiguation cache for '$field' " .
                            ($nameparts ? '(' . join(',', $nameparts->@*) . ') ' : '') .

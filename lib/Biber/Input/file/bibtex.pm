@@ -1444,7 +1444,6 @@ sub _datetime {
           # Save end yeardivision date information
           if (my $yeardivision = $CONFIG_DATE_PARSERS{end}->yeardivision) {
             $bibentry->set_field($datetype . 'endyeardivision', $yeardivision);
-            $bibentry->set_field($datetype . 'endseaason', $yeardivision); # legacy
           }
 
           # must be an hour if there is a time but could be 00 so use defined()
