@@ -23,6 +23,10 @@ Revision history for Biber
          correctly after LaTeX decoding.
        * PAR build scripts no longer link libbtparse (it is part of the
          Text::BibTeX module now).
+       * The "too many commas" check for BibTeX format names only counts
+         commas outside braces, so "{Doe, Inc.}, J, Jr" is accepted and
+         "{Doe}, J, K, {L}" is an error. Consecutive commas are no longer an
+         error: Text::BibTeX treats them as one comma, as BibTeX does.
        * **INCOMPATIBLE CHANGE** - in sourcemaps, the captures $1, $2 etc.
          used in later steps after a match step are now the parenthesised
          groups of the first match only, and $0 is the whole match. Before,

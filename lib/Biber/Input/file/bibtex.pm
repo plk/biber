@@ -1277,22 +1277,15 @@ sub _name {
       next unless $no = parsename_x($section, $name, $fc, $key);
     }
     else { # Normal bibtex name format
-      # Check for malformed names in names which aren't completely escaped
-      # Too many commas
-      unless ($name =~ m/\A\{\X+\}\z/xms) { # Ignore these tests for escaped names
-        my @commas = $name =~ m/,/g;
-        if ($#commas > 1) {
-          biber_error("Name \"$name\" has too many commas, skipping entry '$key'", 1);
-          $section->del_citekey($key);
-          return 'BIBER_SKIP_ENTRY';
-        }
-
-        # Consecutive commas would be silently treated as one comma
-        if ($name =~ /,,/) {
-          biber_error("Name \"$name\" is malformed (consecutive commas): skipping entry '$key'", 1);
-          $section->del_citekey($key);
-          return 'BIBER_SKIP_ENTRY';
-        }
+      # Too many commas. Only commas outside braces separate name parts.
+      # (Empty parts and consecutive commas are dealt with, and warned about,
+      # by Text::BibTeX.)
+      (my $toplevel = $name) =~ s/(\{(?:[^{}]++|(?1))*\})/{}/g;
+      my @commas = $toplevel =~ m/,/g;
+      if ($#commas > 1) {
+        biber_error("Name \"$name\" has too many commas, skipping entry '$key'", 1);
+        $section->del_citekey($key);
+        return 'BIBER_SKIP_ENTRY';
       }
 
       # Skip names that don't parse for some reason
