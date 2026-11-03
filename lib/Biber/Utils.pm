@@ -19,7 +19,6 @@ use Biber::CodePage qw ( :DEFAULT string_analysis );
 use Biber::Constants;
 use Biber::LaTeX::Recode;
 use Biber::Entry::Name;
-use Data::Uniqid qw ( suniqid );
 use Regexp::Common qw( balanced );
 use List::AllUtils qw( first );
 use Log::Log4perl qw(:no_extra_logdie_message);
@@ -1788,6 +1787,10 @@ sub parse_range_alt {
 
 =cut
 
+# $MAPUNIQ values come from a counter, not the clock, so that the output
+# doesn't change between runs
+my $MAPUNIQCOUNT = 0;
+
 sub maploopreplace {
   # $MAPUNIQVAL is lexical here
   no strict 'vars';
@@ -1797,7 +1800,7 @@ sub maploopreplace {
   $string =~ s/\$MAPLOOP/$maploop/g if defined($maploop);
   $string =~ s/\$MAPUNIQVAL/$MAPUNIQVAL/g;
   if ($string =~ m/\$MAPUNIQ/) {
-    my $MAPUNIQ = suniqid;
+    my $MAPUNIQ = 'mapuniq' . ++$MAPUNIQCOUNT;
     $string =~ s/\$MAPUNIQ/$MAPUNIQ/g;
     $MAPUNIQVAL = $MAPUNIQ;
   }

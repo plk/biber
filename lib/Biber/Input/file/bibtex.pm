@@ -194,8 +194,12 @@ sub extract_entries {
       $logger->debug("All citekeys will be used for section '$secnum'");
     }
 
-    # Loop over all entries, creating objects
-    while (my ($key, $entry) = each $cache->{data}{$filename}->%*) {
+    # Loop over all entries, creating objects. In file order, not hash order, so
+    # that sourcemaps (e.g. $MAPUNIQ keys) give the same result on every run
+    # (A copy, as create_entry failures are removed from orig_key_order below)
+    my @keys = map {"$_"} uniq (($cache->{orig_key_order}{$filename} // [])->@*);
+    foreach my $key (@keys) {
+      my $entry = $cache->{data}{$filename}{$key};
 
       # Record a key->datasource name mapping for error reporting
       $section->set_keytods($key, $filename);
@@ -209,8 +213,8 @@ sub extract_entries {
     # Loop over all aliases, creating data in section object
     # Since this is allkeys, we are guaranteed that the real entry for the alias
     # will be available
-    while (my ($alias, $key) = each $cache->{data}{citekey_aliases}->%*) {
-      $section->set_citekey_alias($alias, $key);
+    foreach my $alias (sort keys $cache->{data}{citekey_aliases}->%*) {
+      $section->set_citekey_alias($alias, $cache->{data}{citekey_aliases}{$alias});
     }
 
     # If allkeys, push all bibdata keys into citekeys (if they are not already there).

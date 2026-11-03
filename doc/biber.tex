@@ -901,9 +901,10 @@ examples. A \opt{map} element looks like this:
   order). This allows the user to repeat a group of \opt{map\_step}s for
   each value of \textcolor{red}{\texttt{loopval}}. The special variable
   \verb+$MAPUNIQ+ may also be used in the \opt{map\_step}s to generate a
-  random unique string. This can be useful when creating keys for new
+  unique string (\verb+mapuniq1+, \verb+mapuniq2+ etc., which are the same in
+  every run with the same input). This can be useful when creating keys for new
   entries. The special variable \verb+$MAPUNIQVAL+ may be used the
-  \opt{map\_step}s to refer to the value of the last random unique string
+  \opt{map\_step}s to refer to the value of the last unique string
   generated with \verb+$MAPUNIQ+.
 \end{itemize}
 

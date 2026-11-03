@@ -243,7 +243,7 @@ sub set_output_entry {
         }
 
         # Add per-namelist options
-        foreach my $nlo (keys $CONFIG_SCOPEOPT_BIBLATEX{NAMELIST}->%*) {
+        foreach my $nlo (sort keys $CONFIG_SCOPEOPT_BIBLATEX{NAMELIST}->%*) {
           if (defined($nf->${\"get_$nlo"})) {
             my $nlov = $nf->${\"get_$nlo"};
 

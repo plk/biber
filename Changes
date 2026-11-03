@@ -11,6 +11,9 @@ Revision history for Biber
          the captures of all matches were numbered one after the other, so
          that e.g. $2 could be the first group of the second match, and $0 was
          the last capture. Maps which relied on this need to be changed.
+       * The values of $MAPUNIQ in sourcemaps are now "mapuniq1", "mapuniq2"
+         etc. instead of random strings, so that the .bbl is the same in every
+         run with the same input.
 2.22   (2025-08)
        * Fixed security issues with evals
 2.21   (2025-07)

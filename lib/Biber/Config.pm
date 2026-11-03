@@ -1258,7 +1258,7 @@ sub reset_keyorder {
 
 sub get_crossrefkeys {
   shift; # class method so don't care about class name
-  return [ keys $CONFIG->{state}{crossrefkeys}->%* ];
+  return [ sort keys $CONFIG->{state}{crossrefkeys}->%* ];
 }
 
 =head1 xrefkeys
@@ -1271,7 +1271,7 @@ sub get_crossrefkeys {
 
 sub get_xrefkeys {
   shift; # class method so don't care about class name
-  return [ keys $CONFIG->{state}{xrefkeys}->%* ];
+  return [ sort keys $CONFIG->{state}{xrefkeys}->%* ];
 }
 
 =head2 get_crossrefkey
