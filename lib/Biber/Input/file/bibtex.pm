@@ -1911,7 +1911,8 @@ sub parsename_x {
   my %namec;
   my %pernameopts;
   foreach my $np (split_xsv($namestr)) {# Can have x inside records so use Text::CSV
-    my ($npn, $npv) = $np =~ m/^(.+)\s*$xnamesep\s*(.+)$/x;
+    # Split at the first separator, trimming spaces around it
+    my ($npn, $npv) = $np =~ m/^\s*(.+?)\s*\Q$xnamesep\E\s*(.+?)\s*$/x;
     $npn = lc($npn);
 
     # per-name options
@@ -1946,10 +1947,12 @@ sub parsename_x {
     }
   }
 
+  my $strip;
   foreach my $np (keys %nps) {
     if (exists($namec{$np})) {
       # Generate any stripped information
       (my $s, $namec{$np}) = remove_outer($namec{$np});
+      $strip->{$np} = $s;
 
       # Protect spaces inside {} when splitting to produce initials
       my $part = $namec{$np};
@@ -1987,7 +1990,8 @@ sub parsename_x {
   # .bbl so as to maintain maximum BibTeX compatibility
   return  Biber::Entry::Name->new(
                                   %nameinfo,
-                                  %pernameopts
+                                  %pernameopts,
+                                  strip => $strip
                                  );
 }
 

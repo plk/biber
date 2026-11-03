@@ -64,12 +64,12 @@ my $out = $biber->get_output_obj;
 my $un1 = q|    \entry{un1}{article}{}{}
       \name{author}{1}{}{%
         {{un=1,uniquepart=middle,hash=329d8f9192ea3349d700160c9ddb505d}{%
-           family={Smith},
+           family={{Smith}},
            familyi={S\bibinitperiod},
-           given={John},
+           given={{John}},
            giveni={J\bibinitperiod},
            givenun=1,
-           middle={Simon},
+           middle={{Simon}},
            middlei={S\bibinitperiod},
            middleun=1}}%
       }
@@ -91,12 +91,12 @@ my $un1 = q|    \entry{un1}{article}{}{}
 my $un2 = q|    \entry{un2}{article}{}{}
       \name{author}{1}{}{%
         {{un=2,uniquepart=middle,hash=7551114aede4ef69e4b3683039801706}{%
-           family={Smith},
+           family={{Smith}},
            familyi={S\bibinitperiod},
-           given={John},
+           given={{John}},
            giveni={J\bibinitperiod},
            givenun=1,
-           middle={Alan},
+           middle={{Alan}},
            middlei={A\bibinitperiod},
            middleun=2}}%
       }
@@ -118,12 +118,12 @@ my $un2 = q|    \entry{un2}{article}{}{}
 my $un3 = q|    \entry{un3}{article}{}{}
       \name{author}{1}{}{%
         {{un=2,uniquepart=middle,hash=401aebda288799a7c757526242d8c9fc}{%
-           family={Smith},
+           family={{Smith}},
            familyi={S\bibinitperiod},
-           given={John},
+           given={{John}},
            giveni={J\bibinitperiod},
            givenun=1,
-           middle={Arthur},
+           middle={{Arthur}},
            middlei={A\bibinitperiod},
            middleun=2}}%
       }
@@ -145,12 +145,12 @@ my $un3 = q|    \entry{un3}{article}{}{}
 my $un4 = q|    \entry{un4}{article}{}{}
       \name{author}{1}{}{%
         {{un=1,uniquepart=given,hash=f6038a264619efefd49c7daac56424ca}{%
-           family={Smith},
+           family={{Smith}},
            familyi={S\bibinitperiod},
-           given={Alan},
+           given={{Alan}},
            giveni={A\bibinitperiod},
            givenun=1,
-           middle={Simon},
+           middle={{Simon}},
            middlei={S\bibinitperiod},
            middleun=0}}%
       }
@@ -172,12 +172,12 @@ my $un4 = q|    \entry{un4}{article}{}{}
 my $un1a = q|    \entry{un1}{article}{}{}
       \name{author}{1}{}{%
         {{un=1,uniquepart=middle,hash=329d8f9192ea3349d700160c9ddb505d}{%
-           family={Smith},
+           family={{Smith}},
            familyi={S\bibinitperiod},
-           given={John},
+           given={{John}},
            giveni={J\bibinitperiod},
            givenun=2,
-           middle={Simon},
+           middle={{Simon}},
            middlei={S\bibinitperiod},
            middleun=1}}%
       }
@@ -199,12 +199,12 @@ my $un1a = q|    \entry{un1}{article}{}{}
 my $un2a = q|    \entry{un2}{article}{}{}
       \name{author}{1}{}{%
         {{un=2,uniquepart=middle,hash=7551114aede4ef69e4b3683039801706}{%
-           family={Smith},
+           family={{Smith}},
            familyi={S\bibinitperiod},
-           given={John},
+           given={{John}},
            giveni={J\bibinitperiod},
            givenun=2,
-           middle={Alan},
+           middle={{Alan}},
            middlei={A\bibinitperiod},
            middleun=2}}%
       }
@@ -226,12 +226,12 @@ my $un2a = q|    \entry{un2}{article}{}{}
 my $un3a = q|    \entry{un3}{article}{}{}
       \name{author}{1}{}{%
         {{un=2,uniquepart=middle,hash=401aebda288799a7c757526242d8c9fc}{%
-           family={Smith},
+           family={{Smith}},
            familyi={S\bibinitperiod},
-           given={John},
+           given={{John}},
            giveni={J\bibinitperiod},
            givenun=2,
-           middle={Arthur},
+           middle={{Arthur}},
            middlei={A\bibinitperiod},
            middleun=2}}%
       }
@@ -254,12 +254,12 @@ my $un3a = q|    \entry{un3}{article}{}{}
 my $un4a = q|    \entry{un4}{article}{}{}
       \name{author}{1}{}{%
         {{un=2,uniquepart=given,hash=f6038a264619efefd49c7daac56424ca}{%
-           family={Smith},
+           family={{Smith}},
            familyi={S\bibinitperiod},
-           given={Alan},
+           given={{Alan}},
            giveni={A\bibinitperiod},
            givenun=2,
-           middle={Simon},
+           middle={{Simon}},
            middlei={S\bibinitperiod},
            middleun=0}}%
       }
@@ -283,12 +283,12 @@ my $un4a = q|    \entry{un4}{article}{}{}
 my $un1b = q|    \entry{un1}{article}{}{}
       \name{author}{1}{}{%
         {{un=0,uniquepart=base,hash=329d8f9192ea3349d700160c9ddb505d}{%
-           family={Smith},
+           family={{Smith}},
            familyi={S\bibinitperiod},
-           given={John},
+           given={{John}},
            giveni={J\bibinitperiod},
            givenun=0,
-           middle={Simon},
+           middle={{Simon}},
            middlei={S\bibinitperiod},
            middleun=0}}%
       }
@@ -312,12 +312,12 @@ my $un1b = q|    \entry{un1}{article}{}{}
 my $un2b = q|    \entry{un2}{article}{}{}
       \name{author}{1}{}{%
         {{un=2,uniquepart=middle,hash=7551114aede4ef69e4b3683039801706}{%
-           family={Smith},
+           family={{Smith}},
            familyi={S\bibinitperiod},
-           given={John},
+           given={{John}},
            giveni={J\bibinitperiod},
            givenun=0,
-           middle={Alan},
+           middle={{Alan}},
            middlei={A\bibinitperiod},
            middleun=2}}%
       }
@@ -339,12 +339,12 @@ my $un2b = q|    \entry{un2}{article}{}{}
 my $un3b = q|    \entry{un3}{article}{}{}
       \name{author}{1}{}{%
         {{un=2,uniquepart=middle,hash=401aebda288799a7c757526242d8c9fc}{%
-           family={Smith},
+           family={{Smith}},
            familyi={S\bibinitperiod},
-           given={John},
+           given={{John}},
            giveni={J\bibinitperiod},
            givenun=0,
-           middle={Arthur},
+           middle={{Arthur}},
            middlei={A\bibinitperiod},
            middleun=2}}%
       }
@@ -368,12 +368,12 @@ my $un3b = q|    \entry{un3}{article}{}{}
 my $un4b = q|    \entry{un4}{article}{}{}
       \name{author}{1}{}{%
         {{un=0,uniquepart=base,hash=f6038a264619efefd49c7daac56424ca}{%
-           family={Smith},
+           family={{Smith}},
            familyi={S\bibinitperiod},
-           given={Alan},
+           given={{Alan}},
            giveni={A\bibinitperiod},
            givenun=0,
-           middle={Simon},
+           middle={{Simon}},
            middlei={S\bibinitperiod},
            middleun=0}}%
       }
@@ -399,12 +399,12 @@ my $un4b = q|    \entry{un4}{article}{}{}
 my $un5 = q|    \entry{un5}{article}{uniquenametemplatename=test3}{}
       \name{author}{1}{}{%
         {{un=0,uniquepart=base,hash=74fba0d07ca65976bbff1034f9bb22e6}{%
-           family={Smith},
+           family={{Smith}},
            familyi={S\bibinitperiod},
-           given={Arthur},
+           given={{Arthur}},
            giveni={A\bibinitperiod},
            givenun=0,
-           middle={Simon},
+           middle={{Simon}},
            middlei={S\bibinitperiod},
            middleun=0}}%
       }
@@ -430,12 +430,12 @@ my $un5 = q|    \entry{un5}{article}{uniquenametemplatename=test3}{}
 my $un6 = q|    \entry{un6}{article}{}{}
       \name{author}{1}{uniquenametemplatename=test4}{%
         {{un=0,uniquepart=base,hash=8100e7d06d05938e91bf8863f5c20e33}{%
-           family={Smith},
+           family={{Smith}},
            familyi={S\bibinitperiod},
-           given={Arthur},
+           given={{Arthur}},
            giveni={A\bibinitperiod},
            givenun=0,
-           middle={Smythe},
+           middle={{Smythe}},
            middlei={S\bibinitperiod},
            middleun=0}}%
       }
@@ -461,12 +461,12 @@ my $un6 = q|    \entry{un6}{article}{}{}
 my $un7 = q|    \entry{un7}{article}{}{}
       \name{author}{1}{}{%
         {{un=0,uniquepart=base,uniquenametemplatename=test5,hash=c21736158273b6f2f368818459734e04}{%
-           family={Smith},
+           family={{Smith}},
            familyi={S\bibinitperiod},
-           given={Arthur},
+           given={{Arthur}},
            giveni={A\bibinitperiod},
            givenun=0,
-           middle={Smedley},
+           middle={{Smedley}},
            middlei={S\bibinitperiod},
            middleun=0}}%
       }

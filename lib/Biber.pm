@@ -1859,7 +1859,8 @@ MAIN:  foreach my $pn ($dmh->{namelistsall}->@*) {
 
       $namestring .= $base;
       push $namestrings->@*, $base;
-      push $namedisschema->@*, ['base' => $baseparts] if defined($baseparts);
+      # Always add the base level, even if empty, to keep the schema aligned with $namestrings
+      push $namedisschema->@*, ['base' => $baseparts // []];
 
       # ... then add non-base parts by incrementally adding to the last disambiguation level
       foreach my $np (Biber::Config->getblxoption(undef, 'uniquenametemplate')->{$nuntname}->@*) {
