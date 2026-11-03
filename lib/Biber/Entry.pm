@@ -10,7 +10,7 @@ use Data::Dump qw( pp );
 use Digest::MD5 qw( md5_hex );
 use Encode;
 use Log::Log4perl qw( :no_extra_logdie_message );
-use List::Util qw( first );
+use List::Util qw( any first );
 use Scalar::Util qw( blessed );
 
 my $logger = Log::Log4perl::get_logger('main');
@@ -653,7 +653,7 @@ sub has_keyword {
   my $self = shift;
   my $keyword = shift;
   if (my $keywords = $self->{datafields}{keywords}) {
-    return (first {$_ eq $keyword} @$keywords) ? 1 : 0;
+    return (any {$_ eq $keyword} @$keywords) ? 1 : 0;
   }
   else {
     return 0;

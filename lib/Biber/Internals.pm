@@ -1230,6 +1230,7 @@ sub _generatesortinfo {
     # and so have no impact until later sort items where the final item becomes the
     # sorting key for every subsequent sorting item.
     if (my $f = $BIBER_SORT_FINAL) {
+      $f = 0 if $f eq 'BIBERZERO';
       push $sortobj->@*, ($BIBER_SUPPRESS_FINAL ? '' : $f);
       $BIBER_SUPPRESS_FINAL = 0;
     }
@@ -1329,7 +1330,8 @@ sub _sort_integer {
   my ($self, $citekey, $secnum, $section, $be, $dlist, $sortelementattributes, $args) = @_;
   my $dmtype = $args->[0]; # get int field type
   my $bee = $be->get_field('entrytype');
-  if (my $field = $be->get_field($dmtype)) {
+  my $field = $be->get_field($dmtype);
+  if (defined($field) and $field ne '') { # 0 is a value (year 0, volume 0)
 
     # Make an attempt to map roman numerals to integers for sorting unless suppressed
     if (isroman(NFKD($field)) and
@@ -1458,7 +1460,8 @@ sub _sort_list_verbatim {
 sub _sort_literal {
   my ($self, $citekey, $secnum, $section, $be, $dlist, $sortelementattributes, $args) = @_;
   my $literal = $args->[0]; # get actual field
-  if (my $field = $be->get_field($literal)) {
+  my $field = $be->get_field($literal);
+  if (defined($field) and $field ne '') {
     my $string = normalise_string_sort($field, $literal);
     return _translit($literal, $be, _process_sort_attributes($string, $sortelementattributes));
   }
@@ -1473,7 +1476,8 @@ sub _sort_literal {
 sub _sort_verbatim {
   my ($self, $citekey, $secnum, $section, $be, $dlist, $sortelementattributes, $args) = @_;
   my $verb = $args->[0]; # get actual field
-  if (my $field = $be->get_field($verb)) {
+  my $field = $be->get_field($verb);
+  if (defined($field) and $field ne '') {
     my $string = normalise_string_sort($field, $verb);
     return _process_sort_attributes($string, $sortelementattributes);
   }

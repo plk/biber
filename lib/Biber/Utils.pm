@@ -537,7 +537,7 @@ sub latex_recode_output {
 
 sub strip_noinit {
   my $string = shift;
-  return '' unless $string; # Sanitise missing data
+  return '' unless length($string // ''); # Sanitise missing data (0 is data)
   return $string unless my $noinit = Biber::Config->getoption('noinit');
   foreach my $opt ($noinit->@*) {
     my $re = $opt->{value};
@@ -559,7 +559,7 @@ sub strip_noinit {
 sub strip_nosort {
   no autovivification;
   my ($string, $fieldname) = @_;
-  return '' unless $string; # Sanitise missing data
+  return '' unless length($string // ''); # Sanitise missing data (0 is data)
   return $string unless my $nosort = Biber::Config->getoption('nosort');
 
   my $restrings;
@@ -599,7 +599,7 @@ sub strip_nosort {
 sub strip_nonamestring {
   no autovivification;
   my ($string, $fieldname) = @_;
-  return '' unless $string; # Sanitise missing data
+  return '' unless length($string // ''); # Sanitise missing data (0 is data)
   return $string unless my $nonamestring = Biber::Config->getoption('nonamestring');
 
   my $restrings;
@@ -634,7 +634,7 @@ as this is needed to process compound names or label generation.
 
 sub normalise_string_label {
   my $str = shift;
-  return '' unless $str; # Sanitise missing data
+  return '' unless length($str // ''); # Sanitise missing data (0 is data)
   my $nolabels = Biber::Config->getoption('nolabel');
   $str =~ s/\\[A-Za-z]+//g;    # remove latex macros (assuming they have only ASCII letters)
   # Replace ties with spaces or they will be lost
@@ -659,7 +659,7 @@ Control chars don't need to be stripped as they are completely ignorable in DUCE
 sub normalise_string_sort {
   my $str = shift;
   my $fieldname = shift;
-  return '' unless $str; # Sanitise missing data
+  return '' unless length($str // ''); # Sanitise missing data (0 is data)
   # First strip nosort REs
   $str = strip_nosort($str, $fieldname);
   # Then replace ties with spaces or they will be lost
@@ -680,7 +680,7 @@ Some string normalisation for bblxml output
 
 sub normalise_string_bblxml {
   my $str = shift;
-  return '' unless $str; # Sanitise missing data
+  return '' unless length($str // ''); # Sanitise missing data (0 is data)
   $str =~ s/\\[A-Za-z]+//g; # remove latex macros (assuming they have only ASCII letters)
   $str =~ s/\{([^\{\}]+)\}/$1/g; # remove pointless braces
   $str =~ s/~/ /g; # replace ties with spaces
@@ -735,7 +735,7 @@ sub normalise_string_common {
 
 sub normalise_string_hash {
   my $str = shift;
-  return '' unless $str; # Sanitise missing data
+  return '' unless length($str // ''); # Sanitise missing data (0 is data)
   $str =~ s/\\(\p{L}+)\s*/$1:/g; # remove tex macros
   $str =~ s/\\([^\p{L}])\s*/ord($1).':'/ge; # remove accent macros like \"a
   $str =~ s/[\{\}~\.\s]+//g; # Remove braces, ties, dots, spaces
@@ -750,7 +750,7 @@ sub normalise_string_hash {
 
 sub normalise_string_underscore {
   my $str = shift;
-  return '' unless $str; # Sanitise missing data
+  return '' unless length($str // ''); # Sanitise missing data (0 is data)
   $str =~ s/([^\\])~/$1 /g; # Foo~Bar -> Foo Bar
   $str = normalise_string($str);
   $str =~ s/\s+/_/g;
@@ -765,7 +765,7 @@ sub normalise_string_underscore {
 
 sub escape_label {
   my $str = shift;
-  return '' unless $str; # Sanitise missing data
+  return '' unless length($str // ''); # Sanitise missing data (0 is data)
   $str =~ s/([_\^\$\#\%\&])/\\$1/g;
   $str =~ s/~/{\\textasciitilde}/g;
   $str =~ s/>/{\\textgreater}/g;
@@ -782,7 +782,7 @@ sub escape_label {
 
 sub unescape_label {
   my $str = shift;
-  return '' unless $str; # Sanitise missing data
+  return '' unless length($str // ''); # Sanitise missing data (0 is data)
   $str =~ s/\\([_\^\$\~\#\%\&])/$1/g;
   $str =~ s/\{\\textasciitilde\}/~/g;
   $str =~ s/\{\\textgreater\}/>/g;
