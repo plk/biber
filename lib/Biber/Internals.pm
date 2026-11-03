@@ -1128,7 +1128,8 @@ sub _dispatch_table_sorting {
   if ($dmf->{fieldtype} eq 'list' and $dmf->{datatype} eq 'name') {
     return [\&_sort_name, [$field]];
   }
-  elsif ($dmf->{datatype} eq 'verbatim' or $dmf->{datatype} eq 'uri') {
+  elsif ($dmf->{fieldtype} eq 'field' and
+         ($dmf->{datatype} eq 'verbatim' or $dmf->{datatype} eq 'uri')) {
     return [\&_sort_verbatim, [$field]];
   }
   elsif ($dmf->{fieldtype} eq 'field' and $dmf->{datatype} eq 'literal' ) {
