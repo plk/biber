@@ -1023,8 +1023,15 @@ sub _annotation {
   }
   $fc =~ s/$ann$//;
 
-  foreach my $a (split(/\s*;\s*/, $value)) {
+  # Split on semicolons outside of quoted literal annotations
+  foreach my $a ($value =~ m/((?:[^;"]|"[^"]*")+)/g) {
+    $a =~ s/\A\s+|\s+\z//g;
+    next unless length($a);
     my ($count, $part, $annotations) = $a =~ /^\s*(\d+)?:?([^=]+)?=(.+)/;
+    unless (defined($annotations)) {
+      biber_warn("Invalid annotation '$a' in field '$field' of entry '$key', ignoring", $bibentry);
+      next;
+    }
     # Is the annotations a literal annotation?
     my $literal = 0;
     if ($annotations =~ m/^\s*"(.+)"\s*$/) {
@@ -1191,10 +1198,10 @@ sub _range {
   foreach my $value (@values) {
     my $ovalue = $value;
     $value =~ s/~/ /g; # Some normalisation for malformed fields
-    $value =~ m/\A\s*(\P{Pd}+)\s*\z/xms ||# Simple value without range
-      $value =~ m/\A\s*(\{[^\}]+\}|[^\p{Pd} ]+)\s*(\p{Pd}+)\s*(\{[^\}]+\}|\P{Pd}*)\s*\z/xms ||
-        $value =~ m/\A\s*(.+)(\p{Pd}{2,})(.+)\s*\z/xms || # M-1--M-4
-          $value =~ m/\A\s*(.+)(\p{Pd}+)(.+)\s*\z/xms;# blah M-1
+    $value =~ m/\A\s*(\{[^\}]+\}|\P{Pd}+?)\s*\z/xms ||# Simple or braced value without range
+      $value =~ m/\A\s*(\{[^\}]+\}|[^\p{Pd} ]+)\s*(\p{Pd}+)\s*(\{[^\}]+\}|\P{Pd}*?)\s*\z/xms ||
+        $value =~ m/\A\s*(.+)(\p{Pd}{2,})(.+?)\s*\z/xms || # M-1--M-4
+          $value =~ m/\A\s*(.+)(\p{Pd}+)(.+?)\s*\z/xms;# blah M-1
         my $start = $1;
     my $end;
     if ($2) {

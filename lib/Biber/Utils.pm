@@ -1428,7 +1428,10 @@ sub parse_date_range {
 
   my $unspec;
   if ($sd =~ /X/) {# ISO8601-2 4.3 unspecified format
-    ($sd, $sep, $ed, $unspec) = parse_date_unspecified($sd);
+    # Unsupported patterns are left to fail as invalid dates
+    if (my @range = parse_date_unspecified($sd)) {
+      ($sd, $sep, $ed, $unspec) = @range;
+    }
   }
   # Set start date unknown flag
   if ($sep and not $sd) {
@@ -1489,6 +1492,8 @@ sub parse_date_unspecified {
   elsif ($d =~ m/^(\d{4})\p{Dash}XX\p{Dash}XX$/) {
     return ("${1}-01-01", '/', "${1}-12-31", 'dayinyear');
   }
+  # Unsupported pattern
+  return;
 }
 
 

@@ -170,7 +170,7 @@ sub _pre {
   }
 
   # ISO8601-2:2016 4.8 (yeardivisions)
-  if ($p{input} =~ s/^(-?\d{4})-([23]\d|4[01])$/$1/) {
+  if ($p{input} =~ s/^(-?\d{4})-(2[1-9]|3\d|4[01])$/$1/) {
     $p{self}{yeardivision} = $Biber::Constants::YEARDIVISIONS{$2};
   }
 
