@@ -69,6 +69,8 @@ sub set_output_target_file {
   my $self = shift;
   my $dotfile = shift;
   $self->{output_target_file} = $dotfile;
+  # STDOUT: don't create a file called '-' (output() opens STDOUT)
+  return undef if $dotfile eq '-';
   return IO::File->new($dotfile, '>:encoding(UTF-8)');
 }
 

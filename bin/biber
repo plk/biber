@@ -53,7 +53,7 @@ GetOptions(
            'glob_datasources|glob-datasources',
            'help|h|?',
            'input_directory|input-directory=s',
-           'input_encoding|input-encodinge=s',
+           'input_encoding|input-encoding|e=s',
            'input_format|input-format=s',
            'isbn10',
            'isbn13',
@@ -378,7 +378,7 @@ else {
       $outfile = $bcf =~ s/bcf$/dot/r;
     }
     elsif (Biber::Config->getoption('output_format') eq 'bibtex') { # bibtex output
-      $outfile = $bcf =~ s/\..+$/_biber.bib/r;
+      $outfile = $bcf =~ s/(?:\.[^.\/\\]*)?\z/_biber.bib/r;
     }
     elsif (Biber::Config->getoption('output_format') eq 'bbl') { # bbl output
       $outfile = $bcf =~ s/bcf$/bbl/r;
@@ -387,14 +387,14 @@ else {
       $outfile = $bcf =~ s/bcf$/bblxml/r;
     }
     else {
-      say "output_format option '" . Biber::Config->getoption('output_format') . "' only makes sense in tool mode (--tool)";
-      exit EXIT_ERROR;
+      biber_error("output_format option '" . Biber::Config->getoption('output_format') . "' only makes sense in tool mode (--tool)");
     }
   }
 }
 
 # Set the .bbl path to the output dir, if specified
-if (my $outdir = Biber::Config->getoption('output_directory')) {
+my $outdir = Biber::Config->getoption('output_directory');
+if ($outdir and $outfile ne '-') { # '-' is STDOUT
   my (undef, undef, $file) = File::Spec->splitpath($outfile);
   $outfile = File::Spec->catfile($outdir, $file)
 }

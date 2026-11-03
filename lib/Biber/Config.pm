@@ -121,7 +121,14 @@ sub _initopts {
   unless (defined($opts->{noconf})) {
     # if a config file was given as cmd-line arg, it overrides all other
     # config file locations
-    unless ( defined($opts->{configfile}) and -f $opts->{configfile} ) {
+    if (defined($opts->{configfile})) {
+      unless (-f $opts->{configfile}) {
+        # The logger isn't set up yet
+        say STDERR "ERROR - Cannot find config file '$opts->{configfile}'";
+        exit EXIT_ERROR;
+      }
+    }
+    else {
       $opts->{configfile} = config_file();
     }
   }

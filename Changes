@@ -14,6 +14,9 @@ Revision history for Biber
        * The values of $MAPUNIQ in sourcemaps are now "mapuniq1", "mapuniq2"
          etc. instead of random strings, so that the .bbl is the same in every
          run with the same input.
+       * A --configfile which doesn't exist is now an error (exit status 2).
+         Before, it was silently ignored and the default config file search
+         was used instead.
 2.22   (2025-08)
        * Fixed security issues with evals
 2.21   (2025-07)

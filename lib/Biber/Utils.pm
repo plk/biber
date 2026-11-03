@@ -223,7 +223,7 @@ sub slurp_switchw {
 =cut
 
 sub locate_data_file {
-  my $source = shift;
+  my ($source, $noerror) = @_;
   my $sourcepath = $source; # default if nothing else below applies
   my $foundfile;
 
@@ -379,6 +379,7 @@ sub locate_data_file {
   }
 
   # Not found
+  return undef if $noerror; # caller reports it
   biber_error("Cannot find '$source'!")
 }
 

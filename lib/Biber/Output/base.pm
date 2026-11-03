@@ -63,6 +63,9 @@ sub set_output_target_file {
     $enc_out = ":encoding($enc)";
   }
 
+  # STDOUT: don't create a file called '-' (the output methods open STDOUT)
+  return undef if not ref($file) and $file eq '-';
+
   # This is only for test suite when output is to a scalar ref
   if (ref($file) eq 'SCALAR') {
     return IO::File->new($file, ">$enc_out");
