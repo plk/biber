@@ -25,8 +25,9 @@ Revision history for Biber
          Text::BibTeX module now).
        * The "too many commas" check for BibTeX format names only counts
          commas outside braces, so "{Doe, Inc.}, J, Jr" is accepted and
-         "{Doe}, J, K, {L}" is an error. Consecutive commas are no longer an
-         error: Text::BibTeX treats them as one comma, as BibTeX does.
+         "{Doe}, J, K, {L}" is an error. Entries with names with consecutive
+         commas (eg. "Smith,, John" or "Doe, , John") are skipped with a
+         warning instead of an error.
        * **INCOMPATIBLE CHANGE** - in sourcemaps, the captures $1, $2 etc.
          used in later steps after a match step are now the parenthesised
          groups of the first match only, and $0 is the whole match. Before,

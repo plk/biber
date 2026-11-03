@@ -1278,12 +1278,18 @@ sub _name {
     }
     else { # Normal bibtex name format
       # Too many commas. Only commas outside braces separate name parts.
-      # (Empty parts and consecutive commas are dealt with, and warned about,
-      # by Text::BibTeX.)
       (my $toplevel = $name) =~ s/(\{(?:[^{}]++|(?1))*\})/{}/g;
       my @commas = $toplevel =~ m/,/g;
       if ($#commas > 1) {
         biber_error("Name \"$name\" has too many commas, skipping entry '$key'", 1);
+        $section->del_citekey($key);
+        return 'BIBER_SKIP_ENTRY';
+      }
+
+      # Consecutive commas (with only spaces between them) are silently treated
+      # as one comma by Text::BibTeX, which is probably not what was meant
+      if ($toplevel =~ m/,\s*,/) {
+        biber_warn("Name \"$name\" in key '$key' has consecutive commas: skipping entry '$key'", $bibentry);
         $section->del_citekey($key);
         return 'BIBER_SKIP_ENTRY';
       }
