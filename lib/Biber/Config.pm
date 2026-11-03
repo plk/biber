@@ -69,8 +69,8 @@ $CONFIG->{state}{xrefkeys} = {};
 $CONFIG->{state}{citkey_aliases} = {};
 
 # Record of which entries have inherited from other fields. Used for loop detection.
-$CONFIG->{state}{crossref} = [];
-$CONFIG->{state}{xdata} = [];
+$CONFIG->{state}{crossref} = {};
+$CONFIG->{state}{xdata} = {};
 
 # Record of which entries have inherited what from whom, with the fields inherited.
 # Used for generating inheritance trees
@@ -99,8 +99,8 @@ sub _init {
   $CONFIG->{state}{crossrefkeys} = {};
   $CONFIG->{state}{xrefkeys} = {};
   $CONFIG->{state}{datafiles} = [];
-  $CONFIG->{state}{crossref} = [];
-  $CONFIG->{state}{xdata} = [];
+  $CONFIG->{state}{crossref} = {};
+  $CONFIG->{state}{xdata} = {};
 
   return;
 }
@@ -1138,7 +1138,7 @@ sub get_graph {
 sub set_inheritance {
   shift; # class method so don't care about class name
   my ($type, $source, $target) = @_;
-  push $CONFIG->{state}{$type}->@*, {s => $source, t => $target};
+  $CONFIG->{state}{$type}{$source}{$target} = 1;
   return;
 }
 
@@ -1153,7 +1153,7 @@ sub set_inheritance {
 sub get_inheritance {
   shift; # class method so don't care about class name
   my ($type, $source, $target) = @_;
-  return first {$_->{s} eq $source and $_->{t} eq $target} $CONFIG->{state}{$type}->@*;
+  return $CONFIG->{state}{$type}{$source}{$target};
 }
 
 =head2 is_inheritance_path
@@ -1161,24 +1161,24 @@ sub get_inheritance {
   Checks for an inheritance path from entry $e1 to $e2
   Can be used for crossrefs and xdata
 
-[
-             {s => 'A',
-              t => 'B'},
-             {s => 'A',
-              t => 'E'},
-             {s => 'B',
-              t => 'C'},
-             {s => 'C',
-              t => 'D'}
-];
+{
+  A => {B => 1, E => 1},
+  B => {C => 1},
+  C => {D => 1}
+}
 
 =cut
 
 sub is_inheritance_path {
   my ($self, $type, $e1, $e2) = @_;
-  foreach my $dps (grep {$_->{s} eq $e1} $CONFIG->{state}{$type}->@*) {
-    return 1 if $dps->{t} eq $e2;
-    return 1 if is_inheritance_path($self, $type, $dps->{t}, $e2);
+  my $edges = $CONFIG->{state}{$type};
+  my %seen = ($e1 => 1);
+  my @todo = ($e1);
+  while (defined(my $s = shift @todo)) {
+    foreach my $t (keys(($edges->{$s} // {})->%*)) {
+      return 1 if $t eq $e2;
+      push @todo, $t unless $seen{$t}++;
+    }
   }
   return 0;
 }
