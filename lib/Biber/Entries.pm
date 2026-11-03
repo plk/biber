@@ -65,7 +65,9 @@ sub entry {
 
 sub entries {
   my $self = shift;
-  return values $self->%*;
+  # In key order, so that processing (and its warnings and errors) doesn't
+  # change between runs
+  return map {$self->{$_}} sort keys $self->%*;
 }
 
 

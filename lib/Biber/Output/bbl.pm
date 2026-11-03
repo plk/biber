@@ -340,7 +340,7 @@ sub set_output_entry {
         }
 
         # Add per-namelist options
-        foreach my $nlo (keys $CONFIG_SCOPEOPT_BIBLATEX{NAMELIST}->%*) {
+        foreach my $nlo (sort keys $CONFIG_SCOPEOPT_BIBLATEX{NAMELIST}->%*) {
           if (defined($nf->${\"get_$nlo"})) {
             my $nlov = $nf->${\"get_$nlo"};
 
@@ -697,11 +697,7 @@ sub output {
   }
 
   if (not $target or $target_string eq '-') {
-    my $enc_out;
-    if (Biber::Config->getoption('output_encoding')) {
-      $enc_out = ':encoding(' . Biber::Config->getoption('output_encoding') . ')';
-    }
-    $target = new IO::File ">-$enc_out";
+    $target = open_output('-', Biber::Config->getoption('output_encoding'));
   }
 
   if ($logger->is_debug()) {# performance tune
@@ -713,7 +709,9 @@ sub output {
 
   out($target, $data->{HEAD});
 
-  foreach my $secnum (sort keys $data->{ENTRIES}->%*) {
+  # A section with no found entries still needs its block for its missing keys and aliases
+  my %secnums = map {$_ => 1} map {keys(($data->{$_} // {})->%*)} qw(ENTRIES ALIAS_ENTRIES MISSING_ENTRIES);
+  foreach my $secnum (sort keys %secnums) {
     if ($logger->is_debug()) {# performance tune
       $logger->debug("Writing entries for section $secnum");
     }

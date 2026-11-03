@@ -58,18 +58,17 @@ sub set_output_target_file {
 
   my $file_bytes = encode_CS_system( $file );
   $self->{output_target_file} = $file;
-  my $enc_out;
-  if (my $enc = Biber::Config->getoption('output_encoding')) {
-    $enc_out = ":encoding($enc)";
-  }
+
+  # STDOUT: don't create a file called '-' (the output methods open STDOUT)
+  return undef if not ref($file) and $file eq '-';
 
   # This is only for test suite when output is to a scalar ref
   if (ref($file) eq 'SCALAR') {
-    return IO::File->new($file, ">$enc_out");
+    return open_output($file, Biber::Config->getoption('output_encoding'));
   }
   # Calls to OS file system use byte strings encoded in the system CS:
   else {
-    return IO::File->new($file_bytes, ">$enc_out");
+    return open_output($file_bytes, Biber::Config->getoption('output_encoding'));
   }
 }
 

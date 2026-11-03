@@ -122,9 +122,11 @@ sub extract_entries {
   }
 
   # Check for files with no macros - they also confuse btparse
+  # ascii input is read as UTF-8 (as in preprocess_file), so check it as UTF-8 here too
   my $tbuf;
-  unless (eval {$tbuf = slurp_switchr($filename, $encoding)->$*}) {
-    biber_error("Data file '$filename' cannot be read in encoding '$encoding': $@");
+  my $cenc = $encoding eq 'ascii' ? 'UTF-8' : $encoding;
+  unless (eval {$tbuf = slurp_switchr($filename, $cenc)->$*}) {
+    biber_error("Data file '$filename' cannot be read in encoding '$cenc': $@");
   }
   unless ($tbuf =~ m/\@/) {
     biber_warn("Data source '$filename' contains no BibTeX entries/macros, ignoring");
@@ -191,8 +193,12 @@ sub extract_entries {
       $logger->debug("All citekeys will be used for section '$secnum'");
     }
 
-    # Loop over all entries, creating objects
-    while (my ($key, $entry) = each $cache->{data}{$filename}->%*) {
+    # Loop over all entries, creating objects. In file order, not hash order, so
+    # that sourcemaps (e.g. $MAPUNIQ keys) give the same result on every run
+    # (A copy, as create_entry failures are removed from orig_key_order below)
+    my @keys = map {"$_"} uniq (($cache->{orig_key_order}{$filename} // [])->@*);
+    foreach my $key (@keys) {
+      my $entry = $cache->{data}{$filename}{$key};
 
       # Record a key->datasource name mapping for error reporting
       $section->set_keytods($key, $filename);
@@ -206,8 +212,8 @@ sub extract_entries {
     # Loop over all aliases, creating data in section object
     # Since this is allkeys, we are guaranteed that the real entry for the alias
     # will be available
-    while (my ($alias, $key) = each $cache->{data}{citekey_aliases}->%*) {
-      $section->set_citekey_alias($alias, $key);
+    foreach my $alias (sort keys $cache->{data}{citekey_aliases}->%*) {
+      $section->set_citekey_alias($alias, $cache->{data}{citekey_aliases}{$alias});
     }
 
     # If allkeys, push all bibdata keys into citekeys (if they are not already there).
@@ -1063,7 +1069,8 @@ sub _literal {
   }
   if ($fc eq 'month') {
     return if $bibentry->get_datafield('month');
-    if ($value and not looks_like_number(num($value))) {
+    # Month names and abbreviations are converted below
+    if ($value and not looks_like_number(num(_hack_month($value)))) {
       biber_warn("legacy month field '$value' in entry '$key' is not an integer - this will probably not sort properly.");
     }
   }
@@ -1437,7 +1444,6 @@ sub _datetime {
           # Save end yeardivision date information
           if (my $yeardivision = $CONFIG_DATE_PARSERS{end}->yeardivision) {
             $bibentry->set_field($datetype . 'endyeardivision', $yeardivision);
-            $bibentry->set_field($datetype . 'endseaason', $yeardivision); # legacy
           }
 
           # must be an hour if there is a time but could be 00 so use defined()
@@ -1838,7 +1844,7 @@ sub parsename {
   $loc //= {};
 
   # First sanitise the namestring due to Text::BibTeX::Name limitations on whitespace
-  $namestr =~ s/\A\s*|\s*\z//xms; # leading and trailing whitespace
+  $namestr =~ s/\A\s*|\s*\z//gxms; # leading and trailing whitespace
   # Collapse internal whitespace and escaped spaces like in "Christina A. L.\ Thiele"
   $namestr =~ s/\s+|\\\s/ /g;
   $namestr =~ s/\A\{\{+([^\{\}]+)\}+\}\z/{$1}/xms; # Allow only one enveloping set of braces

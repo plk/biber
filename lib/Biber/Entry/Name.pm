@@ -331,7 +331,7 @@ sub name_to_bibjson {
 
 
   # Add per-name options
-  foreach my $no (keys $CONFIG_SCOPEOPT_BIBLATEX{NAME}->%*) {
+  foreach my $no (sort keys $CONFIG_SCOPEOPT_BIBLATEX{NAME}->%*) {
     if (defined($self->${\"get_$no"})) {
       my $nov = $self->${\"get_$no"};
 
@@ -480,7 +480,7 @@ sub name_to_bbl {
   }
 
   # Add per-name options
-  foreach my $no (keys $CONFIG_SCOPEOPT_BIBLATEX{NAME}->%*) {
+  foreach my $no (sort keys $CONFIG_SCOPEOPT_BIBLATEX{NAME}->%*) {
     if (defined($self->${\"get_$no"})) {
       my $nov = $self->${\"get_$no"};
 
@@ -540,7 +540,7 @@ sub name_to_bblxml {
   }
 
   # Add per-name options
-  foreach my $no (keys $CONFIG_SCOPEOPT_BIBLATEX{NAME}->%*) {
+  foreach my $no (sort keys $CONFIG_SCOPEOPT_BIBLATEX{NAME}->%*) {
     if (defined($self->${\"get_$no"})) {
       my $nov = $self->${\"get_$no"};
 

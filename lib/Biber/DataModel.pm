@@ -66,9 +66,9 @@ sub new {
       }
 
       # Constraints
-      foreach my $uc ($udm->{constraints}[0]{constraint}->@*) {
-        push $dm->{constraints}[0]{constraint}->@*, $uc;
-      }
+      # Each block of constraints applies to its own entrytypes, so add the user's
+      # blocks as they are
+      push $dm->{constraints}->@*, ($udm->{constraints} // [])->@*;
 
       # Entryfields
       foreach my $uef ($udm->{entryfields}->@*) {
@@ -920,15 +920,18 @@ sub check_data_constraints {
     elsif ($c->{datatype} eq 'integer' or
            $c->{datatype} eq 'datepart') {
       foreach my $f ($c->{fields}->@*) {
-        if (my $fv = $be->get_field($f)) {
-          if (my $fmin = $c->{rangemin}) {
+        my $fv = $be->get_field($f);
+        if (defined($fv) and $fv ne '') { # 0 is a value
+          my $fmin = $c->{rangemin};
+          if (defined($fmin) and $fmin ne '') {
             unless ($fv >= $fmin) {
               push @warnings, "Datamodel: $et entry '$key' ($ds): Invalid value of field '$f' must be '>=$fmin' - ignoring field";
               $be->del_field($f);
               next;
             }
           }
-          if (my $fmax = $c->{rangemax}) {
+          my $fmax = $c->{rangemax};
+          if (defined($fmax) and $fmax ne '') {
             unless ($fv <= $fmax) {
               push @warnings, "Datamodel: $et entry '$key' ($ds): Invalid value of field '$f' must be '<=$fmax' - ignoring field";
               $be->del_field($f);

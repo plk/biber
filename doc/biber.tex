@@ -457,8 +457,10 @@ entry can take as it passes through \biber.
   \begin{itemize}
   \item Entries instantiated by being members of a set.
   \item Entries instantiated by being mentioned as a \bibfield{CROSSREF} are
-    promoted to cited status if \bibfield{CROSSREF}'ed or \bibfield{XREF}'ed at
-    least \opt{mincrosref} times.
+    promoted to cited status if \bibfield{CROSSREF}'ed at least
+    \opt{mincrossrefs} times, and entries mentioned as an \bibfield{XREF} if
+    \bibfield{XREF}'ed at least \opt{minxrefs} times. The two are counted
+    separately.
   \item Clones of entries mentioned as a «related» entry of a cited entry.
   \end{itemize}
 \item Some of these auto-cited entries have the «dataonly» option set on
@@ -630,7 +632,7 @@ looked for in the following places, in decreasing order of preference:\\[2ex]
 \hspace*{1em}\verb+$HOME/.biber.conf+ $\rightarrow$\\
 \hspace*{2em}\verb+$XDG_CONFIG_HOME/biber/biber.conf+ $\rightarrow$\\
 \hspace*{3em}\verb+$HOME/Library/biber/biber.conf+ (Mac OSX only)\\
-\hspace*{3em}\verb+$APPDATA/biber.conf+ (Windows only) $\rightarrow$\\
+\hspace*{3em}\verb+$APPDATA/biber/biber.conf+ (Windows only) $\rightarrow$\\
 \hspace*{4em}the output of «\verb+kpsewhich biber.conf+» (if available on the
 system)\\[2ex]
 
@@ -650,7 +652,6 @@ an example config file which displays the \biber\ defaults:
   <decodecharsset>base</decodecharsset>
   <dieondatamodel>0</dieondatamodel>
   <dieonwarning>0</dieonwarning>
-  <graph>0</graph>
   <input_encoding>UTF-8</input_encoding>
   <listsep>and</listsep>
   <mincrossrefs>0</mincrossrefs>
@@ -676,7 +677,7 @@ an example config file which displays the \biber\ defaults:
   </nosort>
   <onlylog>0</onlylog>
   <others_string>others</others_string>
-  <ouput_align>0</output_align>
+  <output_align>0</output_align>
   <output_encoding>UTF-8</output_encoding>
   <output_fieldcase>upper</output_fieldcase>
   <output_format>bbl</output_format>
@@ -690,10 +691,10 @@ an example config file which displays the \biber\ defaults:
   <output_xdatasep>-</output_xdatasep>
   <output_xnamesep>=</output_xnamesep>
   <quiet>0</quiet>
-  <sortcase>true</sortcase>
-  <sortupper>true</sortupper>
-  <tool>false</tool>
-  <trace>false</trace>
+  <sortcase>1</sortcase>
+  <sortupper>1</sortupper>
+  <tool>0</tool>
+  <trace>0</trace>
   <validate_bltxml>0</validate_bltxml>
   <validate_config>0</validate_config>
   <validate_control>0</validate_control>
@@ -901,9 +902,10 @@ examples. A \opt{map} element looks like this:
   order). This allows the user to repeat a group of \opt{map\_step}s for
   each value of \textcolor{red}{\texttt{loopval}}. The special variable
   \verb+$MAPUNIQ+ may also be used in the \opt{map\_step}s to generate a
-  random unique string. This can be useful when creating keys for new
+  unique string (\verb+mapuniq1+, \verb+mapuniq2+ etc., which are the same in
+  every run with the same input). This can be useful when creating keys for new
   entries. The special variable \verb+$MAPUNIQVAL+ may be used the
-  \opt{map\_step}s to refer to the value of the last random unique string
+  \opt{map\_step}s to refer to the value of the last unique string
   generated with \verb+$MAPUNIQ+.
 \end{itemize}
 
@@ -1966,7 +1968,7 @@ You can reverse this globally for all sorting using the \biber\ option
 sort some fields uppercase before lower and others lower before upper. See the
 \biblatex\ manual. Be aware though that some locales rightly enforce a
 particular setting for this (for example, Danish). You will be able to
-override it but \biber\ will warn you if you do.
+override it, and \biber\ notes this in the log (as an informational message).
 
 There are in fact many options to \verb+Unicode::Collate+
 which can tailor the collation in various ways in
@@ -2441,12 +2443,18 @@ overridden by the XML definitions in the \biber config file. For example, to
 add a new name list field \bibfield{DIRECTOR} to \bibfield{VIDEO} entry
 types, you can either use the \biblatex macros \cmd{DeclareDatamodelFields}
 and \cmd{DeclareDatamodelEntryfields} in your document or put the following
-\opt{datamodel} section in your config file:
-in your \biber config file:
+\opt{datamodel} section in your \biber config file (the \opt{entrytypes},
+\opt{fields}, \opt{entryfields} and \opt{constraints} elements are required,
+in this order; listing an entry type which is already in the data model, as
+here, is harmless, and the constraint makes the new field mandatory for
+\bibfield{VIDEO} entries):
 \begin{lstlisting}[language=xml]
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
   <datamodel>
+    <entrytypes>
+      <entrytype>video</entrytype>
+    </entrytypes>
     <fields>
       <field fieldtype="list" datatype="name">director</field>
     </fields>
@@ -2454,6 +2462,12 @@ in your \biber config file:
       <entrytype>video</entrytype>
       <field>director</field>
     </entryfields>
+    <constraints>
+      <entrytype>video</entrytype>
+      <constraint type="mandatory">
+        <field>director</field>
+      </constraint>
+    </constraints>
   </datamodel>
 </config>
 \end{lstlisting}

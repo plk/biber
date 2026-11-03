@@ -69,6 +69,8 @@ sub set_output_target_file {
   my $self = shift;
   my $dotfile = shift;
   $self->{output_target_file} = $dotfile;
+  # STDOUT: don't create a file called '-' (output() opens STDOUT)
+  return undef if $dotfile eq '-';
   return IO::File->new($dotfile, '>:encoding(UTF-8)');
 }
 
@@ -342,7 +344,7 @@ sub _graph_inheritance {
     else {
       foreach my $f_entry (sort keys $gr->%*) {
         my $v = $gr->{$f_entry};
-        foreach my $w (sort values $v->%*) {
+        foreach my $w (map {$v->{$_}} sort keys $v->%*) {
           foreach my $t_entry (sort keys $w->%*) {
             next unless $state->{$secnum}{"${secnum}/${f_entry}"};
             next unless $state->{$secnum}{"${secnum}/${t_entry}"};

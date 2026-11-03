@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 72;
+use Test::More tests => 73;
 use Test::Differences;
 unified_diff;
 
@@ -56,6 +56,10 @@ $biber->prepare;
 my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
 my $main = $biber->datalists->get_list('nty/global//global/global/global');
+
+# The datamodel in the config file is merged into the one from the .bcf
+# (director is only defined in biber-test.conf)
+ok(Biber::Config->get_dm->is_field('director'), 'Config file datamodel merged into .bcf datamodel');
 
 my @keys = sort $section->get_citekeys;
 my @citedkeys = sort qw{ alias1 alias2 alias5 anon1 anon2 matches1 matches2 matches3 murray t1 kant:ku kant:kpv t2 shore u1 u2 us1 list1 isbn1 isbn2 markey ent1 verb1 over1 recurse1};

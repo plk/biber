@@ -353,10 +353,15 @@ sub tool_mode_setup {
 sub parse_ctrlfile {
   my ($self, $ctrl_file) = @_;
 
-  my $ctrl_file_path = locate_data_file($ctrl_file);
+  my $ctrl_file_path = locate_data_file($ctrl_file, 1);
   Biber::Config->set_ctrlfile_path($ctrl_file_path);
 
-  biber_error("Cannot find control file '$ctrl_file'! - Did latex run successfully on your .tex file before you ran biber?") unless ($ctrl_file_path and check_exists($ctrl_file_path));
+  # Fatal even with --nodieonerror: there is nothing to do without a control file
+  unless ($ctrl_file_path and check_exists($ctrl_file_path)) {
+    biber_error("Cannot find control file '$ctrl_file'! - Did latex run successfully on your .tex file before you ran biber?", 1);
+    $self->display_end;
+    exit EXIT_ERROR;
+  }
 
   # Early check to make sure .bcf is well-formed. If not, this means that the last biblatex run
   # exited prematurely while writing the .bcf. This results is problems for latexmk. So, if the
@@ -636,14 +641,11 @@ sub parse_ctrlfile {
         unshift($configmaps->{map}->@*, map {$_->{map}->@*} @docmaps);
       }
 
-      # Merge the driver/style maps with the user maps from the config file
-      if (my @m = grep {$_->{level} eq 'driver' or
-                        $_->{level} eq 'style'} $bcfxml->{sourcemap}{maps}->@* ) {
-        Biber::Config->setoption('sourcemap', [$usms->@*, @m]);
-      }
-      else { # no driver defaults, just override the config file user map settings
-        Biber::Config->setoption('sourcemap', $bcfxml->{sourcemap}{maps});
-      }
+      # Merge the driver/style maps (if any) with the user maps from the config
+      # file, which now include the document's user maps
+      my @m = grep {$_->{level} eq 'driver' or
+                    $_->{level} eq 'style'} $bcfxml->{sourcemap}{maps}->@*;
+      Biber::Config->setoption('sourcemap', [$usms->@*, @m]);
     }
     else { # just write the option as there are no config file settings at all
       Biber::Config->setoption('sourcemap', $bcfxml->{sourcemap}{maps});
@@ -879,6 +881,10 @@ sub parse_ctrlfile {
   # Because in tests, parse_ctrlfile() is called several times so we need to sanitise this here
   Biber::Config->setblxoption(undef, 'datamodel', []);
   Biber::Config->addtoblxoption(undef, 'datamodel', $bcfxml->{datamodel});
+  # A datamodel in the config file adds to or modifies the one from the .bcf
+  foreach my $cdm (Biber::Config->get_configfile_datamodels->@*) {
+    Biber::Config->addtoblxoption(undef, 'datamodel', $cdm);
+  }
 
   # SECTIONS
   # This is also where we set data files as these are associated with a bib section
@@ -1038,15 +1044,16 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
     my $lname = $list->{name};
 
     my $lsection = $list->{section}[0]; # because "section" needs to be a list elsewhere in XML
-    if ($datalists->get_list(section                    => $lsection,
-                             name                       => $lname,
-                             type                       => $ltype,
-                             sortingtemplatename        => $lstn,
-                             sortingnamekeytemplatename => $lsnksn,
-                             labelprefix                => $lpn,
-                             uniquenametemplatename     => $luntn,
-                             labelalphanametemplatename => $llantn,
-                             namehashtemplatename       => $lnhtn)) {
+    # (get_list takes positional arguments; this needs the attribute search)
+    if ($datalists->get_lists_by_attrs(section                    => $lsection,
+                                       name                       => $lname,
+                                       type                       => $ltype,
+                                       sortingtemplatename        => $lstn,
+                                       sortingnamekeytemplatename => $lsnksn,
+                                       labelprefix                => $lpn,
+                                       uniquenametemplatename     => $luntn,
+                                       labelalphanametemplatename => $llantn,
+                                       namehashtemplatename       => $lnhtn)) {
       if ($logger->is_debug()) {# performance tune
         $logger->debug("Section datalist '$lname' of type '$ltype' with sortingtemplate '$lstn', sortingnamekeytemplatename '$lsnksn', labelprefix '$lpn', uniquenametemplate '$luntn', labelalphanametemplate '$llantn' and namehashtemplate '$lnhtn' is repeated for section $lsection - ignoring");
       }
@@ -1061,6 +1068,9 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
                                         namehashtemplatename       => $lnhtn,
                                         labelprefix                => $lpn,
                                         name                       => $lname);
+    unless (Biber::Config->getblxoption(undef, 'sortingtemplate')->{$lstn}) {
+      biber_warn("Datalist '$lname' uses the sorting template '$lstn', which is not defined - using the global sorting template instead");
+    }
     $datalist->set_type($ltype || 'entry'); # lists are entry lists by default
     $datalist->set_name($lname || "$lstn/$lsnksn/$lpn/$luntn/$llantn/$lnhtn"); # default to ss+snkss+pn+untn+lantn+lnhtn
     foreach my $filter ($list->{filter}->@*) {
@@ -1716,7 +1726,8 @@ sub validate_datamodel {
 
   if (Biber::Config->getoption('validate_datamodel')) {
     $logger->info("Datamodel validation starting");
-    my $dmwe = Biber::Config->getoption('dieondatamodel') ? \&biber_error : \&biber_warn;
+    # (biber_error's second argument is $nodie, so don't pass the entry to it)
+    my $dmwe = Biber::Config->getoption('dieondatamodel') ? sub {biber_error($_[0])} : \&biber_warn;
     foreach my $citekey ($section->get_citekeys) {
       my $be = $section->bibentry($citekey);
       my $bee = $be->get_field('entrytype');
@@ -3867,12 +3878,8 @@ sub create_uniquelist_info {
     # one count. We therefore need to distinguish counts which are of the final, complete
     # list of names. If there is more than one count for these, (meaning that there are
     # two or more identical name lists), we don't expand them at all as there is no point.
-    $dlist->add_uniquelistcount_final($namelist);
-
-    # uniquelist=minyear needs tracking only of namelists in same labelyear
-    if ($ul eq 'minyear') {
-      $dlist->add_uniquelistcount_final($namelist, $labelyear);
-    }
+    # uniquelist=minyear also needs tracking of namelists in the same labelyear
+    $dlist->add_uniquelistcount_final($namelist, $ul eq 'minyear' ? $labelyear : undef);
 
     # Add count for uniquelist=minyear
     unless (Compare($ulminyear_namelist, [])) {
@@ -4298,7 +4305,7 @@ sub sort_list {
     $logger->debug("Locale for sorting is '$thislocale'");
   }
 
-  if ( Biber::Config->getoption('fastsort') ) {
+  if ( Biber::Config->getoption('fastsort') and not $self->{fastsort_warned}++ ) {
     biber_warn("fastsort option no longer required/supported, defaulting to UCA");
   }
 

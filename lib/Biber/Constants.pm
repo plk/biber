@@ -180,7 +180,7 @@ our %DM_DATATYPES = (
                        }
 
                        my $isbn = Business::ISBN->new($v);
-                       if (not $isbn) {
+                       unless ($isbn and $isbn->is_valid == Business::ISBN::GOOD_ISBN()) {
                          return 0;
                        }
                        return 1;
@@ -189,7 +189,7 @@ our %DM_DATATYPES = (
                        my $v = shift;
                        require Business::ISSN;
 
-                       my $issn = Business::ISSN->new($_);
+                       my $issn = Business::ISSN->new($v);
                        unless ($issn and $issn->is_valid) {
                          return 0;
                        }
@@ -198,8 +198,8 @@ our %DM_DATATYPES = (
                      ismn => sub {
                        my $v = shift;
                        require Business::ISMN;
-                       my $ismn = Business::ISMN->new($_);
-                       unless ($ismn and $ismn->is_valid) {
+                       my $ismn = Business::ISMN->new($v);
+                       unless ($ismn and $ismn->is_valid == Business::ISMN::GOOD_ISMN()) {
                          return 0;
                        }
                        return 1;
@@ -486,7 +486,7 @@ our %LOCALE_MAP = (
                    'turkmen'         => 'tk-TM',
                    'ukrainian'       => 'uk-UA',
                    'urdu'            => 'ur-IN',
-                   'UKenglish'       => 'en-UK',
+                   'UKenglish'       => 'en-GB',
                    'uppersorbian'    => 'hsb-DE',
                    'USenglish'       => 'en-US',
                    'usorbian'        => 'hsb-DE',
@@ -541,8 +541,6 @@ our %LOCALE_MAP_R = (
                      'en-UK'      => 'UKenglish',
                      'en-GB'      => 'british',
                      'en-NZ'      => 'newzealand',
-                     'en-US'      => 'USenglish',
-                     'en-US'      => 'american',
                      'en-US'      => 'english',
                      'eo'         => 'esperanto',
                      'eo-001'     => 'esperanto',
@@ -557,7 +555,6 @@ our %LOCALE_MAP_R = (
                      'fi'         => 'finnish',
                      'fi-FI'      => 'finnish',
                      'fr'         => 'french',
-                     'fr-CA'      => 'acadian',
                      'fr-CA'      => 'canadien',
                      'fr-FR'      => 'french',
                      'fur'        => 'friulan',
@@ -638,8 +635,8 @@ our %LOCALE_MAP_R = (
                      'sq'         => 'albanian',
                      'sq-AL'      => 'albanian',
                      'sr'         => 'serbian',
-                     'sr-Cyrl'    => 'serbian',
-                     'sr-Latn'    => 'latin',
+                     'sr-Cyrl'    => 'serbianc',
+                     'sr-Latn'    => 'serbian',
                      'sv'         => 'swedish',
                      'sv-SE'      => 'swedish',
                      'syc'        => 'syriac',

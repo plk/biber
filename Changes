@@ -34,6 +34,19 @@ Revision history for Biber
          the captures of all matches were numbered one after the other, so
          that e.g. $2 could be the first group of the second match, and $0 was
          the last capture. Maps which relied on this need to be changed.
+       * The values of $MAPUNIQ in sourcemaps are now "mapuniq1", "mapuniq2"
+         etc. instead of random strings, so that the .bbl is the same in every
+         run with the same input.
+       * A --configfile which doesn't exist is now an error (exit status 2).
+         Before, it was silently ignored and the default config file search
+         was used instead.
+       * In tool mode, options set in the user's config file (e.g. useprefix,
+         maxbibnames or the "tool" sorting template) are no longer overwritten
+         by biber's hard-coded biblatex option defaults.
+       * A datamodel in the biber config file is used again outside tool mode
+         (it was ignored since 2.15), and its constraints now apply to the
+         entry types they are given for, instead of to those of the first
+         constraints block of the default data model.
 2.22   (2025-08)
        * Fixed security issues with evals
 2.21   (2025-07)

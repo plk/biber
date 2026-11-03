@@ -12,6 +12,7 @@ use constant {
 use Carp;
 use Encode;
 use File::Find;
+use IO::File;
 use File::Spec;
 use IPC::Cmd qw( can_run );
 use IPC::Run3; # This works with PAR::Packer and Windows. IPC::Run doesn't
@@ -19,7 +20,6 @@ use Biber::CodePage qw ( :DEFAULT string_analysis );
 use Biber::Constants;
 use Biber::LaTeX::Recode;
 use Biber::Entry::Name;
-use Data::Uniqid qw ( suniqid );
 use Regexp::Common qw( balanced );
 use List::AllUtils qw( first );
 use Log::Log4perl qw(:no_extra_logdie_message);
@@ -46,7 +46,7 @@ All functions are exported by default.
 
 =cut
 
-our @EXPORT = qw{ check_empty check_exists slurp_switchr slurp_switchw
+our @EXPORT = qw{ check_empty check_exists slurp_switchr slurp_switchw open_output
   glob_data_file globU globU1 locate_data_file makenamesid makenameid stringify_hash
   normalise_string normalise_string_hash normalise_string_underscore
   normalise_string_sort normalise_string_label reduce_array remove_outer
@@ -182,7 +182,14 @@ sub slurp_switchr {
     $fh->close;
   }
   else {
-    $slurp = File::Slurper::read_text($filename, $encoding);
+    # Decode the whole file at once: PerlIO's :encoding layer works in 1024-byte chunks
+    # and fails on (UTF-16) or mangles characters that straddle a chunk boundary
+    my $bytes = File::Slurper::read_binary($filename);
+    my $size = length($bytes);
+    $slurp = decode($encoding, $bytes, Encode::FB_CROAK);
+    # Some decoders (e.g. iso-2022-jp) stop at invalid input instead of croaking,
+    # leaving the rest in $bytes
+    die "invalid data at byte " . ($size - length($bytes)) . "\n" if length($bytes);
   }
   return \$slurp;
 }
@@ -224,7 +231,7 @@ sub slurp_switchw {
 =cut
 
 sub locate_data_file {
-  my $source = shift;
+  my ($source, $noerror) = @_;
   my $sourcepath = $source; # default if nothing else below applies
   my $foundfile;
 
@@ -380,6 +387,7 @@ sub locate_data_file {
   }
 
   # Not found
+  return undef if $noerror; # caller reports it
   biber_error("Cannot find '$source'!")
 }
 
@@ -537,7 +545,7 @@ sub latex_recode_output {
 
 sub strip_noinit {
   my $string = shift;
-  return '' unless $string; # Sanitise missing data
+  return '' unless length($string // ''); # Sanitise missing data (0 is data)
   return $string unless my $noinit = Biber::Config->getoption('noinit');
   foreach my $opt ($noinit->@*) {
     my $re = $opt->{value};
@@ -559,7 +567,7 @@ sub strip_noinit {
 sub strip_nosort {
   no autovivification;
   my ($string, $fieldname) = @_;
-  return '' unless $string; # Sanitise missing data
+  return '' unless length($string // ''); # Sanitise missing data (0 is data)
   return $string unless my $nosort = Biber::Config->getoption('nosort');
 
   my $restrings;
@@ -599,7 +607,7 @@ sub strip_nosort {
 sub strip_nonamestring {
   no autovivification;
   my ($string, $fieldname) = @_;
-  return '' unless $string; # Sanitise missing data
+  return '' unless length($string // ''); # Sanitise missing data (0 is data)
   return $string unless my $nonamestring = Biber::Config->getoption('nonamestring');
 
   my $restrings;
@@ -634,7 +642,7 @@ as this is needed to process compound names or label generation.
 
 sub normalise_string_label {
   my $str = shift;
-  return '' unless $str; # Sanitise missing data
+  return '' unless length($str // ''); # Sanitise missing data (0 is data)
   my $nolabels = Biber::Config->getoption('nolabel');
   $str =~ s/\\[A-Za-z]+//g;    # remove latex macros (assuming they have only ASCII letters)
   # Replace ties with spaces or they will be lost
@@ -659,7 +667,7 @@ Control chars don't need to be stripped as they are completely ignorable in DUCE
 sub normalise_string_sort {
   my $str = shift;
   my $fieldname = shift;
-  return '' unless $str; # Sanitise missing data
+  return '' unless length($str // ''); # Sanitise missing data (0 is data)
   # First strip nosort REs
   $str = strip_nosort($str, $fieldname);
   # Then replace ties with spaces or they will be lost
@@ -680,7 +688,7 @@ Some string normalisation for bblxml output
 
 sub normalise_string_bblxml {
   my $str = shift;
-  return '' unless $str; # Sanitise missing data
+  return '' unless length($str // ''); # Sanitise missing data (0 is data)
   $str =~ s/\\[A-Za-z]+//g; # remove latex macros (assuming they have only ASCII letters)
   $str =~ s/\{([^\{\}]+)\}/$1/g; # remove pointless braces
   $str =~ s/~/ /g; # replace ties with spaces
@@ -735,7 +743,7 @@ sub normalise_string_common {
 
 sub normalise_string_hash {
   my $str = shift;
-  return '' unless $str; # Sanitise missing data
+  return '' unless length($str // ''); # Sanitise missing data (0 is data)
   $str =~ s/\\(\p{L}+)\s*/$1:/g; # remove tex macros
   $str =~ s/\\([^\p{L}])\s*/ord($1).':'/ge; # remove accent macros like \"a
   $str =~ s/[\{\}~\.\s]+//g; # Remove braces, ties, dots, spaces
@@ -750,7 +758,7 @@ sub normalise_string_hash {
 
 sub normalise_string_underscore {
   my $str = shift;
-  return '' unless $str; # Sanitise missing data
+  return '' unless length($str // ''); # Sanitise missing data (0 is data)
   $str =~ s/([^\\])~/$1 /g; # Foo~Bar -> Foo Bar
   $str = normalise_string($str);
   $str =~ s/\s+/_/g;
@@ -765,7 +773,7 @@ sub normalise_string_underscore {
 
 sub escape_label {
   my $str = shift;
-  return '' unless $str; # Sanitise missing data
+  return '' unless length($str // ''); # Sanitise missing data (0 is data)
   $str =~ s/([_\^\$\#\%\&])/\\$1/g;
   $str =~ s/~/{\\textasciitilde}/g;
   $str =~ s/>/{\\textgreater}/g;
@@ -782,7 +790,7 @@ sub escape_label {
 
 sub unescape_label {
   my $str = shift;
-  return '' unless $str; # Sanitise missing data
+  return '' unless length($str // ''); # Sanitise missing data (0 is data)
   $str =~ s/\\([_\^\$\~\#\%\&])/$1/g;
   $str =~ s/\{\\textasciitilde\}/~/g;
   $str =~ s/\{\\textgreater\}/>/g;
@@ -1594,7 +1602,53 @@ sub biber_decode_utf8 {
 
 sub out {
   my ($fh, $string) = @_;
-  print $fh NFC($string);# Unicode NFC boundary
+  if (my $enc = ${*$fh}{biber_output_encoding}) { # see open_output()
+    print $fh encode($enc, NFC($string), Encode::FB_PERLQQ | Encode::WARN_ON_ERR | Encode::LEAVE_SRC);
+  }
+  else {
+    print $fh NFC($string);# Unicode NFC boundary
+  }
+}
+
+=head2 open_output
+
+  Open an output target ('-' for STDOUT, a scalar ref, or a file name as a byte string)
+  for writing in encoding $enc. Encodings other than UTF-8 are not done with a PerlIO
+  :encoding layer, which mangles characters straddling its 1024-byte buffer: the handle
+  is opened raw and out() encodes each string instead.
+
+=cut
+
+sub open_output {
+  my ($target, $enc) = @_;
+  my $layer = '';
+  my $encode;
+  if ($enc) {
+    if (lc(find_encoding($enc)->name) =~ m/\Autf-?8/) {
+      $layer = ":encoding($enc)";
+    }
+    else {
+      $layer = ':raw';
+      $encode = $enc;
+    }
+  }
+  my $fh;
+  if (not ref($target) and $target eq '-') {
+    $fh = IO::File->new('>-') or return undef;
+    $fh->binmode($layer) if $layer;
+  }
+  else {
+    $fh = IO::File->new($target, ">$layer") or return undef;
+  }
+  if ($encode) {
+    # UTF-16/32 without a byte order would get a BOM from every encode() call
+    if (find_encoding($encode)->name =~ m/\AUTF-(?:16|32)\z/i) {
+      print $fh encode($encode, '');# just the BOM
+      $encode = find_encoding($encode)->name . 'BE';
+    }
+    ${*$fh}{biber_output_encoding} = $encode;
+  }
+  return $fh;
 }
 
 =head2 process_comment
@@ -1790,6 +1844,10 @@ sub parse_range_alt {
 
 =cut
 
+# $MAPUNIQ values come from a counter, not the clock, so that the output
+# doesn't change between runs
+my $MAPUNIQCOUNT = 0;
+
 sub maploopreplace {
   # $MAPUNIQVAL is lexical here
   no strict 'vars';
@@ -1799,7 +1857,7 @@ sub maploopreplace {
   $string =~ s/\$MAPLOOP/$maploop/g if defined($maploop);
   $string =~ s/\$MAPUNIQVAL/$MAPUNIQVAL/g;
   if ($string =~ m/\$MAPUNIQ/) {
-    my $MAPUNIQ = suniqid;
+    my $MAPUNIQ = 'mapuniq' . ++$MAPUNIQCOUNT;
     $string =~ s/\$MAPUNIQ/$MAPUNIQ/g;
     $MAPUNIQVAL = $MAPUNIQ;
   }
@@ -1814,8 +1872,16 @@ sub maploopreplace {
 
 =cut
 
+my %TRANSLITERATORS; # cache, so that each pair is set up (and warned about) only once
+
 sub get_transliterator {
   my ($target, $from, $to) = map {lc} @_;
+  return $TRANSLITERATORS{"$from\x{10FFFD}$to"} if exists($TRANSLITERATORS{"$from\x{10FFFD}$to"});
+  return $TRANSLITERATORS{"$from\x{10FFFD}$to"} = _get_transliterator($target, $from, $to);
+}
+
+sub _get_transliterator {
+  my ($target, $from, $to) = @_;
   my @valid_from = ('iast', 'russian');
   my @valid_to   = ('devanagari', 'ala-lc', 'bgn/pcgn-standard');
   unless (first {$from eq $_} @valid_from and

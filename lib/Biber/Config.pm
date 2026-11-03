@@ -69,8 +69,8 @@ $CONFIG->{state}{xrefkeys} = {};
 $CONFIG->{state}{citkey_aliases} = {};
 
 # Record of which entries have inherited from other fields. Used for loop detection.
-$CONFIG->{state}{crossref} = [];
-$CONFIG->{state}{xdata} = [];
+$CONFIG->{state}{crossref} = {};
+$CONFIG->{state}{xdata} = {};
 
 # Record of which entries have inherited what from whom, with the fields inherited.
 # Used for generating inheritance trees
@@ -99,8 +99,8 @@ sub _init {
   $CONFIG->{state}{crossrefkeys} = {};
   $CONFIG->{state}{xrefkeys} = {};
   $CONFIG->{state}{datafiles} = [];
-  $CONFIG->{state}{crossref} = [];
-  $CONFIG->{state}{xdata} = [];
+  $CONFIG->{state}{crossref} = {};
+  $CONFIG->{state}{xdata} = {};
 
   return;
 }
@@ -121,7 +121,14 @@ sub _initopts {
   unless (defined($opts->{noconf})) {
     # if a config file was given as cmd-line arg, it overrides all other
     # config file locations
-    unless ( defined($opts->{configfile}) and -f $opts->{configfile} ) {
+    if (defined($opts->{configfile})) {
+      unless (-f $opts->{configfile}) {
+        # The logger isn't set up yet
+        say STDERR "ERROR - Cannot find config file '$opts->{configfile}'";
+        exit EXIT_ERROR;
+      }
+    }
+    else {
       $opts->{configfile} = config_file();
     }
   }
@@ -142,6 +149,12 @@ sub _initopts {
     }
   }
 
+  # Start without global biblatex options from any earlier Biber object, so that
+  # the hard-coded defaults below are only skipped for options which the config
+  # files of this run set
+  $CONFIG->{options}{biblatex}{GLOBAL} = {};
+  $CONFIG->{configfile_datamodels} = [];
+
   # There is a special default config file for tool mode
   # Referring to as yet unprocessed cmd-line tool option as it isn't processed until below
   if ($opts->{tool}) {
@@ -161,7 +174,9 @@ sub _initopts {
   # Set hard-coded biblatex option defaults
   # This has to go after _config_file_set() as this is what defines option scope
   # in tool mode (from the .conf file)
+  # but they are only defaults: don't overwrite values from the config files
   foreach (keys %CONFIG_DEFAULT_BIBLATEX) {
+    next if defined($CONFIG->{options}{biblatex}{GLOBAL}{$_});
     Biber::Config->setblxoption(0, $_, $CONFIG_DEFAULT_BIBLATEX{$_});
   }
 
@@ -640,6 +655,8 @@ sub _config_file_set {
     }
     elsif (lc($k) eq 'datamodel') {# This is a biblatex option
       Biber::Config->addtoblxoption(0, 'datamodel', $v);
+      # Also kept separately, as parse_ctrlfile() replaces the datamodel option
+      push $CONFIG->{configfile_datamodels}->@*, $v;
     }
     elsif (exists($v->{content})) { # simple option
       Biber::Config->setconfigfileoption($k, $v->{content});
@@ -664,7 +681,7 @@ It returns the first file found among:
 
 =item * C<$HOME/Library/biber/biber.conf> (Mac OSX only)
 
-=item * C<$ENV{APPDATA}/biber.conf> (Windows only)
+=item * C<$ENV{APPDATA}/biber/biber.conf> (Windows only)
 
 =item * the output of C<kpsewhich biber.conf> (if available on the system).
 
@@ -952,6 +969,17 @@ sub isexplicitoption {
 #################################
 
 
+=head2 get_configfile_datamodels
+
+    Get the datamodels from the config files, which add to or modify the
+    datamodel from the .bcf
+
+=cut
+
+sub get_configfile_datamodels {
+  return $CONFIG->{configfile_datamodels} // [];
+}
+
 =head2 addtoblxoption
 
     Add to an array global biblatex option
@@ -1124,7 +1152,7 @@ sub get_graph {
 sub set_inheritance {
   shift; # class method so don't care about class name
   my ($type, $source, $target) = @_;
-  push $CONFIG->{state}{$type}->@*, {s => $source, t => $target};
+  $CONFIG->{state}{$type}{$source}{$target} = 1;
   return;
 }
 
@@ -1139,7 +1167,7 @@ sub set_inheritance {
 sub get_inheritance {
   shift; # class method so don't care about class name
   my ($type, $source, $target) = @_;
-  return first {$_->{s} eq $source and $_->{t} eq $target} $CONFIG->{state}{$type}->@*;
+  return $CONFIG->{state}{$type}{$source}{$target};
 }
 
 =head2 is_inheritance_path
@@ -1147,24 +1175,24 @@ sub get_inheritance {
   Checks for an inheritance path from entry $e1 to $e2
   Can be used for crossrefs and xdata
 
-[
-             {s => 'A',
-              t => 'B'},
-             {s => 'A',
-              t => 'E'},
-             {s => 'B',
-              t => 'C'},
-             {s => 'C',
-              t => 'D'}
-];
+{
+  A => {B => 1, E => 1},
+  B => {C => 1},
+  C => {D => 1}
+}
 
 =cut
 
 sub is_inheritance_path {
   my ($self, $type, $e1, $e2) = @_;
-  foreach my $dps (grep {$_->{s} eq $e1} $CONFIG->{state}{$type}->@*) {
-    return 1 if $dps->{t} eq $e2;
-    return 1 if is_inheritance_path($self, $type, $dps->{t}, $e2);
+  my $edges = $CONFIG->{state}{$type};
+  my %seen = ($e1 => 1);
+  my @todo = ($e1);
+  while (defined(my $s = shift @todo)) {
+    foreach my $t (keys(($edges->{$s} // {})->%*)) {
+      return 1 if $t eq $e2;
+      push @todo, $t unless $seen{$t}++;
+    }
   }
   return 0;
 }
@@ -1258,7 +1286,7 @@ sub reset_keyorder {
 
 sub get_crossrefkeys {
   shift; # class method so don't care about class name
-  return [ keys $CONFIG->{state}{crossrefkeys}->%* ];
+  return [ sort keys $CONFIG->{state}{crossrefkeys}->%* ];
 }
 
 =head1 xrefkeys
@@ -1271,7 +1299,7 @@ sub get_crossrefkeys {
 
 sub get_xrefkeys {
   shift; # class method so don't care about class name
-  return [ keys $CONFIG->{state}{xrefkeys}->%* ];
+  return [ sort keys $CONFIG->{state}{xrefkeys}->%* ];
 }
 
 =head2 get_crossrefkey

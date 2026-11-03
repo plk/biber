@@ -53,7 +53,7 @@ GetOptions(
            'glob_datasources|glob-datasources',
            'help|h|?',
            'input_directory|input-directory=s',
-           'input_encoding|input-encodinge=s',
+           'input_encoding|input-encoding|e=s',
            'input_format|input-format=s',
            'isbn10',
            'isbn13',
@@ -252,8 +252,8 @@ if ($opts->{output_macro_fields}) {
 
 # Check the output_format option
 if (my $of = $opts->{output_format}) {
-  unless ($opts->{output_format} =~ /\A(?:bbl|dot|bibtex|biblatexml|bblxml|bibjson)\z/xms) {
-    say STDERR "Biber: Unknown output format '$of', must be one of 'bbl', 'dot', 'bibtex', 'biblatexml', 'bblxml', 'bibjson'";
+  unless ($opts->{output_format} =~ /\A(?:bbl|dot|bibtex|biblatexml|bblxml)\z/xms) {
+    say STDERR "Biber: Unknown output format '$of', must be one of 'bbl', 'dot', 'bibtex', 'biblatexml', 'bblxml'";
     exit EXIT_ERROR;
   }
   if ($opts->{output_format} eq 'bblxml' or $opts->{output_format} eq 'dot') {
@@ -275,8 +275,8 @@ if (exists($opts->{tool}) and
 # Check output-format value
 if (exists($opts->{tool}) and
     exists($opts->{output_format}) and
-    $opts->{output_format} !~ /\A(?:bibtex|biblatexml|bibjson)\z/xms) {
-    say STDERR "Biber: Output format in tool mode must be one of 'bibtex', 'biblatexml' or 'bibjson'";
+    $opts->{output_format} !~ /\A(?:bibtex|biblatexml)\z/xms) {
+    say STDERR "Biber: Output format in tool mode must be one of 'bibtex' or 'biblatexml'";
     exit EXIT_ERROR;
 }
 
@@ -369,16 +369,13 @@ else {
     elsif (Biber::Config->getoption('output_format') eq 'biblatexml') { # tool .blxtxml output
       $outfile = $ARGV[0] =~ s/(?:\.[^.\/\\]*)?\z/_bibertool.bltxml/r;
     }
-    elsif (Biber::Config->getoption('output_format') eq 'bibjson') { # bibjson output
-      $outfile = $ARGV[0] =~ s/(?:\.[^.\/\\]*)?\z/_bibertool.json/r;
-    }
   }
   else {
     if (Biber::Config->getoption('output_format') eq 'dot') { # .dot output
       $outfile = $bcf =~ s/bcf$/dot/r;
     }
     elsif (Biber::Config->getoption('output_format') eq 'bibtex') { # bibtex output
-      $outfile = $bcf =~ s/\..+$/_biber.bib/r;
+      $outfile = $bcf =~ s/(?:\.[^.\/\\]*)?\z/_biber.bib/r;
     }
     elsif (Biber::Config->getoption('output_format') eq 'bbl') { # bbl output
       $outfile = $bcf =~ s/bcf$/bbl/r;
@@ -387,14 +384,14 @@ else {
       $outfile = $bcf =~ s/bcf$/bblxml/r;
     }
     else {
-      say "output_format option '" . Biber::Config->getoption('output_format') . "' only makes sense in tool mode (--tool)";
-      exit EXIT_ERROR;
+      biber_error("output_format option '" . Biber::Config->getoption('output_format') . "' only makes sense in tool mode (--tool)");
     }
   }
 }
 
 # Set the .bbl path to the output dir, if specified
-if (my $outdir = Biber::Config->getoption('output_directory')) {
+my $outdir = Biber::Config->getoption('output_directory');
+if ($outdir and $outfile ne '-') { # '-' is STDOUT
   my (undef, undef, $file) = File::Spec->splitpath($outfile);
   $outfile = File::Spec->catfile($outdir, $file)
 }
@@ -801,7 +798,7 @@ filename only). F<file> can be absolute if B<--output-directory> is not
 set. F<file> can be '-' to output directly to STDOUT. The legacy option
 B<--outfile> is supported as an alias.
 
-=item B<--output-format=dot|bibtex|biblatexml|bbl|bblxml|bibjson>
+=item B<--output-format=dot|bibtex|biblatexml|bbl|bblxml>
 
 Biber output format. Default if not specified is of course, F<bbl>. Use F<dot>
 to output a GraphViz DOT file instead of F<.bbl>. This is a directed graph of

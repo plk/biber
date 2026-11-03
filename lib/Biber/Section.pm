@@ -835,6 +835,8 @@ sub set_dynamic_set {
   my $self = shift;
   my $dkey = shift;
   my @members = @_;
+  # Remember the order of definition, for dynamic_set_keys
+  $self->{dkeysorder}{$dkey} //= scalar(keys $self->{dkeys}->%*);
   $self->{dkeys}{$dkey} = \@members;
   return;
 }
@@ -866,7 +868,9 @@ sub get_dynamic_set {
 
 sub dynamic_set_keys {
   my $self = shift;
-  return [keys $self->{dkeys}->%*];
+  # In order of definition, not hash order, so that the output doesn't change
+  # between runs
+  return [sort {$self->{dkeysorder}{$a} <=> $self->{dkeysorder}{$b}} keys $self->{dkeys}->%*];
 }
 
 =head2 has_dynamic_sets
