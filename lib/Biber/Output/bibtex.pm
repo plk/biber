@@ -141,9 +141,15 @@ sub set_output_entry {
     $outmap = sub {my $f = shift; ucfirst($CONFIG_OUTPUT_FIELDREPLACE{$f} // $f)};
   }
 
+  # The key is only recoded if it can't be output otherwise
+  my $outkey = $key;
+  unless (eval { encode(Biber::Config->getoption('output_encoding'), NFC($key), Encode::FB_CROAK | Encode::LEAVE_SRC); 1 }) {
+    $outkey = latex_recode_output($key);
+  }
+
   $acc .= '@';
   $acc .= $outmap->($bee);
-  $acc .=  "\{$key,\n";
+  $acc .=  "\{$outkey,\n";
 
   # hash accumulator so we can gather all the data before formatting so that things like
   # $max_field_len can be calculated
@@ -225,7 +231,7 @@ sub set_output_entry {
 
   # Per-entry options
   my @entryoptions;
-  foreach my $opt (Biber::Config->getblxentryoptions($secnum, $key)) {
+  foreach my $opt (sort (Biber::Config->getblxentryoptions($secnum, $key))) {
     push @entryoptions, $opt . '=' . Biber::Config->getblxoption($secnum, $opt, undef, $key);
   }
   $acc{$outmap->('options')} = join(',', @entryoptions) if @entryoptions;
@@ -233,7 +239,7 @@ sub set_output_entry {
   # Date fields
   foreach my $datefield ($dmh->{datefields}->@*) {
     my $d = $datefield =~ s/date$//r;
-    next unless $be->get_field("${d}year");
+    next unless defined($be->get_field("${d}year"));
 
     # Output legacy dates for YEAR/MONTH if requested
     if (not $d and Biber::Config->getoption('output_legacy_dates')) {
@@ -275,13 +281,14 @@ sub set_output_entry {
 
   # Standard fields
   foreach my $field ($dmh->{fields}->@*) {
-    if (my $val = $be->get_field($field)) {
+    my $val = $be->get_field($field);
+    if (defined($val) and $val ne '') {
       unless (Biber::Config->getoption('output_resolve_xdata')) {
         my $xd = xdatarefcheck($val);
         $val = $xd // $val;
       }
       # Could have been set in dates above (MONTH, YEAR special handling)
-      $acc{$outmap->($field)} = $val unless $acc{$outmap->($field)};
+      $acc{$outmap->($field)} = $val unless defined($acc{$outmap->($field)});
     }
   }
 
@@ -343,6 +350,29 @@ sub set_output_entry {
     }
   }
 
+  # Recode to LaTeX macros field by field, so that the entry key and
+  # verbatim/URI fields are left alone
+  my $outenc = Biber::Config->getoption('output_encoding');
+  my $recoded = 0;
+  foreach my $f (keys %acc) {
+    my $bf = lc(strip_annotation($f));
+    my $encodable = eval { encode($outenc, NFC($acc{$f}), Encode::FB_CROAK | Encode::LEAVE_SRC); 1 };
+    # Verbatim data is only recoded if it can't be output otherwise
+    next if ($dm->field_is_datatype('verbatim', $bf) or $dm->field_is_datatype('uri', $bf)) and $encodable;
+    # If requested to convert UTF-8 to macros ...
+    if (Biber::Config->getoption('output_safechars')) {
+      $acc{$f} = latex_recode_output($acc{$f});
+    }
+    # ... or, check for encoding problems and force macros
+    elsif (not $encodable) {
+      $acc{$f} = latex_recode_output($acc{$f});
+      $recoded = 1;
+    }
+  }
+  if ($recoded) {
+    biber_warn("The entry '$key' has characters which cannot be encoded in '$outenc'. Recoding problematic characters into macros.");
+  }
+
   # Determine maximum length of field names
   my $max_field_len;
   if (Biber::Config->getoption('output_align')) {
@@ -368,7 +398,7 @@ sub set_output_entry {
       }
       delete @acc{@donefields};
     }
-    elsif (my $value = delete $acc{$outmap->($field)}) {
+    elsif (defined(my $value = delete $acc{$outmap->($field)})) {
       $acc .= bibfield($outmap->($field), $value, $max_field_len);
     }
   }
@@ -379,22 +409,6 @@ sub set_output_entry {
   }
 
   $acc .= "}\n\n";
-
-  # If requested to convert UTF-8 to macros ...
-  if (Biber::Config->getoption('output_safechars')) {
-    $acc = latex_recode_output($acc);
-  }
-  else { # ... or, check for encoding problems and force macros
-    my $outenc = Biber::Config->getoption('output_encoding');
-    if ($outenc ne 'UTF-8') {
-      # Can this entry be represented in the output encoding?
-      if (not eval { encode($outenc, NFC($acc), Encode::FB_CROAK | Encode::LEAVE_SRC); 1 }) { # Malformed data encoding char
-        # So convert to macro
-        $acc = latex_recode_output($acc);
-        biber_warn("The entry '$key' has characters which cannot be encoded in '$outenc'. Recoding problematic characters into macros.");
-      }
-    }
-  }
 
   # Create an index by keyname for easy retrieval
   $self->{output_data}{ENTRIES}{$secnum}{index}{$key} = \$acc;
@@ -457,15 +471,9 @@ sub output {
   }
 
   # Bibtex output uses just one special section, always sorted by global sorting spec
-  foreach my $key ($Biber::MASTER->datalists->get_lists_by_attrs(section => 99999,
-                                                                 name => Biber::Config->getblxoption(undef, 'sortingtemplatename') . '/global//global/global/global',
-                                                                 type => 'entry',
-                                                                 sortingtemplatename => Biber::Config->getblxoption(undef, 'sortingtemplatename'),
-                                                                 sortingnamekeytemplatename => 'global',
-                                                                 labelprefix => '',
-                                                                 uniquenametemplatename => 'global',
-                                                                 labelalphanametemplatename => 'global',
-                                                                 namehashtemplatename       => 'global')->[0]->get_keys->@*) {
+  # (The list is made in tool_mode_setup or parse_ctrlfile; don't rely on the
+  # global sortingtemplatename still matching its name.)
+  foreach my $key ($Biber::MASTER->datalists->get_lists_for_section(99999)->[0]->get_keys->@*) {
     out($target, ${$data->{ENTRIES}{99999}{index}{$key}});
   }
 
@@ -480,6 +488,23 @@ sub output {
 
   $logger->info("Output to $target_string");
   close $target;
+  return;
+}
+
+=head2 create_output_misc
+
+    Output the \@preamble data of the data files
+
+=cut
+
+sub create_output_misc {
+  my $self = shift;
+  my $pa = $Biber::MASTER->get_preamble or return;
+  my $fc = Biber::Config->getoption('output_fieldcase');
+  my $name = $fc eq 'upper' ? 'PREAMBLE' : $fc eq 'title' ? 'Preamble' : 'preamble';
+  foreach my $p ($pa->@*) {
+    $self->{output_data}{HEAD} .= "\@${name}{{$p}}\n\n";
+  }
   return;
 }
 
@@ -595,17 +620,23 @@ sub construct_annotation {
   my ($key, $field, $name) = @_;
   my @annotations;
 
+  # Literal annotations are written in quotes, as they are read
+  my $q = sub { my ($v, @args) = @_;
+                Biber::Annotation->is_literal_annotation(@args) ? "\"$v\"" : $v };
+
   if (my $fa = Biber::Annotation->get_field_annotation($key, $field, $name)) {
-    push @annotations, "=$fa";
+    push @annotations, '=' . $q->($fa, 'field', $key, $field, $name);
   }
 
   foreach my $item (Biber::Annotation->get_annotated_items('item', $key, $field, $name)) {
-    push @annotations, "$item=" . Biber::Annotation->get_annotation('item', $key, $field, $name, $item);
+    push @annotations, "$item=" . $q->(Biber::Annotation->get_annotation('item', $key, $field, $name, $item),
+                                       'item', $key, $field, $name, $item);
   }
 
   foreach my $item (Biber::Annotation->get_annotated_items('part', $key, $field, $name)) {
     foreach my $part (Biber::Annotation->get_annotated_parts('part', $key, $field, $name, $item)) {
-      push @annotations, "$item:$part=" . Biber::Annotation->get_annotation('part', $key, $field, $name, $item, $part);
+      push @annotations, "$item:$part=" . $q->(Biber::Annotation->get_annotation('part', $key, $field, $name, $item, $part),
+                                               'part', $key, $field, $name, $item, $part);
     }
   }
 
@@ -662,7 +693,7 @@ sub construct_datetime {
                         'springS' => 29,
                         'summerS' => 30,
                         'autumnS' => 31,
-                        'WinterS' => 32,
+                        'winterS' => 32,
                         'Q1'      => 33,
                         'Q2'      => 34,
                         'Q3'      => 35,
@@ -715,25 +746,34 @@ sub construct_datetime {
   # Seasons derived from ISO 8601 dates
   if (my $s = $be->get_field("${d}yeardivision")) {
     $overridem = $yeardivisions{$s};
+    $be->del_field("${d}yeardivision");
   }
   if (my $s = $be->get_field("${d}endyeardivision")) {
     $overrideem = $yeardivisions{$s};
+    $be->del_field("${d}endyeardivision");
   }
 
+  # 'XX' (unspecified) is written as it is, numbers are padded
+  my $pad = sub { $_[0] =~ m/^\d+$/ ? sprintf('%.2d', $_[0]) : $_[0] };
+  # Years need four digits to be read again (0 is 1 BCE, -99 is 100 BCE)
+  my $ypad = sub { $_[0] =~ m/^(-?)(\d{1,3})$/ ? $1 . sprintf('%.4d', $2) : $_[0] };
+
   # date exists if there is a start year
-  if (my $sy = $overridey || $be->get_field("${d}year") ) {
-    $datestring .= $sy;
+  my $sy = $overridey // $be->get_field("${d}year");
+  if (defined($sy)) {
+    # An empty start year is an open start ('..') unless it is unknown ('')
+    $datestring .= ($sy eq '' and not $be->get_field("${d}dateunknown")) ? '..' : $ypad->($sy);
     $be->del_field("${d}year");
 
     # Start month
-    if (my $sm = $overridem || $be->get_field("${d}month")) {
-      $datestring .= '-' . sprintf('%.2d', $sm);
+    if (defined(my $sm = $overridem // $be->get_field("${d}month"))) {
+      $datestring .= '-' . $pad->($sm);
       $be->del_field("${d}month");
     }
 
     # Start day
-    if (my $sd = $overrided || $be->get_field("${d}day")) {
-      $datestring .= '-' . sprintf('%.2d', $sd);
+    if (defined(my $sd = $overrided // $be->get_field("${d}day"))) {
+      $datestring .= '-' . $pad->($sd);
       $be->del_field("${d}day");
     }
 
@@ -755,7 +795,7 @@ sub construct_datetime {
     }
 
     # If start hour, there must be minute and second
-    if (my $sh = $be->get_field("${d}hour")) {
+    if (defined(my $sh = $be->get_field("${d}hour"))) {
       $datestring .= 'T' . sprintf('%.2d', $sh) . ':' .
         sprintf('%.2d', $be->get_field("${d}minute")) . ':' .
           sprintf('%.2d', $be->get_field("${d}second"));
@@ -777,19 +817,20 @@ sub construct_datetime {
     }
 
     # End year
-    if (my $ey = $be->get_field("${d}endyear")) {
-      $datestring .= $ey;
+    my $ey = $be->get_field("${d}endyear");
+    if (defined($ey) and $ey ne '') {
+      $datestring .= $ypad->($ey);
       $be->del_field("${d}endyear");
 
       # End month
-      if (my $em = $overrideem || $be->get_field("${d}endmonth")) {
-        $datestring .= '-' . sprintf('%.2d', $em);
+      if (defined(my $em = $overrideem // $be->get_field("${d}endmonth"))) {
+        $datestring .= '-' . $pad->($em);
         $be->del_field("${d}endmonth");
       }
 
       # End day
-      if (my $ed = $be->get_field("${d}endday")) {
-        $datestring .= '-' . sprintf('%.2d', $ed);
+      if (defined(my $ed = $be->get_field("${d}endday"))) {
+        $datestring .= '-' . $pad->($ed);
         $be->del_field("${d}endday");
       }
 
@@ -811,7 +852,7 @@ sub construct_datetime {
       }
 
       # If end hour, there must be minute and second
-      if (my $eh = $be->get_field("${d}endhour")) {
+      if (defined(my $eh = $be->get_field("${d}endhour"))) {
         $datestring .= 'T' . sprintf('%.2d', $eh) . ':' .
           sprintf('%.2d', $be->get_field("${d}endminute")) . ':' .
             sprintf('%.2d', $be->get_field("${d}endsecond"));
@@ -826,6 +867,10 @@ sub construct_datetime {
         $datestring .= $etz;
         $be->del_field("${d}endtimezone");
       }
+    }
+    # Likewise for an empty end year
+    elsif (defined($ey) and not $be->get_field("${d}enddateunknown")) {
+      $datestring .= '..';
     }
   }
   return $datestring;

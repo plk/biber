@@ -1860,7 +1860,8 @@ MAIN:  foreach my $pn ($dmh->{namelistsall}->@*) {
 
       $namestring .= $base;
       push $namestrings->@*, $base;
-      push $namedisschema->@*, ['base' => $baseparts] if defined($baseparts);
+      # Always add the base level, even if empty, to keep the schema aligned with $namestrings
+      push $namedisschema->@*, ['base' => $baseparts // []];
 
       # ... then add non-base parts by incrementally adding to the last disambiguation level
       foreach my $np (Biber::Config->getblxoption(undef, 'uniquenametemplate')->{$nuntname}->@*) {
@@ -2163,6 +2164,21 @@ sub process_uniqueprimaryauthor {
   }
 }
 
+=head2 _labeltitle_string
+
+    The labeltitle as a string for comparisons. The labeltitle can be a name list,
+    which is represented by its full hash.
+
+=cut
+
+sub _labeltitle_string {
+  my ($self, $citekey, $dlist) = @_;
+  my $be = $self->sections->get_section($self->get_current_section)->bibentry($citekey);
+  my $lti = $be->get_labeltitle_info or return '';
+  my $lt = $be->get_field($lti) // return '';
+  return ref($lt) eq 'Biber::Entry::Names' ? $self->_getfullhash($citekey, $lt, $dlist) : $lt;
+}
+
 =head2 process_workuniqueness
 
     Track seen work combination for generation of singletitle, uniquetitle, uniquebaretitle and
@@ -2211,7 +2227,7 @@ sub process_workuniqueness {
   # uniquetitle
   # Don't generate information for entries with no labeltitle
   if ($lti and Biber::Config->getblxoption($secnum, 'uniquetitle', $bee, $citekey)) {
-    $identifier = $be->get_field($lti);
+    $identifier = $self->_labeltitle_string($citekey, $dlist);
 
     # Skip due to ignore settings?
     unless (first {fc($lti) eq fc($_)} $ignore->{uniquetitle}->@*) {
@@ -2223,7 +2239,7 @@ sub process_workuniqueness {
   # uniquebaretitle
   # Don't generate information for entries with no labeltitle and with labelname
   if ($lti and not $lni and Biber::Config->getblxoption($secnum, 'uniquebaretitle', $bee, $citekey)) {
-    $identifier = $be->get_field($lti);
+    $identifier = $self->_labeltitle_string($citekey, $dlist);
 
     # Skip due to ignore settings?
     unless (first {fc($lti) eq fc($_)} $ignore->{uniquebaretitle}->@*) {
@@ -2236,7 +2252,7 @@ sub process_workuniqueness {
   # Don't generate information for entries with no labelname and labeltitle
   # Should use fullhash this is not a test of uniqueness of only visible information
   if ($lni and $lti and Biber::Config->getblxoption($secnum, 'uniquework', $bee, $citekey)) {
-    $identifier = $self->_getfullhash($citekey, $be->get_field($lni), $dlist) . $be->get_field($lti);
+    $identifier = $self->_getfullhash($citekey, $be->get_field($lni), $dlist) . $self->_labeltitle_string($citekey, $dlist);
 
     # Skip due to ignore settings?
     unless (first {fc($lni) eq fc($_)} $ignore->{uniquework}->@* and
@@ -2395,8 +2411,7 @@ sub process_extratitle {
       $namehash = $self->_getnamehash_u($citekey, $be->get_field($lni), $dlist);
     }
 
-    my $lti = $be->get_labeltitle_info;
-    my $title_string = $be->get_field($lti) // '';
+    my $title_string = $self->_labeltitle_string($citekey, $dlist);
 
     my $nametitle_string = "$namehash,$title_string";
     if ($logger->is_trace()) {# performance tune
@@ -2443,8 +2458,7 @@ sub process_extratitleyear {
       $logger->trace("Creating extratitleyear information for '$citekey'");
     }
 
-    my $lti = $be->get_labeltitle_info;
-    my $title_string = $be->get_field($lti) // '';
+    my $title_string = $self->_labeltitle_string($citekey, $dlist);
 
     # Takes into account the labelyear which can be a range
     my $year_string = $be->get_field('labelyear') || $be->get_field('year') || '';
@@ -4527,6 +4541,7 @@ sub prepare_tool {
   $self->process_lists;        # process the output lists (sort and filtering)
   $out->create_output_section; # Generate and push the section output into the
                                # into the output object ready for writing
+  $out->create_output_misc;    # Preambles
   return;
 }
 

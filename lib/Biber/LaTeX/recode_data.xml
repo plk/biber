@@ -865,6 +865,9 @@
     <char>textasciicircum</char>
     <char>textasciigrave</char>
     <char>dots</char>
+    <char>textdollar</char>
+    <char>textpercent</char>
+    <char>textampersand</char>
   </decode_exclude>
   <encode_exclude>
     <char>"</char>

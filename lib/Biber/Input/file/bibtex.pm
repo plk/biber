@@ -320,8 +320,9 @@ sub extract_entries {
 
   # Save comments if in tool mode
   if (Biber::Config->getoption('tool')) {
-    if ($cache->{comments}{$filename}) {
-      $Biber::MASTER->{comments} = $cache->{comments}{$filename};
+    # Keep the comments of every data file, but each file only once
+    if ($cache->{counts}{$filename} < 2 and $cache->{comments}{$filename}) {
+      push(($Biber::MASTER->{comments} //= [])->@*, $cache->{comments}{$filename}->@*);
     }
   }
 
@@ -400,15 +401,16 @@ sub create_entry {
         my @imatches; # For persisting parenthetical matches over several steps
 
         # Set up any mapping foreach loop
-        my @maploop = ('');
+        my @maploop = (undef);
         if (my $foreach = $map->{map_foreach}) {
           if (my $dslist = $DATAFIELD_SETS{fc($foreach)}) { # datafield set list
             @maploop = $dslist->@*;
           }
           # casefold here as the field name does not come from Text::BibTeX so it might not be
           # valid in the case found in the mapping
-          elsif (my $felist = $entry->get(encode('UTF-8', NFC(fc($foreach))))) { # datafield
-            @maploop = split(/\s*,\s*/, $felist);
+          elsif ($dm->is_field(fc($foreach))) { # datafield, no loop if the entry doesn't have it
+            my $felist = $entry->get(encode('UTF-8', NFC(fc($foreach))));
+            @maploop = defined($felist) ? split(/\s*,\s*/, $felist) : ();
           }
           else { # explicit CSV
             @maploop = split(/\s*,\s*/, $foreach);
@@ -438,7 +440,7 @@ sub create_entry {
               # Now re-instate any unescaped $1 .. $9 to get round these being
               # dynamically scoped and being null when we get here from any
               # previous map_match
-              $newkey =~ s/(?<!\\)\$(\d)/$imatches[$1-1]/ge;
+              $newkey =~ s/(?<!\\)\$(\d)/$imatches[$1] \/\/ ''/ge;
 
               my $newentrytype;
               unless ($newentrytype = maploopreplace($step->{map_entry_newtype}, $maploop)) {
@@ -479,7 +481,7 @@ sub create_entry {
               # Now re-instate any unescaped $1 .. $9 to get round these being
               # dynamically scoped and being null when we get here from any
               # previous map_match
-              $clonekey =~ s/(?<!\\)\$(\d)/$imatches[$1-1]/ge;
+              $clonekey =~ s/(?<!\\)\$(\d)/$imatches[$1] \/\/ ''/ge;
 
               if ($logger->is_debug()) { # performance tune
                 $logger->debug("Source mapping (type=$level, key=$key): cloning entry with new key '$clonekey'");
@@ -515,7 +517,7 @@ sub create_entry {
               # Now re-instate any unescaped $1 .. $9 to get round these being
               # dynamically scoped and being null when we get here from any
               # previous map_match
-              $etargetkey =~ s/(?<!\\)\$(\d)/$imatches[$1-1]/ge;
+              $etargetkey =~ s/(?<!\\)\$(\d)/$imatches[$1] \/\/ ''/ge;
 
               unless ($etarget = $newentries{$etargetkey}) {
                 biber_warn("Source mapping (type=$level, key=$key): Dynamically created entry target '$etargetkey' does not exist skipping step ...");
@@ -667,17 +669,18 @@ sub create_entry {
 
             # \nocite{*}
             if ($step->{map_entrykey_starnocited}) {
-              if ($section->is_allkeys_nocite and ($section->is_cite($key) or $section->is_nocite($key))) {  # check if NOT nocited
+              # Only entries which are in the section through \nocite{*} alone
+              if (not $section->is_allkeys_nocite or $section->is_cite($key) or $section->is_nocite($key)) {
                 if ($step->{map_final}) {
                   if ($logger->is_debug()) { # performance tune
-                    $logger->debug("Source mapping (type=$level, key=$key): Key is \\nocite{*}'ed but also either \\cite'd or explicitly \\nocited and step has 'final' set, skipping rest of map ...");
+                    $logger->debug("Source mapping (type=$level, key=$key): Key is not only \\nocite{*}'ed and step has 'final' set, skipping rest of map ...");
                   }
                   next MAP;
                 }
                 else {
                   # just ignore this step
                   if ($logger->is_debug()) { # performance tune
-                    $logger->debug("Source mapping (type=$level, key=$key): Key is \\nocite{*}'ed but also either \\cite'd or explicitly \\nocited, skipping step ...");
+                    $logger->debug("Source mapping (type=$level, key=$key): Key is not only \\nocite{*}'ed, skipping step ...");
                   }
                   next;
                 }
@@ -781,9 +784,8 @@ sub create_entry {
                   # Now re-instate any unescaped $1 .. $n to get round these being
                   # dynamically scoped and being null when we get here from any
                   # previous map_match
-                  # Be aware that imatch() uses m//g so @imatches can have multiple paren group
-                  # captures which might be useful
-                  $m =~ s/(?<!\\)\$(\d+)/$imatches[$1-1]/ge;
+                  # Captures are inserted literally, not as regular expressions
+                  $m =~ s/(?<!\\)\$(\d+)/quotemeta($imatches[$1] \/\/ '')/ge;
                   unless (@imatches = imatch($last_fieldval, $m, $negmatch, $caseinsensitive)) {
                     # Skip the rest of the map if this step doesn't match and match is final
                     if ($step->{map_final}) {
@@ -830,7 +832,7 @@ sub create_entry {
                 # $target and $fieldsource are already casefolded, which is correct as it
                 # does not come from Text::BibTeX's list of fields
                 $etarget->set(encode('UTF-8', NFC($target)),
-                              encode('UTF-8', NFC($entry->get(encode('UTF-8', NFC($fieldsource))))));
+                              encode('UTF-8', NFC($etarget->get(encode('UTF-8', NFC($fieldsource))))));
                 $etarget->delete($fieldsource);
               }
             }
@@ -903,7 +905,7 @@ sub create_entry {
                   # Now re-instate any unescaped $1 .. $9 to get round these being
                   # dynamically scoped and being null when we get here from any
                   # previous map_match
-                  $fv =~ s/(?<!\\)\$(\d)/$imatches[$1-1]/ge;
+                  $fv =~ s/(?<!\\)\$(\d)/$imatches[$1] \/\/ ''/ge;
                   if ($logger->is_debug()) { # performance tune
                     $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field '$field' to '${orig}${fv}'");
                   }
@@ -1011,8 +1013,15 @@ sub _annotation {
   }
   $fc =~ s/$ann$//;
 
-  foreach my $a (split(/\s*;\s*/, $value)) {
+  # Split on semicolons outside of quoted literal annotations
+  foreach my $a ($value =~ m/((?:[^;"]|"[^"]*")+)/g) {
+    $a =~ s/\A\s+|\s+\z//g;
+    next unless length($a);
     my ($count, $part, $annotations) = $a =~ /^\s*(\d+)?:?([^=]+)?=(.+)/;
+    unless (defined($annotations)) {
+      biber_warn("Invalid annotation '$a' in field '$field' of entry '$key', ignoring", $bibentry);
+      next;
+    }
     # Is the annotations a literal annotation?
     my $literal = 0;
     if ($annotations =~ m/^\s*"(.+)"\s*$/) {
@@ -1179,10 +1188,10 @@ sub _range {
   foreach my $value (@values) {
     my $ovalue = $value;
     $value =~ s/~/ /g; # Some normalisation for malformed fields
-    $value =~ m/\A\s*(\P{Pd}+)\s*\z/xms ||# Simple value without range
-      $value =~ m/\A\s*(\{[^\}]+\}|[^\p{Pd} ]+)\s*(\p{Pd}+)\s*(\{[^\}]+\}|\P{Pd}*)\s*\z/xms ||
-        $value =~ m/\A\s*(.+)(\p{Pd}{2,})(.+)\s*\z/xms || # M-1--M-4
-          $value =~ m/\A\s*(.+)(\p{Pd}+)(.+)\s*\z/xms;# blah M-1
+    $value =~ m/\A\s*(\{[^\}]+\}|\P{Pd}+?)\s*\z/xms ||# Simple or braced value without range
+      $value =~ m/\A\s*(\{[^\}]+\}|[^\p{Pd} ]+)\s*(\p{Pd}+)\s*(\{[^\}]+\}|\P{Pd}*?)\s*\z/xms ||
+        $value =~ m/\A\s*(.+)(\p{Pd}{2,})(.+?)\s*\z/xms || # M-1--M-4
+          $value =~ m/\A\s*(.+)(\p{Pd}+)(.+?)\s*\z/xms;# blah M-1
         my $start = $1;
     my $end;
     if ($2) {
@@ -1930,7 +1939,8 @@ sub parsename_x {
   my %namec;
   my %pernameopts;
   foreach my $np (split_xsv($namestr)) {# Can have x inside records so use Text::CSV
-    my ($npn, $npv) = $np =~ m/^(.+)\s*$xnamesep\s*(.+)$/x;
+    # Split at the first separator, trimming spaces around it
+    my ($npn, $npv) = $np =~ m/^\s*(.+?)\s*\Q$xnamesep\E\s*(.+?)\s*$/x;
     $npn = lc($npn);
 
     # per-name options
@@ -1965,10 +1975,12 @@ sub parsename_x {
     }
   }
 
+  my $strip;
   foreach my $np (keys %nps) {
     if (exists($namec{$np})) {
       # Generate any stripped information
       (my $s, $namec{$np}) = remove_outer($namec{$np});
+      $strip->{$np} = $s;
 
       # Protect spaces inside {} when splitting to produce initials
       my $part = $namec{$np};
@@ -2006,7 +2018,8 @@ sub parsename_x {
   # .bbl so as to maintain maximum BibTeX compatibility
   return  Biber::Entry::Name->new(
                                   %nameinfo,
-                                  %pernameopts
+                                  %pernameopts,
+                                  strip => $strip
                                  );
 }
 

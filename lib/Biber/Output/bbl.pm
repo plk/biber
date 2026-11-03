@@ -96,6 +96,39 @@ sub create_output_misc {
   return;
 }
 
+=head2 _recode_entry
+
+    Recode an entry string to LaTeX macros, leaving entry keys and
+    verbatim fields alone
+
+=cut
+
+sub _recode_entry {
+  my $string = shift;
+  my $outenc = Biber::Config->getoption('output_encoding');
+  my $inverb = 0;
+  my $acc = '';
+  foreach my $line (split(/(?<=\n)/, $string)) {
+    my $keep = 0;
+    if ($inverb) {
+      $inverb = 0 if $line =~ m/^\s*\\endl?verb\b/;
+      $keep = 1;
+    }
+    elsif ($line =~ m/^\s*\\l?verb\{/) {
+      $inverb = 1;
+    }
+    elsif ($line =~ m/^\s*\\(?:entry|inset|set)\{/) {
+      $keep = 1;
+    }
+    # Keys and verbatim data are only recoded if they can't be output otherwise
+    unless ($keep and eval { encode($outenc, NFC($line), Encode::FB_CROAK | Encode::LEAVE_SRC); 1 }) {
+      $line = latex_recode_output($line);
+    }
+    $acc .= $line;
+  }
+  return $acc;
+}
+
 =head2 _printfield
 
   Add the .bbl for a text field to the output accumulator.
@@ -732,7 +765,7 @@ sub output {
 
         # If requested to convert UTF-8 to macros ...
         if (Biber::Config->getoption('output_safechars')) {
-          $entry_string = latex_recode_output($entry_string);
+          $entry_string = _recode_entry($entry_string);
         }
         else { # ... or, check for encoding problems and force macros
           my $outenc = Biber::Config->getoption('output_encoding');
@@ -740,7 +773,7 @@ sub output {
             # Can this entry be represented in the output encoding?
             if (not eval { encode($outenc, NFC($entry_string), Encode::FB_CROAK | Encode::LEAVE_SRC); 1 }) { # Malformed data encoding char
               # So convert to macro
-              $entry_string = latex_recode_output($entry_string);
+              $entry_string = _recode_entry($entry_string);
               biber_warn("The entry '$k' has characters which cannot be encoded in '$outenc'. Recoding problematic characters into macros.");
             }
           }

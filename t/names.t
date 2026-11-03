@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 75;
+use Test::More tests => 78;
 use Test::Differences;
 unified_diff;
 
@@ -1019,6 +1019,12 @@ is_deeply(Biber::Input::file::bibtex::parsename($section,'{{{British National Co
 is_deeply(tparsename($section,'Vázques{ de }Parga, Luis', 'author'), $name19, 'parsename 19');
 is_deeply(tparsename_x($section,'family=Smithers Jones, prefix=van der, given=James, useprefix=true', 'author'), $namex1, 'parsename_x 1');
 eq_or_diff(Biber::Input::file::bibtex::parsename_x($section,'family=Smithers Jones, prefix=van der, given=James, useprefix=true', 'author')->{useprefix}, '1', 'parsename_x 2');
+
+# --output-xname keeps any braces around name parts in the original
+Biber::Config->setoption('output_xnamesep', '=');
+eq_or_diff(Biber::Input::file::bibtex::parsename($section, '{Barnes Noble}, {Jean Paul}', 'author')->name_to_xname, 'family={Barnes Noble}, given={Jean Paul}', 'name_to_xname 1');
+eq_or_diff(Biber::Input::file::bibtex::parsename_x($section, 'given=Ann, family={Barnes Noble}', 'author')->name_to_xname, 'family={Barnes Noble}, given=Ann', 'name_to_xname 2');
+eq_or_diff(Biber::Input::file::bibtex::parsename($section, 'Smith, John', 'author')->name_to_xname, 'family=Smith, given=John', 'name_to_xname 3');
 
 # name to bib tests
 eq_or_diff(Biber::Input::file::bibtex::parsename($section,'John Doe', 'author')->name_to_bibtex, 'Doe, John', 'name_to_bibtex 1');

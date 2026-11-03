@@ -1156,12 +1156,18 @@ sub imatch {
   else {
     $val_match = qr/$val_match/;
   }
-  if ($negmatch) {# "!~" doesn't work here as we need an array returned
-    return $value =~ m/$val_match/xmsg ? () : (1);
+  # On success, return a true list for later steps: for a match, the whole of the
+  # first match and then its captures (so that $0 is the whole match and $N is
+  # capture N), for a non-match just an empty "whole match"
+  my @res;
+  my $matched = $value =~ m/$val_match/xms;
+  if ($negmatch) {
+    @res = ('') unless $matched;
   }
-  else {
-    return $value =~ m/$val_match/xmsg;
+  elsif ($matched) {
+    @res = ($&, map {defined($-[$_]) ? substr($value, $-[$_], $+[$_] - $-[$_]) : undef} 1 .. $#-);
   }
+  return wantarray ? @res : scalar(@res);
 }
 
 
@@ -1180,8 +1186,15 @@ sub ireplace {
     my $cpt = Safe->new;
     $cpt->permit_only(qw(:default));
     $value =~ s{$val_match}{
+        my $orig = $&;
         my $r = $cpt->reval(qq{"$val_replace"});
-        $@ ? $val_match : $r;
+        if ($@) {
+          biber_warn("Cannot use sourcemap replacement '$val_replace' for '$orig', leaving it unchanged: $@");
+          $orig;
+        }
+        else {
+          $r;
+        }
       }egxms;
     return $value;
 }
@@ -1417,7 +1430,10 @@ sub parse_date_range {
 
   my $unspec;
   if (defined($sd) and $sd =~ /X/) {# ISO8601-2 4.3 unspecified format
-    ($sd, $sep, $ed, $unspec) = parse_date_unspecified($sd);
+    # Unsupported patterns are left to fail as invalid dates
+    if (my @range = parse_date_unspecified($sd)) {
+      ($sd, $sep, $ed, $unspec) = @range;
+    }
   }
   # Set start date unknown flag
   if ($sep and not $sd) {
@@ -1478,6 +1494,8 @@ sub parse_date_unspecified {
   elsif ($d =~ m/^(\d{4})\p{Dash}XX\p{Dash}XX$/) {
     return ("${1}-01-01", '/', "${1}-12-31", 'dayinyear');
   }
+  # Unsupported pattern
+  return;
 }
 
 
@@ -1777,8 +1795,8 @@ sub maploopreplace {
   no strict 'vars';
   my ($string, $maploop) = @_;
   return undef unless defined($string);
-  return $string unless $maploop;
-  $string =~ s/\$MAPLOOP/$maploop/g;
+  # $MAPLOOP only has a value inside map_foreach, $MAPUNIQ can be used anywhere
+  $string =~ s/\$MAPLOOP/$maploop/g if defined($maploop);
   $string =~ s/\$MAPUNIQVAL/$MAPUNIQVAL/g;
   if ($string =~ m/\$MAPUNIQ/) {
     my $MAPUNIQ = suniqid;

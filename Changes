@@ -23,6 +23,12 @@ Revision history for Biber
          correctly after LaTeX decoding.
        * PAR build scripts no longer link libbtparse (it is part of the
          Text::BibTeX module now).
+       * **INCOMPATIBLE CHANGE** - in sourcemaps, the captures $1, $2 etc.
+         used in later steps after a match step are now the parenthesised
+         groups of the first match only, and $0 is the whole match. Before,
+         the captures of all matches were numbered one after the other, so
+         that e.g. $2 could be the first group of the second match, and $0 was
+         the last capture. Maps which relied on this need to be changed.
 2.22   (2025-08)
        * Fixed security issues with evals
 2.21   (2025-07)
