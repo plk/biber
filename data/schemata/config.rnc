@@ -76,6 +76,13 @@ start =
         empty
       }+
     }? &
+    # nolabelwidthcount specification
+    element nolabelwidthcount {
+      element option {
+        attribute value { xsd:string },
+        empty
+      }+
+    }? &
     # nosort specification
     element nosort     {
       element option {
@@ -101,7 +108,7 @@ start =
     element output_fieldcase     { "upper" | "lower" | "title" }? &
     element output_field_replace { text }? &
     element output_file          { text }? &
-    element output_format        { "bibtex" | "bbl" | "biblatexml" | "dot" }? &
+    element output_format        { "bibtex" | "bbl" | "biblatexml" | "bblxml" | "dot" }? &
     element output_indent        { xsd:string { pattern = "\d+t?" } }? &
     element output_legacy_dates  { "0" | "1" }? &
     element output_listsep       { text }? &
@@ -155,6 +162,29 @@ start =
     element tool                 { "0" | "1" }? &
     element tool_config          { text }? &
     element trace                { "0" | "1" }? &
+    # options without a dedicated place above
+    element glob_datasources     { "0" | "1" }? &
+    element input_format         { text }? &
+    element isbn10               { "0" | "1" }? &
+    element isbn13               { "0" | "1" }? &
+    element isbn_normalise       { "0" | "1" }? &
+    element minxrefs             { xsd:unsignedByte }? &
+    element named_annotation_marker { text }? &
+    element no_bblxml_schema     { "0" | "1" }? &
+    element no_bltxml_schema     { "0" | "1" }? &
+    element no_default_datamodel { "0" | "1" }? &
+    element noskipduplicates     { "0" | "1" }? &
+    element nouri_encode         { "0" | "1" }? &
+    element output_field_order   { text }? &
+    element output_named_annotation_marker { text }? &
+    element remove_tmp_dir       { "0" | "1" }? &
+    element sortdebug            { "0" | "1" }? &
+    element strip_comments       { "0" | "1" }? &
+    element tool_noremove_missing_dependants { "0" | "1" }? &
+    element validate_bblxml      { "0" | "1" }? &
+    element winunicode           { "0" | "1" }? &
+    element xsvsep               { text }? &
+    element validate_bltxml      { "0" | "1" }? &
     element validate_config      { "0" | "1" }? &
     element validate_control     { "0" | "1" }? &
     element validate_datamodel   { "0" | "1" }? &

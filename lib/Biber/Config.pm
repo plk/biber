@@ -678,7 +678,7 @@ It returns the first file found among:
 
 =item * C<$HOME/Library/biber/biber.conf> (Mac OSX only)
 
-=item * C<$ENV{APPDATA}/biber.conf> (Windows only)
+=item * C<$ENV{APPDATA}/biber/biber.conf> (Windows only)
 
 =item * the output of C<kpsewhich biber.conf> (if available on the system).
 

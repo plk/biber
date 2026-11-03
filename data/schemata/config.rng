@@ -262,6 +262,19 @@
           </element>
         </optional>
         <optional>
+          <!-- nolabelwidthcount specification -->
+          <element name="nolabelwidthcount">
+            <oneOrMore>
+              <element name="option">
+                <attribute name="value">
+                  <data type="string"/>
+                </attribute>
+                <empty/>
+              </element>
+            </oneOrMore>
+          </element>
+        </optional>
+        <optional>
           <!-- nosort specification -->
           <element name="nosort">
             <oneOrMore>
@@ -364,6 +377,7 @@
               <value>bibtex</value>
               <value>bbl</value>
               <value>biblatexml</value>
+              <value>bblxml</value>
               <value>dot</value>
             </choice>
           </element>
@@ -606,6 +620,165 @@
         </optional>
         <optional>
           <element name="trace">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <!-- options without a dedicated place above -->
+          <element name="glob_datasources">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="input_format">
+            <text/>
+          </element>
+        </optional>
+        <optional>
+          <element name="isbn10">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="isbn13">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="isbn_normalise">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="minxrefs">
+            <data type="unsignedByte"/>
+          </element>
+        </optional>
+        <optional>
+          <element name="named_annotation_marker">
+            <text/>
+          </element>
+        </optional>
+        <optional>
+          <element name="no_bblxml_schema">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="no_bltxml_schema">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="no_default_datamodel">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="noskipduplicates">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="nouri_encode">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="output_field_order">
+            <text/>
+          </element>
+        </optional>
+        <optional>
+          <element name="output_named_annotation_marker">
+            <text/>
+          </element>
+        </optional>
+        <optional>
+          <element name="remove_tmp_dir">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="sortdebug">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="strip_comments">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="tool_noremove_missing_dependants">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="validate_bblxml">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="winunicode">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="xsvsep">
+            <text/>
+          </element>
+        </optional>
+        <optional>
+          <element name="validate_bltxml">
             <choice>
               <value>0</value>
               <value>1</value>
