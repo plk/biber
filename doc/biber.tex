@@ -2446,7 +2446,7 @@ and \cmd{DeclareDatamodelEntryfields} in your document or put the following
 \opt{datamodel} section in your \biber config file (the \opt{entrytypes},
 \opt{fields}, \opt{entryfields} and \opt{constraints} elements are required,
 in this order; listing an entry type which is already in the data model, as
-here, is harmless, and the constraint makes \bibfield{TITLE} mandatory for
+here, is harmless, and the constraint makes the new field mandatory for
 \bibfield{VIDEO} entries):
 \begin{lstlisting}[language=xml]
 <?xml version="1.0" encoding="UTF-8"?>
@@ -2465,7 +2465,7 @@ here, is harmless, and the constraint makes \bibfield{TITLE} mandatory for
     <constraints>
       <entrytype>video</entrytype>
       <constraint type="mandatory">
-        <field>title</field>
+        <field>director</field>
       </constraint>
     </constraints>
   </datamodel>

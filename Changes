@@ -20,6 +20,10 @@ Revision history for Biber
        * In tool mode, options set in the user's config file (e.g. useprefix,
          maxbibnames or the "tool" sorting template) are no longer overwritten
          by biber's hard-coded biblatex option defaults.
+       * A datamodel in the biber config file is used again outside tool mode
+         (it was ignored since 2.15), and its constraints now apply to the
+         entry types they are given for, instead of to those of the first
+         constraints block of the default data model.
 2.22   (2025-08)
        * Fixed security issues with evals
 2.21   (2025-07)

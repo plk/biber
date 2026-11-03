@@ -153,6 +153,7 @@ sub _initopts {
   # the hard-coded defaults below are only skipped for options which the config
   # files of this run set
   $CONFIG->{options}{biblatex}{GLOBAL} = {};
+  $CONFIG->{configfile_datamodels} = [];
 
   # There is a special default config file for tool mode
   # Referring to as yet unprocessed cmd-line tool option as it isn't processed until below
@@ -654,6 +655,8 @@ sub _config_file_set {
     }
     elsif (lc($k) eq 'datamodel') {# This is a biblatex option
       Biber::Config->addtoblxoption(0, 'datamodel', $v);
+      # Also kept separately, as parse_ctrlfile() replaces the datamodel option
+      push $CONFIG->{configfile_datamodels}->@*, $v;
     }
     elsif (exists($v->{content})) { # simple option
       Biber::Config->setconfigfileoption($k, $v->{content});
@@ -965,6 +968,17 @@ sub isexplicitoption {
 # BibLaTeX options static methods
 #################################
 
+
+=head2 get_configfile_datamodels
+
+    Get the datamodels from the config files, which add to or modify the
+    datamodel from the .bcf
+
+=cut
+
+sub get_configfile_datamodels {
+  return $CONFIG->{configfile_datamodels} // [];
+}
 
 =head2 addtoblxoption
 

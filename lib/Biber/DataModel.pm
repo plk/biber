@@ -66,9 +66,9 @@ sub new {
       }
 
       # Constraints
-      foreach my $uc ($udm->{constraints}[0]{constraint}->@*) {
-        push $dm->{constraints}[0]{constraint}->@*, $uc;
-      }
+      # Each block of constraints applies to its own entrytypes, so add the user's
+      # blocks as they are
+      push $dm->{constraints}->@*, ($udm->{constraints} // [])->@*;
 
       # Entryfields
       foreach my $uef ($udm->{entryfields}->@*) {

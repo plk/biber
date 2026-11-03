@@ -880,6 +880,10 @@ sub parse_ctrlfile {
   # Because in tests, parse_ctrlfile() is called several times so we need to sanitise this here
   Biber::Config->setblxoption(undef, 'datamodel', []);
   Biber::Config->addtoblxoption(undef, 'datamodel', $bcfxml->{datamodel});
+  # A datamodel in the config file adds to or modifies the one from the .bcf
+  foreach my $cdm (Biber::Config->get_configfile_datamodels->@*) {
+    Biber::Config->addtoblxoption(undef, 'datamodel', $cdm);
+  }
 
   # SECTIONS
   # This is also where we set data files as these are associated with a bib section
