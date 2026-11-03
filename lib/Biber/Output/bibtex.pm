@@ -435,17 +435,7 @@ sub output {
 
   # Instantiate output file now that input is read in case we want to do in-place
   # output for tool mode
-  my $enc_out;
-  if (Biber::Config->getoption('output_encoding')) {
-    $enc_out = ':encoding(' . Biber::Config->getoption('output_encoding') . ')';
-  }
-
-  if ($target_string eq '-') {
-    $target = new IO::File ">-$enc_out";
-  }
-  else {
-    $target = IO::File->new($target_string, ">$enc_out");
-  }
+  $target = open_output($target_string, Biber::Config->getoption('output_encoding'));
 
   if ($logger->is_debug()) {# performance tune
     $logger->debug('Preparing final output using class ' . __PACKAGE__ . '...');

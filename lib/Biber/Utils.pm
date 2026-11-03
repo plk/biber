@@ -12,6 +12,7 @@ use constant {
 use Carp;
 use Encode;
 use File::Find;
+use IO::File;
 use File::Spec;
 use IPC::Cmd qw( can_run );
 use IPC::Run3; # This works with PAR::Packer and Windows. IPC::Run doesn't
@@ -45,7 +46,7 @@ All functions are exported by default.
 
 =cut
 
-our @EXPORT = qw{ check_empty check_exists slurp_switchr slurp_switchw
+our @EXPORT = qw{ check_empty check_exists slurp_switchr slurp_switchw open_output
   glob_data_file globU globU1 locate_data_file makenamesid makenameid stringify_hash
   normalise_string normalise_string_hash normalise_string_underscore
   normalise_string_sort normalise_string_label reduce_array remove_outer
@@ -181,7 +182,14 @@ sub slurp_switchr {
     $fh->close;
   }
   else {
-    $slurp = File::Slurper::read_text($filename, $encoding);
+    # Decode the whole file at once: PerlIO's :encoding layer works in 1024-byte chunks
+    # and fails on (UTF-16) or mangles characters that straddle a chunk boundary
+    my $bytes = File::Slurper::read_binary($filename);
+    my $size = length($bytes);
+    $slurp = decode($encoding, $bytes, Encode::FB_CROAK);
+    # Some decoders (e.g. iso-2022-jp) stop at invalid input instead of croaking,
+    # leaving the rest in $bytes
+    die "invalid data at byte " . ($size - length($bytes)) . "\n" if length($bytes);
   }
   return \$slurp;
 }
@@ -1592,7 +1600,53 @@ sub biber_decode_utf8 {
 
 sub out {
   my ($fh, $string) = @_;
-  print $fh NFC($string);# Unicode NFC boundary
+  if (my $enc = ${*$fh}{biber_output_encoding}) { # see open_output()
+    print $fh encode($enc, NFC($string), Encode::FB_PERLQQ | Encode::WARN_ON_ERR | Encode::LEAVE_SRC);
+  }
+  else {
+    print $fh NFC($string);# Unicode NFC boundary
+  }
+}
+
+=head2 open_output
+
+  Open an output target ('-' for STDOUT, a scalar ref, or a file name as a byte string)
+  for writing in encoding $enc. Encodings other than UTF-8 are not done with a PerlIO
+  :encoding layer, which mangles characters straddling its 1024-byte buffer: the handle
+  is opened raw and out() encodes each string instead.
+
+=cut
+
+sub open_output {
+  my ($target, $enc) = @_;
+  my $layer = '';
+  my $encode;
+  if ($enc) {
+    if (lc(find_encoding($enc)->name) =~ m/\Autf-?8/) {
+      $layer = ":encoding($enc)";
+    }
+    else {
+      $layer = ':raw';
+      $encode = $enc;
+    }
+  }
+  my $fh;
+  if (not ref($target) and $target eq '-') {
+    $fh = IO::File->new('>-') or return undef;
+    $fh->binmode($layer) if $layer;
+  }
+  else {
+    $fh = IO::File->new($target, ">$layer") or return undef;
+  }
+  if ($encode) {
+    # UTF-16/32 without a byte order would get a BOM from every encode() call
+    if (find_encoding($encode)->name =~ m/\AUTF-(?:16|32)\z/i) {
+      print $fh encode($encode, '');# just the BOM
+      $encode = find_encoding($encode)->name . 'BE';
+    }
+    ${*$fh}{biber_output_encoding} = $encode;
+  }
+  return $fh;
 }
 
 =head2 process_comment

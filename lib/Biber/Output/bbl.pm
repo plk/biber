@@ -697,11 +697,7 @@ sub output {
   }
 
   if (not $target or $target_string eq '-') {
-    my $enc_out;
-    if (Biber::Config->getoption('output_encoding')) {
-      $enc_out = ':encoding(' . Biber::Config->getoption('output_encoding') . ')';
-    }
-    $target = new IO::File ">-$enc_out";
+    $target = open_output('-', Biber::Config->getoption('output_encoding'));
   }
 
   if ($logger->is_debug()) {# performance tune
