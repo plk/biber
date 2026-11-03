@@ -149,6 +149,11 @@ sub _initopts {
     }
   }
 
+  # Start without global biblatex options from any earlier Biber object, so that
+  # the hard-coded defaults below are only skipped for options which the config
+  # files of this run set
+  $CONFIG->{options}{biblatex}{GLOBAL} = {};
+
   # There is a special default config file for tool mode
   # Referring to as yet unprocessed cmd-line tool option as it isn't processed until below
   if ($opts->{tool}) {
@@ -168,7 +173,9 @@ sub _initopts {
   # Set hard-coded biblatex option defaults
   # This has to go after _config_file_set() as this is what defines option scope
   # in tool mode (from the .conf file)
+  # but they are only defaults: don't overwrite values from the config files
   foreach (keys %CONFIG_DEFAULT_BIBLATEX) {
+    next if defined($CONFIG->{options}{biblatex}{GLOBAL}{$_});
     Biber::Config->setblxoption(0, $_, $CONFIG_DEFAULT_BIBLATEX{$_});
   }
 

@@ -17,6 +17,9 @@ Revision history for Biber
        * A --configfile which doesn't exist is now an error (exit status 2).
          Before, it was silently ignored and the default config file search
          was used instead.
+       * In tool mode, options set in the user's config file (e.g. useprefix,
+         maxbibnames or the "tool" sorting template) are no longer overwritten
+         by biber's hard-coded biblatex option defaults.
 2.22   (2025-08)
        * Fixed security issues with evals
 2.21   (2025-07)

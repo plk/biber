@@ -640,14 +640,11 @@ sub parse_ctrlfile {
         unshift($configmaps->{map}->@*, map {$_->{map}->@*} @docmaps);
       }
 
-      # Merge the driver/style maps with the user maps from the config file
-      if (my @m = grep {$_->{level} eq 'driver' or
-                        $_->{level} eq 'style'} $bcfxml->{sourcemap}{maps}->@* ) {
-        Biber::Config->setoption('sourcemap', [$usms->@*, @m]);
-      }
-      else { # no driver defaults, just override the config file user map settings
-        Biber::Config->setoption('sourcemap', $bcfxml->{sourcemap}{maps});
-      }
+      # Merge the driver/style maps (if any) with the user maps from the config
+      # file, which now include the document's user maps
+      my @m = grep {$_->{level} eq 'driver' or
+                    $_->{level} eq 'style'} $bcfxml->{sourcemap}{maps}->@*;
+      Biber::Config->setoption('sourcemap', [$usms->@*, @m]);
     }
     else { # just write the option as there are no config file settings at all
       Biber::Config->setoption('sourcemap', $bcfxml->{sourcemap}{maps});
@@ -1042,15 +1039,16 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
     my $lname = $list->{name};
 
     my $lsection = $list->{section}[0]; # because "section" needs to be a list elsewhere in XML
-    if ($datalists->get_list(section                    => $lsection,
-                             name                       => $lname,
-                             type                       => $ltype,
-                             sortingtemplatename        => $lstn,
-                             sortingnamekeytemplatename => $lsnksn,
-                             labelprefix                => $lpn,
-                             uniquenametemplatename     => $luntn,
-                             labelalphanametemplatename => $llantn,
-                             namehashtemplatename       => $lnhtn)) {
+    # (get_list takes positional arguments; this needs the attribute search)
+    if ($datalists->get_lists_by_attrs(section                    => $lsection,
+                                       name                       => $lname,
+                                       type                       => $ltype,
+                                       sortingtemplatename        => $lstn,
+                                       sortingnamekeytemplatename => $lsnksn,
+                                       labelprefix                => $lpn,
+                                       uniquenametemplatename     => $luntn,
+                                       labelalphanametemplatename => $llantn,
+                                       namehashtemplatename       => $lnhtn)) {
       if ($logger->is_debug()) {# performance tune
         $logger->debug("Section datalist '$lname' of type '$ltype' with sortingtemplate '$lstn', sortingnamekeytemplatename '$lsnksn', labelprefix '$lpn', uniquenametemplate '$luntn', labelalphanametemplate '$llantn' and namehashtemplate '$lnhtn' is repeated for section $lsection - ignoring");
       }
@@ -1065,6 +1063,9 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
                                         namehashtemplatename       => $lnhtn,
                                         labelprefix                => $lpn,
                                         name                       => $lname);
+    unless (Biber::Config->getblxoption(undef, 'sortingtemplate')->{$lstn}) {
+      biber_warn("Datalist '$lname' uses the sorting template '$lstn', which is not defined - using the global sorting template instead");
+    }
     $datalist->set_type($ltype || 'entry'); # lists are entry lists by default
     $datalist->set_name($lname || "$lstn/$lsnksn/$lpn/$luntn/$llantn/$lnhtn"); # default to ss+snkss+pn+untn+lantn+lnhtn
     foreach my $filter ($list->{filter}->@*) {
