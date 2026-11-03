@@ -2156,11 +2156,18 @@
       <oneOrMore>
         <element name="bcf:map_step">
           <choice>
-            <attribute name="map_entry_clone">
-              <data type="string">
-                <param name="minLength">1</param>
-              </data>
-            </attribute>
+            <group>
+              <attribute name="map_entry_clone">
+                <data type="string">
+                  <param name="minLength">1</param>
+                </data>
+              </attribute>
+              <optional>
+                <attribute name="map_entry_nocite">
+                  <value>1</value>
+                </attribute>
+              </optional>
+            </group>
             <group>
               <attribute name="map_entry_new">
                 <data type="string">
@@ -2172,6 +2179,11 @@
                   <param name="minLength">1</param>
                 </data>
               </attribute>
+              <optional>
+                <attribute name="map_entry_nocite">
+                  <value>1</value>
+                </attribute>
+              </optional>
             </group>
             <group>
               <optional>

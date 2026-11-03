@@ -897,10 +897,12 @@ map =
     element bcf:per_nottype { xsd:string {minLength="1"} }*,
     element bcf:map_step {
       (
-        ( attribute map_entry_clone { xsd:string {minLength="1"} }
+        ( attribute map_entry_clone { xsd:string {minLength="1"} },
+          attribute map_entry_nocite { "1" }?
         ) |
         ( attribute map_entry_new { xsd:string {minLength="1"} },
-          attribute map_entry_newtype { xsd:string {minLength="1"} }
+          attribute map_entry_newtype { xsd:string {minLength="1"} },
+          attribute map_entry_nocite { "1" }?
         ) |
         ( attribute map_entrykey_cited { "1" }?,
           attribute map_entrykey_nocited { "1" }?,
