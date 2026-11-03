@@ -212,7 +212,10 @@ sub latex_decode {
     # Special case for \h?box which requires braces around single chars
     $text =~ s/\\(h?box)\s+\{(\X)\}/\\$1\{$2\}/g;
 
-    # Deal with raw TeX \char macros: \char"7B (hex), \char'173 (octal), \char123 (decimal)
+    # The virtual 'null' set turns decoding off
+    return $text if $set_d eq 'null';
+
+    # Deal with raw TeX \char macros:\char"7B (hex), \char'173 (octal), \char123 (decimal)
     $text =~ s/(\\char(?:"([0-9A-Fa-f]+)|'([0-7]+)|([0-9]+)))/_tex_char($1, $2, $3, $4)/ge;
 
     $text =~ s/(\\[a-zA-Z]+)\\(\s+)/$1\{\}$2/g;    # \foo\ bar -> \foo{} bar
@@ -233,13 +236,14 @@ sub latex_decode {
         $text =~ s/\\textsuperscript\{\\($re)\}/$map->{$1}/ge;
       }
       elsif ($type eq 'dings') {
-        $text =~ s/\\ding\{([2-9AF][0-9A-F])\}/$map->{$1}/ge;
+        # \ding takes a decimal character code; the map is keyed by hex codes
+        $text =~ s/\\ding\{(\d+)\}/$map->{sprintf('%X', $1)} \/\/ "\\ding{$1}"/ge;
       }
       elsif ($type eq 'letters') {
         $text =~ s/\\($re)(?:\{\}|\s+|\b)/$map->{$1}/ge;
       }
       elsif (first {$type eq $_} ('punctuation', 'symbols', 'greek')) {
-        $text =~ s/\\($re)(?: \{\}|\s+|\b)/$map->{$1}/ge;
+        $text =~ s/\\($re)(?:\{\}|\s+|(?<![a-zA-Z])|(?![a-zA-Z]))/$map->{$1}/ge;
       }
       elsif ($type eq 'diacritics') {
 
@@ -255,7 +259,10 @@ sub latex_decode {
         # braces
         # Using the VLB method from the link below, this is equivalent to:
         # $text =~ s/(?<!\\$re)\{(\X)\}/\x{f}$1\x{e}/g;
-        $text =~ s/(?!(?=(?'a'[\s\S]*))(?'b'\\$re(?=\k'a'\z)|(?<=(?=x^|(?&b))[\s\S])))\{(\X)\}/\x{f}$3\x{e}/g;
+        $text =~ s/(?!(?=(?'a'[\s\S]*))(?'b'\\$re\s*(?=\k'a'\z)|(?<=(?=x^|(?&b))[\s\S])))\{(\X)\}/\x{f}$3\x{e}/g;
+
+        # The tie accent spans two letters: \t{oo} -> o U+0361 o
+        $text =~ s/\\t\s*\{(\pL\pM*)(\pL\pM*)\}/$1\x{361}$2/g;
 
         # Rename protecting braces so that they are not broken by RE manipulations
         $text =~ s/(\{?)\\($re)\s*\{(\pL\pM*)\}(\}?)/$bracemap->{$1} . $3 . $map->{$2} . $bracemap->{$4}/ge;
@@ -282,7 +289,7 @@ sub latex_decode {
                        (?(?{$2}) # code block condition (space matched earlier after diacritic?)
                          \pL # yes pattern
                        | # no pattern
-                         [^A-Za-z]
+                         [^A-Za-z\s]
                        ) # close conditional
                      ) # close conditional
                      \pM* # optional marks
@@ -386,7 +393,7 @@ sub latex_encode {
       $text =~ s/($re)/"\\textsuperscript{\\" . $map->{$1} . "}"/ge;
     }
     elsif ($type eq 'dings') {
-      $text =~ s/($re)/'\ding{' . $map->{$1} . '}'/ge;
+      $text =~ s/($re)/'\ding{' . hex($map->{$1}) . '}'/ge;
     }
     elsif ($type eq 'letters') {
       # General macros (excluding special encoding excludes)
