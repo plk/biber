@@ -418,6 +418,7 @@ our %LOCALE_MAP = (
                    'francais'        => 'fr-FR',
                    'french'          => 'fr-FR',
                    'frenchle'        => 'fr-FR',
+                   'frisian'         => 'fy-NL',
                    'friulan'         => 'fur-IT',
                    'galician'        => 'gl-ES',
                    'german'          => 'de-DE',
@@ -492,6 +493,7 @@ our %LOCALE_MAP = (
                    'usorbian'        => 'hsb-DE',
                    'vietnamese'      => 'vi-VN',
                    'welsh'           => 'cy-GB',
+                   'westernfrisian'  => 'fy-NL',
                   );
 
 our %LOCALE_MAP_R = (
@@ -559,6 +561,8 @@ our %LOCALE_MAP_R = (
                      'fr-FR'      => 'french',
                      'fur'        => 'friulan',
                      'fur-IT'     => 'friulan',
+                     'fy'         => 'westernfrisian',
+                     'fy-NL'      => 'westernfrisian',
                      'ga'         => 'irish',
                      'ga-IE'      => 'irish',
                      'gd'         => 'scottish',
