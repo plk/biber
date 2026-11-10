@@ -5,7 +5,7 @@ use utf8;
 no warnings 'utf8' ;
 use open qw/:std :utf8/;
 
-use Test::More tests => 89;
+use Test::More tests => 96;
 use Test::Differences;
 unified_diff;
 
@@ -180,3 +180,14 @@ eq_or_diff(strip_noinit('\texttt{freedesktop.org}'), 'freedesktop.org', 'Name st
 eq_or_diff(strip_noinit('\texttt freedesktop.org'), 'freedesktop.org', 'Name strip - 2');
 eq_or_diff(strip_noinit('{\texttt freedesktop.org}'), '{freedesktop.org}', 'Name strip - 3');
 eq_or_diff(strip_noinit('{C.\bibtexspatium A.}'), '{C.A.}', 'Name strip - 4');
+
+# Western Frisian: babel names, and biber's own tailoring as
+# Unicode::Collate::Locale has none (y sorts as i, after it when otherwise equal)
+eq_or_diff(locale2bcp47('westernfrisian'), 'fy-NL', 'Frisian locale - 1');
+eq_or_diff(bcp472locale('fy'), 'westernfrisian', 'Frisian locale - 2');
+my $fy = Biber::UCollate->new('fy-NL', level => 2);
+ok($fy->is_tailored, 'Frisian collation - tailored');
+eq_or_diff([$fy->sort(qw(Duursma Dotinga Doele Dykstra))], [qw(Dykstra Doele Dotinga Duursma)], 'Frisian collation - 1');
+eq_or_diff([$fy->sort(qw(yn in pyk pik))], [qw(in yn pik pyk)], 'Frisian collation - 2');
+ok(Biber::UCollate->new_sortinit('fy-NL')->eq('Y', 'I'), 'Frisian collation - sortinit');
+ok(not(Biber::UCollate->new_sortinit('nl-NL')->eq('Y', 'I')), 'Other locales are not affected');

@@ -8,6 +8,19 @@ use parent qw(Unicode::Collate::Locale);
 
 my $logger = Log::Log4perl::get_logger('main');
 
+# Tailorings for locales which Unicode::Collate::Locale has no tailoring for,
+# as Unicode::Collate "entry" definitions. The weights are relative to those of
+# other characters, so they are computed from a collator for the table in use.
+my %BIBER_TAILORINGS = (
+  # Western Frisian, CLDR "fy" (&I<<y<<<Y): y sorts as i, and after it when
+  # words are otherwise equal (in, yn; Dykstra, Doele)
+  fy => sub {
+    my $root = shift;
+    my ($i) = $root->viewSortKey('i') =~ m/\[([0-9A-F]+)/;
+    return sprintf("0079 ; [.%s.0021.0002] # y\n0059 ; [.%s.0021.0008] # Y\n", $i, $i);
+  },
+);
+
 =encoding utf-8
 
 =head1 NAME
@@ -51,9 +64,17 @@ sub new {
   # Some options can only be set when creating the object
   my %newopts = map {exists($collopts{$_}) ? ($_ => delete $collopts{$_}) : ()} @Unicode::Collate::ChangeNG;
 
+  # A tailoring of biber's own for the locale, if Unicode::Collate::Locale has
+  # none (any user entry comes after it, so can override it)
+  my $biber_tailoring = biber_tailoring($coll_locale, %newopts);
+  if ($biber_tailoring) {
+    $newopts{entry} = $biber_tailoring . ($newopts{entry} // '');
+  }
+
   # Now create the collator object
   my $Collator = eval {$class->SUPER::new(locale => $coll_locale, %newopts)}
     or Biber::Utils::biber_error("Problem creating collation object: " . _collerr($@));
+  $Collator->{biber_tailored} = 1 if $biber_tailoring;
 
   # Show the collation options when debugging
   if ($logger->is_debug()) {# performance tune
@@ -77,6 +98,52 @@ sub new {
   }
 
   return $Collator;
+}
+
+=head2 biber_tailoring
+
+  The "entry" definitions of biber's own tailoring for a locale, or undef if
+  biber has none or Unicode::Collate::Locale has its own for the locale.
+  %opts are the options the collator is created with.
+
+=cut
+
+sub biber_tailoring {
+  my ($locale, %opts) = @_;
+  return undef unless $locale;
+  my ($lang) = lc($locale) =~ m/\A([a-z]+)/;
+  my $tailoring = $BIBER_TAILORINGS{$lang // ''} or return undef;
+  delete $opts{entry};
+  my $root = Unicode::Collate::Locale->new(%opts, locale => $locale);
+  # Newer versions of Unicode::Collate::Locale may have the locale
+  return undef unless $root->getlocale eq 'default';
+  return $tailoring->($root);
+}
+
+=head2 is_tailored
+
+  Whether the collator has a tailoring for its locale, from
+  Unicode::Collate::Locale or from biber
+
+=cut
+
+sub is_tailored {
+  my $self = shift;
+  return ($self->{biber_tailored} or $self->getlocale ne 'default') ? 1 : 0;
+}
+
+=head2 new_sortinit
+
+  A level 1 collator for sortinit hashes, with the same tailoring for the
+  locale as the sorting collator
+
+=cut
+
+sub new_sortinit {
+  my ($class, $locale) = @_;
+  my $entry = biber_tailoring($locale, level => 1);
+  return Unicode::Collate::Locale->new(locale => $locale, level => 1,
+                                       ($entry ? (entry => $entry) : ()));
 }
 
 # Error message from Unicode::Collate without the location
