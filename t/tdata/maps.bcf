@@ -565,6 +565,18 @@
         <bcf:map_step map_entrykey_citedornocited="1" map_final="1"/>
         <bcf:map_step map_field_set="VERBB" map_field_value="somevalue1"/>
       </bcf:map>
+      <!-- foreach over a temporary field which is not in the data model -->
+      <bcf:map>
+        <bcf:map_step map_field_source="ENTRYKEY" map_match="\Amaps1\z" map_final="1"/>
+        <bcf:map_step map_field_set="TMPLIST" map_field_value="x, y"/>
+      </bcf:map>
+      <bcf:map map_foreach="TMPLIST">
+        <bcf:map_step map_field_source="TMPLIST" map_final="1"/>
+        <bcf:map_step map_entry_new="tmploop:$MAPLOOP" map_entry_newtype="book"/>
+      </bcf:map>
+      <bcf:map>
+        <bcf:map_step map_field_set="TMPLIST" map_null="1"/>
+      </bcf:map>
     </bcf:maps>
   </bcf:sourcemap>
   <!-- LABELALPHA NAME TEMPLATE -->

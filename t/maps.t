@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 8;
+use Test::More tests => 10;
 use Test::Differences;
 unified_diff;
 
@@ -51,3 +51,6 @@ eq_or_diff($bibentries->entry('maps1')->get_field('verba'), 'somevalue', 'Maps t
 ok(is_undef($bibentries->entry('maps3')->get_field('verba')), 'Maps test - 6' );
 eq_or_diff($bibentries->entry('maps1')->get_field('verbb'), 'somevalue1', 'Maps test - 7' );
 ok(is_undef($bibentries->entry('maps3')->get_field('verbb')), 'Maps test - 8' );
+# foreach over a field set in an earlier map which is not in the data model
+is_deeply([sort grep {m/^tmploop:/} $section->get_citekeys], ["tmploop:x", "tmploop:y"], "Maps test - 9");
+ok(is_undef($bibentries->entry("maps1")->get_field("tmplist")), "Maps test - 10");
