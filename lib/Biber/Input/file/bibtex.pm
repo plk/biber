@@ -430,9 +430,13 @@ sub create_entry {
           }
           # casefold here as the field name does not come from Text::BibTeX so it might not be
           # valid in the case found in the mapping
-          elsif ($dm->is_field(fc($foreach))) { # datafield, no loop if the entry doesn't have it
-            my $felist = $entry->get(encode('UTF-8', NFC(fc($foreach))));
-            @maploop = defined($felist) ? split(/\s*,\s*/, $felist) : ();
+          # A field the entry has, even if it is not in the data model (e.g. a
+          # temporary field set in an earlier map)
+          elsif (defined(my $felist = $entry->get(encode('UTF-8', NFC(fc($foreach)))))) {
+            @maploop = split(/\s*,\s*/, $felist);
+          }
+          elsif ($dm->is_field(fc($foreach))) { # datafield the entry doesn't have, no loop
+            @maploop = ();
           }
           else { # explicit CSV
             @maploop = split(/\s*,\s*/, $foreach);
